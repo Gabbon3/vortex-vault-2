@@ -1,0 +1,30 @@
+{
+    "name": "api-js-template",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "keywords": [],
+    "author": "Gabriele Gherlone",
+    "license": "ISC",
+    "description": "Struttura base per un API in Node con Express che include l'autenticazione e gestione di access e refresh tokens",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1",
+        "express-rate-limit": "^7.4.1",
+        "jsonwebtoken": "^9.0.2",
+        "msgpack-lite": "^0.1.26",
+        "mysql2": "^3.11.3",
+        "redis": "^4.7.0",
+        "sequelize": "^6.37.5",
+        "ua-parser-js": "^2.0.0-rc.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    }
+}
