@@ -1,5 +1,5 @@
 import express from "express";
-import { CkeController } from "../controllers/ckeController.js";
+import { CkeController } from "../controllers/cke.controller.js";
 import { verify_access_token } from "../middlewares/authMiddleware.js";
 // -- router
 const router = express.Router();

@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 // import { verifica_jwt } from "../middlewares/authMiddleware.js";
-import { UserController } from "../controllers/userController.js";
+import { UserController } from "../controllers/user.controller.js";
 // -- router
 const router = express.Router();
 // -- controller

@@ -2,10 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { sequelize } from './config/db.js';
-import user_routes from './routes/userRoutes.js';
-import token_routes from './routes/tokenRoutes.js';
-import vault_routes from './routes/vaultRoutes.js';
-import cke_routes from './routes/ckeRoutes.js';
+import user_routes from './routes/user.router.js';
+import token_routes from './routes/token.router.js';
+import vault_routes from './routes/vault.router.js';
+import cke_routes from './routes/cke.router.js';
+import static_routes from './routes/static.router.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 
@@ -26,6 +27,10 @@ app.use('/auth', user_routes);
 app.use('/auth/cke', cke_routes);
 app.use('/auth/token', token_routes);
 app.use('/vault', vault_routes);
+/**
+ * Pubbliche
+ */
+app.use('/', static_routes);
 
 /**
  * Middlewares per gli errori

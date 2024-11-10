@@ -1,6 +1,6 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-import { RefreshTokenController } from "../controllers/refreshTokenController.js";
+import { RefreshTokenController } from "../controllers/refreshToken.controller.js";
 import { verify_access_token } from "../middlewares/authMiddleware.js";
 // -- router
 const router = express.Router();

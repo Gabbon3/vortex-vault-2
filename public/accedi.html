@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi</title>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <!-- stile -->
+    <link rel="stylesheet" href="./css/main.css">
+    <!-- componenti -->
+    <script type="module" src="./components/main.components.js"></script>
+    <!-- auth -->
+    <script type="module" src="./js/login.js"></script>
+</head>
+<body>
+    <vortex-navbar></vortex-navbar>
+    <main class="pagina">
+        <form id="accedi">
+            <h2>
+                <span class="material-symbols-rounded">login</span>
+                Login
+            </h2>
+            <!-- --- -->
+            <label for="username">
+                <span class="material-symbols-rounded">person</span>
+                Username
+            </label>
+            <input type="text" class="input-text" id="username" name="username" required>
+            <!-- --- -->
+            <label for="password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Password
+            </label>
+            <input type="text" class="input-text" id="password" name="password" required>
+            <!-- --- -->
+            <hr>
+            <button class="btn primario">
+                <span class="material-symbols-rounded">login</span>
+                Accedi
+            </button>
+        </form>
+    </main>
+</body>
+</html>

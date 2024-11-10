@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { RefreshTokenService } from "./refreshTokenService.js";
 import { CError } from "../helpers/cError.js";
+import { Cripto } from "../utils/cryptoUtils.js";
 
 export class UserService {
     constructor() {
@@ -19,10 +20,12 @@ export class UserService {
         const user_exist = await User.findOne({
             where: { username }
         });
-        if (user_exist) throw new CError("UserExist", "L'username inserito esiste già", 409);
+        if (user_exist) throw new CError("UserExist", "This username is not available", 409);
+        // -- genero il salt di 16 byte
+        const salt = Cripto.random_bytes(16, 'hex');
         // -- creo un nuovo utente
         const password_hash = await this.hash_password(password);
-        const user = new User({ username, password: password_hash });
+        const user = new User({ username, password: password_hash, salt });
         // ---
         return await user.save();
     }

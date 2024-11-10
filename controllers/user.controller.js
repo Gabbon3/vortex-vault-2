@@ -43,7 +43,8 @@ export class UserController {
         res.status(201).json({
             access_token,
             refresh_token,
-            cke
+            cke,
+            salt: user.salt
         });
     })
     /**

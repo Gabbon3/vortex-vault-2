@@ -1,6 +1,6 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-import { VaultController } from "../controllers/vaultController.js";
+import { VaultController } from "../controllers/vault.controller.js";
 import { verify_access_token } from "../middlewares/authMiddleware.js";
 import { binBodyParser } from "../middlewares/binBodyParser.js";
 // -- router

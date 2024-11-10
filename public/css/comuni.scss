@@ -1,0 +1,195 @@
+.title-icon,
+label {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+label {
+    .material-symbols-rounded {
+        color: $c1;
+    }
+    margin: 10px 0 7px 0;
+}
+
+.flex {
+    display: flex !important;
+
+    @mixin flex-grow($value) {
+        flex-grow: $value;
+    }
+
+    @for $i from 1 through 10 {
+        .fg-#{$i} {
+            @include flex-grow($i);
+        }
+    }
+
+    @mixin gap($value) {
+        gap: #{calc($value / 10)}px !important;
+    }
+
+    $i: 25;
+    @while $i < 300 {
+        &.gap-#{$i} {
+            @include gap($i);
+        }
+        $i: $i + 25;
+    }
+
+    &.d-row {
+        flex-direction: row;
+    }
+
+    &.d-column {
+        flex-direction: column;
+    }
+
+    &.x-right {
+        justify-content: right;
+    }
+
+    &.y-center {
+        align-items: center;
+    }
+
+    &.x-center {
+        justify-content: center;
+    }
+
+    &.stretch {
+        justify-content: stretch;
+    }
+
+    &.wrap {
+        flex-wrap: wrap;
+
+        &.reverse {
+            flex-wrap: wrap-reverse;
+        }
+
+        &.no {
+            flex-wrap: nowrap;
+        }
+    }
+
+    .last {
+        margin-left: auto;
+    }
+}
+
+h1, h2, h3, h4, h5 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0.5em 0 0.3em 0;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+hr {
+    display: block;
+    margin: 13px auto;
+    height: 1px;
+    width: 98%;
+    border: none;
+    background-color: $border-color;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    padding: 7px 10px;
+    border-radius: 7px;
+    border: none;
+    transition: 0.2s;
+    cursor: pointer;
+    color: $text-color;
+    font-size: $fs-m;
+
+    .material-symbols-rounded {
+        font-size: 1.7em !important;
+    }
+
+    &.primario {
+        background-color: rgba($c1, 0.2);
+        color: $c3;
+
+        &:hover {
+            background-color: rgba($c1, 0.3);
+        }
+    }
+
+    &.danger {
+        background-color: rgba(236, 55, 82, 0.2);
+        color: $c-danger;
+
+        &:hover {
+            background-color: rgba(236, 55, 82, 0.3);
+        }
+    }
+
+    &.trasparente {
+        // background-color: transparent;
+        background-color: $bg-2;
+
+        &:hover {
+            background-color: $bg-3;
+        }
+    }
+}
+
+.finestra {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid $border-color;
+    max-height: 98%;
+    max-width: 950px;
+    width: 95%;
+    min-height: 100px;
+    overflow-y: scroll;
+    z-index: 1050;
+    background-color: var(--bg-1);
+
+    // small
+    &.s {
+        max-width: 400px;
+    }
+
+    // auto
+    &.auto {
+        width: inherit;
+        // min-height: inherit;
+    }
+}
+
+.input-text {
+    display: block;
+    margin: 0 auto;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid $border-color;
+    transition: 0.2s;
+    outline: none;
+    background-color: $bg-15;
+    color: $text-color;
+    width: 100%;
+    font-size: $fs-m;
+
+    &:hover, &:focus {
+        border-color: $c1;
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 4px rgba($c1, 0.2);
+    }
+}

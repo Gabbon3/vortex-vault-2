@@ -11,7 +11,7 @@ export class CkeController {
      */
     generate = async_handler(async (req, res) => {
         const old_cke = req.cookies.cke;
-        const new_cke = Cripto.random_bytes(32, 'base64');
+        const new_cke = Cripto.random_bytes(32, 'hex');
         // ---
         res.cookie('cke', new_cke, {
             httpOnly: true,
