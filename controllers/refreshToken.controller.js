@@ -29,6 +29,15 @@ export class RefreshTokenController {
             last_used_at: new Date(),
             ip_address: ip_address ?? ''
         });
+        // -- imposto il cookie
+        res.cookie('access_token', access_token, {
+            httpOnly: true,
+            secure: TokenUtils.secure_option, // da mettere true in produzione
+            maxAge: TokenUtils.access_token_cookie_lifetime,
+            sameSite: 'Strict',
+            path: '/', // disponibile per tutte le route
+        });
+        // ---
         res.status(201).json({ access_token });
     })
     /**

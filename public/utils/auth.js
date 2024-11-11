@@ -1,5 +1,4 @@
 import { Bytes } from "./bytes.js";
-import { AES256GCM } from "../secure/aesgcm.js";
 import { Cripto } from "../secure/cripto.js";
 import { SessionStorage } from "./session.js";
 import { LocalStorage } from "./local.js";
@@ -54,7 +53,7 @@ export class Auth {
         });
         if (!res) return false;
         // -- imposto la scadenza dell'access token
-        LocalStorage.set('access-token-expire', new Date(Date.now() + 3600000));
+        await LocalStorage.set('access-token-expire', new Date(Date.now() + 3600000));
         return true;
     }
     /**
@@ -87,7 +86,7 @@ export class Auth {
     static async start_session() {
         // -- verifico che ce bisogno di rigenerare l'access token
         const access_token_expire = await LocalStorage.get('access-token-expire');
-        if (Date.now() > access_token_expire || !access_token_expire) {
+        if (!access_token_expire || Date.now() > access_token_expire.getTime()) {
             const created = await this.new_access_token();
             // -- se non è stato generato un nuovo access token fermo
             // - l'utente dovrebbe accedere nuovamente
