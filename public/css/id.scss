@@ -46,3 +46,98 @@
     z-index: 1000;
     backdrop-filter: blur(4px);
 }
+
+#logs_container {
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    z-index: 2050;
+
+    log-info {
+        position: relative;
+		display: flex;
+        align-items: center;
+		gap: 8px;
+        padding: 6px 8px;
+        padding-bottom: 13px;
+        border-radius: 10px;
+        overflow: hidden;
+        --bc-log: $bg-1;
+        --i-color: $text-color;
+        -webkit-backdrop-filter: blur(5px);
+        backdrop-filter: blur(5px);
+        min-width: 300px;
+        max-width: 99%;
+        animation: bounce 500ms linear both;
+
+        &.chiudi {
+            animation: bounce-out 500ms linear both;
+        }
+
+        p {
+            margin: 0;
+            color: $text-color;
+        }
+
+		&._2 {
+            --bc-log: rgba(255, 83, 83, 0.3);
+            --i-color: rgb(255, 83, 83);
+		}
+
+		&._1 {
+            --bc-log: rgba(255, 133, 35, 0.3);
+            --i-color: rgba(255, 133, 35);
+		}
+
+		&._0 {
+            --bc-log: rgba(91, 178, 84, 0.3);
+            --i-color: rgb(91, 178, 84);
+		}
+
+        &._4 {
+            --bc-log: rgba(44, 73, 101, 0.3);
+            --i-color: rgb(69, 129, 185);
+		}
+
+        background-color: var(--bc-log);
+        border: 1px solid var(--i-color);
+
+        .i-container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            
+            i, .material-symbols-rounded {
+                color: var(--i-color);
+                font-size: calc($fs-m + 8px);
+                padding: 8px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                aspect-ratio: 1 / 1;
+            }
+        }
+
+        &::after, &::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            width: 0;
+            background-color: var(--bc-log);
+        }
+        &::after {
+            width: 100%;
+            animation: log_bar 7s linear 0s 1;
+            background-color: var(--i-color);
+        }
+        &::before {
+            width: 100%;
+        }
+	}
+}
