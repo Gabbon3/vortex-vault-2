@@ -1,6 +1,6 @@
 import { AES256GCM } from "../secure/aesgcm.js";
 import { Bytes } from "./bytes.js";
-import * as msgpack from "./msgpack.min.js";
+import msgpack from "./msgpack.min.js";
 
 export class LocalStorage {
     static prefix = 'vortex-vault';
@@ -10,33 +10,33 @@ export class LocalStorage {
      * @param {Uint8Array} key - una chiave crittografica
      */
     static setKey(key) {
-        LocalStorage.key = Bytes.hex.from(key);
+        LocalStorage.key = key;
     }
     /**
      * Salva qualcosa sul localstorage
-     * @param {string} key 
+     * @param {string} key nome di riferimento della risorsa nel local storage
      * @param {string} value 
-     * @param {boolean} [encrypt=false] 
+     * @param {Uint8Array} crypto_key se un Uint8Array verrà eseguita la crittografia del value 
      */
-    static async set(key, value, encrypt = false) {
+    static async set(key, value, crypto_key = null) {
         const buffer = msgpack.encode(value);
         // ---
-        const data = encrypt ? await AES256GCM.encrypt(buffer, this.key) : buffer;
+        const data = crypto_key instanceof Uint8Array ? await AES256GCM.encrypt(buffer, crypto_key) : buffer;
         // ---
         localStorage.setItem(`${LocalStorage.prefix}-${key}`, Bytes.base64.to(data));
     }
     /**
      * Ricava qualcosa dal localstorage
-     * @param {string} key 
-     * @param {boolean} [decrypt=false] 
+     * @param {string} key nome di riferimento della risorsa nel local storage
+     * @param {Uint8Array} crypto_key se diverso da null verrà eseguita la decifratura del value
      * @returns {string|Object}
      */
-    static async get(key, decrypt = false) {
+    static async get(key, crypto_key = null) {
         const data = localStorage.getItem(`${LocalStorage.prefix}-${key}`);
         if (!data) return null;
         // ---
         const buffer = Bytes.base64.from(data);
-        let value = decrypt ? await AES256GCM.decrypt(buffer, this.key) : buffer;
+        let value = crypto_key instanceof Uint8Array ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
         return msgpack.decode(value);
     }
     /**

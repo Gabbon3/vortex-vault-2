@@ -160,6 +160,9 @@ h1, h2, h3, h4, h5 {
   gap: 5px;
   margin: 0.5em 0 0.3em 0;
 }
+h1.icon .material-symbols-rounded, h2.icon .material-symbols-rounded, h3.icon .material-symbols-rounded, h4.icon .material-symbols-rounded, h5.icon .material-symbols-rounded {
+  color: rgb(135, 142, 84);
+}
 
 .w-100 {
   width: 100%;
@@ -280,10 +283,13 @@ hr {
 }
 
 #accedi, #registrati {
+  display: block;
+  margin: 20px auto;
   background-color: #29252d;
   padding: 10px;
   border: 1px dashed #495057;
   border-radius: 10px;
+  max-width: 500px;
 }
 
 #bc-finestre {

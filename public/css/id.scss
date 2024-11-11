@@ -26,10 +26,13 @@
 }
 
 #accedi, #registrati {
+    display: block;
+    margin: 20px auto;
     background-color: $bg-2;
     padding: 10px;
     border: 1px dashed $border-color;
     border-radius: 10px;
+    max-width: 500px;
 }
 
 #bc-finestre {

@@ -111,7 +111,7 @@ export class Cripto {
             },
             derived_key,
             { name: 'AES-GCM', length: key_length * 8 }, // AES key length in bits
-            false,
+            true,
             ['encrypt', 'decrypt']
         );
         // -- restituisco la chiave derivata come Uint8Array

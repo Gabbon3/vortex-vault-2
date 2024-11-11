@@ -17,7 +17,7 @@
     <vortex-navbar></vortex-navbar>
     <main class="pagina">
         <form id="accedi">
-            <h2>
+            <h2 class="icon">
                 <span class="material-symbols-rounded">login</span>
                 Login
             </h2>
@@ -26,16 +26,16 @@
                 <span class="material-symbols-rounded">person</span>
                 Username
             </label>
-            <input type="text" class="input-text" id="username" name="username" required>
+            <input type="text" class="input-text" id="username" name="username" autocomplete="off" required>
             <!-- --- -->
             <label for="password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Password
             </label>
-            <input type="text" class="input-text" id="password" name="password" required>
+            <input type="password" class="input-text" id="password" name="password" required>
             <!-- --- -->
             <hr>
-            <button class="btn primario">
+            <button class="btn primario w-100">
                 <span class="material-symbols-rounded">login</span>
                 Accedi
             </button>
