@@ -52,6 +52,16 @@ export class VaultService {
         return await Vault.findAll({ where });
     }
     /**
+     * Conta il numero di vaults totali
+     * @param {string} user_id 
+     * @returns {Array<Vault>}
+     */
+    async count(user_id) {
+        return await Vault.count({
+            where: { user_id }
+        });
+    }
+    /**
      * Aggiorna un vault modificando le informazioni cifrate
      * @param {number} user_id 
      * @param {string} vault_id 

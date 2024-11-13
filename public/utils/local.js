@@ -6,13 +6,6 @@ export class LocalStorage {
     static prefix = 'vortex-vault';
     static key = null;
     /**
-     * Imposta la chiave crittografica con la quale cifrare e decifrare il localstorage
-     * @param {Uint8Array} key - una chiave crittografica
-     */
-    static setKey(key) {
-        LocalStorage.key = key;
-    }
-    /**
      * Salva qualcosa sul localstorage
      * @param {string} key nome di riferimento della risorsa nel local storage
      * @param {string} value 
@@ -29,7 +22,7 @@ export class LocalStorage {
      * Ricava qualcosa dal localstorage
      * @param {string} key nome di riferimento della risorsa nel local storage
      * @param {Uint8Array} crypto_key se diverso da null verrà eseguita la decifratura del value
-     * @returns {string|Object}
+     * @returns {Promise<string|Object>}
      */
     static async get(key, crypto_key = null) {
         const data = localStorage.getItem(`${LocalStorage.prefix}-${key}`);

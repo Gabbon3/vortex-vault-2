@@ -21,10 +21,16 @@
             Vault
         </h1>
         <hr>
-        <button class="btn primario open" data-target-open="win-create-vault">
-            <span class="material-symbols-rounded">add</span>
-            Nuovo Vault
-        </button>
+        <div class="flex gap-50">
+            <button class="btn primario" id="btn-sync-vault">
+                <span class="material-symbols-rounded">sync_alt</span>
+                Sync
+            </button>
+            <button class="btn primario open" data-target-open="win-create-vault">
+                <span class="material-symbols-rounded">add</span>
+                Nuovo Vault
+            </button>
+        </div>
         <hr>
         <div id="vaults-list">
             <!-- ... -->
@@ -61,7 +67,7 @@
                 Username
             </label>
             <div class="flex gap-50">
-                <input name="U" type="text" class="input-text mono" list="user-username" id="username" autocomplete="off">
+                <input name="U" type="text" class="input-text mono" list="used-username" id="username" autocomplete="off">
                 <button class="btn t CA paste-val" data-target-pa="username" type="button" title="Paste">
                     <span class="material-symbols-rounded">content_paste</span>
                 </button>
@@ -125,12 +131,11 @@
                 Username
             </label>
             <div class="flex gap-75">
-                <input name="U" type="text" class="input-text mono" list="user-username" id="update-username" autocomplete="off">
+                <input name="U" type="text" class="input-text mono" id="update-username" autocomplete="off">
                 <button class="btn t CA paste-val" data-target-pa="update-username" type="button" title="Paste">
                     <span class="material-symbols-rounded">content_paste</span>
                 </button>
             </div>
-            <datalist id="used-username"></datalist>
             <!-- PASSWORD -->
             <label for="update-password">
                 <span class="material-symbols-rounded">key_vertical</span>
@@ -154,10 +159,13 @@
                     <span class="material-symbols-rounded">edit</span>
                     Modifica
                 </button>
+                <button type="button" vault-id="" id="btn-delete-vault" class="btn danger last">
+                    <span class="material-symbols-rounded">delete_forever</span>
+                    Elimina
+                </button>
             </div>
         </form>
     </div>
-    <!-- container dei log -->
-    <div id="logs_container"></div>
+    <vortex-footer></vortex-footer>
 </body>
 </html>

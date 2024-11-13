@@ -1,4 +1,4 @@
-import { Auth } from "../utils/auth.js";
+import { Auth } from "../business/auth.business.js";
 import { Form } from "../utils/form.js";
 import { Log } from "../utils/log.js";
 

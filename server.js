@@ -2,11 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { sequelize } from './config/db.js';
-import user_routes from './routes/user.router.js';
-import token_routes from './routes/token.router.js';
-import vault_routes from './routes/vault.router.js';
-import cke_routes from './routes/cke.router.js';
-import static_routes from './routes/static.router.js';
+import user_routes from './routes/user.routes.js';
+import token_routes from './routes/token.routes.js';
+import vault_routes from './routes/vault.routes.js';
+import cke_routes from './routes/cke.routes.js';
+import static_routes from './routes/static.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 

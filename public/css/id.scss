@@ -35,18 +35,6 @@
     max-width: 500px;
 }
 
-#bc-finestre {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(35, 39, 43, 0.3);
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-}
-
 #logs_container {
     position: fixed;
     bottom: 5px;

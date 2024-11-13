@@ -6,21 +6,47 @@ import { SessionStorage } from "../utils/session.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { API } from "../utils/api.js";
+import { LocalStorage } from "../utils/local.js";
+import { VaultLocal } from "./vault.local.js";
+
+window.VaultLocal = VaultLocal;
 
 export class VaultBusiness {
     static master_key = null;
     static vaults = [];
     static used_usernames = new Set();
-    static indexs = {};
     /**
-     * Inizializza il vault
-     * @returns 
+     * Sincronizza e inizializza il Vault con il db
+     * @param {boolean} full - sincronizzazione completa true, false sincronizza solo il necessario
+     * @returns {boolean} true per processo completato con successo
      */
-    static async init() {
+    static async syncronize(full = false) {
         this.master_key = SessionStorage.get('master-key');
+        const vault_update = await LocalStorage.get('vault-update') ?? null;
         if (!this.master_key) return Log.summon(2, 'Nessuna chiave crittografica trovata');
         // ---
-        this.vaults = await this.get();
+        try {
+            this.vaults = await VaultLocal.get(this.master_key);
+            const n_local_vaults = this.vaults.length;
+            const n_db_vaults = await this.count();
+            // recupero tutti i vault se per esempio un vault è stato eliminato sul db
+            if (n_local_vaults > n_db_vaults) full = true;
+            // se ci sono dei vault nel localstorage recupero solo quelli nuovi
+            // recupero tutti i vault se full è true
+            const vaults_from_db = await this.get(this.vaults.length > 0 && !full ? vault_update : null);
+            if (vaults_from_db.length > 0) {
+                if (!full) {
+                    this.vaults = await VaultLocal.sync_update(vaults_from_db, this.master_key)
+                } else {
+                    await VaultLocal.save(vaults_from_db, this.master_key);
+                    this.vaults = vaults_from_db;
+                }
+            }
+        } catch (error) {
+            console.warn('Sync Error - Vault => ', error);
+            return false;
+        }
+        this.load_used_usernames();
         // ---
         return true;
     }
@@ -69,7 +95,20 @@ export class VaultBusiness {
         });
         if (!res) return null;
         // ---
+        if (res.length > 0) LocalStorage.set('vault-update', new Date());
+        // ---
         return await this.decrypt_vaults(res) ? res : null;
+    }
+    /**
+     * Restituisce il numero totale di vault del db
+     * @returns {number}
+     */
+    static async count() {
+        const res = await API.fetch('/vaults/count', {
+            method: 'GET',
+        });
+        if (!res) return 0;
+        return res.count;
     }
     /**
      * Modifica un vault
@@ -105,30 +144,29 @@ export class VaultBusiness {
         return true;
     }
     /**
-     * Restituisce un vault
+     * Restituisce un vault tramite id
      * @param {string} vault_id 
      * @returns {Object}
      */
     static get_vault(vault_id) {
-        return this.vaults[this.indexs[vault_id]];
+        return this.vaults[this.get_index(vault_id)];
+    }
+    /**
+     * Restituisce l'index di un vault
+     * @param {Array<Object>} vaults 
+     * @param {string} vault_id 
+     * @returns {string}
+     */
+    static get_index(vault_id, vaults = this.vaults) {
+        return vaults.findIndex(vault => vault.id === vault_id);
     }
     /**
      * Carica gli username utilizzati
-     * @param {Array<Object>} vaults 
+     * @param {Array<Object>} [vaults=this.vaults]
      */
-    static load_used_usernames(vaults) {
-        // ---
+    static load_used_usernames(vaults = this.vaults) {
         for (const vault of vaults) {
-            if (vault.U.includes('@')) this.used_usernames.add(vault.U);
-        }
-    }
-    /**
-     * Inizializza tutti gli index dei vault
-     * @param {Array<Object>} [vaults=this.vaults] - array dei vari vault
-     */
-    static init_indexs(vaults = this.vaults) {
-        for (let i = 0; i < vaults.length; i++) {
-            this.indexs[vaults[i].id] = i;
+            if (vault.secrets.U.includes('@')) this.used_usernames.add(vault.secrets.U);
         }
     }
     /**
@@ -165,7 +203,6 @@ export class VaultBusiness {
                 const data = msgpack.decode(bytes);
                 // --
                 vaults[i].secrets = data;
-                this.indexs[vaults[i].id] = i;
             }
         } catch (error) {
             console.warn(`Decrypt Vault error at i = ${i}:`, error);

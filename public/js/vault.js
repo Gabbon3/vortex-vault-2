@@ -1,4 +1,5 @@
 import { VaultBusiness } from "../business/vault.business.js";
+import { VaultLocal } from "../business/vault.local.js";
 import { Form } from "../utils/form.js";
 import { Log } from "../utils/log.js";
 import { date } from "../utils/dateUtils.js";
@@ -14,7 +15,9 @@ $(document).ready(async () => {
         // ---
         if (await VaultBusiness.create(elements)) {
             Log.summon(0, `${elements.T} salvato con successo`);
+            finestra.close('win-create-vault');
             $(form).trigger("reset");
+            VaultUI.init();
         } else {
             Log.summon(2, `Errore durante il salvataggio di ${elements.T}`);
         }
@@ -30,7 +33,9 @@ $(document).ready(async () => {
         // ---
         if (await VaultBusiness.update(vault_id, elements)) {
             Log.summon(0, `${elements.T} modificato con successo`);
+            finestra.close('win-update-vault');
             $(form).trigger("reset");
+            VaultUI.init();
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
         }
@@ -46,10 +51,37 @@ $(document).ready(async () => {
         // -- riempio i campi
         document.querySelector('#vault-title-to-update').textContent = vault.secrets.T;
         document.querySelector('#update-vault-id').value = id;
+        document.querySelector('#btn-delete-vault').setAttribute('vault-id', id);
         document.querySelector('#update-titolo').value = vault.secrets.T;
         document.querySelector('#update-username').value = vault.secrets.U;
         document.querySelector('#update-password').value = vault.secrets.P;
         document.querySelector('#update-note').value = vault.secrets.N;
+    });
+    /**
+     * SYNCRONIZE VAULT
+     */
+    $('#btn-sync-vault').on('click', async () => {
+        if (!confirm('Confermi di volerti sincronizzare con il server?')) return;
+        // ---
+        await VaultBusiness.syncronize(true);
+        VaultUI.html_vaults(VaultBusiness.vaults);
+        VaultUI.html_used_usernames(VaultBusiness.used_usernames);
+    });
+    /**
+     * DELETE VAULT
+     */
+    $('#btn-delete-vault').on('click', async (e) => {
+        const vault_id = e.target.getAttribute('vault-id');
+        const title = VaultBusiness.get_vault(vault_id).secrets.T;
+        if (!confirm(`Confermi di voler eliminare ${title}?`)) return;
+        // ---
+        if (await VaultBusiness.delete(vault_id)) {
+            Log.summon(0, `${title} eliminato con successo`);
+            finestra.close('win-update-vault');
+            VaultUI.init();
+        } else {
+            Log.summon(2, `Errore durante l'eliminazione di ${title}`);
+        }
     });
 });
 
@@ -57,10 +89,11 @@ window.Form = Form;
 
 class VaultUI {
     static async init() {
-        const inizialized = await VaultBusiness.init();
+        const inizialized = await VaultBusiness.syncronize();
         if (inizialized !== true) return;
         // ---
         this.html_vaults(VaultBusiness.vaults);
+        this.html_used_usernames(VaultBusiness.used_usernames);
     }
     /**
      * This function generates HTML markup for a list of vaults.
@@ -77,5 +110,16 @@ class VaultUI {
         ></vault-li>`;
         }
         document.querySelector("#vaults-list").innerHTML = html;
+    }
+    /**
+     * Carica gli username utilizzati dall'utente sul datalist
+     * @param {Set} used_usernames 
+     */
+    static html_used_usernames(used_usernames) {
+        let options = '';
+        for (const username of used_usernames) {
+            options += `<option value="${username}"></option>`;
+        }
+        document.querySelector('#used-username').innerHTML = options;
     }
 }

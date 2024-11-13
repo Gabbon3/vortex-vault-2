@@ -17,6 +17,7 @@ router.use(limiter);
 router.use(verify_access_token);
 // -- /vaults
 router.post('/create', controller.create);
+router.get('/count', controller.count);
 router.get('/:vault_id', controller.get_id);
 router.get('', controller.get);
 router.post('/update', controller.update);

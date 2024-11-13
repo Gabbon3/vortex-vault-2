@@ -1,6 +1,7 @@
 import './navbar.component.js';
 import './log.component.js';
 import './vault-li.component.js';
+import './footer.component.js';
 
 $(document).ready(() => {
     /**
@@ -16,7 +17,7 @@ $(document).ready(() => {
         const target = $(btn).attr("data-target-open");
         finestra.open(target);
     });
-    $("#bc_finestre").click((bc) => {
+    $("#bc-finestre").click((bc) => {
         bc = bc.currentTarget;
         const target = $(bc).attr("data-target");
         finestra.close(target);
@@ -72,8 +73,8 @@ export const finestra = {
         const div = $("#" + target);
         if (div.length > 0) {
             $("#" + target).fadeIn(150);
-            $("#bc_finestre").attr("data-target", target);
-            $("#bc_finestre").fadeIn(150);
+            $("#bc-finestre").attr("data-target", target);
+            $("#bc-finestre").fadeIn(150);
         }
     },
     /**
@@ -82,6 +83,6 @@ export const finestra = {
      */
     close(target) {
         $("#" + target).fadeOut(150);
-        $("#bc_finestre").fadeOut(150);
+        $("#bc-finestre").fadeOut(150);
     },
 };
