@@ -2,7 +2,7 @@ export class Form {
     /**
      * Restituisce i dati di un form sotto forma di json
      * @param {String|HTMLElement} form 
-     * @returns 
+     * @returns {Object} - Oggetto contenente i dati del form
      */
     static get_data(form) {
         let elements;
@@ -33,4 +33,21 @@ export class Form {
         // ---
         return json;
     }
+    /**
+     * Aggiunge un evento di submit al form
+     * @param {string} form_id - L'ID del form.
+     * @param {FormOnSubmitCallback} callback - La funzione di callback eseguita al submit.
+     */
+    static onsubmit(form_id, callback) {
+        $(`#${form_id}`).on('submit', async (e) => {
+            e.preventDefault();
+            callback(e.currentTarget, Form.get_data(e.currentTarget));
+        });
+    }
+    /**
+     * Questo callback gestisce l'evento submit dei form
+     * @callback FormOnSubmitCallback
+     * @param {HTMLElement} form - Elemento html del form
+     * @param {Object} elements - un oggetto che contiene gli input del form indicati tramite i loro "name"
+     */
 }

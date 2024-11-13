@@ -1,3 +1,5 @@
+import { CError } from "./error.js";
+
 export class API {
     /**
      * Eseguo una richiesta fetch centralizzata con endpoint, opzioni e tipo di dato.
@@ -17,7 +19,13 @@ export class API {
             // -- Controllo se la risposta è valida (status OK)
             if (!response.ok) {
                 // -- Se c'è un errore nella risposta, lo loggo in console e restituisco null
-                console.warn(`Errore nella fetch: ${response.status} - ${response.statusText}`);
+                const error = {
+                    status: response.status,
+                    status_text: response.statusText,
+                    error: (await response.json()).error
+                };
+                console.warn(`Errore nella fetch:`, error);
+                CError.check(error);
                 return null;
             }
             // -- Estraggo e restituisco il dato in base al tipo richiesto
@@ -29,7 +37,7 @@ export class API {
                 case 'binario':
                     return await response.arrayBuffer();
                 default:
-                    console.warn("Tipo di dato non supportato, restituisco null.");
+                    console.warn("Tipo di dato non supportato.");
                     return null;
             }
         } catch (error) {

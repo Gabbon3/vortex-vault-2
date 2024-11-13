@@ -154,6 +154,14 @@ label .material-symbols-rounded {
   margin-left: auto;
 }
 
+.m-0 {
+  margin: 0;
+}
+
+.none {
+  display: none;
+}
+
 h1, h2, h3, h4, h5 {
   display: flex;
   align-items: center;
@@ -174,7 +182,7 @@ hr {
   height: 1px;
   width: 98%;
   border: none;
-  background-color: #495057;
+  background-color: #333238;
 }
 
 .btn {
@@ -190,15 +198,16 @@ hr {
   color: #f5f5f5;
   font-size: 1em;
 }
-.btn .material-symbols-rounded {
-  font-size: 1.7em !important;
-}
 .btn.primario {
   background-color: rgba(135, 142, 84, 0.2);
-  color: rgb(205, 220, 57);
+  color: rgb(135, 142, 84);
 }
 .btn.primario:hover {
   background-color: rgba(135, 142, 84, 0.3);
+}
+.btn.secondario {
+  background-color: #322f37;
+  color: #f5f5f5;
 }
 .btn.danger {
   background-color: rgba(236, 55, 82, 0.2);
@@ -207,11 +216,25 @@ hr {
 .btn.danger:hover {
   background-color: rgba(236, 55, 82, 0.3);
 }
-.btn.trasparente {
-  background-color: #29252d;
+.btn.t {
+  background-color: transparent;
+  color: #888;
 }
-.btn.trasparente:hover {
-  background-color: #2f2b34;
+.btn.t:hover {
+  box-shadow: 0 0 0 4px #29252d;
+  color: #f5f5f5;
+}
+.btn.t:active {
+  box-shadow: 0 0 0 6px #29252d;
+}
+.btn.l {
+  font-size: 1.4em;
+}
+.btn.xl {
+  font-size: 1.8em;
+}
+.btn.close.last {
+  padding: 3px;
 }
 
 .finestra {
@@ -221,18 +244,21 @@ hr {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #495057;
+  border-radius: 7px;
+  border: 1px solid #333238;
   max-height: 98%;
   max-width: 950px;
   width: 95%;
   min-height: 100px;
   overflow-y: scroll;
-  z-index: 1050;
-  background-color: var(--bg-1);
+  z-index: 10;
+  background-color: #211e24;
 }
 .finestra.s {
   max-width: 400px;
+}
+.finestra.m {
+  max-width: 500px;
 }
 .finestra.auto {
   width: inherit;
@@ -242,14 +268,18 @@ hr {
   display: block;
   margin: 0 auto;
   padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #495057;
+  border-radius: 7px;
+  border: 1px solid #333238;
   transition: 0.2s;
   outline: none;
   background-color: #242027;
   color: #f5f5f5;
   width: 100%;
   font-size: 1em;
+  resize: none;
+}
+.input-text.mono {
+  font-family: "JetBrains Mono", monospace;
 }
 .input-text:hover, .input-text:focus {
   border-color: rgb(135, 142, 84);
@@ -287,7 +317,7 @@ hr {
   margin: 20px auto;
   background-color: #29252d;
   padding: 10px;
-  border: 1px dashed #495057;
+  border: 1px dashed #333238;
   border-radius: 10px;
   max-width: 500px;
 }
@@ -386,6 +416,49 @@ hr {
 }
 #logs_container log-info::before {
   width: 100%;
+}
+
+#vaults-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+#vaults-list vault-li {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: nowrap;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px dashed #333238;
+  transition: 0.15s;
+}
+#vaults-list vault-li:hover {
+  background-color: #29252d;
+  box-shadow: 0 0 0 4px #2f2b34;
+  border: 1px solid #2f2b34;
+}
+#vaults-list vault-li .simbolo {
+  color: rgb(135, 142, 84);
+  font-size: 1.4em;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+#vaults-list vault-li .info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+#vaults-list vault-li .info strong {
+  font-size: calc(1em + 3px);
+}
+#vaults-list vault-li .info i {
+  font-size: 1em;
+  color: #888;
 }
 
 @keyframes bounce {

@@ -8,7 +8,7 @@ class Navbar extends HTMLElement {
         // ---
         this.innerHTML = `
             <nav class="navbar">
-                <a ${path === '/vortexvault' ? '' : 'href="/vortexvault"'}>
+                <a ${path === '/vault' ? '' : 'href="/vault"'}>
                     <span class="material-symbols-rounded">lock</span>
                     Vault
                 </a>

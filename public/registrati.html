@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accedi</title>
+    <title>Registrati</title>
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <!-- stile -->
@@ -11,15 +11,15 @@
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
     <!-- auth -->
-    <script type="module" src="./js/login.js"></script>
+    <script type="module" src="./js/register.js"></script>
 </head>
 <body>
     <vortex-navbar></vortex-navbar>
     <main class="pagina">
-        <form id="accedi">
+        <form id="registrati">
             <h2 class="icon">
-                <span class="material-symbols-rounded">login</span>
-                Login
+                <span class="material-symbols-rounded">person_add</span>
+                Registrati
             </h2>
             <!-- --- -->
             <label for="username">
@@ -28,16 +28,23 @@
             </label>
             <input type="text" class="input-text" id="username" name="username" autocomplete="off" required>
             <!-- --- -->
+            <hr>
             <label for="password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Password
             </label>
             <input type="password" class="input-text" id="password" name="password" required>
             <!-- --- -->
+            <label for="password2">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Ripeti password
+            </label>
+            <input type="password" class="input-text" id="password2" name="password2" required>
+            <!-- --- -->
             <hr>
             <button class="btn primario w-100">
-                <span class="material-symbols-rounded">login</span>
-                Accedi
+                <span class="material-symbols-rounded">person_add</span>
+                Registrati
             </button>
         </form>
     </main>

@@ -78,6 +78,14 @@ label {
     }
 }
 
+.m-0 {
+    margin: 0;
+}
+
+.none {
+    display: none;
+}
+
 h1, h2, h3, h4, h5 {
     display: flex;
     align-items: center;
@@ -117,17 +125,18 @@ hr {
     color: $text-color;
     font-size: $fs-m;
 
-    .material-symbols-rounded {
-        font-size: 1.7em !important;
-    }
-
     &.primario {
         background-color: rgba($c1, 0.2);
-        color: $c3;
+        color: $c1;
 
         &:hover {
             background-color: rgba($c1, 0.3);
         }
+    }
+
+    &.secondario {
+        background-color: $bg-4;
+        color: $text-color;
     }
 
     &.danger {
@@ -139,13 +148,30 @@ hr {
         }
     }
 
-    &.trasparente {
-        // background-color: transparent;
-        background-color: $bg-2;
+    &.t {
+        background-color: transparent;
+        color: $text-color-2;
 
         &:hover {
-            background-color: $bg-3;
+            box-shadow: 0 0 0 4px $bg-2;
+            color: $text-color;
         }
+
+        &:active {
+            box-shadow: 0 0 0 6px $bg-2;
+        }
+    }
+
+    &.l {
+        font-size: $fs-l;
+    }
+
+    &.xl {
+        font-size: $fs-xl;
+    }
+
+    &.close.last {
+        padding: 3px;
     }
 }
 
@@ -156,19 +182,23 @@ hr {
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 7px;
     border: 1px solid $border-color;
     max-height: 98%;
     max-width: 950px;
     width: 95%;
     min-height: 100px;
     overflow-y: scroll;
-    z-index: 1050;
-    background-color: var(--bg-1);
+    z-index: 10;
+    background-color: $bg-1;
 
     // small
     &.s {
         max-width: 400px;
+    }
+
+    &.m {
+        max-width: 500px;
     }
 
     // auto
@@ -182,7 +212,7 @@ hr {
     display: block;
     margin: 0 auto;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 7px;
     border: 1px solid $border-color;
     transition: 0.2s;
     outline: none;
@@ -190,6 +220,11 @@ hr {
     color: $text-color;
     width: 100%;
     font-size: $fs-m;
+    resize: none;
+
+    &.mono {
+        font-family: $monospace;
+    }
 
     &:hover, &:focus {
         border-color: $c1;

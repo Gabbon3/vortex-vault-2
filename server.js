@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use('/auth', user_routes);
 app.use('/auth/cke', cke_routes);
 app.use('/auth/token', token_routes);
-app.use('/vault', vault_routes);
+app.use('/vaults', vault_routes);
 /**
  * Pubbliche
  */

@@ -20,7 +20,7 @@ export class UserService {
         const user_exist = await User.findOne({
             where: { username }
         });
-        if (user_exist) throw new CError("UserExist", "This username is not available", 409);
+        if (user_exist) throw new CError("UserExist", "Questo username non è disponibile", 409);
         // -- genero il salt di 16 byte
         const salt = Cripto.random_bytes(16, 'hex');
         // -- creo un nuovo utente
@@ -55,6 +55,18 @@ export class UserService {
         const refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
         // ---
         return { access_token, refresh_token, user };
+    }
+    /**
+     * Aggiorna un qualunque campo dell'utente
+     * @param {string} uid
+     * @param {Object} updated_info un oggetto con le informazioni da modificare
+     * @returns
+     */
+    async update_user_info(uid, updated_info) {
+        return await User.update(
+            updated_info,
+            { where: { id: uid } }
+        );
     }
     /**
      * Esegue l'hash della password utilizzando bcrypt

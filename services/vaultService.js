@@ -42,14 +42,14 @@ export class VaultService {
      * @returns {Array<Vault>}
      */
     async get(user_id, updated_after = null) {
-        return await Vault.findAll({
-            where: {
-                user_id,
-                updated_at: {
-                    [Op.gt]: updated_after ?? new Date(0)
-                }
+        const where = { user_id };
+        if (updated_after) {
+            where.updated_at = {
+                [Op.gt]: updated_after.toISOString()
             }
-        });
+        }
+        // ---
+        return await Vault.findAll({ where });
     }
     /**
      * Aggiorna un vault modificando le informazioni cifrate

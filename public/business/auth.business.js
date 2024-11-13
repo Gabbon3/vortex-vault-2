@@ -1,8 +1,8 @@
-import { Bytes } from "./bytes.js";
+import { Bytes } from "../utils/bytes.js";
 import { Cripto } from "../secure/cripto.js";
-import { SessionStorage } from "./session.js";
-import { LocalStorage } from "./local.js";
-import { API } from "./api.js";
+import { SessionStorage } from "../utils/session.js";
+import { LocalStorage } from "../utils/local.js";
+import { API } from "../utils/api.js";
 
 export class Auth {
     /**

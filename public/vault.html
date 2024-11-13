@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault</title>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <!-- stile -->
+    <link rel="stylesheet" href="./css/main.css">
+    <!-- componenti -->
+    <script type="module" src="./components/main.components.js"></script>
+    <!-- vault -->
+    <script type="module" src="./js/vault.js"></script>
+</head>
+<body>
+    <vortex-navbar></vortex-navbar>
+    <main class="pagina">
+        <h1 class="icon">
+            <span class="material-symbols-rounded">encrypted</span>
+            Vault
+        </h1>
+        <hr>
+        <button class="btn primario open" data-target-open="win-create-vault">
+            <span class="material-symbols-rounded">add</span>
+            Nuovo Vault
+        </button>
+        <hr>
+        <div id="vaults-list">
+            <!-- ... -->
+        </div>
+    </main>
+    <!-- 
+    CREATE VAULT
+    -->
+    <div class="finestra m" id="win-create-vault">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">encrypted_add</span>
+                Nuovo Vault
+            </h2>
+            <button class="btn t close l last" data-target-close="win-create-vault">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <!-- FORM -->
+        <form id="form-create-vault">
+            <label for="titolo">
+                <span class="material-symbols-rounded">tag</span>
+                Titolo
+            </label>
+            <div class="flex gap-50">
+                <input name="T" type="text" class="input-text mono" id="titolo" autocomplete="off" required>
+                <button class="btn t CA paste-val" data-target-pa="titolo" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <!-- USERNAME -->
+            <label for="username">
+                <span class="material-symbols-rounded">person</span>
+                Username
+            </label>
+            <div class="flex gap-50">
+                <input name="U" type="text" class="input-text mono" list="user-username" id="username" autocomplete="off">
+                <button class="btn t CA paste-val" data-target-pa="username" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <datalist id="used-username"></datalist>
+            <!-- PASSWORD -->
+            <label for="password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Password
+            </label>
+            <div class="flex gap-50">
+                <input name="P" type="text" class="input-text mono" id="password" autocomplete="off" required>
+                <button class="btn t CA paste-val" data-target-pa="password" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <!-- NOTE -->
+            <label for="note">
+                <span class="material-symbols-rounded">info</span>
+                Note
+            </label>
+            <textarea name="N" id="note" autocomplete="none" class="input-text" rows="3"></textarea>
+            <hr>
+            <div class="flex gap-50">
+                <button type="submit" class="btn primario">
+                    <span class="material-symbols-rounded">cloud_upload</span>
+                    Salva
+                </button>
+            </div>
+        </form>
+    </div>
+    <!-- 
+    UPDATE VAULT
+    -->
+    <div class="finestra m" id="win-update-vault">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">edit</span>
+                <span id="vault-title-to-update">Null</span>
+            </h2>
+            <button class="btn t close l last" data-target-close="win-update-vault">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <!-- FORM -->
+        <form id="form-update-vault">
+            <input type="text" class="none" id="update-vault-id" name="vault_id" value="*">
+            <label for="update-titolo">
+                <span class="material-symbols-rounded">tag</span>
+                Titolo
+            </label>
+            <div class="flex gap-75">
+                <input name="T" type="text" class="input-text mono" id="update-titolo" autocomplete="off" required>
+                <button class="btn t CA paste-val" data-target-pa="update-titolo" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <!-- USERNAME -->
+            <label for="update-username">
+                <span class="material-symbols-rounded">person</span>
+                Username
+            </label>
+            <div class="flex gap-75">
+                <input name="U" type="text" class="input-text mono" list="user-username" id="update-username" autocomplete="off">
+                <button class="btn t CA paste-val" data-target-pa="update-username" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <datalist id="used-username"></datalist>
+            <!-- PASSWORD -->
+            <label for="update-password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Password
+            </label>
+            <div class="flex gap-75">
+                <input name="P" type="text" class="input-text mono" id="update-password" autocomplete="off" required>
+                <button class="btn t CA paste-val" data-target-pa="update-password" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <!-- NOTE -->
+            <label for="update-note">
+                <span class="material-symbols-rounded">info</span>
+                Note
+            </label>
+            <textarea name="N" id="update-note" autocomplete="none" class="input-text" rows="3"></textarea>
+            <hr>
+            <div class="flex gap-50">
+                <button type="submit" class="btn primario">
+                    <span class="material-symbols-rounded">edit</span>
+                    Modifica
+                </button>
+            </div>
+        </form>
+    </div>
+    <!-- container dei log -->
+    <div id="logs_container"></div>
+</body>
+</html>
