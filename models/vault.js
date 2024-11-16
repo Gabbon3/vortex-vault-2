@@ -10,7 +10,7 @@ export const Vault = sequelize.define(
             primaryKey: true
         },
         user_id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT.UNSIGNED,
             allowNull: false
         },
         secrets: {
@@ -21,6 +21,8 @@ export const Vault = sequelize.define(
     {
         tableName: 'vault',
         timestamps: true,
-        underscored: true
+        underscored: true,
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_unicode_ci',
     }
 );

@@ -57,10 +57,30 @@ export class UserService {
         return { access_token, refresh_token, user };
     }
     /**
+     * Restituisce un utente tramite il suo id
+     * @param {number} id 
+     * @returns {Object}
+     */
+    async find_by_id(id) {
+        return await User.findOne({
+            where: { id },
+        })
+    }
+    /**
+     * Restituisce un utente tramite il suo username
+     * @param {string} username 
+     * @returns 
+     */
+    async find_by_username(username) {
+        return await User.findOne({
+            where: { username },
+        })
+    }
+    /**
      * Aggiorna un qualunque campo dell'utente
      * @param {string} uid
      * @param {Object} updated_info un oggetto con le informazioni da modificare
-     * @returns
+     * @returns {Array} [affectedCount]
      */
     async update_user_info(uid, updated_info) {
         return await User.update(

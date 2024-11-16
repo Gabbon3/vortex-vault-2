@@ -1,8 +1,10 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
+import { Bytes } from "../public/utils/bytes.js";
 import { UserService } from "../services/userService.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
+import { TOTP } from "../utils/totp.js";
 
 export class UserController {
     constructor() {
@@ -46,7 +48,39 @@ export class UserController {
             cke,
             salt: user.salt
         });
-    })
+    });
+    /**
+     * Abilita l'autenticazione a 2 fattori
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    enable_2fa = async_handler(async (req, res) => {
+        const secret = Cripto.random_bytes(20, 'hex');
+        const [ affected ] = await this.service.update_user_info(req.user.uid, { totp_secret: secret });
+        if (affected !== 1) throw new CError('Internal Error', 'Impossibile abilitare l\'autenticazione a due fattori', 500);
+        // ---
+        res.status(201).json({
+            secret
+        });
+    });
+    /**
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    test_2fa = async_handler(async (req, res) => {
+        const { code } = req.body;
+        if (!code) throw new CError("ValidationError", "Codice di autenticazione a due fattori non specificato", 422);
+        // ---
+        const user = await this.service.find_by_id(req.user.uid);
+        if (!user.totp_secret) throw new CError("ValidationError", "L'autenticazione a due fattori non è abilitata per questo utente", 422);
+        // --
+        const secret_bytes = Bytes.hex.from(user.totp_secret);
+        const valid = await TOTP.verify(code, secret_bytes);
+        if (!valid) throw new CError("ValidationError", "Codice di autenticazione a due fattori non valido", 401);
+        // ---
+        res.status(200).json({ message: 'Codice di autenticazione a due fattori valido' });
+    });
     /**
      * Imposta nei cookie l'access e il refresh token
      * @param {Response} res 

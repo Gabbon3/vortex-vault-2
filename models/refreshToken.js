@@ -9,7 +9,7 @@ export const RefreshToken = sequelize.define(
             allowNull: false, 
             primaryKey: true },
         user_id: { 
-            type: DataTypes.INTEGER, 
+            type: DataTypes.BIGINT.UNSIGNED, 
             allowNull: false 
         },
         device_name: {
@@ -43,6 +43,8 @@ export const RefreshToken = sequelize.define(
     {
         tableName: "refresh_token",
         timestamps: false,
-        underscored: true
+        underscored: true,
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_unicode_ci',
     }
 );

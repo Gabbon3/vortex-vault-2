@@ -72,7 +72,8 @@ $(document).ready(async () => {
      */
     $('#btn-delete-vault').on('click', async (e) => {
         const vault_id = e.target.getAttribute('vault-id');
-        const title = VaultBusiness.get_vault(vault_id).secrets.T;
+        const vault = await VaultBusiness.get_vault(vault_id);
+        const title = vault.secrets.T;
         if (!confirm(`Confermi di voler eliminare ${title}?`)) return;
         // ---
         if (await VaultBusiness.delete(vault_id)) {
@@ -104,7 +105,7 @@ class VaultUI {
         for (const vault of vaults) {
             html += `<vault-li 
             title="${vault.secrets.T}"
-            updated-at="${date.format("%d-%m-%Y", new Date(vault.updatedAt))}"
+            updated-at="${date.format("%d %F %Y", new Date(vault.updatedAt))}"
             secure="true"
             id="${vault.id}"
         ></vault-li>`;

@@ -2,6 +2,7 @@ import './navbar.component.js';
 import './log.component.js';
 import './vault-li.component.js';
 import './footer.component.js';
+import './device-list-item.component.js';
 
 $(document).ready(() => {
     /**
@@ -51,7 +52,7 @@ $(document).ready(() => {
      */
     $(document).on('click', '.copy-val', (e) => {
         const target = document.getElementById(e.currentTarget.getAttribute('data-target-cc')); // cc sta per copy
-        navigator.clipboard.writeText(target.textContent);
+        navigator.clipboard.writeText(target.value);
     });
     /**
      * pulsanti incolla

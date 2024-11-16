@@ -4,7 +4,7 @@ export class Cripto {
     /**
      * Genera una serie di byte casuali crittograficamente sicuri
      * @param {number} size numero di byte da generare casualmente del
-     * @param {string} [encoding] - Formato della chiave Uint8Array di default se no: 'hex' o 'base64'
+     * @param {string} [encoding] - Formato della chiave Uint8Array di default se no: 'hex', 'base64'
      * @returns {string} byte generati
      */
     static random_bytes(size, encoding = null) {

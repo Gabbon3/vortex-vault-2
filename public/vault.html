@@ -10,8 +10,12 @@
     <link rel="stylesheet" href="./css/main.css">
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
-    <!-- vault -->
+    <!-- js esterno -->
+    <!-- qrcode -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- js -->
     <script type="module" src="./js/vault.js"></script>
+    <script type="module" src="./js/device.js"></script>
 </head>
 <body>
     <vortex-navbar></vortex-navbar>
@@ -31,7 +35,6 @@
                 Nuovo Vault
             </button>
         </div>
-        <hr>
         <div id="vaults-list">
             <!-- ... -->
         </div>
@@ -121,8 +124,8 @@
             </label>
             <div class="flex gap-75">
                 <input name="T" type="text" class="input-text mono" id="update-titolo" autocomplete="off" required>
-                <button class="btn t CA paste-val" data-target-pa="update-titolo" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
+                <button class="btn t CA copy-val" data-target-cc="update-titolo" type="button" title="Copy">
+                    <span class="material-symbols-rounded">content_copy</span>
                 </button>
             </div>
             <!-- USERNAME -->
@@ -132,8 +135,8 @@
             </label>
             <div class="flex gap-75">
                 <input name="U" type="text" class="input-text mono" id="update-username" autocomplete="off">
-                <button class="btn t CA paste-val" data-target-pa="update-username" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
+                <button class="btn t CA copy-val" data-target-cc="update-username" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_copy</span>
                 </button>
             </div>
             <!-- PASSWORD -->
@@ -143,8 +146,8 @@
             </label>
             <div class="flex gap-75">
                 <input name="P" type="text" class="input-text mono" id="update-password" autocomplete="off" required>
-                <button class="btn t CA paste-val" data-target-pa="update-password" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
+                <button class="btn t CA copy-val" data-target-cc="update-password" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_copy</span>
                 </button>
             </div>
             <!-- NOTE -->
@@ -166,6 +169,59 @@
             </div>
         </form>
     </div>
+    <!-- 
+    DEVICES
+    -->
+    <div class="finestra m" id="win-devices">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">token</span>
+                Dispositivi
+            </h2>
+            <button class="btn t close l last" data-target-close="win-devices">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <div id="devices-list">
+            <!-- ... -->
+        </div>
+    </div>
+    <!-- 
+    SETTINGS
+    -->
+    <div class="finestra m" id="win-settings" style="display: block;">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">settings</span>
+                Impostazioni
+            </h2>
+            <button class="btn t close l last" data-target-close="win-settings">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <h3 class="icon">
+            <span class="material-symbols-rounded">phonelink_lock</span>
+            2FA
+        </h3>
+        <p>
+            Attiva la funzione di autenticazione secondaria per proteggere il tuo account.
+        </p>
+        <div class="flex gap-50">
+            <button class="btn primario" id="btn-enable-2fa">
+                <span class="material-symbols-rounded">security</span>
+                Abilita
+            </button>
+        </div>
+        <span id="qrcode-2fa-secret"></span>
+        <hr>
+        <h3 class="icon">
+            <span class="material-symbols-rounded">cloud</span>
+            Backup
+        </h3>
+    </div>
+    <!-- FOOTER -->
     <vortex-footer></vortex-footer>
 </body>
 </html>

@@ -16,7 +16,7 @@ html {
   padding: 0;
   border: 0;
   scroll-behavior: smooth;
-  background-color: #211e24;
+  background-color: #212121;
   color: #f5f5f5;
   font-family: "Rubik", sans-serif !important;
 }
@@ -54,7 +54,7 @@ label {
   margin: 10px 0 7px 0;
 }
 label .material-symbols-rounded {
-  color: rgb(135, 142, 84);
+  color: #878e54;
 }
 
 .flex {
@@ -169,7 +169,26 @@ h1, h2, h3, h4, h5 {
   margin: 0.5em 0 0.3em 0;
 }
 h1.icon .material-symbols-rounded, h2.icon .material-symbols-rounded, h3.icon .material-symbols-rounded, h4.icon .material-symbols-rounded, h5.icon .material-symbols-rounded {
-  color: rgb(135, 142, 84);
+  color: #878e54;
+}
+
+p {
+  font-size: 1em;
+  color: #f5f5f5;
+}
+p a {
+  color: #738e54;
+  text-decoration: none;
+  border-bottom: 2px dashed #738e54;
+}
+p a:hover {
+  border-bottom: 2px solid #738e54;
+}
+p.center {
+  text-align: center;
+}
+p.secondary {
+  color: #888;
 }
 
 .w-100 {
@@ -199,14 +218,14 @@ hr {
   font-size: 1em;
 }
 .btn.primario {
-  background-color: rgba(135, 142, 84, 0.2);
-  color: rgb(135, 142, 84);
+  background-color: rgba(135, 142, 84, 0.15);
+  color: #878e54;
 }
 .btn.primario:hover {
-  background-color: rgba(135, 142, 84, 0.3);
+  background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondario {
-  background-color: #322f37;
+  background-color: #2e2e2e;
   color: #f5f5f5;
 }
 .btn.danger {
@@ -221,11 +240,11 @@ hr {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px #29252d;
+  box-shadow: 0 0 0 4px #2e2e2e;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px #29252d;
+  box-shadow: 0 0 0 6px #2e2e2e;
 }
 .btn.l {
   font-size: 1.4em;
@@ -245,14 +264,13 @@ hr {
   transform: translate(-50%, -50%);
   padding: 10px;
   border-radius: 7px;
-  border: 1px solid #333238;
   max-height: 98%;
   max-width: 950px;
   width: 95%;
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: #211e24;
+  background-color: #272727;
 }
 .finestra.s {
   max-width: 400px;
@@ -271,7 +289,7 @@ hr {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(35, 39, 43, 0.2);
+  background-color: rgba(33, 33, 33, 0.2);
   z-index: 9;
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -282,20 +300,26 @@ hr {
   margin: 0 auto;
   padding: 8px;
   border-radius: 7px;
-  border: 1px solid #333238;
   transition: 0.2s;
   outline: none;
-  background-color: #242027;
+  background-color: #212121;
+  border: none;
   color: #f5f5f5;
   width: 100%;
   font-size: 1em;
   resize: none;
 }
+.input-text[disabled], .input-text:read-only {
+  color: #888;
+}
+.input-text.bg-2 {
+  background-color: #272727;
+}
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
 }
-.input-text:hover, .input-text:focus {
-  border-color: rgb(135, 142, 84);
+.input-text:hover {
+  box-shadow: 0 0 0 1px rgba(135, 142, 84, 0.2);
 }
 .input-text:focus {
   box-shadow: 0 0 0 4px rgba(135, 142, 84, 0.2);
@@ -319,7 +343,7 @@ hr {
   cursor: pointer;
 }
 .navbar a span {
-  color: rgb(135, 142, 84);
+  color: #878e54;
 }
 .navbar a:hover {
   background-color: rgba(135, 142, 84, 0.1);
@@ -328,9 +352,8 @@ hr {
 #accedi, #registrati {
   display: block;
   margin: 20px auto;
-  background-color: #29252d;
+  background-color: #272727;
   padding: 10px;
-  border: 1px dashed #333238;
   border-radius: 10px;
   max-width: 500px;
 }
@@ -421,7 +444,8 @@ hr {
 
 #vaults-list {
   display: flex;
-  flex-direction: column;
+  margin: 10px auto;
+  flex-wrap: wrap;
   gap: 7px;
 }
 #vaults-list vault-li {
@@ -433,16 +457,15 @@ hr {
   cursor: pointer;
   padding: 10px;
   border-radius: 10px;
-  border: 1px dashed #333238;
+  background-color: #272727;
   transition: 0.15s;
 }
 #vaults-list vault-li:hover {
-  background-color: #29252d;
-  box-shadow: 0 0 0 4px #2f2b34;
-  border: 1px solid #2f2b34;
+  background-color: #2a2a2a;
+  box-shadow: 0 0 4px 0px #2a2a2a;
 }
 #vaults-list vault-li .simbolo {
-  color: rgb(135, 142, 84);
+  color: #878e54;
   font-size: 1.4em;
   padding: 5px;
   display: flex;
@@ -460,6 +483,41 @@ hr {
 #vaults-list vault-li .info i {
   font-size: 1em;
   color: #888;
+}
+
+#devices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+#devices-list device-list-item {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 7px;
+  border-radius: 7px;
+  background-color: #2e2e2e;
+}
+#devices-list device-list-item .token-id {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: #888;
+  font-size: 0.9em;
+  font-style: normal;
+}
+#devices-list device-list-item .info {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+}
+
+#qrcode-2fa-secret {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+  overflow: hidden;
 }
 
 @keyframes bounce {

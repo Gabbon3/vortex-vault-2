@@ -8,17 +8,21 @@ class Navbar extends HTMLElement {
         // ---
         this.innerHTML = `
             <nav class="navbar">
-                <a ${path === '/vault' ? '' : 'href="/vault"'}>
+                ${path === '/vault' ? `<a class="open" data-target-open="win-settings">
+                    <span class="material-symbols-rounded">settings</span>
+                    Impostazioni
+                </a>` : ''}
+                ${path === '/vault' ? `<a class="open" data-target-open="win-devices">
+                    <span class="material-symbols-rounded">token</span>
+                    Dispositivi
+                </a>` : ''}
+                ${path !== '/vault' ? `<a href="/vault"'>
                     <span class="material-symbols-rounded">lock</span>
                     Vault
-                </a>
+                </a>` : ''}
                 <a ${path === '/accedi' ? '' : 'href="/accedi"'}>
                     <span class="material-symbols-rounded">login</span>
-                    Accedi
-                </a>
-                <a ${path === '/registrati' ? '' : 'href="/registrati"'}>
-                    <span class="material-symbols-rounded">person_add</span>
-                    Registrati
+                    Login
                 </a>
             </nav>
         `;
