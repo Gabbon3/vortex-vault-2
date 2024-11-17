@@ -1,6 +1,6 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { UserService } from "../services/userService.js";
+import { UserService } from "../services/user.service.js";
 import { VaultService } from "../services/vaultService.js";
 
 export class VaultController {

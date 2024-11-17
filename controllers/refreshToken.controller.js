@@ -1,6 +1,6 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { RefreshTokenService } from "../services/refreshTokenService.js";
+import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 
 export class RefreshTokenController {

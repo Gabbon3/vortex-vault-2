@@ -1,7 +1,7 @@
 import { User } from "../models/User.js";
 import bcrypt from 'bcryptjs';
 import { TokenUtils } from "../utils/tokenUtils.js";
-import { RefreshTokenService } from "./refreshTokenService.js";
+import { RefreshTokenService } from "./refreshToken.service.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 

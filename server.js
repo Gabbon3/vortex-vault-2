@@ -6,6 +6,7 @@ import user_routes from './routes/user.routes.js';
 import token_routes from './routes/token.routes.js';
 import vault_routes from './routes/vault.routes.js';
 import cke_routes from './routes/cke.routes.js';
+import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
@@ -27,6 +28,7 @@ app.use('/auth', user_routes);
 app.use('/auth/cke', cke_routes);
 app.use('/auth/token', token_routes);
 app.use('/vaults', vault_routes);
+app.use('/backup', backup_routes);
 /**
  * Pubbliche
  */

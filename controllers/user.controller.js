@@ -1,7 +1,7 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Bytes } from "../public/utils/bytes.js";
-import { UserService } from "../services/userService.js";
+import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { TOTP } from "../utils/totp.js";
