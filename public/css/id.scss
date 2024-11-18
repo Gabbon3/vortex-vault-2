@@ -2,7 +2,11 @@
     display: flex;
     gap: 5px;
     align-items: center;
+    flex-wrap: wrap;
     padding-bottom: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: $bg-3;
 
     a {
         padding: 10px;
@@ -171,6 +175,7 @@
             }
 
             i {
+                font-style: normal;
                 font-size: $fs-m;
                 color: $text-color-2;
             }

@@ -1,6 +1,6 @@
 import { API } from "../utils/api.js";
 
-export class DeviceBusiness {
+export class DeviceService {
     static devices = null;
     /*
     example response from /auth/token/
@@ -64,4 +64,4 @@ export class DeviceBusiness {
     }
 }
 
-window.DeviceBusiness = DeviceBusiness;
+window.DeviceBusiness = DeviceService;

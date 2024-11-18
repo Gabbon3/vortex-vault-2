@@ -83,7 +83,7 @@ export class Cripto {
 
     /**
      * Deriva una chiave crittografica da una password usando PBKDF2.
-     * @param {string} password - La password da usare per derivare la chiave.
+     * @param {string | Uint8Array} password - La password da usare per derivare la chiave.
      * @param {Uint8Array} salt - Il sale utilizzato nel processo di derivazione.
      * @param {number} [iterations=16] - Il numero di iterazioni da eseguire.
      * @param {number} [key_length=32] - La lunghezza della chiave derivata in byte.
@@ -92,7 +92,7 @@ export class Cripto {
      */
     static async derive_key(password, salt, iterations = 16, key_length = 32, algo = 'SHA-256') {
         // -- converto la password in un Uint8Array
-        const password_buffer = new TextEncoder().encode(password);
+        const password_buffer = password instanceof Uint8Array ? password : new TextEncoder().encode(password);
         // -- derivo la chiave con PBKDF2
         const derived_key = await crypto.subtle.importKey(
             'raw',

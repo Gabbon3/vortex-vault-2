@@ -6,10 +6,10 @@ export class BackupService {
      * @param {Uint8Array} backup 
      * @param {number} user_id 
      */
-    async create(backup, user_id) {
+    async create(backup_bytes, user_id) {
         const backup = await Backup.create({
             user_id,
-            bin: backup
+            bin: backup_bytes
         });
         // ---
         return backup;

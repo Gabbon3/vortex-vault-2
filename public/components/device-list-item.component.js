@@ -1,5 +1,5 @@
 import { Log } from "../utils/log.js";
-import { DeviceBusiness } from "../business/device.business.js";
+import { DeviceService } from "../service/device.service.js";
 
 class DeviceListItem extends HTMLElement {
     constructor() {
@@ -27,6 +27,7 @@ class DeviceListItem extends HTMLElement {
         const user_agent_summary = this.getAttribute('user-agent-summary');
         const lua = this.getAttribute('lua'); // last used at
         const revoked = this.getAttribute('revoked');
+        const current = JSON.parse(this.getAttribute('current'));
         // -- imposto la struttura HTML interna del log
         this.innerHTML = `
             <span class="token-id">
@@ -37,7 +38,8 @@ class DeviceListItem extends HTMLElement {
                 <input type="text" class="input-text device-name" title="Device name" value="${device_name}">
                 <button 
                     title="Revoke or not this device"
-                    class="btn ${revoked === 'true' ? 'danger' : 'primario'} revoke-device">
+                    class="btn ${revoked === 'true' ? 'danger' : 'primario'} revoke-device"
+                    ${current ? 'disabled' : ''}>
                     <span class="material-symbols-rounded">${revoked === 'true' ? 'close' : 'check'}</span>
                 </button>
                 <button class="btn danger device-delete" title="Delete this device">
@@ -56,15 +58,15 @@ class DeviceListItem extends HTMLElement {
         this.querySelector('.device-delete').addEventListener('click', this.delete_device.bind(this));
     }
 
-    toggle_revoked() {
+    async toggle_revoked() {
         const revoked = this.getAttribute('revoked') === 'true';
         const token_id = this.getAttribute('id');
         const device_name = this.getAttribute('device-name');
-        Log.summon(0, `${device_name} ${revoked ? 'un' : ''} revoked`);
         // -- business
-        const done = DeviceBusiness.revoke(token_id, !revoked);
+        const done = await DeviceService.revoke(token_id, !revoked);
         if (!done) return;
         // ---
+        Log.summon(0, `${device_name} ${revoked ? 'un' : ''} revoked`);
         this.setAttribute('revoked', revoked ? 'false' : 'true');
     }
 

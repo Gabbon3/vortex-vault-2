@@ -102,6 +102,7 @@ h1, h2, h3, h4, h5 {
 p {
     font-size: $fs-m;
     color: $text-color;
+    margin: 0.5em auto;
 
     a {
         color: $c2;
@@ -147,6 +148,11 @@ hr {
     cursor: pointer;
     color: $text-color;
     font-size: $fs-m;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
 
     &.primario {
         background-color: rgba($c1, 0.15);

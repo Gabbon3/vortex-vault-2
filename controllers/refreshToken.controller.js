@@ -46,7 +46,7 @@ export class RefreshTokenController {
      * @param {*} res 
      */
     get_all = async_handler(async (req, res) => {
-        const tokens = await this.service.get_all(req.user.uid);
+        const tokens = await this.service.get_all(req.user.uid, req.cookies.refresh_token);
         res.status(200).json( tokens );
     })
     /**
@@ -56,6 +56,9 @@ export class RefreshTokenController {
      */
     revoke = async_handler(async (req, res) => {
         const { token_id, revoke } = req.body;
+        const current_token = req.cookies.refresh_token;
+        if (token_id === current_token) throw new CError('SelfRevocationError', "Self-revocation of the current device's token is not allowed.", 403);
+        // ---
         await this.service.revoke(token_id, revoke);
         res.status(200).json({ "revoked": revoke });
     })

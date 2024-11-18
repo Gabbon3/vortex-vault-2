@@ -188,9 +188,31 @@
         </div>
     </div>
     <!-- 
+    BACKUP
+    -->
+    <div class="finestra m" id="win-backups" style="display: block;">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">cloud</span>
+                Backup
+            </h2>
+            <button class="btn t close l last" data-target-close="win-backups">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <button class="btn primario" id="btn-create-backup">
+            <span class="material-symbols-rounded">add</span>
+            Crea Backup
+        </button>
+        <div id="backups-list">
+            <!-- ... -->
+        </div>
+    </div>
+    <!-- 
     SETTINGS
     -->
-    <div class="finestra m" id="win-settings" style="display: block;">
+    <div class="finestra m" id="win-settings">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">settings</span>
@@ -215,11 +237,6 @@
             </button>
         </div>
         <span id="qrcode-2fa-secret"></span>
-        <hr>
-        <h3 class="icon">
-            <span class="material-symbols-rounded">cloud</span>
-            Backup
-        </h3>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

@@ -1,7 +1,6 @@
 import { Bytes } from "../utils/bytes.js";
 import { Cripto } from "../secure/cripto.js";
 import { AES256GCM } from "../secure/aesgcm.js";
-import { Form } from "../utils/form.js";
 import { SessionStorage } from "../utils/session.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
@@ -11,7 +10,7 @@ import { VaultLocal } from "./vault.local.js";
 
 window.VaultLocal = VaultLocal;
 
-export class VaultBusiness {
+export class VaultService {
     static master_key = null;
     static vaults = [];
     static used_usernames = new Set();
@@ -170,6 +169,40 @@ export class VaultBusiness {
         }
     }
     /**
+     * Esporta i vaults cifrati
+     * @param {Uint8Array} custom_key - Chiave personalizzata da usare al posto della master key
+     * @returns {Promise<Uint8Array>} Backup cifrato e compresso
+     */
+    static async export_vaults(custom_key = null) {
+        if (!this.vaults || this.vaults.length === 0) {
+            console.warn("Nessun vault da esportare.");
+            return null;
+        }
+        const backup_salt = Cripto.random_bytes(16);
+        const backup_key = await Cripto.derive_key(custom_key ?? this.master_key, backup_salt);
+        // -- preparo il backup con il salt come primo elemento
+        const backup = [backup_salt];
+        const compacted_vaults = this.compact_vaults();
+        // -- cifro ogni vault e lo aggiungo al backup
+        for (const vault of compacted_vaults) {
+            const encoded_vault = msgpack.encode(vault);
+            const encrypted_vault = await AES256GCM.encrypt(encoded_vault, backup_key);
+            backup.push(encrypted_vault);
+        }
+        // -- converto il backup completo in formato MessagePack
+        return msgpack.encode(backup);
+    }
+    /**
+     * Compatta i vaults per renderli pronti all esportazione
+     * @returns {Array<Object>} l'array dei vault compattati
+     */
+    static compact_vaults(vaults = this.vaults) {
+        return vaults.map(vault => {
+            const { id: I, secrets: S, createdAt: C, updatedAt: U } = vault;
+            return { I, S, C, U };
+        });
+    }
+    /**
      * Cifra tutti i vault 
      * @param {Array<Object>} vaults - array dei vari vault
      */
@@ -212,4 +245,4 @@ export class VaultBusiness {
     }
 }
 
-window.Vault = VaultBusiness;
+window.Vault = VaultService;

@@ -1,5 +1,4 @@
-import { VaultBusiness } from "../business/vault.business.js";
-import { VaultLocal } from "../business/vault.local.js";
+import { VaultService } from "../service/vault.service.js";
 import { Form } from "../utils/form.js";
 import { Log } from "../utils/log.js";
 import { date } from "../utils/dateUtils.js";
@@ -13,7 +12,7 @@ $(document).ready(async () => {
     Form.onsubmit("form-create-vault", async (form, elements) => {
         if (!confirm(`Confermi di voler salvare ${elements.T}`)) return;
         // ---
-        if (await VaultBusiness.create(elements)) {
+        if (await VaultService.create(elements)) {
             Log.summon(0, `${elements.T} salvato con successo`);
             finestra.close('win-create-vault');
             $(form).trigger("reset");
@@ -31,7 +30,7 @@ $(document).ready(async () => {
         const { vault_id } = elements;
         delete elements.vault_id;
         // ---
-        if (await VaultBusiness.update(vault_id, elements)) {
+        if (await VaultService.update(vault_id, elements)) {
             Log.summon(0, `${elements.T} modificato con successo`);
             finestra.close('win-update-vault');
             $(form).trigger("reset");
@@ -47,7 +46,7 @@ $(document).ready(async () => {
         const id = $(e.currentTarget).attr('id');
         finestra.open('win-update-vault');
         // --
-        const vault = VaultBusiness.get_vault(id);
+        const vault = VaultService.get_vault(id);
         // -- riempio i campi
         document.querySelector('#vault-title-to-update').textContent = vault.secrets.T;
         document.querySelector('#update-vault-id').value = id;
@@ -63,20 +62,20 @@ $(document).ready(async () => {
     $('#btn-sync-vault').on('click', async () => {
         if (!confirm('Confermi di volerti sincronizzare con il server?')) return;
         // ---
-        await VaultBusiness.syncronize(true);
-        VaultUI.html_vaults(VaultBusiness.vaults);
-        VaultUI.html_used_usernames(VaultBusiness.used_usernames);
+        await VaultService.syncronize(true);
+        VaultUI.html_vaults(VaultService.vaults);
+        VaultUI.html_used_usernames(VaultService.used_usernames);
     });
     /**
      * DELETE VAULT
      */
     $('#btn-delete-vault').on('click', async (e) => {
         const vault_id = e.target.getAttribute('vault-id');
-        const vault = await VaultBusiness.get_vault(vault_id);
+        const vault = await VaultService.get_vault(vault_id);
         const title = vault.secrets.T;
         if (!confirm(`Confermi di voler eliminare ${title}?`)) return;
         // ---
-        if (await VaultBusiness.delete(vault_id)) {
+        if (await VaultService.delete(vault_id)) {
             Log.summon(0, `${title} eliminato con successo`);
             finestra.close('win-update-vault');
             VaultUI.init();
@@ -90,11 +89,11 @@ window.Form = Form;
 
 class VaultUI {
     static async init() {
-        const inizialized = await VaultBusiness.syncronize();
+        const inizialized = await VaultService.syncronize();
         if (inizialized !== true) return;
         // ---
-        this.html_vaults(VaultBusiness.vaults);
-        this.html_used_usernames(VaultBusiness.used_usernames);
+        this.html_vaults(VaultService.vaults);
+        this.html_used_usernames(VaultService.used_usernames);
     }
     /**
      * This function generates HTML markup for a list of vaults.

@@ -175,6 +175,7 @@ h1.icon .material-symbols-rounded, h2.icon .material-symbols-rounded, h3.icon .m
 p {
   font-size: 1em;
   color: #f5f5f5;
+  margin: 0.5em auto;
 }
 p a {
   color: #738e54;
@@ -216,6 +217,10 @@ hr {
   cursor: pointer;
   color: #f5f5f5;
   font-size: 1em;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 .btn.primario {
   background-color: rgba(135, 142, 84, 0.15);
@@ -329,7 +334,11 @@ hr {
   display: flex;
   gap: 5px;
   align-items: center;
+  flex-wrap: wrap;
   padding-bottom: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #2a2a2a;
 }
 .navbar a {
   padding: 10px;
@@ -481,6 +490,7 @@ hr {
   font-size: calc(1em + 3px);
 }
 #vaults-list vault-li .info i {
+  font-style: normal;
   font-size: 1em;
   color: #888;
 }

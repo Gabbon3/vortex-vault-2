@@ -16,6 +16,10 @@ class Navbar extends HTMLElement {
                     <span class="material-symbols-rounded">token</span>
                     Dispositivi
                 </a>` : ''}
+                ${path === '/vault' ? `<a class="open" data-target-open="win-backups">
+                    <span class="material-symbols-rounded">cloud</span>
+                    Backup
+                </a>` : ''}
                 ${path !== '/vault' ? `<a href="/vault"'>
                     <span class="material-symbols-rounded">lock</span>
                     Vault

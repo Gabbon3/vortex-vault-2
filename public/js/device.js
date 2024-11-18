@@ -1,4 +1,4 @@
-import { DeviceBusiness } from "../business/device.business.js";
+import { DeviceService } from "../service/device.service.js";
 import { Bytes } from "../utils/bytes.js";
 import { date } from "../utils/dateUtils.js";
 import { LocalStorage } from "../utils/local.js";
@@ -18,17 +18,17 @@ $(document).ready(async () => {
 
 class DeviceUI {
     static async init() {
-        const inizialized = await DeviceBusiness.init();
+        const inizialized = await DeviceService.init();
         if (inizialized !== true) return;
         // ---
-        this.html_devices(DeviceBusiness.devices);
+        this.html_devices(DeviceService.devices);
     }
     /**
      * 
      * @returns 
      */
     static async enable_2FA_auth() {
-        const secret = await DeviceBusiness.enable_2FA_auth();
+        const secret = await DeviceService.enable_2FA_auth();
         if (!secret) return;
         const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
         const app_name = 'Vortex Vault';
@@ -67,6 +67,7 @@ class DeviceUI {
                 user-agent-summary="${device.user_agent_summary}"
                 lua="${date.format("%j %M %Y at %H:%i", new Date(device.last_used_at))}"
                 revoked="${device.is_revoked}"
+                current="${device.current ?? false}"
             ></device-list-item>`
         }
         // ---

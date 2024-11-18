@@ -4,7 +4,7 @@ import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import { API } from "../utils/api.js";
 
-export class Auth {
+export class AuthService {
     /**
      * Esegue l'accesso
      * @param {string} username 
@@ -103,4 +103,4 @@ export class Auth {
     }
 }
 
-window.Auth = Auth;
+window.Auth = AuthService;
