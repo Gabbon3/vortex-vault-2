@@ -100,7 +100,7 @@ export class UserController {
             secure: TokenUtils.secure_option, // da mettere true in produzione
             maxAge: TokenUtils.refresh_token_cookie_lifetime,
             sameSite: 'Strict',
-            path: '/auth/token/',
+            path: '/auth',
         });
         res.cookie('cke', cke, {
             httpOnly: true,
