@@ -25,6 +25,9 @@ export class Form {
                     case 'number':
                         value = Number(value);
                         break;
+                    case 'file':
+                        value = element.files.length > 0 ? element.files[0] : null;
+                        break;
                 }
                 // ---
                 json[element.getAttribute('name')] = value;
@@ -39,7 +42,7 @@ export class Form {
      * @param {FormOnSubmitCallback} callback - La funzione di callback eseguita al submit.
      */
     static onsubmit(form_id, callback) {
-        $(`#${form_id}`).on('submit', async (e) => {
+        document.getElementById(form_id).addEventListener('submit', async (e) => {
             e.preventDefault();
             callback(e.currentTarget, Form.get_data(e.currentTarget));
         });

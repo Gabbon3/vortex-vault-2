@@ -221,27 +221,27 @@
             <span class="material-symbols-rounded">devices</span>
             Locally
         </h3>
-        <div class="isle bg-4 mb-2">
+        <form class="isle bg-4 mb-2" id="form-create-backup-locally">
             <label for="backup-custom-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *">
+            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *">
             <p class="description">
                 Leave blank if you want to use the default master key.
             </p>
-            <button class="btn primario" id="btn-create-backup-locally">
+            <button type="submit" class="btn primario">
                 <span class="material-symbols-rounded">download</span>
                 Generate & Download
             </button>
-        </div>
+        </form>
         <hr>
-        <div class="isle bg-4">
+        <form id="form-restore-backup-from-file" class="isle bg-4">
             <label for="backup-file">
                 <span class="material-symbols-rounded">draft</span>
                 Backup file
             </label>
-            <input type="file" id="backup-file" class="input-text" accept=".bin">
+            <input type="file" id="backup-file" name="backup_file" class="input-text" accept=".bin">
             <p class="description">
                 .bin file
             </p>
@@ -250,7 +250,7 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" id="backup-custom-password-restore" class="input-text mb-2" placeholder="* * *">
+            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2" placeholder="* * *">
             <p class="description">
                 Leave blank if you had not used a custom password for backup.
             </p>
@@ -258,10 +258,7 @@
                 <span class="material-symbols-rounded">settings_backup_restore</span>
                 Restore
             </button>
-        </div>
-        <div id="backups-list">
-            <!-- ... -->
-        </div>
+        </form>
     </div>
     <!-- 
     SETTINGS
