@@ -10,7 +10,7 @@ const controller = new RefreshTokenController();
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
     max: 5,
-    message: "Troppe richieste, riprova più tardi",
+    message: "Too many requests, try later",
 });
 router.use(limiter);
 // -- le routes con i controller associati
@@ -19,5 +19,6 @@ router.post('/refresh', controller.generate_access_token);
 router.post('/revoke', verify_access_token, controller.revoke);
 router.post('/revoke-all', verify_access_token, controller.revoke_all);
 router.get('/', verify_access_token, controller.get_all);
+router.delete('/:token_id', verify_access_token, controller.delete)
 
 export default router;

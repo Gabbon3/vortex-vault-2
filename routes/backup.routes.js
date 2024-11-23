@@ -10,13 +10,13 @@ const controller = new BackupController();
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
     max: 60,
-    message: "Troppe richieste, riprova più tardi",
+    message: "Too many requests, try later",
 });
 router.use(limiter);
 // -- middleware
 router.use(verify_access_token);
 // -- /backup
-router.post('/', controller.create);
+router.post('/', express.raw({ type: 'application/octet-stream' }), controller.create);
 router.get('/', controller.get);
 router.get('/:backup_id', controller.get_id);
 router.delete('/:backup_id', controller.delete);

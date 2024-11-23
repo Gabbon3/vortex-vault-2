@@ -85,11 +85,9 @@ $(document).ready(async () => {
     });
 });
 
-window.Form = Form;
-
-class VaultUI {
-    static async init() {
-        const inizialized = await VaultService.syncronize();
+export class VaultUI {
+    static async init(full = false) {
+        const inizialized = await VaultService.syncronize(full);
         if (inizialized !== true) return;
         // ---
         this.html_vaults(VaultService.vaults);

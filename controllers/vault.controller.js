@@ -1,5 +1,6 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
+import msgpack from "../public/utils/msgpack.min.js";
 import { UserService } from "../services/user.service.js";
 import { VaultService } from "../services/vault.service.js";
 
@@ -73,6 +74,22 @@ export class VaultController {
         const vault = await this.service.update(req.user.uid, vault_id, secrets_bytes);
         if (!vault) throw new CError("NotFoundError", "Vault non trovato", 404);
         res.status(200).json(vault);
+    });
+    /**
+     * Esegue il restore di tutti i vault
+     * elimina i precedenti e li sostituisce con quelli nuovi
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    restore = async_handler(async (req, res) => {
+        const packed_vaults = req.body;
+        const vaults = msgpack.decode(packed_vaults);
+        console.log(vaults);
+        // ---
+        const restored = await this.service.restore(req.user.uid, vaults);
+        if (!restored) throw new CError("RestoreFailed", "Error during restore of vaults", 500);
+        // ---
+        res.status(201).json({ message: "Vaults restored" });
     });
     /**
      * Elimina un vault

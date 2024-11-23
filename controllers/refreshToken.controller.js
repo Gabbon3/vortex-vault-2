@@ -71,4 +71,14 @@ export class RefreshTokenController {
         await this.service.revoke_all(req.user.uid);
         res.sendStatus(200);
     })
+    /**
+     * Elimina un refresh token
+     * @param {*} req 
+     * @param {*} res 
+     */
+    delete = async_handler(async (req, res) => {
+        const { token_id } = req.params;
+        await this.service.delete(token_id, req.user.uid);
+        res.status(200).json({ "deleted": true });
+    });
 }

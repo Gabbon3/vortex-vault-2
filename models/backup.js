@@ -12,6 +12,7 @@ export const Backup = sequelize.define(
         user_id: {
             type: DataTypes.BIGINT.UNSIGNED,
             allowNull: false,
+            unique: true
         },
         expire: {
             type: DataTypes.DATE,

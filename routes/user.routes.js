@@ -11,7 +11,7 @@ const controller = new UserController();
 const limiter = rateLimit({
     windowMs: 2 * 60 * 1000, // 2 minuti
     max: 20, // massimo 10 richieste per 2 minuti
-    message: "Troppe richieste, riprova più tardi",
+    message: "Too many requests, try later",
 });
 router.use(limiter);
 // -- le routes con i controller associati

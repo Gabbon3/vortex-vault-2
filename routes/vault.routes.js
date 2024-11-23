@@ -10,7 +10,7 @@ const controller = new VaultController();
 // const limiter = rateLimit({
 //     windowMs: 1 * 60 * 1000,
 //     max: 60,
-//     message: "Troppe richieste, riprova più tardi",
+//     message: "Too many requests, try later",
 // });
 // router.use(limiter);
 // -- middleware
@@ -22,5 +22,6 @@ router.get('/:vault_id', controller.get_id);
 router.get('', controller.get);
 router.post('/update', controller.update);
 router.delete('/:vault_id', controller.delete);
+router.post('/restore', express.raw({ type: 'application/octet-stream' }), controller.restore);
 
 export default router;

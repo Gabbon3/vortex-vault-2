@@ -202,7 +202,11 @@
             align-items: center;
             color: $text-color-2;
             font-size: $fs-s;
-            font-style: normal;
+            
+            i {
+                font-family: $monospace !important;
+                font-style: normal !important;
+            }
         }
 
         .info {
@@ -214,9 +218,7 @@
 }
 
 #qrcode-2fa-secret {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px auto;
-    overflow: hidden;
+    display: block;
+    margin: 0 auto;
+    height: 0;
 }

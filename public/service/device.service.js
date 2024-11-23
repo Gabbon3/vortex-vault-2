@@ -51,6 +51,19 @@ export class DeviceService {
         return true;
     }
     /**
+     * Elimina un token
+     * @param {string} token_id 
+     * @returns 
+     */
+    static async delete(token_id) {
+        const res = await API.fetch(`/auth/token/${token_id}`, {
+            method: 'DELETE',
+        });
+        // ---
+        if (!res) return false;
+        return true;
+    }
+    /**
      * Attiva l'autenticazione a due fattori
      * @returns {boolean}
      */

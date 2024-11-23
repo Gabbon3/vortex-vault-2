@@ -10,12 +10,10 @@
     <link rel="stylesheet" href="./css/main.css">
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
-    <!-- js esterno -->
-    <!-- qrcode -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- js -->
-    <script type="module" src="./js/vault.js"></script>
+    <script type="module" src="./js/vault.ui.js"></script>
     <script type="module" src="./js/device.js"></script>
+    <script type="module" src="./js/backup.ui.js"></script>
 </head>
 <body>
     <vortex-navbar></vortex-navbar>
@@ -32,7 +30,7 @@
             </button>
             <button class="btn primario open" data-target-open="win-create-vault">
                 <span class="material-symbols-rounded">add</span>
-                Nuovo Vault
+                New Vault
             </button>
         </div>
         <div id="vaults-list">
@@ -46,7 +44,7 @@
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">encrypted_add</span>
-                Nuovo Vault
+                New Vault
             </h2>
             <button class="btn t close l last" data-target-close="win-create-vault">
                 <span class="material-symbols-rounded">close</span>
@@ -56,7 +54,7 @@
         <form id="form-create-vault">
             <label for="titolo">
                 <span class="material-symbols-rounded">tag</span>
-                Titolo
+                Title
             </label>
             <div class="flex gap-50">
                 <input name="T" type="text" class="input-text mono" id="titolo" autocomplete="off" required>
@@ -96,8 +94,8 @@
             <hr>
             <div class="flex gap-50">
                 <button type="submit" class="btn primario">
-                    <span class="material-symbols-rounded">cloud_upload</span>
-                    Salva
+                    <span class="material-symbols-rounded">add</span>
+                    Create
                 </button>
             </div>
         </form>
@@ -120,7 +118,7 @@
             <input type="text" class="none" id="update-vault-id" name="vault_id" value="*">
             <label for="update-titolo">
                 <span class="material-symbols-rounded">tag</span>
-                Titolo
+                Title
             </label>
             <div class="flex gap-75">
                 <input name="T" type="text" class="input-text mono" id="update-titolo" autocomplete="off" required>
@@ -160,11 +158,11 @@
             <div class="flex gap-50">
                 <button type="submit" class="btn primario">
                     <span class="material-symbols-rounded">edit</span>
-                    Modifica
+                    Edit
                 </button>
                 <button type="button" vault-id="" id="btn-delete-vault" class="btn danger last">
                     <span class="material-symbols-rounded">delete_forever</span>
-                    Elimina
+                    Delete
                 </button>
             </div>
         </form>
@@ -176,7 +174,7 @@
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">token</span>
-                Dispositivi
+                Devices
             </h2>
             <button class="btn t close l last" data-target-close="win-devices">
                 <span class="material-symbols-rounded">close</span>
@@ -190,7 +188,7 @@
     <!-- 
     BACKUP
     -->
-    <div class="finestra m" id="win-backups" style="display: block;">
+    <div class="finestra m" id="win-backups">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">cloud</span>
@@ -201,10 +199,66 @@
             </button>
         </div>
         <hr>
-        <button class="btn primario" id="btn-create-backup">
-            <span class="material-symbols-rounded">add</span>
-            Crea Backup
-        </button>
+        <h3 class="icon">
+            <span class="material-symbols-rounded">dns</span>
+            Server
+        </h3>
+        <p>
+            You can save only one backup at time on server
+        </p>
+        <div class="isle bg-4 flex gap-50">
+            <button class="btn primario fg-1" id="btn-create-backup">
+                <span class="material-symbols-rounded">add</span>
+                Generate
+            </button>
+            <button class="btn warning fg-1" id="btn-restore-backup-server">
+                <span class="material-symbols-rounded">settings_backup_restore</span>
+                Restore
+            </button>
+        </div>
+        <hr>
+        <h3 class="icon">
+            <span class="material-symbols-rounded">devices</span>
+            Locally
+        </h3>
+        <div class="isle bg-4 mb-2">
+            <label for="backup-custom-password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Custom password
+            </label>
+            <input type="password" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *">
+            <p class="description">
+                Leave blank if you want to use the default master key.
+            </p>
+            <button class="btn primario" id="btn-create-backup-locally">
+                <span class="material-symbols-rounded">download</span>
+                Generate & Download
+            </button>
+        </div>
+        <hr>
+        <div class="isle bg-4">
+            <label for="backup-file">
+                <span class="material-symbols-rounded">draft</span>
+                Backup file
+            </label>
+            <input type="file" id="backup-file" class="input-text" accept=".bin">
+            <p class="description">
+                .bin file
+            </p>
+            <!-- --- -->
+            <label for="backup-custom-password-restore">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Custom password
+            </label>
+            <input type="password" id="backup-custom-password-restore" class="input-text mb-2" placeholder="* * *">
+            <p class="description">
+                Leave blank if you had not used a custom password for backup.
+            </p>
+            <button class="btn warning" id="btn-restore-backup-locally">
+                <span class="material-symbols-rounded">settings_backup_restore</span>
+                Restore
+            </button>
+        </div>
         <div id="backups-list">
             <!-- ... -->
         </div>
@@ -236,7 +290,7 @@
                 Abilita
             </button>
         </div>
-        <span id="qrcode-2fa-secret"></span>
+        <canvas id="qrcode-2fa-secret"></canvas>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

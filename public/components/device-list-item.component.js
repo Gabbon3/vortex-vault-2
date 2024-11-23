@@ -42,7 +42,7 @@ class DeviceListItem extends HTMLElement {
                     ${current ? 'disabled' : ''}>
                     <span class="material-symbols-rounded">${revoked === 'true' ? 'close' : 'check'}</span>
                 </button>
-                <button class="btn danger device-delete" title="Delete this device">
+                <button class="btn danger device-delete" title="Delete this device" ${current ? 'disabled' : ''}>
                     <span class="material-symbols-rounded">delete</span>
                 </button>
             </div>
@@ -70,9 +70,14 @@ class DeviceListItem extends HTMLElement {
         this.setAttribute('revoked', revoked ? 'false' : 'true');
     }
 
-    delete_device() {
-        // -- gestione cancellazione del device
-        //...
+    async delete_device() {
+        if (!confirm('Are you sure you want to delete this device?')) return;
+        // ---
+        const token_id = this.getAttribute('id');
+        // ---
+        const deleted = await DeviceService.delete(token_id);
+        if (!deleted) return;
+        Log.summon(0, "Device deleted successfully");
     }
 }
 

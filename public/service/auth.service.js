@@ -23,6 +23,7 @@ export class AuthService {
         const cke_buffer = Bytes.base64.from(res.cke);
         await LocalStorage.set('username-utente', username);
         await LocalStorage.set('master-key', key, cke_buffer);
+        SessionStorage.set('master-key', key);
         // --- imposto la scadenza dell'access token
         await LocalStorage.set('access-token-expire', new Date(Date.now() + 3600000));
         // ---

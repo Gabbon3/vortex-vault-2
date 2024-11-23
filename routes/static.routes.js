@@ -14,7 +14,7 @@ const router = express.Router();
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
     max: 100,
-    message: "Troppe richieste, riprova più tardi",
+    message: "Too many requests, try later",
 });
 router.use(limiter);
 // -- middleware per servire i file statici

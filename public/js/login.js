@@ -7,10 +7,10 @@ $(document).ready(async () => {
     /**
      * Provo ad accedere automaticamente
      */
-    const session_started = await AuthService.start_session();
-    if (session_started) {
-        const saved_username = await LocalStorage.get('username-utente');
-        if (confirm(`Accesso salvato come ${saved_username}, vuoi continuare?`)) window.location.href = '/vault';
+    const saved_username = await LocalStorage.get('username-utente');
+    if (confirm(`Accesso salvato come ${saved_username}, vuoi continuare?`)) {
+        const session_started = await AuthService.start_session();
+        if (session_started) window.location.href = '/vault';
     }
     /**
      * LOGIN

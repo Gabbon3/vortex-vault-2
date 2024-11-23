@@ -50,4 +50,16 @@ export class BackupService {
             }
         })
     }
+    /**
+     * Elimina tutti i backup associati ad un utente
+     * @param {number} user_id 
+     * @returns 
+     */
+    async delete_all(user_id) {
+        return await Backup.destroy({
+            where: {
+                user_id
+            }
+        })
+    }
 }

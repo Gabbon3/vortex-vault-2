@@ -12,16 +12,18 @@ export class BackupController {
      * @param {Response} res
      */
     create = async_handler(async (req, res) => {
-        const { backup: backup_base64 } = req.body; // è in base64
+        const backup_bytes = req.body; // è in base64
         // ---
-        if (!backup_base64)
+        if (!backup_bytes)
             throw new CError("ValidationError", "No backup", 422);
-        // -- riconverto da base 64 a bytes
-        const backup_bytes = Buffer.from(backup_base64, "base64");
+        // -- elimino il vecchio backup
+        await this.service.delete_all(req.user.uid);
         // ---
         const backup = await this.service.create(backup_bytes, req.user.uid);
         // ---
-        res.status(201).json(backup);
+        if (!backup) throw new CError("CreationError", "Error while saving new backup", 500);
+        // ---
+        res.status(201).json({ "id": backup.id });
     });
     /**
      * Ottieni un backup dal suo id
@@ -31,11 +33,11 @@ export class BackupController {
     get_id = async_handler(async (req, res) => {
         const { backup_id } = req.params;
         // ---
-        const vault = await this.service.get_id(backup_id, req.user.uid);
+        const backup = await this.service.get_id(backup_id, req.user.uid);
         // ---
-        if (!vault)
+        if (!backup)
             throw new CError("NotFoundError", "Backup non trovato", 404);
-        res.status(200).json(vault);
+        res.status(200).json(backup);
     });
     /**
      * Ottieni tutti i backup
@@ -43,8 +45,8 @@ export class BackupController {
      * @param {Response} res 
      */
     get = async_handler(async (req, res) => {
-        const vaults = await this.service.get(req.user.uid);
-        res.status(200).json(vaults);
+        const backups = await this.service.get(req.user.uid);
+        res.status(200).json(backups);
     });
     /**
      * Elimina un backup

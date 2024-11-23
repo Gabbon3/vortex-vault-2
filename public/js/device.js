@@ -3,6 +3,7 @@ import { Bytes } from "../utils/bytes.js";
 import { date } from "../utils/dateUtils.js";
 import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
+import { qrcode } from "../utils/qrcode.js";
 
 $(document).ready(async () => {
     await DeviceUI.init();
@@ -34,15 +35,17 @@ class DeviceUI {
         const app_name = 'Vortex Vault';
         const username = LocalStorage.get('username-utente');
         // ---
+        const canvas = document.querySelector('#qrcode-2fa-secret');
         const uri = `otpauth://totp/${app_name}:${username}?secret=${base32_secret}&issuer=${app_name}`;
-        const qrcode = new QRCode(document.querySelector('#qrcode-2fa-secret'), {
-            text: uri,
-            width: 180,
-            height: 180,
-            colorDark: "#FFFFFF",
-            colorLight: "#272727",
-            correctLevel: QRCode.CorrectLevel.H
+        qrcode.toCanvas(canvas, uri, {
+            width: 200,
+            margin: 2,
+            color: {
+                dark: "#FFFFFF",
+                light: "#272727"
+            }
         });
+        canvas.style.height = 200;
         // -- copio negli appunti il segreto
         navigator.clipboard.writeText(base32_secret);
         // ---
@@ -50,7 +53,7 @@ class DeviceUI {
         setTimeout(() => {
             Log.summon(1, "Attenzione! Il Qr Code verrà invalidato tra 20 secondi");
             setTimeout(() => {
-                document.querySelector('#qrcode-2fa-secret').innerHTML = '';
+                canvas.style.height = 0;
             }, 20000);
         }, 1000);
     }

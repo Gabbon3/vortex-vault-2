@@ -95,6 +95,20 @@ export class RefreshTokenService {
         });
     }
     /**
+     * Elimina un token
+     * @param {string} token_id 
+     * @param {number} user_id 
+     * @returns 
+     */
+    async delete(token_id, user_id) {
+        return await RefreshToken.destroy({
+            where: {
+                id: token_id,
+                user_id,
+            },
+        });
+    }
+    /**
      * Verifica la validità dei refresh token restituendo le informazioni associate se valido
      * @param {string} token_id
      * @param {string} user_agent

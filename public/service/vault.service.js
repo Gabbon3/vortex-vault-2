@@ -131,6 +131,30 @@ export class VaultService {
         return res;
     }
     /**
+     * Reimposta tutti i vault sul db
+     * @param {string} mfa_code codice multifattore perchè un operazione sensibile
+     * @returns {boolean}
+     */
+    static async restore(vaults) {
+        // -- cifro i vault
+        for (const vault of vaults) {
+            const bytes = msgpack.encode(vault.secrets);
+            const encrypted_bytes = await AES256GCM.encrypt(bytes, this.master_key);
+            vault.secrets = encrypted_bytes;
+        }
+        // ---
+        const packed_vaults = msgpack.encode(vaults);
+        // ---
+        const res = await API.fetch('/vaults/restore', {
+            method: 'POST',
+            body: packed_vaults
+        }, {
+            content_type: 'bin'
+        });
+        if (!res) return false;
+        return true;
+    }
+    /**
      * Elimina un vault tramite id
      * @param {string} vault_id 
      * @returns {boolean}
@@ -138,7 +162,9 @@ export class VaultService {
     static async delete(vault_id) {
         const res = await API.fetch(`/vaults/${vault_id}`, {
             method: 'DELETE'
-        }, 'text');
+        }, {
+            return_type: 'text'
+        });
         if (!res) return false;
         return true;
     }
@@ -175,7 +201,7 @@ export class VaultService {
      */
     static async export_vaults(custom_key = null) {
         if (!this.vaults || this.vaults.length === 0) {
-            console.warn("Nessun vault da esportare.");
+            console.warn("Any vault to export.");
             return null;
         }
         const backup_salt = Cripto.random_bytes(16);
@@ -193,6 +219,27 @@ export class VaultService {
         return msgpack.encode(backup);
     }
     /**
+     * Operazione inversa di esporta vaults
+     * @param {Uint8Array} packed_backup 
+     * @param {Uint8Array} custom_key 
+     * @returns {Promise<Array<Object>>} i vaults
+     */
+    static async import_vaults(packed_backup, custom_key = null) {
+        const vaults = [];
+        const backup = msgpack.decode(packed_backup);
+        // -- ottengo il salt del backup cosi genero la chiave del backup
+        const backup_salt = backup.shift();
+        const backup_key = await Cripto.derive_key(custom_key ?? this.master_key, backup_salt);
+        // -- decifro ogni vault
+        for (const vault of backup) {
+            const decrypted_vault = await AES256GCM.decrypt(vault, backup_key);
+            const decoded_vault = msgpack.decode(decrypted_vault);
+            vaults.push(decoded_vault);
+        }
+        // -- decompatto i vaults
+        return this.decompact_vaults(vaults);
+    }
+    /**
      * Compatta i vaults per renderli pronti all esportazione
      * @returns {Array<Object>} l'array dei vault compattati
      */
@@ -200,6 +247,16 @@ export class VaultService {
         return vaults.map(vault => {
             const { id: I, secrets: S, createdAt: C, updatedAt: U } = vault;
             return { I, S, C, U };
+        });
+    }
+    /**
+     * Decompatta i vaults per renderli nuovamente utilizzabili
+     * @param {Array<Object>} compacted_vaults 
+     */
+    static decompact_vaults(compacted_vaults) {
+        return compacted_vaults.map(vault => {
+            const { I: id, S: secrets, C: createdAt, U: updatedAt } = vault;
+            return { id, secrets, createdAt, updatedAt };
         });
     }
     /**

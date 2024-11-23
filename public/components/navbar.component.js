@@ -10,11 +10,11 @@ class Navbar extends HTMLElement {
             <nav class="navbar">
                 ${path === '/vault' ? `<a class="open" data-target-open="win-settings">
                     <span class="material-symbols-rounded">settings</span>
-                    Impostazioni
+                    Settings
                 </a>` : ''}
                 ${path === '/vault' ? `<a class="open" data-target-open="win-devices">
                     <span class="material-symbols-rounded">token</span>
-                    Dispositivi
+                    Devices
                 </a>` : ''}
                 ${path === '/vault' ? `<a class="open" data-target-open="win-backups">
                     <span class="material-symbols-rounded">cloud</span>

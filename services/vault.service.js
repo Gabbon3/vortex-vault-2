@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import { Vault } from "../models/vault.js";
 import { UID } from "../utils/uid.js";
+import { sequelize } from "../config/db.js";
 
 export class VaultService {
     static id_random_length = 5;
@@ -80,6 +81,48 @@ export class VaultService {
         if (updated_rows === 0) return null;
         // -- restituisco il vault aggiornato
         return await this.get_id(user_id, vault_id);
+    }
+    /**
+     * Esegue il restore completo dei vault.
+     * 1. Rimuove i vecchi vault per l'utente.
+     * 2. Aggiunge i nuovi vault.
+     * 
+     * @param {number} user_id - ID dell'utente
+     * @param {Array} vaults - Array di oggetti vault con i segreti
+     * @returns {Array} - Array degli ID dei vault creati
+     */
+    async restore(user_id, vaults) {
+        // -- avvio una transazione
+        const t = await sequelize.transaction();
+        // ---
+        try {
+            // -- elimino i vecchi vault
+            await Vault.destroy({
+                where: { user_id },
+                transaction: t
+            });
+            // -- inserisco i nuovi vault
+            for (const vault of vaults) {
+                const { id, secrets, createdAt, updatedAt } = vault;
+                // ---
+                const secrets_buffer = Buffer.from(secrets);
+                // ---
+                await Vault.create({
+                    id,
+                    user_id,
+                    secrets: secrets_buffer,
+                    createdAt,
+                    updatedAt
+                }, { transaction: t });
+            }
+            // -- committo la transazione
+            await t.commit();
+            return true;
+        } catch (error) {
+            await t.rollback();
+            console.warn(error);
+            return false;
+        }
     }
     /**
      * Elimina un vault dal db
