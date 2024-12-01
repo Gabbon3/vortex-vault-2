@@ -25,6 +25,22 @@ $(document).ready(async () => {
         }
     });
     /**
+     * NEW VAULT CUSTOM SECTION
+     */
+    $('#add-custom-section-new-vault').on('click', () => {
+        document.querySelector('#custom-sections-new-vault').innerHTML 
+        += 
+        `<custom-vault-section input-id="${Date.now()}"></custom-vault-section>`;
+    });
+    /**
+     * UPDATE VAULT CUSTOM SECTION
+     */
+    $('#add-custom-section-update-vault').on('click', () => {
+        document.querySelector('#custom-sections-update-vault').innerHTML 
+        += 
+        `<custom-vault-section input-id="${Date.now()}"></custom-vault-section>`;
+    });
+    /**
      * UPDATE VAULT
      */
     Form.onsubmit("form-update-vault", async (form, elements) => {
@@ -60,6 +76,17 @@ $(document).ready(async () => {
         document.querySelector('#update-note').value = vault.secrets.N;
         document.querySelector('#update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
         document.querySelector('#update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
+        // -- customs
+        const custom_container = document.querySelector('#custom-sections-update-vault');
+        custom_container.innerHTML = '';
+        let i = 0;
+        for (const secret in vault.secrets) {
+            if (secret.length === 1) continue;
+            // ---
+            custom_container.innerHTML += 
+            `<custom-vault-section input-id="${`${Date.now()}.${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}"></custom-vault-section>`; 
+            i++;
+        }
     });
     /**
      * SYNCRONIZE VAULT

@@ -36,11 +36,11 @@
             </div>
         </div>
         <div class="flex gap-50">
-            <button class="btn primario" id="btn-sync-vault">
+            <button class="btn primary" id="btn-sync-vault">
                 <span class="material-symbols-rounded">sync_alt</span>
                 Sync
             </button>
-            <button class="btn primario open" data-target-open="win-create-vault">
+            <button class="btn primary open" data-target-open="win-create-vault">
                 <span class="material-symbols-rounded">add</span>
                 New Vault
             </button>
@@ -97,6 +97,10 @@
                     <span class="material-symbols-rounded">content_paste</span>
                 </button>
             </div>
+            <!-- CUSTOM -->
+            <div class="custom-sections flex gap-50 d-column" id="custom-sections-new-vault">
+                <!-- ... -->
+            </div>
             <!-- NOTE -->
             <label for="note">
                 <span class="material-symbols-rounded">info</span>
@@ -105,9 +109,13 @@
             <textarea name="N" id="note" autocomplete="none" class="input-text" rows="3"></textarea>
             <hr>
             <div class="flex gap-50">
-                <button type="submit" class="btn primario">
+                <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">add</span>
                     Create
+                </button>
+                <button type="button" class="btn secondary" id="add-custom-section-new-vault">
+                    <span class="material-symbols-rounded">variable_add</span>
+                    Custom section
                 </button>
             </div>
         </form>
@@ -160,6 +168,10 @@
                     <span class="material-symbols-rounded">content_copy</span>
                 </button>
             </div>
+            <!-- CUSTOM -->
+            <div class="custom-sections flex gap-50 d-column" id="custom-sections-update-vault">
+                <!-- ... -->
+            </div>
             <!-- NOTE -->
             <label for="update-note">
                 <span class="material-symbols-rounded">info</span>
@@ -178,9 +190,13 @@
             </div>
             <hr>
             <div class="flex gap-50">
-                <button type="submit" class="btn primario">
+                <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">edit</span>
                     Edit
+                </button>
+                <button type="button" class="btn secondary" id="add-custom-section-update-vault">
+                    <span class="material-symbols-rounded">variable_add</span>
+                    Custom section
                 </button>
                 <button type="button" vault-id="" id="btn-delete-vault" class="btn danger last">
                     <span class="material-symbols-rounded">delete_forever</span>
@@ -208,7 +224,7 @@
             The <b>highlighted</b> device represents the current one.
         </p>
         <div class="flex gap-50 mb-2">
-            <button class="btn primario" id="btn-sync-devices">
+            <button class="btn primary" id="btn-sync-devices">
                 <span class="material-symbols-rounded">sync_alt</span>
                 Sync
             </button>
@@ -239,7 +255,7 @@
             You can save only one backup at time on server
         </p>
         <div class="isle bg-4 flex gap-50">
-            <button class="btn primario fg-1" id="btn-create-backup">
+            <button class="btn primary fg-1" id="btn-create-backup">
                 <span class="material-symbols-rounded">add</span>
                 Generate
             </button>
@@ -262,7 +278,7 @@
             <p class="description">
                 Leave blank if you want to use the default master key.
             </p>
-            <button type="submit" class="btn primario">
+            <button type="submit" class="btn primary">
                 <span class="material-symbols-rounded">download</span>
                 Generate & Download
             </button>
@@ -315,7 +331,7 @@
             Enable the secondary authentication feature to protect your account.
         </p>
         <div class="flex gap-50">
-            <button class="btn primario" id="btn-enable-2fa">
+            <button class="btn primary" id="btn-enable-2fa">
                 <span class="material-symbols-rounded">security</span>
                 Enable
             </button>
@@ -349,7 +365,7 @@
             </p>
             <!-- --- -->
             <div class="flex-gap-50 mt-2">
-                <button type="submit" class="btn primario" id="btn-generate-recovery-code">
+                <button type="submit" class="btn primary" id="btn-generate-recovery-code">
                     <span class="material-symbols-rounded">security</span>
                     Generate Recovery Code
                 </button>

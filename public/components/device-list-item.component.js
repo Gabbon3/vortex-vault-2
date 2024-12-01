@@ -40,7 +40,7 @@ class DeviceListItem extends HTMLElement {
                 <input type="text" class="input-text device-name" title="Device name" value="${device_name}">
                 <button 
                     title="Revoke or not this device"
-                    class="btn ${revoked === 'true' ? 'danger' : 'primario'} revoke-device"
+                    class="btn ${revoked === 'true' ? 'danger' : 'primary'} revoke-device"
                     ${current ? 'disabled' : ''}>
                     <span class="material-symbols-rounded">${revoked === 'true' ? 'close' : 'check'}</span>
                 </button>

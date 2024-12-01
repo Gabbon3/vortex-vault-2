@@ -184,6 +184,24 @@
     }
 }
 
+.custom-sections {
+    margin-top: 10px;
+
+    custom-vault-section {
+        background-color: $bg-3;
+        padding: 0 7px 7px 7px;
+        border-radius: 7px;
+
+        .remove-custom-section {
+            padding: 3px;
+
+            .material-symbols-rounded {
+                color: $text-color-2;
+            }
+        }
+    }
+}
+
 #devices-list {
     display: flex;
     flex-direction: column;

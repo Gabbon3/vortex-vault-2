@@ -14,6 +14,10 @@ export class Form {
         for (let i = 0; i < elements.length; i++) {
             const element = elements[i];
             if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                // ---
+                const name = element.getAttribute('name');
+                if (!name) continue;
+                // ---
                 let value = element.value;
                 const type = element.getAttribute('type');
                 // ---
@@ -30,7 +34,7 @@ export class Form {
                         break;
                 }
                 // ---
-                json[element.getAttribute('name')] = value;
+                json[name] = value;
             }
         }
         // ---

@@ -10,6 +10,12 @@ label {
         color: $c1;
     }
     margin: 10px 0 7px 0;
+
+    input.input-text {
+        margin: 0;
+        padding: 3px;
+        background-color: transparent;
+    }
 }
 
 .flex {
@@ -200,18 +206,22 @@ hr {
         cursor: default;
     }
 
-    &.primario {
+    &.primary {
         background-color: rgba($c1, 0.15);
-        color: $c1;
+        color: lighten($c1, 5);
 
         &:hover {
             background-color: rgba($c1, 0.2);
         }
     }
 
-    &.secondario {
+    &.secondary {
         background-color: $bg-4;
-        color: $text-color;
+        color: $text-color-15;
+
+        &:hover {
+            color: $text-color;
+        }
     }
 
     &.warning {
@@ -244,6 +254,11 @@ hr {
         &:active {
             box-shadow: 0 0 0 6px $bg-4;
         }
+    }
+
+    &.s {
+        font-size: $fs-s;
+        padding: 4px 7px;
     }
 
     &.l {

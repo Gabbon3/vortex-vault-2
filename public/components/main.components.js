@@ -3,6 +3,7 @@ import './log.component.js';
 import './vault-li.component.js';
 import './footer.component.js';
 import './device-list-item.component.js';
+import './custom-vault-section.js';
 
 $(document).ready(() => {
     /**
