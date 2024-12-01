@@ -11,7 +11,7 @@ export const verify_access_token = (req, res, next) => {
     const access_token = req.cookies.access_token;
     // -- verifico che esista
     if (!access_token) {
-        return res.status(401).json({ error: "Token di accesso mancante" });
+        return res.status(401).json({ error: "Invalid access token" });
     }
     // -- verifico che l'access token sia valido
     const payload = TokenUtils.verifica_access_token(access_token);
@@ -20,7 +20,7 @@ export const verify_access_token = (req, res, next) => {
         // - se va a buon fine vuol dire che il token è valido ed è stato rigenerato correttamente
         // return TokenUtils.refresh_token(req, res);
         return res.status(401)
-            .json({ error: "Token di accesso non valido" });
+            .json({ error: "Invalid access token" });
     }
     // -- se è tutto ok aggiungo il payload dell'utente alla request
     req.user = payload;

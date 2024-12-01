@@ -1,8 +1,11 @@
 import { VaultService } from "../service/vault.service.js";
+import { AuthService } from "../service/auth.service.js";
 import { Form } from "../utils/form.js";
 import { Log } from "../utils/log.js";
 import { date } from "../utils/dateUtils.js";
 import { finestra } from "../components/main.components.js";
+import { FileUtils } from "../utils/file.utils.js";
+import { Search } from "../utils/search.js";
 
 $(document).ready(async () => {
     await VaultUI.init();
@@ -83,9 +86,41 @@ $(document).ready(async () => {
             Log.summon(2, `Errore durante l'eliminazione di ${title}`);
         }
     });
+    /**
+     * GENERATE RECOVERY CODE
+     */
+    Form.onsubmit('form-new-recovery-code', async (form, elements) => {
+        const { password } = elements;
+        // -- verifico la password dell'utente
+        if (!(await AuthService.verify_master_password(password))) {
+            Log.summon(2, "Password isn't correct");
+            return;
+        }
+        // ---
+        const code = await AuthService.generate_recovery_code(password);
+        // ---
+        if (code) {
+            Log.summon(0, "Recovery code generated successfully");
+            navigator.clipboard.writeText(code);
+            Log.summon(3, "Recovery code has been copied on your clipboard");
+            FileUtils.download('Recovery Code', 'txt', code);
+            $(form).trigger('reset');
+        }
+    });
+    /**
+     * SEARCH VAULT
+     */
+    $('#search-vault').on('keyup', (e) => {
+        VaultUI.search.tabella(
+            document.getElementById('search-vault'),
+            'vaults-list',
+            'vault-li'
+        );
+    });
 });
 
 export class VaultUI {
+    static search = new Search();
     static async init(full = false) {
         const inizialized = await VaultService.syncronize(full);
         if (inizialized !== true) return;

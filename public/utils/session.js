@@ -28,3 +28,5 @@ export class SessionStorage {
         sessionStorage.removeItem(`${SessionStorage.prefix}-${key}`);
     }
 }
+
+window.SessionStorage = SessionStorage;

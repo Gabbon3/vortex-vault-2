@@ -21,6 +21,23 @@ export class Cripto {
             return bytes;
         }
     }
+    /**
+     * Genera un codice di recupero crittograficamente sicuro
+     * @param {number} size 
+     * @returns {string}
+     */
+    static random_recovery_code(size = 20) {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        let recovery_code = "";
+        const buffer = new Uint8Array(size);
+        window.crypto.getRandomValues(buffer);
+        // ---
+        for (let i = 0; i < size; i++) {
+            recovery_code += chars[buffer[i] % chars.length];
+        }
+        // ---
+        return recovery_code.match(/.{1,4}/g).join('-');
+    }
 
     /**
      * Genera un hash HMAC di un messaggio con una chiave specifica.
@@ -118,3 +135,5 @@ export class Cripto {
         return new Uint8Array(await crypto.subtle.exportKey('raw', key));
     }
 }
+
+window.Cripto = Cripto;

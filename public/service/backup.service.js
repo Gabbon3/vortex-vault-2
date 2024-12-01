@@ -78,7 +78,13 @@ export class BackupService {
         // ---
         if (!backup) return false;
         custom_key = custom_key ? new TextEncoder().encode(custom_key) : null;
-        const vaults = await VaultService.import_vaults(backup, custom_key);
+        let vaults = null;
+        try {
+            vaults = await VaultService.import_vaults(backup, custom_key);
+        } catch (e) {
+            console.warn(e);
+            return false;
+        }
         // ---
         const restored = await VaultService.restore(vaults);
         // ---

@@ -360,6 +360,7 @@ p {
   font-size: 1em;
   color: #f5f5f5;
   margin: 0.5em auto;
+  line-height: 1.5;
 }
 p a {
   color: #738e54;
@@ -456,12 +457,11 @@ hr {
   padding: 3px;
 }
 
-.finestra {
-  display: none;
+.window {
   position: fixed;
-  top: 50%;
+  top: 100%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0);
   padding: 10px;
   border-radius: 7px;
   max-height: 98%;
@@ -471,14 +471,41 @@ hr {
   overflow-y: scroll;
   z-index: 10;
   background-color: #272727;
+  transition: all 200ms cubic-bezier(1, 0, 1, 1);
+  opacity: 0;
 }
-.finestra.s {
+.window.pt {
+  top: -100%;
+}
+.window.pl {
+  top: 50%;
+  right: 100%;
+  transform: translate(50%, -50%) scale(0);
+  left: unset;
+}
+.window.pl.open {
+  right: 50%;
+  left: unset;
+  transform: translate(50%, -50%) scale(1);
+}
+.window.pr {
+  top: 50%;
+  left: 100%;
+}
+.window.open {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition: all 200ms cubic-bezier(0, 0, 0, 1);
+  opacity: 1;
+}
+.window.s {
   max-width: 400px;
 }
-.finestra.m {
+.window.m {
   max-width: 500px;
 }
-.finestra.auto {
+.window.auto {
   width: inherit;
 }
 
@@ -627,9 +654,9 @@ hr {
   --bc-log: rgba(91, 178, 84, 0.3);
   --i-color: rgb(91, 178, 84);
 }
-#logs_container log-info._4 {
-  --bc-log: rgba(44, 73, 101, 0.3);
-  --i-color: rgb(69, 129, 185);
+#logs_container log-info._3 {
+  --bc-log: rgba(130, 147, 169, 0.2);
+  --i-color: rgb(196, 210, 224);
 }
 #logs_container log-info .i-container {
   height: 100%;
@@ -681,10 +708,10 @@ hr {
   border-radius: 10px;
   background-color: #272727;
   transition: 0.15s;
+  flex-grow: 1;
 }
 #vaults-list vault-li:hover {
   background-color: #2a2a2a;
-  box-shadow: 0 0 4px 0px #2a2a2a;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -731,6 +758,9 @@ hr {
 #devices-list device-list-item .token-id i {
   font-family: "JetBrains Mono", monospace !important;
   font-style: normal !important;
+}
+#devices-list device-list-item.current .token-id {
+  color: #878e54;
 }
 #devices-list device-list-item .info {
   display: flex;

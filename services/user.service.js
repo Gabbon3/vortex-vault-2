@@ -15,7 +15,7 @@ export class UserService {
      * @param {string} password 
      * @returns {string} id dell'utente appena inserito
      */
-    async registra(username, password) {
+    async signup(username, password) {
         // -- verifico che l'username sia disponibile
         const user_exist = await User.findOne({
             where: { username }
@@ -37,7 +37,7 @@ export class UserService {
      * @param {string} ip_address
      * @returns {Object} - access_token, user
      */
-    async accedi(username, password, user_agent, ip_address) {
+    async signin(username, password, user_agent, ip_address, refresh_token = null) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { username }
@@ -49,10 +49,14 @@ export class UserService {
         // -- Access Token
         const access_token = TokenUtils.genera_access_token(user.id);
         // -- Refresh Token
-        // - elimino i token associati
-        const user_agent_hash = this.refresh_token_service.user_agent_hash(user_agent);
-        await this.refresh_token_service.delete_old_tokens(user.id, user_agent_hash);
-        const refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
+
+        /* - RIMOSSO -- elimino i token associati - potrebbe eliminare token associati a dispositivi con user agent uguale
+        // const user_agent_hash = this.refresh_token_service.user_agent_hash(user_agent);
+        // await this.refresh_token_service.delete_old_tokens(user.id, user_agent_hash);
+        */
+        if (!refresh_token) {
+            refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
+        }
         // ---
         return { access_token, refresh_token, user };
     }

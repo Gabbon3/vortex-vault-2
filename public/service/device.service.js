@@ -37,6 +37,19 @@ export class DeviceService {
         return res;
     }
     /**
+     * Rinomina un token
+     * @param {string} token_id 
+     * @param {string} device_name 
+     */
+    static async update_device_name(token_id, device_name) {
+        const res = await API.fetch('/auth/token/rename', {
+            method: 'POST',
+            body: { token_id, device_name }
+        });
+        if (!res) return null;
+        return res;
+    }
+    /**
      * Revoca o meno un dispositivo
      * @param {string} token_id 
      * @param {boolean} revoke 
@@ -75,6 +88,23 @@ export class DeviceService {
         if (!res) return false;
         return res.secret;
     }
+    /**
+     * Restituisce un device tramite id
+     * @param {string} token_id 
+     * @returns {Object}
+     */
+    static get_device(token_id) {
+        return this.devices[this.get_index(token_id)];
+    }
+    /**
+     * Restituisce l'index di un device
+     * @param {Array<Object>} devices 
+     * @param {string} token_id 
+     * @returns {string}
+     */
+    static get_index(token_id, devices = this.devices) {
+        return devices.findIndex(device => device.id === token_id);
+    }
 }
 
-window.DeviceBusiness = DeviceService;
+window.DeviceService = DeviceService;

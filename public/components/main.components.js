@@ -63,6 +63,21 @@ $(document).ready(() => {
             target.value = text;
         }).catch((error) => { console.warn(error) });
     });
+    /**
+     * Pulsanti cancella testo
+     */
+    $(document).on('click', '.del-val', (e) => {
+        const target = document.getElementById(e.currentTarget.getAttribute('data-target-del'));
+        target.value = '';
+        // --- simulo l'evento
+        const keyupevent = new KeyboardEvent('keyup', {
+            key: 'Delete',
+            bubbles: true,
+            cancelable: true,
+        });
+        // ---
+        target.dispatchEvent(keyupevent);
+    });
 });
 
 export const finestra = {
@@ -73,7 +88,7 @@ export const finestra = {
     open(target) {
         const div = $("#" + target);
         if (div.length > 0) {
-            $("#" + target).fadeIn(150);
+            document.getElementById(target).classList.add('open');
             $("#bc-finestre").attr("data-target", target);
             $("#bc-finestre").fadeIn(150);
         }
@@ -83,7 +98,7 @@ export const finestra = {
      * @param {String} target id della finestra html
      */
     close(target) {
-        $("#" + target).fadeOut(150);
+        document.getElementById(target).classList.remove('open');
         $("#bc-finestre").fadeOut(150);
     },
 };

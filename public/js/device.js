@@ -15,6 +15,30 @@ $(document).ready(async () => {
         // ---
         await DeviceUI.enable_2FA_auth();
     });
+    /**
+     * DEVICE NAME
+     */
+    $('#devices-list').on('keyup', '.device-name', async (e) => {
+        const key = e.key;
+        const token_id = e.currentTarget.parentElement.parentElement.getAttribute('id');
+        // ---
+        if (key === 'Enter') {
+            const device_name = e.currentTarget.value;
+            const device = DeviceService.get_device(token_id);
+            if (confirm(`Are you sure you want to rename this device into "${device_name}"?`)) {
+                await DeviceService.update_device_name(token_id, device_name);
+                device.device_name = device_name;
+            } else {
+                e.currentTarget.value = device.device_name;
+            }
+        }
+    })
+    /**
+     * SYNC
+     */
+    $('#btn-sync-devices').on('click', () => {
+        DeviceUI.init();
+    });
 });
 
 class DeviceUI {

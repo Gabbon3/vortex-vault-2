@@ -16,6 +16,7 @@ router.use(limiter);
 // -- le routes con i controller associati
 // /auth/token
 router.post('/refresh', controller.generate_access_token);
+router.post('/rename', verify_access_token, controller.rename);
 router.post('/revoke', verify_access_token, controller.revoke);
 router.post('/revoke-all', verify_access_token, controller.revoke_all);
 router.get('/', verify_access_token, controller.get_all);

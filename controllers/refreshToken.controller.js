@@ -14,12 +14,12 @@ export class RefreshTokenController {
      */
     generate_access_token = async_handler(async (req, res) => {
         const token_id = req.cookies.refresh_token;
-        if (!token_id) throw new CError("AuthenticationError", "Refresh token non valido", 403);
+        if (!token_id) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
         const user_agent = req.get('user-agent');
         // ---
         const refresh_token = await this.service.verify(token_id, user_agent);
-        if (!refresh_token) throw new CError("AuthenticationError", "Refresh token non valido", 403);
+        if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
         const access_token = await TokenUtils.genera_access_token(refresh_token.user_id);
         // -- ottengo l'ip adress del richiedente
@@ -70,7 +70,15 @@ export class RefreshTokenController {
     revoke_all = async_handler(async (req, res) => {
         await this.service.revoke_all(req.user.uid);
         res.sendStatus(200);
-    })
+    });
+    /**
+     * Rinomina un token 
+     */
+    rename = async_handler(async (req, res) => {
+        const { token_id, device_name } = req.body;
+        await this.service.update_token_info(token_id, { device_name });
+        res.status(200).json({ "renamed": true });
+    });
     /**
      * Elimina un refresh token
      * @param {*} req 

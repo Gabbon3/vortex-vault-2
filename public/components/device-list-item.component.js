@@ -28,6 +28,8 @@ class DeviceListItem extends HTMLElement {
         const lua = this.getAttribute('lua'); // last used at
         const revoked = this.getAttribute('revoked');
         const current = JSON.parse(this.getAttribute('current'));
+        // ---
+        if (current) this.classList.add('current');
         // -- imposto la struttura HTML interna del log
         this.innerHTML = `
             <span class="token-id">
@@ -77,6 +79,7 @@ class DeviceListItem extends HTMLElement {
         // ---
         const deleted = await DeviceService.delete(token_id);
         if (!deleted) return;
+        this.remove();
         Log.summon(0, "Device deleted successfully");
     }
 }

@@ -41,10 +41,10 @@ $(document).ready(() => {
         // ---
         if (await BackupService.restore_locally(backup_file, key === ''? null : key)) {
             Log.summon(0, "Backup restored successfully");
+            $(form).trigger('reset');
         } else {
             Log.summon(1, "Error restoring backup");
         }
-        $(form).trigger('reset');
     });
 });
 

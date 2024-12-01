@@ -3,6 +3,7 @@ import { Cripto } from "../secure/cripto.js";
 import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import { API } from "../utils/api.js";
+import { AES256GCM } from "../secure/aesgcm.js";
 
 export class AuthService {
     /**
@@ -18,12 +19,15 @@ export class AuthService {
         });
         if (!res) return false;
         // -- derivo la chiave crittografica
-        const key = await Cripto.derive_key(password, Bytes.hex.from(res.salt));
+        const salt = Bytes.hex.from(res.salt);
+        const key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
         const cke_buffer = Bytes.base64.from(res.cke);
         await LocalStorage.set('username-utente', username);
         await LocalStorage.set('master-key', key, cke_buffer);
+        await LocalStorage.set('salt', salt, cke_buffer);
         SessionStorage.set('master-key', key);
+        SessionStorage.set('salt', salt);
         // --- imposto la scadenza dell'access token
         await LocalStorage.set('access-token-expire', new Date(Date.now() + 3600000));
         // ---
@@ -74,11 +78,26 @@ export class AuthService {
      */
     static async set_master_key(cke) {
         const master_key = await LocalStorage.get('master-key', cke);
+        const salt = await LocalStorage.get('salt', cke);
         if (!master_key) return false;
         // ---
         SessionStorage.set('master-key', master_key);
+        SessionStorage.set('salt', salt);
         // ---
         return true;
+    }
+    /**
+     * Verifica localmente se la password passata come parametro corrisponde a quella effettiva dell'utente
+     * alleggerendo il server
+     * @param {string} password 
+     * @returns {boolean} 
+     */
+    static async verify_master_password(password) {
+        const master_key = await SessionStorage.get('master-key');
+        const salt = await SessionStorage.get('salt');
+        // ---
+        const key = await Cripto.derive_key(password, salt);
+        return Bytes.compare(key, master_key);
     }
     /**
      * Tenta di avviare automaticamente una sessione
@@ -102,6 +121,55 @@ export class AuthService {
         // ---
         return true;
     }
+    /**
+     * Genera e cifra la master password dell'utente con un codice di recupero
+     * @param {string} master_password 
+     */
+    static async generate_recovery_code(master_password) {
+        const code = Cripto.random_recovery_code();
+        const salt = Cripto.random_bytes(16);
+        const master_password_bytes = new TextEncoder().encode(master_password);
+        // ---
+        const key = await Cripto.derive_key(code, salt);
+        const encrypted_password = await AES256GCM.encrypt(master_password_bytes, key);
+        const result_bytes = Bytes.merge([salt, encrypted_password], 8);
+        // ---
+        const res = await API.fetch('/auth/recovery', {
+            method: 'POST',
+            body: result_bytes,
+        }, {
+            content_type: 'bin'
+        });
+        // ---
+        if (!res) return false;
+        return code;
+    }
+    /**
+     * Restituisce la password dell'utente se il codice è corretto
+     * @param {string} code 
+     * @returns {string} Returns
+     */
+    static async master_password_recovery(username, code) {
+        const res = await API.fetch(`/auth/recovery/${username}`, {
+            method: 'GET',
+        });
+        if (!res) return false;
+        // ---
+        const recovery = new Uint8Array(res.recovery.data);
+        const salt = recovery.subarray(0, 16);
+        const encrypted_password = recovery.subarray(16);
+        // ---
+        const key = await Cripto.derive_key(code, salt);
+        try {
+            const master_password_bytes = await AES256GCM.decrypt(encrypted_password, key);
+            const master_password = new TextDecoder().decode(master_password_bytes);
+            // ---
+            return master_password;
+        } catch (error) {
+            console.warn(error);
+            return null;
+        }
+    } 
 }
 
 window.Auth = AuthService;

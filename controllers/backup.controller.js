@@ -12,7 +12,7 @@ export class BackupController {
      * @param {Response} res
      */
     create = async_handler(async (req, res) => {
-        const backup_bytes = req.body; // è in base64
+        const backup_bytes = req.body; // è in binario
         // ---
         if (!backup_bytes)
             throw new CError("ValidationError", "No backup", 422);

@@ -1,6 +1,7 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Bytes } from "../public/utils/bytes.js";
+import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
@@ -9,19 +10,20 @@ import { TOTP } from "../utils/totp.js";
 export class UserController {
     constructor() {
         this.service = new UserService();
+        this.refresh_token_service = new RefreshTokenService();
     }
     /**
      * Registra utente
      * @param {Request} req 
      * @param {Response} res 
      */
-    registra = async_handler(async (req, res) => {
+    signup = async_handler(async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) {
             throw new CError("ValidationError", "Username e password sono richiesti", 422);
         }
         // ---
-        const user = await this.service.registra(username, password);
+        const user = await this.service.signup(username, password);
         res.status(201).json({ message: 'Utente registrato con successo', id: user.id });
     })
     /**
@@ -29,16 +31,25 @@ export class UserController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    accedi = async_handler(async (req, res) => {
+    signin = async_handler(async (req, res) => {
         const { username, password } = req.body;
+        const refresh_token_cookie = req.cookies.refresh_token;
         if (!username || !password) {
             throw new CError("ValidationError", "Username e password sono richiesti", 422);
         }
         // ---
         const user_agent = req.get('user-agent');
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
+        // -- refresh token 
+        let old_refresh_token = null;
+        if (refresh_token_cookie) {
+            // -- verifico se è valido
+            if (await this.refresh_token_service.verify(refresh_token_cookie, user_agent)) {
+                old_refresh_token = refresh_token_cookie
+            }
+        }
         // -- Access Token
-        const { access_token, refresh_token, user } = await this.service.accedi(username, password, user_agent, ip_address);
+        const { access_token, refresh_token, user } = await this.service.signin(username, password, user_agent, ip_address, old_refresh_token);
         const cke = Cripto.random_bytes(32, 'base64');
         this.set_token_cookies(res, access_token, refresh_token, cke);
         // ---
@@ -80,6 +91,31 @@ export class UserController {
         if (!valid) throw new CError("ValidationError", "Codice di autenticazione a due fattori non valido", 401);
         // ---
         res.status(200).json({ message: 'Codice di autenticazione a due fattori valido' });
+    });
+    /**
+     * Imposta le informazioni di recupero password
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    set_recovery = async_handler(async (req, res) => {
+        const recovery = req.body;
+        // -- salvo sul db
+        const [ affected ] = await this.service.update_user_info(req.user.uid, { recovery });
+        if (affected !== 1) throw new CError("ServerError", "Not able to set recovery informations", 500);
+        // ---
+        res.status(200).json({ message: 'Recovery access enabled successfully' });
+    });
+    /**
+     * Restituisce le informazioni di recupero password
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    get_recovery = async_handler(async (req, res) => {
+        const { username } = req.params;
+        // ---
+        const user = await this.service.find_by_username(username);
+        if (!user) throw new CError("ValidationError", "Username provided does not exist", 404);
+        res.status(200).json({ recovery: user.recovery });
     });
     /**
      * Imposta nei cookie l'access e il refresh token

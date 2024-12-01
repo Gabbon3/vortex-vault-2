@@ -23,6 +23,18 @@
             Vault
         </h1>
         <hr>
+        <div class="isle bg-2 mb-2">
+            <label for="search-vault">
+                <span class="material-symbols-rounded">search</span>
+                Search
+            </label>
+            <div class="flex gap-50">
+                <input type="text" class="input-text" id="search-vault" autocomplete="off" required>
+                <button class="btn t CA del-val" data-target-del="search-vault" type="button">
+                    <span class="material-symbols-rounded">backspace</span>
+                </button>
+            </div>
+        </div>
         <div class="flex gap-50">
             <button class="btn primario" id="btn-sync-vault">
                 <span class="material-symbols-rounded">sync_alt</span>
@@ -40,7 +52,7 @@
     <!-- 
     CREATE VAULT
     -->
-    <div class="finestra m" id="win-create-vault">
+    <div class="window m pr" id="win-create-vault">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">encrypted_add</span>
@@ -103,7 +115,7 @@
     <!-- 
     UPDATE VAULT
     -->
-    <div class="finestra m" id="win-update-vault">
+    <div class="window m" id="win-update-vault">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">edit</span>
@@ -170,7 +182,7 @@
     <!-- 
     DEVICES
     -->
-    <div class="finestra m" id="win-devices">
+    <div class="window m pl" id="win-devices">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">token</span>
@@ -181,6 +193,16 @@
             </button>
         </div>
         <hr>
+        <p>
+            In this section you can control the access of devices connected to your account. <br>
+            The device highlighted in green represents the current one.
+        </p>
+        <div class="flex gap-50 mb-2">
+            <button class="btn primario" id="btn-sync-devices">
+                <span class="material-symbols-rounded">sync_alt</span>
+                Sync
+            </button>
+        </div>
         <div id="devices-list">
             <!-- ... -->
         </div>
@@ -188,7 +210,7 @@
     <!-- 
     BACKUP
     -->
-    <div class="finestra m" id="win-backups">
+    <div class="window m pl" id="win-backups">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">cloud</span>
@@ -263,31 +285,66 @@
     <!-- 
     SETTINGS
     -->
-    <div class="finestra m" id="win-settings">
+    <div class="window m pl" id="win-settings">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">settings</span>
-                Impostazioni
+                Settings
             </h2>
             <button class="btn t close l last" data-target-close="win-settings">
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
         <hr>
+        <!-- MFA -->
         <h3 class="icon">
             <span class="material-symbols-rounded">phonelink_lock</span>
             MFA
         </h3>
         <p>
-            Attiva la funzione di autenticazione secondaria per proteggere il tuo account.
+            Enable the secondary authentication feature to protect your account.
         </p>
         <div class="flex gap-50">
             <button class="btn primario" id="btn-enable-2fa">
                 <span class="material-symbols-rounded">security</span>
-                Abilita
+                Enable
             </button>
         </div>
         <canvas id="qrcode-2fa-secret"></canvas>
+        <hr>
+        <!-- RECOVERY CODE -->
+        <h3 class="icon">
+            <span class="material-symbols-rounded">lock_reset</span>
+            Recovery Code
+        </h3>
+        <p>
+            Generate a recovery code to help you recover your password if you forget it.
+            <br>
+            <strong>Pay attention!</strong> If you also lose your recovery code, 
+            you would be able to access your password anymore.
+        </p>
+        <form id="form-new-recovery-code">
+            <label for="password-recovery">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Password
+            </label>
+            <div class="flex gap-50">
+                <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
+                <button class="btn t CA paste-val" data-target-pa="password-recovery" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <p class="description">
+                You need to enter your password to perform this operation.
+            </p>
+            <!-- --- -->
+            <div class="flex-gap-50 mt-2">
+                <button type="submit" class="btn primario" id="btn-generate-recovery-code">
+                    <span class="material-symbols-rounded">security</span>
+                    Generate Recovery Code
+                </button>
+            </div>
+        </form>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

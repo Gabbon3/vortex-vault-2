@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi</title>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <!-- stile -->
+    <link rel="stylesheet" href="./css/main.css">
+    <!-- componenti -->
+    <script type="module" src="./components/main.components.js"></script>
+    <!-- auth -->
+    <script type="module" src="./js/login.js"></script>
+</head>
+<body>
+    <vortex-navbar></vortex-navbar>
+    <main class="pagina">
+        <form id="accedi">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">login</span>
+                Sign In
+            </h2>
+            <p class="secondary">
+                Don't have an account? <a href="/signup">Sign Up</a>
+            </p>
+            <!-- --- -->
+            <label for="username">
+                <span class="material-symbols-rounded">person</span>
+                Username
+            </label>
+            <input type="text" class="input-text" id="username" name="username" autocomplete="off" required>
+            <!-- --- -->
+            <label for="password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Password
+            </label>
+            <input type="password" class="input-text" id="password" name="password" required>
+            <!-- --- -->
+            <hr>
+            <div class="flex gap-50 d-row">
+                <button type="submit" class="btn primario w-100">
+                    <span class="material-symbols-rounded">login</span>
+                    Sign In
+                </button>
+                <button type="button" class="btn warning w-100 open" data-target-open="win-password-recovery">
+                    <span class="material-symbols-rounded">lock_reset</span>
+                    Password Recovery
+                </button>
+            </div>
+        </form>
+    </main>
+    <!--
+        PASSWORD DIMENTICATA
+    -->
+    <div class="window m" id="win-password-recovery">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">lock_reset</span>
+                Password Recovery
+            </h2>
+            <button class="btn t close l last" data-target-close="win-password-recovery">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <form id="form-password-recovery">
+            <!-- USERNAME -->
+            <label for="recovery-username">
+                <span class="material-symbols-rounded">person</span>
+                Username
+            </label>
+            <input type="text" class="input-text" id="recovery-username" name="username" autocomplete="off" required>
+            <!-- RECOVERY CODE -->
+            <label for="recovery-code">
+                <span class="material-symbols-rounded">password</span>
+                Recovery Code
+            </label>
+            <div class="flex gap-75">
+                <input name="code" type="password" class="input-text mono" id="recovery-code" autocomplete="off" placeholder="****-****-****-****-****" required>
+                <button class="btn t CA paste-val" data-target-pa="recovery-code" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <!-- --- -->
+            <button type="submit" class="btn primario mt-2">
+                Submit
+            </button>
+        </form>
+    </div>
+    <!-- FOOTER -->
+    <vortex-footer></vortex-footer>
+</body>
+</html>

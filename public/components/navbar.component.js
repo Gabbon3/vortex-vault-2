@@ -24,9 +24,9 @@ class Navbar extends HTMLElement {
                     <span class="material-symbols-rounded">lock</span>
                     Vault
                 </a>` : ''}
-                <a ${path === '/accedi' ? '' : 'href="/accedi"'}>
+                <a ${path === '/signin' ? '' : 'href="/signin"'}>
                     <span class="material-symbols-rounded">login</span>
-                    Login
+                    Signin
                 </a>
             </nav>
         `;

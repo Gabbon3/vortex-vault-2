@@ -88,9 +88,9 @@
             --i-color: rgb(91, 178, 84);
 		}
 
-        &._4 {
-            --bc-log: rgba(44, 73, 101, 0.3);
-            --i-color: rgb(69, 129, 185);
+        &._3 {
+            --bc-log: rgba(130, 147, 169, 0.2);
+            --i-color: rgb(196, 210, 224);
 		}
 
         background-color: var(--bc-log);
@@ -150,10 +150,11 @@
         border-radius: 10px;
         background-color: $bg-2;
         transition: 0.15s;
+        flex-grow: 1;
 
         &:hover {
             background-color: $bg-3;
-            box-shadow: 0 0 4px 0px $bg-3;
+            // box-shadow: 0 0 4px 0px $bg-3;
         }
 
         .simbolo {
@@ -206,6 +207,12 @@
             i {
                 font-family: $monospace !important;
                 font-style: normal !important;
+            }
+        }
+
+        &.current {
+            .token-id {
+                color: $c1;
             }
         }
 
