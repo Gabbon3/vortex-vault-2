@@ -150,6 +150,11 @@ p {
         }
     }
 
+    b {
+        color: $c1;
+        font-weight: normal;
+    }
+
     &.center {
         text-align: center;
     }

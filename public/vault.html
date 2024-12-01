@@ -28,7 +28,7 @@
                 <span class="material-symbols-rounded">search</span>
                 Search
             </label>
-            <div class="flex gap-50">
+            <div class="flex gap-75">
                 <input type="text" class="input-text" id="search-vault" autocomplete="off" required>
                 <button class="btn t CA del-val" data-target-del="search-vault" type="button">
                     <span class="material-symbols-rounded">backspace</span>
@@ -166,6 +166,16 @@
                 Note
             </label>
             <textarea name="N" id="update-note" autocomplete="none" class="input-text" rows="3"></textarea>
+            <div class="flex gap-50 wrap mt-2">
+                <label class="isle bg-1 fg-1 icon m-0" title="Vault Created Date">
+                    <span class="material-symbols-rounded">calendar_add_on</span>
+                    <span id="update-created-date">Null</span>
+                </label>
+                <label class="isle bg-1 fg-1 icon m-0" title="Vault Last Update Date">
+                    <span class="material-symbols-rounded">edit_calendar</span>
+                    <span id="update-last-modified-date">Null</span>
+                </label>
+            </div>
             <hr>
             <div class="flex gap-50">
                 <button type="submit" class="btn primario">
@@ -195,7 +205,7 @@
         <hr>
         <p>
             In this section you can control the access of devices connected to your account. <br>
-            The device highlighted in green represents the current one.
+            The <b>highlighted</b> device represents the current one.
         </p>
         <div class="flex gap-50 mb-2">
             <button class="btn primario" id="btn-sync-devices">

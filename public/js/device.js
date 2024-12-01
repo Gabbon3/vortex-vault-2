@@ -11,7 +11,7 @@ $(document).ready(async () => {
      * ENABLE 2FA AUTH
      */
     $('#btn-enable-2fa').on('click', async () => {
-        if (!confirm(`Attenzione! Verrà mostrato il segreto tramite QR CODE che dovrai scansionare.`)) return;
+        if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
         await DeviceUI.enable_2FA_auth();
     });

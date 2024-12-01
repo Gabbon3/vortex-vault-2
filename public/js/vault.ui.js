@@ -58,6 +58,8 @@ $(document).ready(async () => {
         document.querySelector('#update-username').value = vault.secrets.U;
         document.querySelector('#update-password').value = vault.secrets.P;
         document.querySelector('#update-note').value = vault.secrets.N;
+        document.querySelector('#update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
+        document.querySelector('#update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
     });
     /**
      * SYNCRONIZE VAULT
@@ -137,7 +139,7 @@ export class VaultUI {
         for (const vault of vaults) {
             html += `<vault-li 
             title="${vault.secrets.T}"
-            updated-at="${date.format("%d %F %Y", new Date(vault.updatedAt))}"
+            updated-at="${date.format("%d %M %Y", new Date(vault.updatedAt))}"
             secure="true"
             id="${vault.id}"
         ></vault-li>`;

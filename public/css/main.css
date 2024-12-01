@@ -370,6 +370,10 @@ p a {
 p a:hover {
   border-bottom: 2px solid #738e54;
 }
+p b {
+  color: #878e54;
+  font-weight: normal;
+}
 p.center {
   text-align: center;
 }
