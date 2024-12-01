@@ -4,6 +4,8 @@ import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import { API } from "../utils/api.js";
 import { AES256GCM } from "../secure/aesgcm.js";
+import { BackupService } from "./backup.service.js";
+import { VaultService } from "./vault.service.js";
 
 export class AuthService {
     /**
@@ -46,6 +48,31 @@ export class AuthService {
         });
         if (!res) return false;
         // -- cifro le credenziali sul localstorage
+        return true;
+    }
+    /**
+     * Cambio password
+     * @param {string} old_password 
+     * @param {string} new_password 
+     * @returns {boolean}
+     */
+    static async change_password(old_password, new_password) {
+        const res = await API.fetch('/auth/password', {
+            method: 'POST',
+            body: { old_password, new_password },
+        });
+        if (!res) return false;
+        // -- imposto la master key
+        const salt = await SessionStorage.get('salt');
+        const key = await Cripto.derive_key(new_password, salt);
+        VaultService.master_key = key;
+        // -- la salvo localmente
+        const cke_buffer = Bytes.base64.from(res.cke);
+        await LocalStorage.set('master-key', key, cke_buffer);
+        await SessionStorage.set('master-key', key);
+        // -- creo e genero un backup per l'utente
+        await BackupService.create_locally();
+        // ---
         return true;
     }
     /**

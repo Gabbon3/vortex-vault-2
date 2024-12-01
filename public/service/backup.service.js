@@ -34,6 +34,7 @@ export class BackupService {
         if (!packed_backup) return false;
         // ---
         FileUtils.download(`Passwords Backup - ${date.format('%d %M %Y')}`, 'bin', packed_backup, 'application/octet-stream');
+        return true;
     }
     /**
      * Restituisce tutti i backup

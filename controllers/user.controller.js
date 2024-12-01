@@ -93,6 +93,18 @@ export class UserController {
         res.status(200).json({ message: 'Codice di autenticazione a due fattori valido' });
     });
     /**
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    change_password = async_handler(async (req, res) => {
+        const { old_password, new_password } = req.body;
+        // ---
+        const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
+        if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
+        res.status(200).json({ message: "Password changed!", cke: req.cookies.cke });
+    });
+    /**
      * Imposta le informazioni di recupero password
      * @param {Request} req 
      * @param {Response} res 

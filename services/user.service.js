@@ -1,9 +1,9 @@
-import { User } from "../models/User.js";
 import bcrypt from 'bcryptjs';
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { RefreshTokenService } from "./refreshToken.service.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
+import { User } from '../models/user.js';
 
 export class UserService {
     constructor() {
@@ -59,6 +59,23 @@ export class UserService {
         }
         // ---
         return { access_token, refresh_token, user };
+    }
+    /**
+     * Esegue il cambio password
+     * @param {number} uid 
+     * @param {string} old_password 
+     * @param {string} password 
+     */
+    async change_password(uid, old_password, password) {
+        // -- verifico se la vecchia password è corretta
+        // -- cerco se l'utente esiste
+        const user = await this.find_by_id(uid);
+        // -- cerco se la password è corretta
+        const password_is_correct = await this.verify_password(old_password, user.password);
+        if (!password_is_correct) throw new CError("AuthenticationError", "Password is not valid", 401);
+        // ---
+        const password_hash = await this.hash_password(password);
+        return this.update_user_info(uid, { password: password_hash });
     }
     /**
      * Restituisce un utente tramite il suo id

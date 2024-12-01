@@ -14,6 +14,7 @@
     <script type="module" src="./js/vault.ui.js"></script>
     <script type="module" src="./js/device.js"></script>
     <script type="module" src="./js/backup.ui.js"></script>
+    <script type="module" src="./js/auth.ui.js"></script>
 </head>
 <body>
     <vortex-navbar></vortex-navbar>
@@ -322,6 +323,31 @@
             </button>
         </div>
         <hr>
+        <!-- CHANGE PASSWORD -->
+        <h3 class="icon">
+            <span class="material-symbols-rounded">key</span>
+            Change Password
+        </h3>
+        <form id="form-change-password">
+            <label for="old-password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Old Password
+            </label>
+            <input name="old_password" type="password" class="input-text mono" id="old-password" autocomplete="off" required>
+            <label for="new-password">
+                <span class="material-symbols-rounded">key_vertical</span>
+                New Password
+            </label>
+            <input name="new_password" type="password" class="input-text mono" id="new-password" autocomplete="off" required>
+            <!-- --- -->
+            <div class="flex-gap-50 mt-2">
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">sync</span>
+                    Change Password
+                </button>
+            </div>
+        </form>
+        <hr>
         <!-- MFA -->
         <h3 class="icon">
             <span class="material-symbols-rounded">phonelink_lock</span>
@@ -365,7 +391,7 @@
             </p>
             <!-- --- -->
             <div class="flex-gap-50 mt-2">
-                <button type="submit" class="btn primary" id="btn-generate-recovery-code">
+                <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">security</span>
                     Generate Recovery Code
                 </button>

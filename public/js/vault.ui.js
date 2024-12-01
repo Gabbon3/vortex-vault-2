@@ -8,6 +8,7 @@ import { FileUtils } from "../utils/file.utils.js";
 import { Search } from "../utils/search.js";
 
 $(document).ready(async () => {
+    if (window.location.pathname !== '/vault') return;
     await VaultUI.init();
     /**
      * CREATE VAULT

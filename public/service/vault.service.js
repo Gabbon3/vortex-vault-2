@@ -22,7 +22,7 @@ export class VaultService {
     static async syncronize(full = false) {
         this.master_key = SessionStorage.get('master-key');
         const vault_update = await LocalStorage.get('vault-update') ?? null;
-        if (!this.master_key) return Log.summon(2, 'Nessuna chiave crittografica trovata');
+        if (!this.master_key) return Log.summon(2, 'Any Crypto Key founded');
         // ---
         try {
             this.vaults = await VaultLocal.get(this.master_key);
@@ -136,6 +136,7 @@ export class VaultService {
      * @returns {boolean}
      */
     static async restore(vaults) {
+        await VaultLocal.save(vaults, this.master_key);
         // -- cifro i vault
         for (const vault of vaults) {
             const bytes = msgpack.encode(vault.secrets);

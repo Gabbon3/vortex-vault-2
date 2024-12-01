@@ -40,3 +40,5 @@ export class LocalStorage {
         localStorage.removeItem(`${LocalStorage.prefix}-${key}`);
     }
 }
+
+window.LocalStorage = LocalStorage;

@@ -18,6 +18,7 @@ router.use(limiter);
 router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
 router.get('/recovery/:username', controller.get_recovery);
+router.post('/password', verify_access_token, controller.change_password);
 router.post('/recovery', verify_access_token, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 router.post('/2fa', verify_access_token, controller.enable_2fa);
 router.post('/2fa_test', verify_access_token, controller.test_2fa);

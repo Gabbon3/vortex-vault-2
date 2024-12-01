@@ -84,7 +84,6 @@ export class VaultController {
     restore = async_handler(async (req, res) => {
         const packed_vaults = req.body;
         const vaults = msgpack.decode(packed_vaults);
-        console.log(vaults);
         // ---
         const restored = await this.service.restore(req.user.uid, vaults);
         if (!restored) throw new CError("RestoreFailed", "Error during restore of vaults", 500);
