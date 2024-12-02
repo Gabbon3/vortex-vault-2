@@ -6,8 +6,6 @@ node_modules/
 .log
 # ignoro i file di configurazione
 # al momento non ignorato per permettere una semplice implementazione
-.env 
-
 # ignoro i file docker
 dockerfile
 .dockerignore

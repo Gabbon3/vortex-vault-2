@@ -20,6 +20,8 @@
         "jsonwebtoken": "^9.0.2",
         "msgpack-lite": "^0.1.26",
         "mysql2": "^3.11.3",
+        "pg": "^8.13.1",
+        "pg-hstore": "^2.3.4",
         "redis": "^4.7.0",
         "sequelize": "^6.37.5",
         "ua-parser-js": "^2.0.0-rc.1"

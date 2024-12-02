@@ -1,7 +1,11 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
+
+const ssl_cert_path = path.resolve('./ssl.crt');
 
 export const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -9,7 +13,14 @@ export const sequelize = new Sequelize(
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
-        dialect: 'mysql',
+        dialect: 'postgres',
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false,
+                ca: fs.readFileSync(ssl_cert_path).toString(),
+            }
+        },
         logging: false,
         pool: {
             max: 5,           // Numero massimo di connessioni attive

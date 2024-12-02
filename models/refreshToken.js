@@ -9,7 +9,7 @@ export const RefreshToken = sequelize.define(
             allowNull: false, 
             primaryKey: true },
         user_id: { 
-            type: DataTypes.BIGINT.UNSIGNED, 
+            type: DataTypes.BIGINT, 
             allowNull: false 
         },
         device_name: {

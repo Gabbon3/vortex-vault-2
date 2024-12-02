@@ -5,22 +5,21 @@ export const Backup = sequelize.define(
     "Backup",
     {
         id: { 
-            type: DataTypes.BIGINT.UNSIGNED, 
+            type: DataTypes.BIGINT, 
             primaryKey: true,
             autoIncrement: true 
         },
         user_id: {
-            type: DataTypes.BIGINT.UNSIGNED,
+            type: DataTypes.BIGINT,
             allowNull: false,
             unique: true
         },
         expire: {
             type: DataTypes.DATE,
-            defaultValue: sequelize.literal('DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 MONTH)'),
             allowNull: false
         },
         bin: {
-            type: DataTypes.BLOB('long'),
+            type: DataTypes.BLOB,
             allowNull: false,
         }
     },

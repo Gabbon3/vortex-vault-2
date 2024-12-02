@@ -10,7 +10,7 @@ export const Vault = sequelize.define(
             primaryKey: true
         },
         user_id: {
-            type: DataTypes.BIGINT.UNSIGNED,
+            type: DataTypes.BIGINT,
             allowNull: false
         },
         secrets: {
