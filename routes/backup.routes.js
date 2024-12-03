@@ -8,8 +8,8 @@ const router = express.Router();
 const controller = new BackupController();
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 60,
+    windowMs: 5 * 60 * 1000,
+    max: 100,
     message: "Too many requests, try later",
 });
 router.use(limiter);

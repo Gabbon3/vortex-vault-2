@@ -9,8 +9,8 @@ const router = express.Router();
 const controller = new UserController();
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({
-    windowMs: 2 * 60 * 1000, // 2 minuti
-    max: 20, // massimo 10 richieste per 2 minuti
+    windowMs: 5 * 60 * 1000,
+    max: 250, // massimo 10 richieste per 2 minuti
     message: "Too many requests, try later",
 });
 router.use(limiter);

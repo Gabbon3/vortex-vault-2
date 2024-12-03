@@ -7,12 +7,12 @@ const router = express.Router();
 // -- controller
 const controller = new VaultController();
 // -- rate Limiter per le auth routes
-// const limiter = rateLimit({
-//     windowMs: 1 * 60 * 1000,
-//     max: 60,
-//     message: "Too many requests, try later",
-// });
-// router.use(limiter);
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 250,
+    message: "Too many requests, try later",
+});
+router.use(limiter);
 // -- middleware
 router.use(verify_access_token);
 // -- /vaults

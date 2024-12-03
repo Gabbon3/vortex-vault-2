@@ -9,7 +9,7 @@ const controller = new RefreshTokenController();
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 5,
+    max: 30,
     message: "Too many requests, try later",
 });
 router.use(limiter);
