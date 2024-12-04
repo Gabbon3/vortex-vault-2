@@ -31,17 +31,29 @@ $(document).ready(async () => {
      * NEW VAULT CUSTOM SECTION
      */
     $('#add-custom-section-new-vault').on('click', () => {
-        document.querySelector('#custom-sections-new-vault').innerHTML 
-        += 
-        `<custom-vault-section input-id="${Date.now()}" paste="true"></custom-vault-section>`;
+        // -- memorizzo i dati degli input precedenti
+        document.querySelectorAll('custom-vault-section input').forEach((e) => {
+            e.setAttribute("value", e.value);
+        });
+        // ---
+        const section = document.createElement('custom-vault-section');
+        section.setAttribute('input-id', Date.now());
+        section.setAttribute('paste', 'true');
+        document.querySelector('#custom-sections-new-vault').appendChild(section);
     });
     /**
      * UPDATE VAULT CUSTOM SECTION
      */
     $('#add-custom-section-update-vault').on('click', () => {
-        document.querySelector('#custom-sections-update-vault').innerHTML 
-        += 
-        `<custom-vault-section input-id="${Date.now()}" paste="true"></custom-vault-section>`;
+        // -- memorizzo i dati degli input precedenti
+        document.querySelectorAll('custom-vault-section input').forEach((e) => {
+            e.setAttribute("value", e.value);
+        });
+        // ---
+        const section = document.createElement('custom-vault-section');
+        section.setAttribute('input-id', Date.now());
+        section.setAttribute('paste', 'true');
+        document.querySelector('#custom-sections-update-vault').appendChild(section);
     });
     /**
      * UPDATE VAULT

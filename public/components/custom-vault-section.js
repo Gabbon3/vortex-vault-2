@@ -5,19 +5,19 @@ class CustomVaultSection extends HTMLElement {
         this.name = null;
     }
 
-    static get observedAttributes() {
-        return ['input-id'];
-    }
+    // static get observedAttributes() {
+    //     return ['input-id'];
+    // }
 
     connectedCallback() {
         this.render();
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            this.render();
-        }
-    }
+    // attributeChangedCallback(name, oldValue, newValue) {
+    //     if (oldValue !== newValue) {
+    //         this.render();
+    //     }
+    // }
     /**
      * Restituisce un icona adatta a rappresentare la sezione indicata
      * @param {string} section_name 
@@ -64,7 +64,7 @@ class CustomVaultSection extends HTMLElement {
         this.innerHTML = `
             <label for="${input_id}">
                 <span class="material-symbols-rounded">${CustomVaultSection.get_icon(section_name)}</span>
-                <input class="input-text input-name" value="${section_name}">
+                <input class="input-text input-name">
                 <button type="button" class="btn t remove-custom-section" title="Remove this section">
                     <span class="material-symbols-rounded">close</span>
                 </button>
@@ -79,6 +79,7 @@ class CustomVaultSection extends HTMLElement {
         // -- VARIABILI
         this.input = this.querySelector('.custom-input');
         this.name = this.querySelector('.input-name');
+        this.name.value = 'Custom';
         // -- EVENTI
         this.querySelector('.remove-custom-section').addEventListener('click', this.delete.bind(this));
         // - modifica il name dell'input quando l'input dedicato al nome appunto viene modificato

@@ -1,7 +1,7 @@
 # ignoro la cartella di configurazione di vscode
 # .vscode/
 # ignoro la cartella dei node modules
-# node_modules/
+node_modules/
 # ignoro i file di log se esistenti
 # .log
 # ignoro i file di configurazione
