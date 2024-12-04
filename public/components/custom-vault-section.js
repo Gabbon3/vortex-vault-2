@@ -58,7 +58,7 @@ class CustomVaultSection extends HTMLElement {
     render() {
         const input_id = this.getAttribute('input-id');
         const input_value = this.getAttribute('input-value') ?? '';
-        const section_name = this.getAttribute('section-name') ?? 'custom';
+        const section_name = this.getAttribute('section-name') ?? 'Custom';
         const paste = JSON.parse(this.getAttribute('paste'));
         // ---
         this.innerHTML = `
@@ -79,7 +79,7 @@ class CustomVaultSection extends HTMLElement {
         // -- VARIABILI
         this.input = this.querySelector('.custom-input');
         this.name = this.querySelector('.input-name');
-        this.name.value = 'Custom';
+        this.name.value = section_name;
         // -- EVENTI
         this.querySelector('.remove-custom-section').addEventListener('click', this.delete.bind(this));
         // - modifica il name dell'input quando l'input dedicato al nome appunto viene modificato
