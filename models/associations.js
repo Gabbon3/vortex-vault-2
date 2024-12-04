@@ -1,5 +1,5 @@
 import { RefreshToken } from "./refreshToken.js";
-import { User } from "./User.js";
+import { User } from "./user.js";
 import { Vault } from "./vault.js";
 import { Backup } from "./backup.js";
 

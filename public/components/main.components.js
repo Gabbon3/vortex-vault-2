@@ -79,6 +79,12 @@ $(document).ready(() => {
         // ---
         target.dispatchEvent(keyupevent);
     });
+    /**
+     * Chiudi Caricamento
+     */
+    $('#loader').on('dblclick', (e) => {
+        $(e.currentTarget).fadeOut(200);
+    })
 });
 
 export const finestra = {
@@ -101,5 +107,16 @@ export const finestra = {
     close(target) {
         document.getElementById(target).classList.remove('open');
         $("#bc-finestre").fadeOut(150);
+    },
+    /**
+     * schermata di caricamento
+     * @param {boolean} active 
+     */
+    loader(active) {
+        if (active) {
+            $("#loader").fadeIn(200);
+        } else {
+            $("#loader").fadeOut(200);
+        }
     },
 };

@@ -73,9 +73,9 @@ class DeviceUI {
         // -- copio negli appunti il segreto
         navigator.clipboard.writeText(base32_secret);
         // ---
-        Log.summon(0, `2FA attivato con successo`);
+        Log.summon(0, `MFA enabled`);
         setTimeout(() => {
-            Log.summon(1, "Attenzione! Il Qr Code verrà invalidato tra 20 secondi");
+            Log.summon(1, "Pay attention! The Qr Code will be invalidated in 20 seconds");
             setTimeout(() => {
                 canvas.style.height = 0;
             }, 20000);

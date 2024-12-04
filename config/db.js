@@ -5,7 +5,7 @@ import fs from 'fs';
 
 dotenv.config();
 
-const ssl_cert_path = path.resolve('./ssl.crt');
+const ssl_cert_path = path.resolve('./config/ssl.crt');
 
 export const sequelize = new Sequelize(
     process.env.DB_NAME,

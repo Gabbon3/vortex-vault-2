@@ -9,3 +9,5 @@ node_modules/
 # ignoro i file docker
 dockerfile
 .dockerignore
+*.pem
+*.env

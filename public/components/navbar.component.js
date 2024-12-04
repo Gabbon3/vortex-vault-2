@@ -24,10 +24,14 @@ class Navbar extends HTMLElement {
                     <span class="material-symbols-rounded">lock</span>
                     Vault
                 </a>` : ''}
-                <a ${path === '/signin' ? '' : 'href="/signin"'}>
+                ${path !== '/signin' ? `<a href="/signin"'>
                     <span class="material-symbols-rounded">login</span>
-                    Signin
-                </a>
+                    Sign In
+                </a>` : ''}
+                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"'>
+                    <span class="material-symbols-rounded">person_add</span>
+                    Sign Up
+                </a>` : ''}
             </nav>
         `;
     }

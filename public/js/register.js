@@ -9,11 +9,11 @@ $(document).ready(async () => {
     Form.onsubmit('registrati', async (form, elements) => {
         const { username, password, password2 } = elements;
         // -- controllo sulle password
-        if (password !== password2) return Log.summon(1, 'Le password non coincidono');
+        if (password !== password2) return Log.summon(1, 'Passwords doesn\'t match');;
         // ---
         if (await AuthService.register(username, password)) {
             $(form).trigger('reset');
-            Log.summon(0, `${username}, sei stato registrato con successo`);
+            Log.summon(0, `${username}, you have been successfully registered`);
         }
     });
 });

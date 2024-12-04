@@ -32,21 +32,27 @@ export class VaultService {
             if (n_local_vaults > n_db_vaults) full = true;
             // se ci sono dei vault nel localstorage recupero solo quelli nuovi
             // recupero tutti i vault se full è true
-            const vaults_from_db = await this.get(this.vaults.length > 0 && !full ? vault_update : null);
+            const vaults_from_db = await this.get(full ? null : vault_update);
             if (vaults_from_db.length > 0) {
-                if (!full) {
-                    this.vaults = await VaultLocal.sync_update(vaults_from_db, this.master_key)
-                } else {
+                if (full) {
                     await VaultLocal.save(vaults_from_db, this.master_key);
                     this.vaults = vaults_from_db;
+                } else {
+                    this.vaults = await VaultLocal.sync_update(vaults_from_db, this.master_key)
                 }
+            } else {
+                // -- se eseguendo il sync totale non ci sono vault nel db allora azzero per sicurezza anche in locale
+                if (full) await VaultLocal.save([], this.master_key);
             }
         } catch (error) {
             console.warn('Sync Error - Vault => ', error);
+            LocalStorage.remove('vault-update');
+            LocalStorage.remove('vaults');
             return false;
         }
         this.load_used_usernames();
-        // ---
+        // -- ordino l'array
+        this.vaults.sort((a, b) => a.secrets.T.localeCompare(b.secrets.T));
         return true;
     }
     /**

@@ -14,15 +14,17 @@ $(document).ready(async () => {
      * CREATE VAULT
      */
     Form.onsubmit("form-create-vault", async (form, elements) => {
-        if (!confirm(`Confermi di voler salvare ${elements.T}`)) return;
+        if (!confirm(`Have you entered everything for ${elements.T}`)) return;
         // ---
         if (await VaultService.create(elements)) {
-            Log.summon(0, `${elements.T} salvato con successo`);
+            Log.summon(0, `${elements.T} saved`);
             finestra.close('win-create-vault');
             $(form).trigger("reset");
-            VaultUI.init();
+            setTimeout(() => {
+                VaultUI.init();
+            }, 1000);
         } else {
-            Log.summon(2, `Errore durante il salvataggio di ${elements.T}`);
+            Log.summon(2, `Error while saving ${elements.T}`);
         }
     });
     /**
@@ -31,7 +33,7 @@ $(document).ready(async () => {
     $('#add-custom-section-new-vault').on('click', () => {
         document.querySelector('#custom-sections-new-vault').innerHTML 
         += 
-        `<custom-vault-section input-id="${Date.now()}"></custom-vault-section>`;
+        `<custom-vault-section input-id="${Date.now()}" paste="true"></custom-vault-section>`;
     });
     /**
      * UPDATE VAULT CUSTOM SECTION
@@ -39,13 +41,13 @@ $(document).ready(async () => {
     $('#add-custom-section-update-vault').on('click', () => {
         document.querySelector('#custom-sections-update-vault').innerHTML 
         += 
-        `<custom-vault-section input-id="${Date.now()}"></custom-vault-section>`;
+        `<custom-vault-section input-id="${Date.now()}" paste="true"></custom-vault-section>`;
     });
     /**
      * UPDATE VAULT
      */
     Form.onsubmit("form-update-vault", async (form, elements) => {
-        if (!confirm(`Confermi di voler modificare ${elements.T}`)) return;
+        if (!confirm(`Do you confirm that you want to edit ${elements.T}`)) return;
         // ---
         const { vault_id } = elements;
         delete elements.vault_id;
@@ -54,7 +56,9 @@ $(document).ready(async () => {
             Log.summon(0, `${elements.T} modificato con successo`);
             finestra.close('win-update-vault');
             $(form).trigger("reset");
-            VaultUI.init();
+            setTimeout(() => {
+                VaultUI.init();
+            }, 1000);
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
         }
@@ -85,7 +89,7 @@ $(document).ready(async () => {
             if (secret.length === 1) continue;
             // ---
             custom_container.innerHTML += 
-            `<custom-vault-section input-id="${`${Date.now()}.${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}"></custom-vault-section>`; 
+            `<custom-vault-section input-id="${`${Date.now()}.${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}" paste="false"></custom-vault-section>`; 
             i++;
         }
     });
@@ -93,7 +97,7 @@ $(document).ready(async () => {
      * SYNCRONIZE VAULT
      */
     $('#btn-sync-vault').on('click', async () => {
-        if (!confirm('Confermi di volerti sincronizzare con il server?')) return;
+        if (!confirm('Do you confirm that you want to synchronize with the server?')) return;
         // ---
         await VaultService.syncronize(true);
         VaultUI.html_vaults(VaultService.vaults);
@@ -103,17 +107,17 @@ $(document).ready(async () => {
      * DELETE VAULT
      */
     $('#btn-delete-vault').on('click', async (e) => {
-        const vault_id = e.target.getAttribute('vault-id');
-        const vault = await VaultService.get_vault(vault_id);
+        const vault_id = e.currentTarget.getAttribute('vault-id');
+        const vault = VaultService.get_vault(vault_id);
         const title = vault.secrets.T;
-        if (!confirm(`Confermi di voler eliminare ${title}?`)) return;
+        if (!confirm(`Are you sure you want to delete permanently ${title}?`)) return;
         // ---
         if (await VaultService.delete(vault_id)) {
-            Log.summon(0, `${title} eliminato con successo`);
+            Log.summon(0, `${title} deleted`);
             finestra.close('win-update-vault');
             VaultUI.init();
         } else {
-            Log.summon(2, `Errore durante l'eliminazione di ${title}`);
+            Log.summon(2, `Error while deleting ${title}`);
         }
     });
     /**

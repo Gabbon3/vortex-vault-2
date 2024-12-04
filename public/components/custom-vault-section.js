@@ -52,13 +52,14 @@ class CustomVaultSection extends HTMLElement {
         svg = iconMap.find((item) =>
             item.keywords.some((keyword) => section_name.includes(keyword))
         )?.svg;
-        return svg ?? text_fields;
+        return svg ?? 'text_fields';
     }
 
     render() {
         const input_id = this.getAttribute('input-id');
         const input_value = this.getAttribute('input-value') ?? '';
         const section_name = this.getAttribute('section-name') ?? 'custom';
+        const paste = JSON.parse(this.getAttribute('paste'));
         // ---
         this.innerHTML = `
             <label for="${input_id}">
@@ -70,8 +71,8 @@ class CustomVaultSection extends HTMLElement {
             </label>
             <div class="flex gap-50">
                 <input name="${section_name}" value="${input_value}" type="text" class="input-text mono custom-input" id="${input_id}" autocomplete="off" required>
-                <button class="btn t CA paste-val" data-target-pa="${input_id}" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
+                <button class="btn t CA ${paste ? 'paste' : 'copy'}-val" data-target-${paste ? 'pa' : 'cc'}="${input_id}" type="button" title="Paste">
+                    <span class="material-symbols-rounded">${paste ? 'content_paste' : 'content_copy'}</span>
                 </button>
             </div>
         `;

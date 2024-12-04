@@ -16,7 +16,8 @@ export const Backup = sequelize.define(
         },
         expire: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: true,
+            defaultValue: null,
         },
         bin: {
             type: DataTypes.BLOB,
