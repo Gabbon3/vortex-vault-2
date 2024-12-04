@@ -10,9 +10,6 @@ import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
 
 dotenv.config();
 
@@ -44,17 +41,6 @@ app.use(error_handler_middleware);
 
 const PORT = process.env.PORT || 3000;
 
-/**
- * HTTPS
- */
-const private_key_path = path.resolve('/etc/letsencrypt/live/vortexvault.duckdns.org/privkey.pem');
-const certificate_path = path.resolve('/etc/letsencrypt/live/vortexvault.duckdns.org/fullchain.pem');
-// ---
-const options = {
-    key: fs.readFileSync(private_key_path).toString(),
-    cert: fs.readFileSync(certificate_path).toString(),
-}
-
 try {
     await sequelize.authenticate();
     console.log('☑️ DB');
@@ -62,8 +48,8 @@ try {
     // await sequelize.sync({ force: true });
     // console.log('Modelli sincronizzati con il database.');
     // ---
-    https.createServer(options, app).listen(PORT, () => {
-        console.log(`☑️ Server => https://35.158.51.131:${PORT}`);
+    app.listen(PORT, () => {
+        console.log(`☑️ Server`);
     });
 } catch (error) {
     console.error('❌ Errore durante l\'avvio del server => ', error);
