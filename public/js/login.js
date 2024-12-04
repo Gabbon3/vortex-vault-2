@@ -16,7 +16,7 @@ $(document).ready(async () => {
     if (saved_username) {
         if (confirm(`Access saved as ${saved_username}, continue?`)) {
             const session_started = await AuthService.start_session();
-            if (session_started) finestra.location.href = '/vault';
+            if (session_started) window.location.href = '/vault';
         }
     }
     /**
