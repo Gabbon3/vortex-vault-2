@@ -2,7 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 // import { verifica_jwt } from "../middlewares/authMiddleware.js";
 import { UserController } from "../controllers/user.controller.js";
-import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { verify_access_token, verify_mfa_code } from "../middlewares/authMiddleware.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -20,7 +20,7 @@ router.post('/accedi', controller.signin);
 router.get('/recovery/:username', controller.get_recovery);
 router.post('/password', verify_access_token, controller.change_password);
 router.post('/recovery', verify_access_token, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
-router.post('/2fa', verify_access_token, controller.enable_2fa);
-router.post('/2fa_test', verify_access_token, controller.test_2fa);
+router.post('/mfa', verify_access_token, controller.enable_2fa);
+router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
 
 export default router;

@@ -75,22 +75,12 @@ export class UserController {
         });
     });
     /**
-     * 
+     * Just a test
      * @param {Request} req 
      * @param {Response} res 
      */
     test_2fa = async_handler(async (req, res) => {
-        const { code } = req.body;
-        if (!code) throw new CError("ValidationError", "Codice di autenticazione a due fattori non specificato", 422);
-        // ---
-        const user = await this.service.find_by_id(req.user.uid);
-        if (!user.totp_secret) throw new CError("ValidationError", "L'autenticazione a due fattori non è abilitata per questo utente", 422);
-        // --
-        const secret_bytes = Bytes.hex.from(user.totp_secret);
-        const valid = await TOTP.verify(code, secret_bytes);
-        if (!valid) throw new CError("ValidationError", "Codice di autenticazione a due fattori non valido", 401);
-        // ---
-        res.status(200).json({ message: 'Codice di autenticazione a due fattori valido' });
+        res.status(200).json({ message: "Valid" });
     });
     /**
      * 

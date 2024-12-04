@@ -13,7 +13,7 @@ $(document).ready(async () => {
     $('#btn-enable-2fa').on('click', async () => {
         if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
-        await DeviceUI.enable_2FA_auth();
+        await DeviceUI.enable_mfa();
     });
     /**
      * DEVICE NAME
@@ -52,8 +52,8 @@ class DeviceUI {
      * 
      * @returns 
      */
-    static async enable_2FA_auth() {
-        const secret = await DeviceService.enable_2FA_auth();
+    static async enable_mfa() {
+        const secret = await DeviceService.enable_mfa();
         if (!secret) return;
         const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
         const app_name = 'Vortex Vault';

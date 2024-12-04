@@ -49,11 +49,6 @@ export class UserService {
         // -- Access Token
         const access_token = TokenUtils.genera_access_token(user.id);
         // -- Refresh Token
-
-        /* - RIMOSSO -- elimino i token associati - potrebbe eliminare token associati a dispositivi con user agent uguale
-        // const user_agent_hash = this.refresh_token_service.user_agent_hash(user_agent);
-        // await this.refresh_token_service.delete_old_tokens(user.id, user_agent_hash);
-        */
         if (!refresh_token) {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
         }

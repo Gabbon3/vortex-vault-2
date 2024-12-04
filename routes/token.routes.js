@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { RefreshTokenController } from "../controllers/refreshToken.controller.js";
-import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { verify_access_token, verify_mfa_code } from "../middlewares/authMiddleware.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -18,6 +18,7 @@ router.use(limiter);
 router.post('/refresh', controller.generate_access_token);
 router.post('/rename', verify_access_token, controller.rename);
 router.post('/revoke', verify_access_token, controller.revoke);
+router.post('/unlock', verify_mfa_code, controller.unlock);
 router.post('/revoke-all', verify_access_token, controller.revoke_all);
 router.get('/', verify_access_token, controller.get_all);
 router.delete('/:token_id', verify_access_token, controller.delete)

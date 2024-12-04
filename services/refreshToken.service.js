@@ -18,13 +18,19 @@ export class RefreshTokenService {
         const ua = UAParser(user_agent);
         const user_agent_summary = `${ua.browser.name ?? ""}-${ua.browser.major ?? ""}-${ua.os.name ?? ""}-${ua.os.version ?? ""}`;
         const user_agent_hash = this.user_agent_hash(user_agent);
+        // -- conto i refresh token
+        const count = await this.count(user_id);
+        // -- se non ci sono token associati quindi si tratta del primo accesso
+        // -- abilito il token, se no bisogna approvarlo
+        const revoke_this_token = count > 0;
         // ---
         const token = await RefreshToken.create({
             id: token_id,
             user_id,
             user_agent_summary,
             user_agent_hash,
-            ip_address: ip_address ?? ''
+            ip_address: ip_address ?? '',
+            is_revoked: revoke_this_token
         });
         // ---
         return token ? token_id : null;
@@ -62,6 +68,18 @@ export class RefreshTokenService {
             { is_revoked: true },
             { where: { user_id } }
         );
+    }
+    /**
+     * Restituisce il numero totale di refresh token associati ad un utente
+     * @param {number} user_id 
+     * @returns {number}
+     */
+    async count(user_id) {
+        return await RefreshToken.count({
+            where: {
+                user_id
+            }
+        });
     }
     /**
      * Restituisce tutti i token associati ad un utente

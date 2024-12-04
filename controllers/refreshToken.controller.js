@@ -61,7 +61,21 @@ export class RefreshTokenController {
         // ---
         await this.service.revoke(token_id, revoke);
         res.status(200).json({ "revoked": revoke });
-    })
+    });
+    /**
+     * Riattiva un refresh token revocato tramite controllo mfa
+     * @param {*} req body { token_id }
+     * @param {*} res 
+     */
+    unlock = async_handler(async (req, res) => {
+        const current_token = req.cookies.refresh_token;
+        if (!current_token) throw new Error('ValidationError', 'Any token avaiable', 404);
+        // ---
+        const [affectedCount] = await this.service.update_token_info(current_token, {
+            is_revoked: false
+        });
+        res.status(200).json({ message: "Token unlocked" });
+    });
     /**
      * Revoca tutti i refresh token associati ad un utente
      * @param {*} req 

@@ -84,3 +84,5 @@ export class API {
         return formData;
     }
 }
+
+window.API = API;

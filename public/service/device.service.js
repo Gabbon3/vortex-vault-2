@@ -80,7 +80,7 @@ export class DeviceService {
      * Attiva l'autenticazione a due fattori
      * @returns {boolean}
      */
-    static async enable_2FA_auth() {
+    static async enable_mfa() {
         const res = await API.fetch('/auth/2fa', {
             method: 'POST'
         });
