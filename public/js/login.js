@@ -9,11 +9,13 @@ $(document).ready(async () => {
      * Provo ad accedere automaticamente
      */
     const saved_username = await LocalStorage.get('username-utente');
+    const access_token_expire = await LocalStorage.get('access-token-expire');
     // ---
     document.getElementById('recovery-username').value = saved_username;
+    document.getElementById('recovery-device-username').value = saved_username;
     document.getElementById('username').value = saved_username;
     // ---
-    if (saved_username) {
+    if (saved_username && access_token_expire && Date.now() < access_token_expire.getTime()) {
         if (confirm(`Access saved as ${saved_username}, continue?`)) {
             const session_started = await AuthService.start_session();
             if (session_started) window.location.href = '/vault';
@@ -28,6 +30,8 @@ $(document).ready(async () => {
         if (await AuthService.login(username, password)) {
             $(form).trigger('reset');
             Log.summon(0, `Authenticated as ${username}`);
+        } else {
+            Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
     });
     /**
@@ -45,6 +49,18 @@ $(document).ready(async () => {
             finestra.close('win-password-recovery');
         } else {
             Log.summon(2, 'Decryption failed');
+        }
+    });
+    /**
+     * DEVICE RECOVERY
+     */
+    Form.onsubmit('form-device-recovery', async (form, elements) => {
+        const { username, code } = elements;
+        const message = await AuthService.device_recovery(username, code);
+        if (message) {
+            Log.summon(0, message);
+            $(form).trigger('reset');
+            finestra.close('win-device-recovery');
         }
     });
 });

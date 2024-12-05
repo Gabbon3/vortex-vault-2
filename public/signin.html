@@ -38,12 +38,16 @@
             <input type="password" class="input-text" id="password" name="password" required>
             <!-- --- -->
             <hr>
+            <button type="submit" class="btn primary w-100 mb-2">
+                <span class="material-symbols-rounded">login</span>
+                Sign In
+            </button>
             <div class="flex gap-50 d-row">
-                <button type="submit" class="btn primary w-100">
-                    <span class="material-symbols-rounded">login</span>
-                    Sign In
+                <button type="button" class="btn warning fg-1 open" data-target-open="win-device-recovery">
+                    <span class="material-symbols-rounded">mobile_friendly</span>
+                    Device Recovery
                 </button>
-                <button type="button" class="btn warning w-100 open" data-target-open="win-password-recovery">
+                <button type="button" class="btn warning fg-1 open" data-target-open="win-password-recovery">
                     <span class="material-symbols-rounded">lock_reset</span>
                     Password Recovery
                 </button>
@@ -53,7 +57,7 @@
     <!--
         PASSWORD DIMENTICATA
     -->
-    <div class="window m" id="win-password-recovery">
+    <div class="window m pr" id="win-password-recovery">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">lock_reset</span>
@@ -79,6 +83,44 @@
             <div class="flex gap-75">
                 <input name="code" type="password" class="input-text mono" id="recovery-code" autocomplete="off" placeholder="****-****-****-****-****" required>
                 <button class="btn t CA paste-val" data-target-pa="recovery-code" type="button" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+            </div>
+            <!-- --- -->
+            <button type="submit" class="btn primary mt-2">
+                Submit
+            </button>
+        </form>
+    </div>
+    <!--
+        DEVICE RECOVERY
+    -->
+    <div class="window m pl" id="win-device-recovery">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">mobile_friendly</span>
+                Device Recovery
+            </h2>
+            <button class="btn t close l last" data-target-close="win-device-recovery">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <form id="form-device-recovery">
+            <!-- USERNAME -->
+            <label for="recovery-device-username">
+                <span class="material-symbols-rounded">person</span>
+                Username
+            </label>
+            <input type="text" class="input-text" id="recovery-device-username" name="username" autocomplete="off" required>
+            <!-- RECOVERY CODE -->
+            <label for="recovery-device-code">
+                <span class="material-symbols-rounded">password</span>
+                Recovery Code
+            </label>
+            <div class="flex gap-75">
+                <input name="code" maxlength="6" type="text" class="input-text mfa" id="recovery-device-code" autocomplete="off" placeholder="******" required>
+                <button class="btn t CA paste-val" data-target-pa="recovery-device-code" type="button" title="Paste">
                     <span class="material-symbols-rounded">content_paste</span>
                 </button>
             </div>

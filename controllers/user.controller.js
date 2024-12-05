@@ -53,6 +53,13 @@ export class UserController {
         const cke = Cripto.random_bytes(32, 'base64');
         this.set_token_cookies(res, access_token, refresh_token, cke);
         // ---
+        if (!access_token) {
+            return res.status(403).json({
+                error: "This device is locked",
+                refresh_token
+            });
+        }
+        // ---
         res.status(201).json({
             access_token,
             refresh_token,
@@ -126,27 +133,33 @@ export class UserController {
      * @param {string} refresh_token 
      */
     set_token_cookies = (res, access_token, refresh_token, cke) => {
-        res.cookie('access_token', access_token, {
-            httpOnly: true,
-            secure: TokenUtils.secure_option, // da mettere true in produzione
-            maxAge: TokenUtils.access_token_cookie_lifetime,
-            sameSite: 'Strict',
-            path: '/', // disponibile per tutte le route
-        });
-        res.cookie('refresh_token', refresh_token, {
-            httpOnly: true,
-            secure: TokenUtils.secure_option, // da mettere true in produzione
-            maxAge: TokenUtils.refresh_token_cookie_lifetime,
-            sameSite: 'Strict',
-            path: '/auth',
-        });
-        res.cookie('cke', cke, {
-            httpOnly: true,
-            secure: TokenUtils.secure_option, // da mettere true in produzione
-            maxAge: TokenUtils.cke_cookie_lifetime,
-            sameSite: 'Strict',
-            path: '/auth', // disponibile per tutte le route
-        });
+        if (access_token) {
+            res.cookie('access_token', access_token, {
+                httpOnly: true,
+                secure: TokenUtils.secure_option, // da mettere true in produzione
+                maxAge: TokenUtils.access_token_cookie_lifetime,
+                sameSite: 'Strict',
+                path: '/', // disponibile per tutte le route
+            });
+        }
+        if (refresh_token) {
+            res.cookie('refresh_token', refresh_token, {
+                httpOnly: true,
+                secure: TokenUtils.secure_option, // da mettere true in produzione
+                maxAge: TokenUtils.refresh_token_cookie_lifetime,
+                sameSite: 'Strict',
+                path: '/auth',
+            });
+        }
+        if (cke) {
+            res.cookie('cke', cke, {
+                httpOnly: true,
+                secure: TokenUtils.secure_option, // da mettere true in produzione
+                maxAge: TokenUtils.cke_cookie_lifetime,
+                sameSite: 'Strict',
+                path: '/auth', // disponibile per tutte le route
+            });
+        }
     }
 }
 

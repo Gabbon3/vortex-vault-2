@@ -46,14 +46,14 @@ export class UserService {
         // -- cerco se la password è corretta
         const password_is_correct = await this.verify_password(password, user.password);
         if (!password_is_correct) throw new CError("AuthenticationError", "Username o password non validi", 401);
-        // -- Access Token
-        const access_token = TokenUtils.genera_access_token(user.id);
         // -- Refresh Token
         if (!refresh_token) {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
         }
+        // -- Access Token
+        const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token(user.id);
         // ---
-        return { access_token, refresh_token, user };
+        return { access_token, refresh_token: refresh_token.id, user };
     }
     /**
      * Esegue il cambio password

@@ -17,9 +17,11 @@ router.use(limiter);
 // -- le routes con i controller associati
 router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
-router.get('/recovery/:username', controller.get_recovery);
 router.post('/password', verify_access_token, controller.change_password);
+// -- password recovery
+router.get('/recovery/:username', controller.get_recovery);
 router.post('/recovery', verify_access_token, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
+// ---
 router.post('/mfa', verify_access_token, controller.enable_2fa);
 router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
 

@@ -388,6 +388,12 @@ hr {
         color: $text-color-2;
     }
 
+    &.mfa {
+        letter-spacing: 0.5em;
+        text-align: center;
+        font-family: $monospace;
+    }
+
     &.bg-2 {
         background-color: $bg-2;
     }
