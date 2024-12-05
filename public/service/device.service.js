@@ -81,7 +81,7 @@ export class DeviceService {
      * @returns {boolean}
      */
     static async enable_mfa() {
-        const res = await API.fetch('/auth/2fa', {
+        const res = await API.fetch('/auth/mfa', {
             method: 'POST'
         });
         // ---
