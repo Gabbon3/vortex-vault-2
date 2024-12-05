@@ -9,13 +9,12 @@ $(document).ready(async () => {
      * Provo ad accedere automaticamente
      */
     const saved_username = await LocalStorage.get('username-utente');
-    const access_token_expire = await LocalStorage.get('access-token-expire');
     // ---
     document.getElementById('recovery-username').value = saved_username;
     document.getElementById('recovery-device-username').value = saved_username;
     document.getElementById('username').value = saved_username;
     // ---
-    if (saved_username && access_token_expire && Date.now() < access_token_expire.getTime()) {
+    if (saved_username) {
         if (confirm(`Access saved as ${saved_username}, continue?`)) {
             const session_started = await AuthService.start_session();
             if (session_started) window.location.href = '/vault';
