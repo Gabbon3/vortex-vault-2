@@ -324,16 +324,17 @@
         </div>
         <hr>
         <!-- CHANGE PASSWORD -->
-        <h3 class="icon">
+        <h3 class="icon slider" slider="form-change-password">
             <span class="material-symbols-rounded">key</span>
             Change Password
         </h3>
-        <form id="form-change-password">
+        <form id="form-change-password" class="isle bg-3" style="display: none;">
             <label for="old-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Old Password
             </label>
             <input name="old_password" type="password" class="input-text mono" id="old-password" autocomplete="off" required>
+            <hr>
             <label for="new-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 New Password
@@ -354,54 +355,58 @@
         </form>
         <hr>
         <!-- MFA -->
-        <h3 class="icon">
+        <h3 class="icon slider" slider="cont-mfa">
             <span class="material-symbols-rounded">phonelink_lock</span>
             MFA
         </h3>
-        <p>
-            Enable the secondary authentication feature to protect your account.
-        </p>
-        <div class="flex gap-50">
-            <button class="btn primary" id="btn-enable-2fa">
-                <span class="material-symbols-rounded">security</span>
-                Enable
-            </button>
+        <div id="cont-mfa" class="isle bg-3" style="display: none;">
+            <p>
+                Enable the secondary authentication feature to protect your account.
+            </p>
+            <div class="flex gap-50">
+                <button class="btn primary" id="btn-enable-2fa">
+                    <span class="material-symbols-rounded">security</span>
+                    Enable
+                </button>
+            </div>
+            <canvas id="qrcode-2fa-secret"></canvas>
         </div>
-        <canvas id="qrcode-2fa-secret"></canvas>
         <hr>
         <!-- RECOVERY CODE -->
-        <h3 class="icon">
+        <h3 class="icon slider" slider="cont-rec-code">
             <span class="material-symbols-rounded">lock_reset</span>
             Recovery Code
         </h3>
-        <p>
-            Generate a recovery code to help you recover your password if you forget it.
-            <br>
-            <strong>Pay attention!</strong> If you also lose your recovery code, 
-            you would be able to access your password anymore.
-        </p>
-        <form id="form-new-recovery-code">
-            <label for="password-recovery">
-                <span class="material-symbols-rounded">key_vertical</span>
-                Password
-            </label>
-            <div class="flex gap-50">
-                <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
-                <button class="btn t CA paste-val" data-target-pa="password-recovery" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
-                </button>
-            </div>
-            <p class="description">
-                You need to enter your password to perform this operation.
+        <div id="cont-rec-code" class="isle bg-3" style="display: none;">
+            <p>
+                Generate a recovery code to help you recover your password if you forget it.
+                <br>
+                <strong>Pay attention!</strong> If you also lose your recovery code, 
+                you would be able to access your password anymore.
             </p>
-            <!-- --- -->
-            <div class="flex-gap-50 mt-2">
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">security</span>
-                    Generate Recovery Code
-                </button>
-            </div>
-        </form>
+            <form id="form-new-recovery-code">
+                <label for="password-recovery">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Password
+                </label>
+                <div class="flex gap-50">
+                    <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
+                    <button class="btn t CA paste-val" data-target-pa="password-recovery" type="button" title="Paste">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                </div>
+                <p class="description">
+                    You need to enter your password to perform this operation.
+                </p>
+                <!-- --- -->
+                <div class="flex-gap-50 mt-2">
+                    <button type="submit" class="btn primary">
+                        <span class="material-symbols-rounded">security</span>
+                        Generate Recovery Code
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

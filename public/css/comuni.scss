@@ -175,6 +175,10 @@ p {
     }
 }
 
+.slider {
+    cursor: pointer;
+}
+
 .w-100 {
     width: 100%;
 }
@@ -200,6 +204,7 @@ hr {
     cursor: pointer;
     color: $text-color;
     font-size: $fs-m;
+    font-weight: normal !important;
 
     &:disabled {
         opacity: 0.5;

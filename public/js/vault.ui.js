@@ -17,6 +17,7 @@ $(document).ready(async () => {
     Form.onsubmit("form-create-vault", async (form, elements) => {
         if (!confirm(`Have you entered everything for ${elements.T}`)) return;
         // ---
+        finestra.loader(true);
         if (await VaultService.create(elements)) {
             Log.summon(0, `${elements.T} saved`);
             finestra.close('win-create-vault');
@@ -27,6 +28,7 @@ $(document).ready(async () => {
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
         }
+        finestra.loader(false);
     });
     /**
      * NEW VAULT CUSTOM SECTION
@@ -65,6 +67,8 @@ $(document).ready(async () => {
         const { vault_id } = elements;
         delete elements.vault_id;
         // ---
+        finestra.loader(true);
+        // ---
         if (await VaultService.update(vault_id, elements)) {
             Log.summon(0, `${elements.T} modificato con successo`);
             finestra.close('win-update-vault');
@@ -75,6 +79,7 @@ $(document).ready(async () => {
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
         }
+        finestra.loader(false);
     });
     /**
      * ON CLICK VAULT-LI UPDATE
@@ -112,7 +117,9 @@ $(document).ready(async () => {
     $('#btn-sync-vault').on('click', async () => {
         if (!confirm('Do you confirm that you want to synchronize with the server?')) return;
         // ---
+        finestra.loader(true);
         await VaultService.syncronize(true);
+        finestra.loader(false);
         VaultUI.html_vaults(VaultService.vaults);
         VaultUI.html_used_usernames(VaultService.used_usernames);
     });
@@ -125,6 +132,8 @@ $(document).ready(async () => {
         const title = vault.secrets.T;
         if (!confirm(`Are you sure you want to delete permanently ${title}?`)) return;
         // ---
+        finestra.loader(true);
+        // ---
         if (await VaultService.delete(vault_id)) {
             Log.summon(0, `${title} deleted`);
             finestra.close('win-update-vault');
@@ -132,6 +141,7 @@ $(document).ready(async () => {
         } else {
             Log.summon(2, `Error while deleting ${title}`);
         }
+        finestra.loader(false);
     });
     /**
      * GENERATE RECOVERY CODE
@@ -144,6 +154,8 @@ $(document).ready(async () => {
             return;
         }
         // ---
+        finestra.loader(true);
+        // ---
         const code = await AuthService.generate_recovery_code(password);
         // ---
         if (code) {
@@ -153,6 +165,7 @@ $(document).ready(async () => {
             FileUtils.download('Recovery Code', 'txt', code);
             $(form).trigger('reset');
         }
+        finestra.loader(false);
     });
     /**
      * SEARCH VAULT

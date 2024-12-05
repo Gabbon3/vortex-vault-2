@@ -84,7 +84,16 @@ $(document).ready(() => {
      */
     $('#loader').on('dblclick', (e) => {
         $(e.currentTarget).fadeOut(200);
-    })
+    });
+    /**
+     * sliders
+     */
+    $('.slider').on('click', (e) => {
+        // -- id del container
+        const target = document.getElementById(e.currentTarget.getAttribute('slider'));
+        // ---
+        $(target).slideToggle(200);
+    });
 });
 
 export const finestra = {
@@ -114,9 +123,9 @@ export const finestra = {
      */
     loader(active) {
         if (active) {
-            $("#loader").fadeIn(200);
+            $("#loader").fadeIn(150);
         } else {
-            $("#loader").fadeOut(200);
+            $("#loader").fadeOut(150);
         }
     },
 };

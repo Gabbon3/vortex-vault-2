@@ -15,10 +15,13 @@ $(document).ready(async () => {
     document.getElementById('username').value = saved_username;
     // ---
     if (saved_username) {
-        if (confirm(`Access saved as ${saved_username}, continue?`)) {
-            const session_started = await AuthService.start_session();
-            if (session_started) window.location.href = '/vault';
-        }
+        setTimeout(async () => {
+            if (confirm(`Access saved as ${saved_username}, continue?`)) {
+                finestra.loader(true);
+                const session_started = await AuthService.start_session();
+                if (session_started) window.location.href = '/vault';
+            }
+        }, 1000);
     }
     /**
      * LOGIN
@@ -26,18 +29,21 @@ $(document).ready(async () => {
     Form.onsubmit('accedi', async (form, elements) => {
         const { username, password } = elements;
         // ---
+        finestra.loader(true);
         if (await AuthService.login(username, password)) {
             $(form).trigger('reset');
             Log.summon(0, `Authenticated as ${username}`);
         } else {
             Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
+        finestra.loader(false);
     });
     /**
      * PASSWORD DIMENTICATA
      */
     Form.onsubmit('form-password-recovery', async (form, elements) => {
         const { username, code } = elements;
+        finestra.loader(true);
         const password = await AuthService.master_password_recovery(username, code);
         // ---
         if (password) {
@@ -49,17 +55,20 @@ $(document).ready(async () => {
         } else {
             Log.summon(2, 'Decryption failed');
         }
+        finestra.loader(false);
     });
     /**
      * DEVICE RECOVERY
      */
     Form.onsubmit('form-device-recovery', async (form, elements) => {
         const { username, code } = elements;
+        finestra.loader(true);
         const message = await AuthService.device_recovery(username, code);
         if (message) {
             Log.summon(0, message);
             $(form).trigger('reset');
             finestra.close('win-device-recovery');
         }
+        finestra.loader(false);
     });
 });

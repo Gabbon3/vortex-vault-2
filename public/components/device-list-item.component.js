@@ -1,5 +1,6 @@
 import { Log } from "../utils/log.js";
 import { DeviceService } from "../service/device.service.js";
+import { finestra } from "./main.components.js";
 
 class DeviceListItem extends HTMLElement {
     constructor() {
@@ -77,7 +78,9 @@ class DeviceListItem extends HTMLElement {
         // ---
         const token_id = this.getAttribute('id');
         // ---
+        finestra.loader(true);
         const deleted = await DeviceService.delete(token_id);
+        finestra.loader(false);
         if (!deleted) return;
         this.remove();
         Log.summon(0, "Device deleted successfully");

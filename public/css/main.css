@@ -390,6 +390,10 @@ p.description {
   font-size: 0.9em;
 }
 
+.slider {
+  cursor: pointer;
+}
+
 .w-100 {
   width: 100%;
 }
@@ -415,6 +419,7 @@ hr {
   cursor: pointer;
   color: #f5f5f5;
   font-size: 1em;
+  font-weight: normal !important;
 }
 .btn:disabled {
   opacity: 0.5;

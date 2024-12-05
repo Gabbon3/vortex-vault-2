@@ -1,3 +1,4 @@
+import { finestra } from "../components/main.components.js";
 import { DeviceService } from "../service/device.service.js";
 import { Bytes } from "../utils/bytes.js";
 import { date } from "../utils/dateUtils.js";
@@ -13,7 +14,9 @@ $(document).ready(async () => {
     $('#btn-enable-2fa').on('click', async () => {
         if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
+        finestra.loader(true);
         await DeviceUI.enable_mfa();
+        finestra.loader(false);
     });
     /**
      * DEVICE NAME
@@ -23,6 +26,7 @@ $(document).ready(async () => {
         const token_id = e.currentTarget.parentElement.parentElement.getAttribute('id');
         // ---
         if (key === 'Enter') {
+            finestra.loader(true);
             const device_name = e.currentTarget.value;
             const device = DeviceService.get_device(token_id);
             if (confirm(`Are you sure you want to rename this device into "${device_name}"?`)) {
@@ -32,12 +36,15 @@ $(document).ready(async () => {
                 e.currentTarget.value = device.device_name;
             }
         }
+        finestra.loader(false);
     })
     /**
      * SYNC
      */
-    $('#btn-sync-devices').on('click', () => {
-        DeviceUI.init();
+    $('#btn-sync-devices').on('click', async () => {
+        finestra.loader(true);
+        await DeviceUI.init();
+        finestra.loader(false);
     });
 });
 

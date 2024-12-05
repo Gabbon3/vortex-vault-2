@@ -1,3 +1,4 @@
+import { finestra } from "../components/main.components.js";
 import { CError } from "./error.js";
 
 export class API {
@@ -63,6 +64,7 @@ export class API {
                     return null;
             }
         } catch (error) {
+            finestra.loader(false);
             // -- gestisco eventuali errori nella chiamata
             console.warn(`fetch error: ${error.message}`);
             return null;
