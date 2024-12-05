@@ -197,6 +197,19 @@ export class AuthService {
             return null;
         }
     } 
+    /**
+     * Recovery a device by using mfa
+     * @param {string} username 
+     * @param {string} code 
+     */
+    static async device_recovery(username, code) {
+        const res = await API.fetch('/auth/token/unlock', {
+            method: 'POST',
+            body: { username, code }
+        });
+        if (!res) return false;
+        return res.message;
+    }
 }
 
 window.Auth = AuthService;

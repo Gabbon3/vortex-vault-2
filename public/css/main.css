@@ -422,7 +422,7 @@ hr {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: #969e5d;
+  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
@@ -572,6 +572,11 @@ hr {
 }
 .input-text[disabled], .input-text:read-only {
   color: #888;
+}
+.input-text.mfa {
+  letter-spacing: 0.5em;
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
   background-color: #272727;

@@ -74,7 +74,10 @@ export class RefreshTokenController {
         const [affectedCount] = await this.service.update_token_info(current_token, {
             is_revoked: false
         });
-        res.status(200).json({ message: "Token unlocked" });
+        // ---
+        let message = 'Device unlocked';
+        if (affectedCount === 0) message = 'The device was already unlocked';
+        res.status(200).json({ message });
     });
     /**
      * Revoca tutti i refresh token associati ad un utente
@@ -86,7 +89,7 @@ export class RefreshTokenController {
         res.sendStatus(200);
     });
     /**
-     * Rinomina un token 
+     * Rinomina un token
      */
     rename = async_handler(async (req, res) => {
         const { token_id, device_name } = req.body;
