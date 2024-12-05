@@ -12,3 +12,5 @@ node_modules/
 # *.pem
 # *.env
 config/db.js
+*.env
+.env.txt

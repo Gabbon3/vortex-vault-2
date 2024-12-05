@@ -6,6 +6,7 @@ import { date } from "../utils/dateUtils.js";
 import { finestra } from "../components/main.components.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { Search } from "../utils/search.js";
+import { ptg } from "../utils/passwordtester.js";
 
 $(document).ready(async () => {
     if (window.location.pathname !== '/vault') return;
@@ -181,10 +182,11 @@ export class VaultUI {
     static html_vaults(vaults) {
         let html = "";
         for (const vault of vaults) {
+            // ---
             html += `<vault-li 
             title="${vault.secrets.T}"
             updated-at="${date.format("%d %M %Y", new Date(vault.updatedAt))}"
-            secure="true"
+            secure="${ptg.test(vault.secrets.P) > 60}"
             id="${vault.id}"
         ></vault-li>`;
         }

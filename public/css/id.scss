@@ -163,6 +163,10 @@
             padding: 5px;
             display: flex;
             align-items: center;
+
+            &.danger {
+                color: $c-danger;
+            }
         }
 
         .info {

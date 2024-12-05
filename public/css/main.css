@@ -741,6 +741,9 @@ hr {
   display: flex;
   align-items: center;
 }
+#vaults-list vault-li .simbolo.danger {
+  color: rgb(238, 113, 132);
+}
 #vaults-list vault-li .info {
   width: 100%;
   display: flex;

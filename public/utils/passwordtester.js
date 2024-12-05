@@ -1,0 +1,155 @@
+// password tester gabbone
+export class ptg {
+    // static chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!?+*#@$%&";
+    static chars = {
+        az: "qwertyuiopasdfghjklzxcvbnm",
+        AZ: "QWERTYUIOPASDFGHJKLZXCVBNM",
+        _09: "1234567890",
+        _$: "!?+*#@$%&",
+    };
+    static regex = {
+        az: /[a-z]/,
+        AZ: /[A-Z]/,
+        _09: /\d/,
+        _$: /[^a-zA-Z0-9]/,
+    }
+    static sequence_map = {
+        1: "12q", 2: "21qw3", 3: "32we4", 4: "43er5",
+        5: "54rt6", 6: "65ty7", 7: "76yu8", 8: "87ui9",
+        9: "98io0", 0: "09op", q: "q12wa", w: "wq23esa",
+        e: "e3wsdr4", r: "r4edft5", t: "t5rfgy6", y: "y6tghu7",
+        u: "u7yhji8", i: "i8ujko9", o: "9iklp0", p: "p0ol",
+        a: "aqwsz", s: "swazxde", d: "desxcfr", f: "frdcvgt", 
+        g: "gtfvbhy", h: "hygbnju", j: "juhnmki", k: "kijmlo",
+        l: "lpokm", z: "zasx", x: "xzsdc", c: "xdfv",
+        v: "vcfgb", b: "bvghn", n: "nbhjm", m: "mnjkl"
+    };
+    /**
+     * Genera una password
+     * @param {Object} options opzioni di configurazione della password
+     * @param {boolean} [options.len=12]
+     * @param {boolean} [options.az=true]
+     * @param {boolean} [options.AZ=true]
+     * @param {boolean} [options._09=true]
+     * @param {boolean} [options._$=true]
+     */
+    static generate(len = 12, az = true, AZ = true, _09 = true, _$ = true ) {
+        let password = '';
+        // -- costruisco la base da cui estrarre
+        let chars = '';
+        if (az) chars += this.chars.az;
+        if (AZ) chars += this.chars.AZ;
+        if (_09) chars += this.chars._09;
+        if (_$) chars += this.chars._$;
+        // ---
+        let tryes = 0;
+        let ok = false;
+        while (!ok) {
+            password = '';
+            // -- per una scelta crittograficamente sicura
+            const buffer = new Uint8Array(len);
+            window.crypto.getRandomValues(buffer);
+            // ---
+            for (let i = 0; i < len; i++) {
+                password += chars[buffer[i] % chars.length];
+            }
+            // ---
+            const check = this.check_types(password);
+            ok = 
+                check.az === az &&
+                check.AZ === AZ &&
+                check._09 === _09 &&
+                check._$ === _$;
+            tryes++;
+            if (tryes >= 1000) throw new Error("Max tryes reached");
+        }
+        // ---
+        return password;
+    }
+    /**
+     * Restituisce quali tipi di caratteri sono presenti in una password
+     * @param {string} psw
+     * @returns {Object}
+     */
+    static check_types(psw) {
+        let types = {};
+        types.az = this.regex.az.test(psw);
+        types.AZ = this.regex.AZ.test(psw);
+        types._09 = this.regex._09.test(psw);
+        types._$ = this.regex._$.test(psw);
+        return types;
+    }
+    /**
+     * Conta il numero di tipi di caratteri presenti in una password
+     * @param {string} psw 
+     * @returns {number}
+     */
+    static count_types(psw) {
+        let types = 0;
+        const check = this.check_types(psw);
+        for (const c in check) {
+            types += check[c] ? 1 : 0;
+        }
+        return types;
+    }
+    /**
+     * Ricerca delle sequenze di caratteri vicini in una stringa
+     * @param {string} chars 
+     * @returns {Array}
+     */
+    static search_sequence(chars) {
+        chars = chars.toLowerCase();
+        const l = chars.length - 1;
+        // ---
+        const sequences = [];
+        let sequence = '';
+        // ---
+        for (let i = 0; i < l; i++) {
+            if (this.sequence_map[chars[i]] && this.sequence_map[chars[i]].includes(chars[i + 1])) {
+                sequence += chars[i];
+            } else {
+                if (sequence.length > 0) sequences.push(`${sequence}${chars[i]}`);
+                // ---
+                sequence = '';
+            }
+        }
+        // -- ultimo controllo
+        if (sequence.length > 0) sequences.push(`${sequence}${chars[l]}`);
+        // ---
+        return sequences.filter(seq => seq.length >= 3);
+    }
+    /**
+     * Calcola in linea generale il punteggio di una password
+     * @param {string} password 
+     * @returns {number}
+     */
+    static test(password) {
+        const max_l = 100;
+        const max_t = 80;
+        const max_s = 50;
+        const max = max_l + max_t + max_s;
+        // ---
+        let ppt = [
+            0, // per la lunghezza
+            0, // per i tipi di caratteri
+            0, // per le sequenze
+        ];
+        // -- lunghezza
+        const l = password.length;
+        if (l >= 16) ppt[0] = max_l;
+        else {
+            // 100 : x = 16 : l
+            ppt[0] = (max_l * l) / 16;
+        }
+        // -- tipi caratteri
+        ppt[1] = this.count_types(password) * (max_t / 4);
+        // -- sequenze
+        const sequences = this.search_sequence(password);
+        // 100 - (100 : x = l : sequences.length)
+        ppt[2] = max_s - ((max_s * sequences.length) / l);
+        // -- sum : max = x : 100
+        return Math.round(((ppt[0] + ppt[1] + ppt[2]) * 100) / max);
+    }
+}
+
+window.ptg = ptg;
