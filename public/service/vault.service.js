@@ -12,17 +12,27 @@ window.VaultLocal = VaultLocal;
 
 export class VaultService {
     static master_key = null;
+    static salt = null;
     static vaults = [];
     static used_usernames = new Set();
+    /**
+     * Configura i segreti necessari ad utilizzare il vault
+     * @returns {boolean} - true se entrambi sono presenti
+     */
+    static async config_secrets() {
+        this.master_key = await SessionStorage.get('master-key');
+        this.salt = await SessionStorage.get('salt');
+        return this.master_key && this.salt ? true : false;
+    }
     /**
      * Sincronizza e inizializza il Vault con il db
      * @param {boolean} full - sincronizzazione completa true, false sincronizza solo il necessario
      * @returns {boolean} true per processo completato con successo
      */
     static async syncronize(full = false) {
-        this.master_key = SessionStorage.get('master-key');
+        const configured = await this.config_secrets();
+        if (!configured || !this.master_key) return Log.summon(2, 'Any Crypto Key founded');
         const vault_update = await LocalStorage.get('vault-update') ?? null;
-        if (!this.master_key) return Log.summon(2, 'Any Crypto Key founded');
         // ---
         try {
             this.vaults = await VaultLocal.get(this.master_key);

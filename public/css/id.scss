@@ -44,14 +44,13 @@
     left: 5px;
     display: flex;
     gap: 5px;
-    flex-direction: column;
+    // flex-direction: column;
     z-index: 2050;
+    max-width: 350px;
+    flex-wrap: wrap;
 
     log-info {
         position: relative;
-		display: flex;
-        align-items: center;
-		gap: 8px;
         padding: 6px 8px;
         padding-bottom: 13px;
         border-radius: 10px;
@@ -60,9 +59,15 @@
         --i-color: $text-color;
         -webkit-backdrop-filter: blur(5px);
         backdrop-filter: blur(5px);
-        min-width: 300px;
-        max-width: 99%;
         animation: bounce 500ms linear both;
+
+        .log-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 200px;
+            max-width: 350px;
+        }
 
         &.chiudi {
             animation: bounce-out 500ms linear both;
@@ -192,7 +197,7 @@
     margin-top: 10px;
 
     custom-vault-section {
-        background-color: $bg-3;
+        background-color: $bg-4;
         padding: 0 7px 7px 7px;
         border-radius: 7px;
 

@@ -7,7 +7,6 @@ import { Log } from "../utils/log.js";
 import { qrcode } from "../utils/qrcode.js";
 
 $(document).ready(async () => {
-    await DeviceUI.init();
     /**
      * ENABLE 2FA AUTH
      */
@@ -48,7 +47,7 @@ $(document).ready(async () => {
     });
 });
 
-class DeviceUI {
+export class DeviceUI {
     static async init() {
         const inizialized = await DeviceService.init();
         if (inizialized !== true) return;

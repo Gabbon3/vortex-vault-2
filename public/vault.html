@@ -12,7 +12,6 @@
     <script type="module" src="./components/main.components.js"></script>
     <!-- js -->
     <script type="module" src="./js/vault.ui.js"></script>
-    <script type="module" src="./js/device.js"></script>
     <script type="module" src="./js/backup.ui.js"></script>
     <script type="module" src="./js/auth.ui.js"></script>
 </head>
@@ -329,6 +328,13 @@
             Change Password
         </h3>
         <form id="form-change-password" class="isle bg-3" style="display: none;">
+            <p>
+                <strong>Before changing your password</strong>
+                you should know that you will have to manually restore a backup, 
+                which will be generated locally after the change, 
+                you will have to go to the backup section and restore the 
+                backup from the file you just downloaded.
+            </p>
             <label for="old-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Old Password

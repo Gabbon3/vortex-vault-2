@@ -16,7 +16,7 @@ html {
   padding: 0;
   border: 0;
   scroll-behavior: smooth;
-  background-color: #212121;
+  background-color: #111111;
   color: #f5f5f5;
   font-family: "Rubik", sans-serif !important;
 }
@@ -433,7 +433,7 @@ hr {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: #2e2e2e;
+  background-color: #292929;
   color: #ddd;
 }
 .btn.secondary:hover {
@@ -458,11 +458,11 @@ hr {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px #2e2e2e;
+  box-shadow: 0 0 0 4px #292929;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px #2e2e2e;
+  box-shadow: 0 0 0 6px #292929;
 }
 .btn.s {
   font-size: 0.9em;
@@ -491,7 +491,7 @@ hr {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: #272727;
+  background-color: #1d1d1d;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
 }
@@ -535,19 +535,19 @@ hr {
   border-radius: 7px;
 }
 .isle.bg-1 {
-  background-color: #212121;
+  background-color: #111111;
 }
 .isle.bg-15 {
-  background-color: #242424;
+  background-color: #171717;
 }
 .isle.bg-2 {
-  background-color: #272727;
+  background-color: #1d1d1d;
 }
 .isle.bg-3 {
-  background-color: #2a2a2a;
+  background-color: #232323;
 }
 .isle.bg-4 {
-  background-color: #2e2e2e;
+  background-color: #292929;
 }
 
 #bc-finestre {
@@ -557,7 +557,7 @@ hr {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(33, 33, 33, 0.7);
+  background-color: rgba(17, 17, 17, 0.7);
   z-index: 9;
 }
 
@@ -568,7 +568,7 @@ hr {
   border-radius: 7px;
   transition: 0.2s;
   outline: none;
-  background-color: #212121;
+  background-color: #111111;
   border: none;
   color: #f5f5f5;
   width: 100%;
@@ -584,7 +584,7 @@ hr {
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: #272727;
+  background-color: #1d1d1d;
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -604,7 +604,7 @@ hr {
   padding-bottom: 15px;
   padding: 5px;
   border-radius: 5px;
-  background-color: #2a2a2a;
+  background-color: #232323;
 }
 .navbar a {
   padding: 10px;
@@ -627,7 +627,7 @@ hr {
 #accedi, #registrati {
   display: block;
   margin: 20px auto;
-  background-color: #272727;
+  background-color: #1d1d1d;
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -639,14 +639,12 @@ hr {
   left: 5px;
   display: flex;
   gap: 5px;
-  flex-direction: column;
   z-index: 2050;
+  max-width: 350px;
+  flex-wrap: wrap;
 }
 #logs_container log-info {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   padding: 6px 8px;
   padding-bottom: 13px;
   border-radius: 10px;
@@ -655,11 +653,16 @@ hr {
   --i-color: $text-color;
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  min-width: 300px;
-  max-width: 99%;
   animation: bounce 500ms linear both;
   background-color: var(--bc-log);
   border: 1px solid var(--i-color);
+}
+#logs_container log-info .log-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
+  max-width: 350px;
 }
 #logs_container log-info.chiudi {
   animation: bounce-out 500ms linear both;
@@ -732,12 +735,12 @@ hr {
   cursor: pointer;
   padding: 10px;
   border-radius: 10px;
-  background-color: #272727;
+  background-color: #1d1d1d;
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: #2a2a2a;
+  background-color: #232323;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -768,7 +771,7 @@ hr {
   margin-top: 10px;
 }
 .custom-sections custom-vault-section {
-  background-color: #2a2a2a;
+  background-color: #292929;
   padding: 0 7px 7px 7px;
   border-radius: 7px;
 }
@@ -790,7 +793,7 @@ hr {
   gap: 7px;
   padding: 7px;
   border-radius: 7px;
-  background-color: #2e2e2e;
+  background-color: #292929;
 }
 #devices-list device-list-item .token-id {
   display: flex;
@@ -825,7 +828,7 @@ hr {
   z-index: 2000;
   width: 100%;
   height: 100%;
-  background-color: rgba(33, 33, 33, 0.5);
+  background-color: rgba(17, 17, 17, 0.5);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   display: none;

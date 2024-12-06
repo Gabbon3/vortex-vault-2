@@ -7,8 +7,10 @@ class Footer extends HTMLElement {
         this.innerHTML = `
         <!-- container dei log -->
         <div id="logs_container"></div>
+
         <!-- background delle finestre -->
         <div id="bc-finestre"></div>
+        
         <!-- caricamento -->
         <div id="loader">
             <div class="full flex x-center y-center">
