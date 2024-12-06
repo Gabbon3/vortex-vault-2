@@ -1,5 +1,5 @@
 {
-    "name": "api-js-template",
+    "name": "vortex-vault",
     "version": "1.0.0",
     "type": "module",
     "main": "server.js",
