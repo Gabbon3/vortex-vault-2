@@ -103,13 +103,15 @@ export class AuthService {
      * Imposta la chiave master dell'utente nel session storage
      * @param {Uint8Array} cke 
      */
-    static async set_master_key(cke) {
+    static async config_session_vars(cke) {
         const master_key = await LocalStorage.get('master-key', cke);
         const salt = await LocalStorage.get('salt', cke);
+        const username = await LocalStorage.get('username-utente');
         if (!master_key) return false;
         // ---
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
+        SessionStorage.set('username', username);
         // ---
         return true;
     }
@@ -144,7 +146,7 @@ export class AuthService {
         // -- se non è stato possibile ottenere la cke, l'utente dovrebbe accedere nuovamente
         if (!cke) return false;
         // -- imposto la master key
-        this.set_master_key(cke);
+        this.config_session_vars(cke);
         // ---
         return true;
     }

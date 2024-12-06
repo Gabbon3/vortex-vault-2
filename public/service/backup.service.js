@@ -66,7 +66,7 @@ export class BackupService {
         const restored = await VaultService.restore(vaults);
         // ---
         if (!restored) return false;
-        VaultUI.init(true);
+        VaultUI.init_db_dom(true);
         return true;
     }
     /**
@@ -90,7 +90,7 @@ export class BackupService {
         const restored = await VaultService.restore(vaults);
         // ---
         if (!restored) return false;
-        VaultUI.init(true);
+        VaultUI.init_db_dom(true);
         return true;
     }
 }

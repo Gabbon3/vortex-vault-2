@@ -7,6 +7,8 @@ import { finestra } from "../components/main.components.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { Search } from "../utils/search.js";
 import { ptg } from "../utils/passwordtester.js";
+import { SessionStorage } from "../utils/session.js";
+import { DeviceUI } from "./device.js";
 
 $(document).ready(async () => {
     if (window.location.pathname !== '/vault') return;
@@ -23,7 +25,7 @@ $(document).ready(async () => {
             finestra.close('win-create-vault');
             $(form).trigger("reset");
             setTimeout(() => {
-                VaultUI.init();
+                VaultUI.init_db_dom();
             }, 1000);
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
@@ -74,7 +76,7 @@ $(document).ready(async () => {
             finestra.close('win-update-vault');
             $(form).trigger("reset");
             setTimeout(() => {
-                VaultUI.init();
+                VaultUI.init_db_dom();
             }, 1000);
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
@@ -137,7 +139,7 @@ $(document).ready(async () => {
         if (await VaultService.delete(vault_id)) {
             Log.summon(0, `${title} deleted`);
             finestra.close('win-update-vault');
-            VaultUI.init();
+            VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Error while deleting ${title}`);
         }
@@ -181,7 +183,37 @@ $(document).ready(async () => {
 
 export class VaultUI {
     static search = new Search();
-    static async init(full = false) {
+    /**
+     * inizializza tutto il necessario per avviare il vault se possibile
+     */
+    static async init() {
+        // - controllo se è possibile usare il vault configurando i segreti
+        const configured = await VaultService.config_secrets();
+        let timeout = 0;
+        // -- se non ci sono provo ad avviare la sessione
+        if (!configured) {
+            finestra.loader(true);
+            const started = await AuthService.start_session();
+            // --- se non viene avviata fermo e restituisco errore
+            if (!started) return Log.summon(2, "Not able to get Cripto Key, please sign in");
+            // --- se la sessione viene avviata, eseguo init_db_dom() e avvio il vault
+            timeout = 1000;
+        }
+        // -- se ci sono avvio il vault
+        setTimeout(() => {
+            // ---
+            this.init_db_dom();
+            DeviceUI.init();
+            // ---
+            finestra.loader(false);
+            if (timeout > 0) Log.summon(0, `Signed as ${SessionStorage.get('username')}`);
+        }, timeout);
+    }
+    /**
+     * Inizializza il vault e il dom
+     * @param {boolean} full sincronizzazione completa con il db
+     */
+    static async init_db_dom(full = false) {
         const inizialized = await VaultService.syncronize(full);
         if (inizialized !== true) return;
         // ---

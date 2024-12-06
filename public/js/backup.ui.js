@@ -54,7 +54,3 @@ $(document).ready(() => {
         finestra.loader(false);
     });
 });
-
-class BackupUI {
-    
-}
