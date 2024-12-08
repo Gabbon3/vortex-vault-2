@@ -5,7 +5,7 @@ import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
-import { TOTP } from "../utils/totp.js";
+import { MFAService } from "../services/mfa.service.js";
 
 export class UserController {
     constructor() {
@@ -72,14 +72,14 @@ export class UserController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    enable_2fa = async_handler(async (req, res) => {
-        const secret = Cripto.random_bytes(20, 'hex');
-        const [ affected ] = await this.service.update_user_info(req.user.uid, { totp_secret: secret });
-        if (affected !== 1) throw new CError('Internal Error', 'Impossibile abilitare l\'autenticazione a due fattori', 500);
+    enable_mfa = async_handler(async (req, res) => {
+        const { final, secret } = MFAService.generate();
+        // -- salvo nel db
+        const [affected] = await this.service.update_user_info(req.user.uid, { mfa_secret: Buffer.from(final) });
         // ---
-        res.status(201).json({
-            secret
-        });
+        if (affected !== 1) throw new CError("Internal error", "Not able to enable MFA", 500);
+        // ---
+        res.status(201).json({ secret: Bytes.hex.to(secret) });
     });
     /**
      * Just a test

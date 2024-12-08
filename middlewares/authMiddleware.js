@@ -4,7 +4,7 @@ import { Bytes } from "../public/utils/bytes.js";
 import { UserService } from "../services/user.service.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { TOTP } from "../utils/totp.js";
-
+import { MFAService } from "../services/mfa.service.js";
 /**
  * Middleware per la verifica del jwt e refresh 
  * dell'access token se scaduto
@@ -45,8 +45,8 @@ export const verify_mfa_code = async_handler(async (req, res, next) => {
     const user = from_token ? await service.find_by_id(uid) : await service.find_by_username(uid);
     // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
     if (!user) throw new CError("ValidationError", "User not exist", 404);
-    if (!user.totp_secret) throw new CError("ValidationError", "Any secret to use", 404);
-    const secret = Bytes.hex.from(user.totp_secret);
+    if (!user.mfa_secret) throw new CError("ValidationError", "Any secret to use", 404);
+    const secret = MFAService.decrypt(user.mfa_secret);
     // -- verifico il codice
     const valid = await TOTP.verify(code, secret);
     if (!valid) throw new CError("AuthError", "Invalid code", 403);

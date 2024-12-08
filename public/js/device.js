@@ -8,16 +8,6 @@ import { qrcode } from "../utils/qrcode.js";
 
 $(document).ready(async () => {
     /**
-     * ENABLE 2FA AUTH
-     */
-    $('#btn-enable-2fa').on('click', async () => {
-        if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
-        // ---
-        finestra.loader(true);
-        await DeviceUI.enable_mfa();
-        finestra.loader(false);
-    });
-    /**
      * DEVICE NAME
      */
     $('#devices-list').on('keyup', '.device-name', async (e) => {
@@ -53,39 +43,6 @@ export class DeviceUI {
         if (inizialized !== true) return;
         // ---
         this.html_devices(DeviceService.devices);
-    }
-    /**
-     * 
-     * @returns 
-     */
-    static async enable_mfa() {
-        const secret = await DeviceService.enable_mfa();
-        if (!secret) return;
-        const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
-        const app_name = 'Vortex Vault';
-        const username = await LocalStorage.get('username-utente');
-        // ---
-        const canvas = document.querySelector('#qrcode-2fa-secret');
-        const uri = `otpauth://totp/${app_name}:${username}?secret=${base32_secret}&issuer=${app_name}`;
-        qrcode.toCanvas(canvas, uri, {
-            width: 200,
-            margin: 2,
-            color: {
-                dark: "#FFFFFF",
-                light: "#272727"
-            }
-        });
-        canvas.style.height = 200;
-        // -- copio negli appunti il segreto
-        navigator.clipboard.writeText(base32_secret);
-        // ---
-        Log.summon(0, `MFA enabled`);
-        setTimeout(() => {
-            Log.summon(1, "Pay attention! The Qr Code will be invalidated in 20 seconds");
-            setTimeout(() => {
-                canvas.style.height = 0;
-            }, 20000);
-        }, 1000);
     }
     /**
      * 

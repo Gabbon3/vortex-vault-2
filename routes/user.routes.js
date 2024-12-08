@@ -22,7 +22,7 @@ router.post('/password', verify_access_token, controller.change_password);
 router.get('/recovery/:username', controller.get_recovery);
 router.post('/recovery', verify_access_token, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // ---
-router.post('/mfa', verify_access_token, controller.enable_2fa);
+router.post('/mfa', verify_access_token, controller.enable_mfa);
 router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
 
 export default router;
