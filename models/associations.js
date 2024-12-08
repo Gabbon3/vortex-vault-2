@@ -9,7 +9,8 @@ import { Backup } from "./backup.js";
 
 // Relazione 1 utente - N refresh token
 User.hasMany(RefreshToken, { 
-    foreignKey: "user_id" 
+    foreignKey: "user_id", 
+    onDelete: "CASCADE",
 });
 RefreshToken.belongsTo(User, { 
     foreignKey: "user_id", 
@@ -18,7 +19,8 @@ RefreshToken.belongsTo(User, {
 
 // Relazione 1 utente - N vault
 User.hasMany(Vault, { 
-    foreignKey: "user_id" 
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
 });
 Vault.belongsTo(User, { 
     foreignKey: "user_id", 
@@ -28,6 +30,7 @@ Vault.belongsTo(User, {
 // Relazione 1 utente - N backup
 User.hasMany(Backup, {
     foreignKey: "user_id",
+    onDelete: "CASCADE",
 });
 Backup.belongsTo(User, {
     foreignKey: "user_id",

@@ -8,7 +8,7 @@ export class TokenUtils {
     static ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, "hex");
     // -- proprietà dei jwt o cookie
-    static secure_option = false;
+    static secure_option = true;
     // -- tempo di vita dei token in millisecondi
     static access_token_lifetime = 60 * 60; // 1 ora
     static cke_lifetime = 60 * 60 * 24 * 31; // 31 giorni

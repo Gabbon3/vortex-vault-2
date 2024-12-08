@@ -15,7 +15,7 @@ export const RefreshToken = sequelize.define(
         device_name: {
             type: DataTypes.STRING(25),
             allowNull: false,
-            defaultValue: "*",
+            defaultValue: "New device *",
         },
         user_agent_hash: {
             type: DataTypes.STRING(32),

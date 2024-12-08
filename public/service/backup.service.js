@@ -1,4 +1,5 @@
 import { VaultUI } from "../js/vault.ui.js";
+import { Cripto } from "../secure/cripto.js";
 import { API } from "../utils/api.js";
 import { date } from "../utils/dateUtils.js";
 import { FileUtils } from "../utils/file.utils.js";
@@ -30,6 +31,7 @@ export class BackupService {
      * @returns 
      */
     static async create_locally(custom_key = null) {
+        if (custom_key !== null) custom_key = await Cripto.hash(custom_key);
         const packed_backup = await VaultService.export_vaults(custom_key);
         if (!packed_backup) return false;
         // ---
@@ -75,10 +77,11 @@ export class BackupService {
      * @returns 
      */
     static async restore_locally(file, custom_key = null) {
+        if (!file) return false;
         const backup = new Uint8Array(await FileUtils.read(file));
         // ---
         if (!backup) return false;
-        custom_key = custom_key ? new TextEncoder().encode(custom_key) : null;
+        if (custom_key !== null) custom_key = await Cripto.hash(custom_key);
         let vaults = null;
         try {
             vaults = await VaultService.import_vaults(backup, custom_key);

@@ -41,8 +41,8 @@ export class Cripto {
 
     /**
      * Genera un hash HMAC di un messaggio con una chiave specifica.
-     * @param {string} message - Messaggio da crittografare.
-     * @param {Uint8Array|string} key - Chiave segreta per l'HMAC.
+     * @param {string | Uint8Array} message - Messaggio da crittografare.
+     * @param {Uint8Array} key - Chiave segreta per l'HMAC.
      * @param {Object} [options={}] - Opzioni per configurare l'HMAC.
      * @param {string} [options.key_encoding] - Encoding della chiave (es: 'hex' o 'base64').
      * @param {string} [options.algo='SHA-256'] - Algoritmo di hash da usare per l'HMAC.
@@ -50,21 +50,17 @@ export class Cripto {
      * @returns {Promise<string|Uint8Array>} - HMAC del messaggio in formato specificato.
      */
     static async hmac(message, key, options = {}) {
-        // -- converto la chiave in formato appropriato
-        const key_buffer = options.key_encoding
-            ? Bytes.convertToBuffer(key, options.key_encoding)
-            : key;
-
+        const message_bytes = message instanceof Uint8Array ? message : new TextEncoder().encode(message);
+        // ---
         const crypto_key = await crypto.subtle.importKey(
             'raw',
-            key_buffer,
+            key,
             { name: 'HMAC', hash: { name: options.algo || 'SHA-256' } },
             false,
             ['sign']
         );
         // -- genero l'HMAC
-        const encoded_message = new TextEncoder().encode(message);
-        const hmac_buffer = await crypto.subtle.sign('HMAC', crypto_key, encoded_message);
+        const hmac_buffer = await crypto.subtle.sign('HMAC', crypto_key, message_bytes);
         // -- converto l'output nel formato desiderato (hex, base64 o Uint8Array)
         if (options.output_encoding === 'hex') {
             return Bytes.hex.to(new Uint8Array(hmac_buffer));
@@ -77,7 +73,7 @@ export class Cripto {
 
     /**
      * Calcola l'hash di un messaggio.
-     * @param {string} message - Messaggio da hashare.
+     * @param {string | Uint8Array} message - Messaggio da hashare.
      * @param {Object} [options={}] - Opzioni per configurare l'hash.
      * @param {string} [options.algorithm='SHA-256'] - Algoritmo di hash da usare (es: 'SHA-256').
      * @param {string} [options.encoding='hex'] - Encoding per l'output hash, default 'hex'.
@@ -86,7 +82,7 @@ export class Cripto {
     static async hash(message, options = {}) {
         const hashBuffer = await crypto.subtle.digest(
             { name: options.algorithm || 'SHA-256' },
-            new TextEncoder().encode(message)
+            message instanceof Uint8Array ? message : new TextEncoder().encode(message)
         );
         // -- converto l'output nel formato desiderato (hex, base64 o Uint8Array)
         if (options.encoding === 'hex') {
