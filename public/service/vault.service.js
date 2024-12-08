@@ -131,8 +131,7 @@ export class VaultService {
      */
     static async update(vault_id, data) {
         // -- cifro il vault
-        const bytes = msgpack.encode(data);
-        const encrypted_bytes = await AES256GCM.encrypt(bytes, this.master_key);
+        const encrypted_bytes = await this.encrypt(data);
         // ---
         const res = await API.fetch("/vaults/update", {
             method: 'POST',
