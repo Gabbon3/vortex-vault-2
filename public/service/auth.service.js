@@ -76,6 +76,18 @@ export class AuthService {
         return true;
     }
     /**
+     * Attiva l'autenticazione a due fattori
+     * @returns {boolean}
+     */
+    static async enable_mfa() {
+        const res = await API.fetch('/auth/mfa', {
+            method: 'POST'
+        });
+        // ---
+        if (!res) return false;
+        return res.secret;
+    }
+    /**
      * Cerca di ottenere un nuovo access token
      * @returns {boolean} true se rigenerato, false se non rigenerato
      */

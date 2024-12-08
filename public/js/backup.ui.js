@@ -34,7 +34,10 @@ $(document).ready(() => {
      * Genera e scarica un file di backup
      */
     Form.onsubmit('form-create-backup-locally', async (form, elements) => {
-        const { key } = elements;
+        const { key, key_r } = elements;
+        // ---
+        if (key !== key_r) return Log.summon(1, "Custom passwords do not match");
+        // ---
         await BackupService.create_locally(key === '' ? null : key);
         $(form).trigger('reset');
     });

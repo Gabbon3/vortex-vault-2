@@ -275,6 +275,11 @@
                 Custom password
             </label>
             <input type="password" name="key" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *">
+            <label for="backup-custom-password-">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Repeat custom password
+            </label>
+            <input type="password" name="key_r" id="backup-custom-password-" class="input-text mb-2"  placeholder="* * *">
             <p class="description">
                 Leave blank if you want to use the default master key.
             </p>
@@ -289,7 +294,7 @@
                 <span class="material-symbols-rounded">draft</span>
                 Backup file
             </label>
-            <input type="file" id="backup-file" name="backup_file" class="input-text" accept=".bin">
+            <input type="file" id="backup-file" name="backup_file" class="input-text" accept=".bin" required>
             <p class="description">
                 .bin file
             </p>

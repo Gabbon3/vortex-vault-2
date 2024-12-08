@@ -22,7 +22,6 @@ export const User = sequelize.define(
             defaultValue: new Date(),
         },
         recovery: { type: DataTypes.BLOB, allowNull: true }, // hash de codice di recupero
-        totp_secret: { type: DataTypes.STRING(40), allowNull: true },
     },
     {
         tableName: "user",

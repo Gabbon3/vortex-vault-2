@@ -71,8 +71,7 @@ export class VaultService {
      */
     static async create(data) {
         // -- cifro il vault
-        const bytes = msgpack.encode(data);
-        const encrypted_bytes = await AES256GCM.encrypt(bytes, this.master_key);
+        const encrypted_bytes = await this.encrypt(data);
         // ---
         const res = await API.fetch("/vaults/create", {
             method: 'POST',
@@ -155,9 +154,7 @@ export class VaultService {
         await VaultLocal.save(vaults, this.master_key);
         // -- cifro i vault
         for (const vault of vaults) {
-            const bytes = msgpack.encode(vault.secrets);
-            const encrypted_bytes = await AES256GCM.encrypt(bytes, this.master_key);
-            vault.secrets = encrypted_bytes;
+            vault.secrets = await this.encrypt(vault.secrets);
         }
         // ---
         const packed_vaults = msgpack.encode(vaults);
@@ -212,26 +209,60 @@ export class VaultService {
         }
     }
     /**
+     * Cifra un vault
+     * @param {Object} vault 
+     * @param {Uint8Array} provided_salt 
+     * @returns {Uint8Array}
+     */
+    static async encrypt(vault, provided_salt = null, master_key = this.master_key) {
+        // -- derivo la chiave specifica del vault
+        const salt = provided_salt || Cripto.random_bytes(16);
+        const key = await Cripto.hmac(salt, master_key);
+        // -- cifro il vault
+        const vault_bytes = msgpack.encode(vault);
+        const encrypted_vault = await AES256GCM.encrypt(vault_bytes, key);
+        // -- unisco il salt al vault cifrato
+        return Bytes.merge([salt, encrypted_vault], 8);
+    }
+    /**
+     * Decifra un vault
+     * @param {Uint8Array} encrypted_bytes 
+     * @return {Object} - il vault decifrato
+     */
+    static async decrypt(encrypted_bytes, master_key = this.master_key) {
+        // -- ottengo il salt e i dati cifrati
+        const salt = encrypted_bytes.subarray(0, 16);
+        const encrypted_vault = encrypted_bytes.subarray(16);
+        // -- derivo la chiave specifica del vault
+        const key = await Cripto.hmac(salt, master_key);
+        // -- decifro i dati
+        const decrypted_vault = await AES256GCM.decrypt(encrypted_vault, key);
+        // -- decodifico i dati
+        return msgpack.decode(decrypted_vault);
+    }
+    /**
      * Esporta i vaults cifrati
      * @param {Uint8Array} custom_key - Chiave personalizzata da usare al posto della master key
      * @returns {Promise<Uint8Array>} Backup cifrato e compresso
      */
     static async export_vaults(custom_key = null) {
+        if (custom_key !== null && custom_key.length !== 32) throw new Error("Custom key must be of 32 bytes length");
         if (!this.vaults || this.vaults.length === 0) {
             console.warn("Any vault to export.");
             return null;
         }
-        const backup_salt = Cripto.random_bytes(16);
-        const backup_key = await Cripto.derive_key(custom_key ?? this.master_key, backup_salt);
+        const export_salt = Cripto.random_bytes(16);
+        const export_key = await Cripto.derive_key(custom_key ?? this.master_key, export_salt);
         // -- preparo il backup con il salt come primo elemento
-        const backup = [backup_salt];
+        const backup = [export_salt];
         const compacted_vaults = this.compact_vaults();
         // -- cifro ogni vault e lo aggiungo al backup
         for (const vault of compacted_vaults) {
-            const encoded_vault = msgpack.encode(vault);
-            const encrypted_vault = await AES256GCM.encrypt(encoded_vault, backup_key);
+            const encrypted_vault = await this.encrypt(vault, null, export_key);
             backup.push(encrypted_vault);
         }
+        // --
+        console.log("Cripto Key Fingerprint", await Cripto.hash(export_key, { encoding: 'hex' }));
         // -- converto il backup completo in formato MessagePack
         return msgpack.encode(backup);
     }
@@ -242,15 +273,18 @@ export class VaultService {
      * @returns {Promise<Array<Object>>} i vaults
      */
     static async import_vaults(packed_backup, custom_key = null) {
+        if (custom_key !== null && custom_key.length !== 32) throw new Error("Custom key must be of 32 bytes length");
+        // ---
         const vaults = [];
         const backup = msgpack.decode(packed_backup);
         // -- ottengo il salt del backup cosi genero la chiave del backup
         const backup_salt = backup.shift();
         const backup_key = await Cripto.derive_key(custom_key ?? this.master_key, backup_salt);
+        // ---
+        console.log("Cripto Key Fingerprint", await Cripto.hash(backup_key, { encoding: 'hex' }));
         // -- decifro ogni vault
-        for (const vault of backup) {
-            const decrypted_vault = await AES256GCM.decrypt(vault, backup_key);
-            const decoded_vault = msgpack.decode(decrypted_vault);
+        for (let i = 0; i < backup.length; i++) {
+            const decoded_vault = await this.decrypt(backup[i], backup_key);
             vaults.push(decoded_vault);
         }
         // -- decompatto i vaults
@@ -285,8 +319,7 @@ export class VaultService {
         try {
             for (i = 0; i < vaults.length; i++) {
                 // -- decripto i secrets
-                const bytes = msgpack.encode(vaults[i]);
-                const encrypted_bytes = await AES256GCM.encrypt(bytes, this.master_key);
+                const encrypted_bytes = await this.encrypt(vaults[i]);
                 // ---
                 vaults[i].secrets = encrypted_bytes;
             }
@@ -306,8 +339,7 @@ export class VaultService {
             for (i = 0; i < vaults.length; i++) {
                 // -- decripto i secrets
                 const encrypted_bytes = new Uint8Array(vaults[i].secrets.data);
-                const bytes = await AES256GCM.decrypt(encrypted_bytes, this.master_key);
-                const data = msgpack.decode(bytes);
+                const data = await this.decrypt(encrypted_bytes);
                 // --
                 vaults[i].secrets = data;
             }
