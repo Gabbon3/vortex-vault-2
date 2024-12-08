@@ -16,7 +16,7 @@ html {
   padding: 0;
   border: 0;
   scroll-behavior: smooth;
-  background-color: #111111;
+  background-color: #181313;
   color: #f5f5f5;
   font-family: "Rubik", sans-serif !important;
 }
@@ -390,6 +390,10 @@ p.description {
   font-size: 0.9em;
 }
 
+.fs-l {
+  font-size: 1.2em;
+}
+
 .slider {
   cursor: pointer;
 }
@@ -427,13 +431,13 @@ hr {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
+  color: #969e5d;
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: #292929;
+  background-color: #2C2727;
   color: #ddd;
 }
 .btn.secondary:hover {
@@ -458,21 +462,21 @@ hr {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px #292929;
+  box-shadow: 0 0 0 4px #2C2727;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px #292929;
+  box-shadow: 0 0 0 6px #2C2727;
 }
 .btn.s {
   font-size: 0.9em;
   padding: 4px 7px;
 }
 .btn.l {
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 .btn.xl {
-  font-size: 1.8em;
+  font-size: 1.5em;
 }
 .btn.close.last {
   padding: 3px;
@@ -491,7 +495,7 @@ hr {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: #1d1d1d;
+  background-color: #221D1D;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
 }
@@ -535,19 +539,19 @@ hr {
   border-radius: 7px;
 }
 .isle.bg-1 {
-  background-color: #111111;
+  background-color: #181313;
 }
 .isle.bg-15 {
-  background-color: #171717;
+  background-color: #1D1818;
 }
 .isle.bg-2 {
-  background-color: #1d1d1d;
+  background-color: #221D1D;
 }
 .isle.bg-3 {
-  background-color: #232323;
+  background-color: #272222;
 }
 .isle.bg-4 {
-  background-color: #292929;
+  background-color: #2C2727;
 }
 
 #bc-finestre {
@@ -557,8 +561,12 @@ hr {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(17, 17, 17, 0.7);
+  background-color: rgba(24, 19, 19, 0.7);
   z-index: 9;
+}
+
+monospace {
+  font-family: "JetBrains Mono", monospace;
 }
 
 .input-text {
@@ -568,7 +576,7 @@ hr {
   border-radius: 7px;
   transition: 0.2s;
   outline: none;
-  background-color: #111111;
+  background-color: #181313;
   border: none;
   color: #f5f5f5;
   width: 100%;
@@ -584,7 +592,7 @@ hr {
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: #1d1d1d;
+  background-color: #221D1D;
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -596,6 +604,62 @@ hr {
   box-shadow: 0 0 0 4px rgba(135, 142, 84, 0.2);
 }
 
+.input-switch {
+  display: inline-block;
+  position: relative;
+}
+.input-switch label {
+  display: block;
+  width: 2.4em;
+  height: 1.2em;
+  background-color: #333238;
+  border-radius: 0.9em;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+.input-switch label::before {
+  content: "";
+  position: absolute;
+  top: 0.15em;
+  left: 0.15em;
+  width: 0.9em;
+  height: 0.9em;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  transition: left 0.2s ease;
+}
+.input-switch input {
+  display: none;
+}
+.input-switch input:checked + label {
+  background-color: rgba(135, 142, 84, 0.5);
+}
+.input-switch input:checked + label::before {
+  left: 1.35em;
+}
+
+input[type=range] {
+  appearance: none;
+  width: 95%;
+  height: 0.2rem;
+  outline: none;
+  border-radius: 0.2rem;
+  display: block;
+  margin: 15px auto;
+  background-color: #878e54;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: #878e54;
+  border: 0.2rem solid #878e54;
+  background-color: #f5f5f5;
+  border-radius: 1.25rem;
+  cursor: pointer;
+}
+
 .navbar {
   display: flex;
   gap: 5px;
@@ -604,7 +668,7 @@ hr {
   padding-bottom: 15px;
   padding: 5px;
   border-radius: 5px;
-  background-color: #232323;
+  background-color: #272222;
 }
 .navbar a {
   padding: 10px;
@@ -627,7 +691,7 @@ hr {
 #accedi, #registrati {
   display: block;
   margin: 20px auto;
-  background-color: #1d1d1d;
+  background-color: #221D1D;
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -735,16 +799,16 @@ hr {
   cursor: pointer;
   padding: 10px;
   border-radius: 10px;
-  background-color: #1d1d1d;
+  background-color: #221D1D;
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: #232323;
+  background-color: #272222;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
-  font-size: 1.4em;
+  font-size: 1.5em;
   padding: 5px;
   display: flex;
   align-items: center;
@@ -771,7 +835,7 @@ hr {
   margin-top: 10px;
 }
 .custom-sections custom-vault-section {
-  background-color: #292929;
+  background-color: #2C2727;
   padding: 0 7px 7px 7px;
   border-radius: 7px;
 }
@@ -780,6 +844,64 @@ hr {
 }
 .custom-sections custom-vault-section .remove-custom-section .material-symbols-rounded {
   color: #888;
+}
+
+colored-password i {
+  font-style: normal !important;
+  font-family: "JetBrains Mono", monospace !important;
+}
+colored-password i.az {
+  color: bisque;
+}
+colored-password i.AZ {
+  color: rgb(164, 164, 30);
+}
+colored-password i._09 {
+  color: salmon;
+}
+colored-password i._s {
+  color: lightskyblue;
+}
+colored-password.l {
+  font-size: 1.2em;
+}
+
+password-strength-bar {
+  display: flex;
+  margin: 10px auto;
+  width: 100%;
+  overflow: hidden;
+  background-color: #272222;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 1.2em;
+}
+password-strength-bar .bar {
+  overflow: hidden;
+  border-radius: 5px;
+  padding: 4px;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: "JetBrains Mono", monospace;
+}
+password-strength-bar._1 .bar {
+  background-color: rgba(238, 113, 132, 0.2);
+  color: rgb(238, 113, 132);
+}
+password-strength-bar._2 .bar {
+  background-color: rgba(238, 173, 113, 0.2);
+  color: rgb(238, 173, 113);
+}
+password-strength-bar._3 .bar {
+  background-color: rgba(115, 142, 84, 0.2);
+  color: #738e54;
+}
+password-strength-bar._4 .bar {
+  background-color: rgba(135, 142, 84, 0.2);
+  color: #878e54;
 }
 
 #devices-list {
@@ -793,7 +915,7 @@ hr {
   gap: 7px;
   padding: 7px;
   border-radius: 7px;
-  background-color: #292929;
+  background-color: #2C2727;
 }
 #devices-list device-list-item .token-id {
   display: flex;
@@ -828,7 +950,7 @@ hr {
   z-index: 2000;
   width: 100%;
   height: 100%;
-  background-color: rgba(17, 17, 17, 0.5);
+  background-color: rgba(24, 19, 19, 0.5);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   display: none;

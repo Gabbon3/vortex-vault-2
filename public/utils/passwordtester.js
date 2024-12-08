@@ -124,9 +124,10 @@ export class ptg {
      * @returns {number}
      */
     static test(password) {
-        const max_l = 100;
-        const max_t = 80;
-        const max_s = 50;
+        const max_l = 200;
+        const max_t = 100;
+        const ppt_t = { az: 0.15, AZ: 0.15, _09: 0.3, _$: 0.4 }; // punti per tipo
+        const max_s = 70;
         const max = max_l + max_t + max_s;
         // ---
         let ppt = [
@@ -139,16 +140,41 @@ export class ptg {
         if (l >= 16) ppt[0] = max_l;
         else {
             // 100 : x = 16 : l
-            ppt[0] = (max_l * l) / 16;
+            const e_l = l <= 8 ? 2.5 : 1.5; // esponente lunghezza
+            ppt[0] = max_l * Math.pow(l / 16, e_l);
         }
         // -- tipi caratteri
-        ppt[1] = this.count_types(password) * (max_t / 4);
+        const types = this.check_types(password);
+        const types_count = this.count_types(password);
+        for (const c in types) {
+            if (types[c]) ppt[1] += ppt_t[c] * max_t;
+        }
+        if (types_count < 3) ppt[1] *= 0.5;
         // -- sequenze
         const sequences = this.search_sequence(password);
-        // 100 - (100 : x = l : sequences.length)
-        ppt[2] = max_s - ((max_s * sequences.length) / l);
+        const s_l = sequences.join('').length; // lunghezza totale delle sequenze
+        // - esponente
+        const ratio_s = s_l / l;
+        const e_s = ratio_s >= 0.5 ? 2 : 1.5; // esponente sequenze
+        ppt[2] = max_s * (1 - Math.pow(ratio_s, e_s));
         // -- sum : max = x : 100
         return Math.round(((ppt[0] + ppt[1] + ppt[2]) * 100) / max);
+    }
+    /**
+     * UTILITY HTML
+     */
+    /**
+     * Restituisce il testo suddiviso per tipo con gia l'html inserito
+     * @param {string} text 
+     */
+    static colorize_text(text) {
+        const groups = text.match(/([A-Z]+)|([a-z]+)|([0-9]+)|([^a-zA-Z0-9]+)/g) || [];
+        return groups.map(group => {
+            if (/[a-z]/.test(group)) return `<i class="az">${group}</i>`;
+            else if (/[A-Z]/.test(group)) return `<i class="AZ">${group}</i>`;
+            else if (/[0-9]/.test(group)) return `<i class="_09">${group}</i>`;
+            else return `<i class="_s">${group}</i>`;
+        }).join('');
     }
 }
 

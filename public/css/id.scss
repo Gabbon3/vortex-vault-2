@@ -164,7 +164,7 @@
 
         .simbolo {
             color: $c1;
-            font-size: $fs-l;
+            font-size: $fs-xl;
             padding: 5px;
             display: flex;
             align-items: center;
@@ -208,6 +208,62 @@
                 color: $text-color-2;
             }
         }
+    }
+}
+
+colored-password {
+    i {
+        font-style: normal !important;
+        font-family: $monospace !important;
+
+        &.az { color: bisque }
+        &.AZ { color: rgb(164, 164, 30) }
+        &._09 { color: salmon }
+        &._s { color: lightskyblue }
+    }
+
+    &.l {
+        font-size: $fs-l;
+    }
+}
+
+password-strength-bar {
+    display: flex;
+    margin: 10px auto;
+    width: 100%;
+    overflow: hidden;
+    background-color: $bg-3;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: $fs-l;
+
+    .bar {
+        overflow: hidden;
+        border-radius: 5px;
+        padding: 4px;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-family: $monospace;
+    }
+
+    &._1 .bar {
+        background-color: rgba($c-danger, 0.2);
+        color: $c-danger;
+    }
+    &._2 .bar {
+        background-color: rgba($c-warning, 0.2);
+        color: $c-warning;
+    }
+    &._3 .bar {
+        background-color: rgba($c2, 0.2);
+        color: $c2;
+    }
+    &._4 .bar {
+        background-color: rgba($c1, 0.2);
+        color: $c1;
     }
 }
 

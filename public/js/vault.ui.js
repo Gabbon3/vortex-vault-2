@@ -179,6 +179,24 @@ $(document).ready(async () => {
             'vault-li'
         );
     });
+    /**
+     * PASSWORD GENERATOR
+     */
+    $('#psw-gen-len').on('input', (e) => {
+        document.getElementById('psw-gen-length-indicator').textContent = e.currentTarget.value;
+    });
+    Form.onsubmit('form-psw-gen', (form, elements) => {
+        const { length, az, AZ, _09, _$ } = elements;
+        const target = document.getElementById('psw-generator-tester');
+        try {
+            const password = ptg.generate(length, az, AZ, _09, _$);
+            const test = ptg.test(password);
+            target.innerHTML = ptg.colorize_text(password);
+            document.getElementById('psw-gen-str-bar').setAttribute('value', test);
+        } catch (error) {
+            Log.summon(3, "Error while generating new password");
+        }
+    });
 });
 
 export class VaultUI {

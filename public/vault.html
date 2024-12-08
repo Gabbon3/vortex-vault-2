@@ -313,6 +313,86 @@
             </button>
         </form>
     </div>
+    <!-- PSW GENERATOR -->
+    <div class="window m pr" id="win-psw-generator">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">key_vertical</span>
+                Generator
+            </h2>
+            <button class="btn t close l last" data-target-close="win-psw-generator">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <colored-password class="l mb-2" id="psw-generator-tester"></colored-password>
+        <!-- strength bar -->
+        <password-strength-bar value="100" id="psw-gen-str-bar"></password-strength-bar>
+        <!-- actions -->
+        <div class="flex gap-50 d-row y-center">
+            <div class="flex gap-50">
+                <button class="btn t CA copy-val" data-target-cc="psw-generator-tester" title="Copy">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+                <button class="btn t CA paste-val" data-target-pa="psw-generator-tester" title="Paste">
+                    <span class="material-symbols-rounded">content_paste</span>
+                </button>
+                <button class="btn t CA del-val" data-target-del="psw-generator-tester" title="Cancel">
+                    <span class="material-symbols-rounded">backspace</span>
+                </button>
+            </div>
+            <!-- --- -->
+        </div>
+        <form id="form-psw-gen">
+            <!-- length -->
+            <div class="flex gap-50 y-center">
+                <label for="psw-gen-len"><monospace>Length</monospace></label>
+                <monospace id="psw-gen-length-indicator" class="fs-l last">12</monospace>
+            </div>
+            <input type="range" name="length" min="1" max="32" value="12" step="1" class="" id="psw-gen-len">
+            <!-- types -->
+            <div class="flex gap-50 d-row mb-2">
+                <div class="flex d-column fg-1">
+                    <div class="flex gap-100 d-row y-center">
+                        <div class="input-switch">
+                            <input type="checkbox" id="psw-gen-az" name="az" checked>
+                            <label for="psw-gen-az"></label>
+                        </div>
+                        <monospace>a-z</monospace>
+                    </div>
+                    <div class="flex gap-100 d-row y-center">
+                        <div class="input-switch">
+                            <input type="checkbox" id="psw-gen-AZ" name="AZ" checked>
+                            <label for="psw-gen-AZ"></label>
+                        </div>
+                        <monospace>A-Z</monospace>
+                    </div>
+                </div>
+                <div class="flex d-column fg-1">
+                    <div class="flex gap-100 d-row y-center">
+                        <div class="input-switch">
+                            <input type="checkbox" id="psw-gen-09" name="_09" checked>
+                            <label for="psw-gen-09"></label>
+                        </div>
+                        <monospace>0-9</monospace>
+                    </div>
+                    <div class="flex gap-100 d-row y-center">
+                        <div class="input-switch">
+                            <input type="checkbox" id="psw-gen-_s" name="_$" checked>
+                            <label for="psw-gen-_s"></label>
+                        </div>
+                        <monospace>!-?</monospace>
+                    </div>
+                </div>
+            </div>
+            <!-- submit -->
+            <button type="submit" class="btn primary w-100">
+                <span class="material-symbols-rounded">sync</span>
+                Generate
+            </button>
+        </form>
+        
+    </div>
     <!-- 
     SETTINGS
     -->

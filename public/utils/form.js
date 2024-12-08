@@ -23,15 +23,19 @@ export class Form {
                 // ---
                 switch (type) {
                     case 'checkbox':
+                        value = element.checked;
+                        break;
                     case 'radio':
                         value = value == 'on';
                         break;
                     case 'number':
+                    case 'range':
                         value = Number(value);
                         break;
                     case 'file':
                         value = element.files.length > 0 ? element.files[0] : null;
                         break;
+                        
                 }
                 // ---
                 json[name] = value;

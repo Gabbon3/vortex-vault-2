@@ -4,6 +4,8 @@ import './vault-li.component.js';
 import './footer.component.js';
 import './device-list-item.component.js';
 import './custom-vault-section.js';
+import './colored-password.component.js';
+import './password-strenght-bar.component.js'
 
 $(document).ready(() => {
     /**
@@ -53,7 +55,7 @@ $(document).ready(() => {
      */
     $(document).on('click', '.copy-val', (e) => {
         const target = document.getElementById(e.currentTarget.getAttribute('data-target-cc')); // cc sta per copy
-        navigator.clipboard.writeText(target.value);
+        navigator.clipboard.writeText(target.value ?? target.textContent);
     });
     /**
      * pulsanti incolla
@@ -61,7 +63,17 @@ $(document).ready(() => {
     $(document).on('click', '.paste-val', (e) => {
         const target = document.getElementById(e.currentTarget.getAttribute('data-target-pa')); // pa sta per paste
         navigator.clipboard.readText().then((text) => {
-            target.value = text;
+            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ?
+                target.value = text :
+                target.textContent = text;
+                // --- simulo l'evento
+                const keyupevent = new KeyboardEvent('input', {
+                    key: '',
+                    bubbles: true,
+                    cancelable: true,
+                });
+                // ---
+                target.dispatchEvent(keyupevent);
         }).catch((error) => { console.warn(error) });
     });
     /**
@@ -69,7 +81,9 @@ $(document).ready(() => {
      */
     $(document).on('click', '.del-val', (e) => {
         const target = document.getElementById(e.currentTarget.getAttribute('data-target-del'));
-        target.value = '';
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ?
+            target.value = '' :
+            target.textContent = '';
         // --- simulo l'evento
         const keyupevent = new KeyboardEvent('keyup', {
             key: 'Delete',

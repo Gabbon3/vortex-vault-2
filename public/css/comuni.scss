@@ -175,6 +175,10 @@ p {
     }
 }
 
+.fs-l {
+    font-size: $fs-l;
+}
+
 .slider {
     cursor: pointer;
 }
@@ -374,6 +378,10 @@ hr {
     z-index: 9;
 }
 
+monospace {
+    font-family: $monospace;
+}
+
 .input-text {
     display: block;
     margin: 0 auto;
@@ -413,5 +421,69 @@ hr {
 
     &:focus {
         box-shadow: 0 0 0 4px rgba($c1, 0.2);
+    }
+}
+
+.input-switch {
+    display: inline-block;
+    position: relative;
+    // -- coefficente per gestire facilmente la dimensione
+    $k: 0.6;
+    label {
+        display: block;
+        width: ($k * 4em);
+        height: ($k * 2em);
+        background-color: $border-color;
+        border-radius: ($k * 1.5em);
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.2s ease;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: ($k * 0.25em);
+            left: ($k * 0.25em);
+            width: ($k * 1.5em);
+            height: ($k * 1.5em);
+            background-color: $text-color;
+            border-radius: 50%; 
+            transition: left 0.2s ease;
+        }
+
+    }
+    
+    input {
+        display: none;
+    }
+
+    input:checked + label {
+        background-color: rgba($c1, 0.5);
+    }
+
+    input:checked + label::before {
+        left: ($k * 2.25em); // 1.75em = 32px
+    }
+}
+
+input[type="range"] {
+    appearance: none;
+    width: 95%;
+    height: 0.2rem;
+    outline: none;
+    border-radius: 0.2rem;
+    display: block;
+    margin: 15px auto;
+    background-color: $c1;
+
+    &::-webkit-slider-thumb {
+        appearance: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: $c1;
+        border: 0.2rem solid $c1;
+        background-color: $text-color;
+        border-radius: 1.25rem;
+        cursor: pointer;
     }
 }

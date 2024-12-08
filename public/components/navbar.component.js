@@ -20,6 +20,10 @@ class Navbar extends HTMLElement {
                     <span class="material-symbols-rounded">cloud</span>
                     Backup
                 </a>` : ''}
+                ${path === '/vault' ? `<a class="open" data-target-open="win-psw-generator">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Generator
+                </a>` : ''}
                 ${path !== '/vault' ? `<a href="/vault"'>
                     <span class="material-symbols-rounded">lock</span>
                     Vault
