@@ -2,6 +2,7 @@ export class Search {
     cache = {
         // usata per non ricericare sempre l'html
     }
+    elemento_ricerca = 'tr';
     /**
      * Ricerca nelle tabelle
      * @param {HTMLElement} input input di ricerca
@@ -12,6 +13,7 @@ export class Search {
         const match = input.value.toLowerCase();
         // Se non esiste già, crea la cache e inizia a monitorare la tabella per eventuali modifiche
         if (!this.cache[target]) {
+            this.elemento_ricerca = elemento_ricerca;
             this.crea_cache(target, elemento_ricerca);
             this.osserva_modifiche(target); // Inizia a osservare eventuali modifiche alla tabella
         }
@@ -56,7 +58,7 @@ export class Search {
      * @param {String} target ID della tabella target
      */
     osserva_modifiche(target) {
-        const tabella = document.querySelector("#" + target);
+        const tabella = document.getElementById(target);
         if (!tabella) return;
         // ---
         const observer = new MutationObserver((mutationsList) => {
@@ -64,7 +66,7 @@ export class Search {
                 if (mutation.type === 'childList' || mutation.type === 'characterData') {
                     // -- se ci sono cambiamenti nella lista dei nodi o nel contenuto, invalida la cache
                     this.invalida_cache(target);
-                    this.crea_cache(target);  // -- ricarica la cache aggiornata
+                    this.crea_cache(target, this.elemento_ricerca);  // -- ricarica la cache aggiornata
                     break;
                 }
             }

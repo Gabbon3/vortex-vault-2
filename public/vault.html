@@ -35,15 +35,29 @@
                 </button>
             </div>
         </div>
-        <div class="flex gap-50">
-            <button class="btn primary" id="btn-sync-vault">
-                <span class="material-symbols-rounded">sync_alt</span>
-                Sync
-            </button>
-            <button class="btn primary open" data-target-open="win-create-vault">
-                <span class="material-symbols-rounded">add</span>
-                New Vault
-            </button>
+        <div class="flex gap-50 wrap">
+            <!-- Sync & New Vault -->
+            <div class="flex gap-50">
+                <button class="btn primary" id="btn-sync-vault">
+                    <span class="material-symbols-rounded">sync_alt</span>
+                    Sync
+                </button>
+                <button class="btn primary open" data-target-open="win-create-vault">
+                    <span class="material-symbols-rounded">add</span>
+                    New Vault
+                </button>
+            </div>
+            <!-- Order Buttons -->
+            <div class="flex gap-50 last">
+                <button class="btn secondary order-vaults" order="az" active="false">
+                    <span class="material-symbols-rounded">title</span>
+                    <span class="material-symbols-rounded">sort</span>
+                </button>
+                <button class="btn secondary order-vaults" order="date" active="false">
+                    <span class="material-symbols-rounded">calendar_today</span>
+                    <span class="material-symbols-rounded">sort</span>
+                </button>
+            </div>
         </div>
         <div id="vaults-list">
             <!-- ... -->

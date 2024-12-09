@@ -410,6 +410,13 @@ hr {
   border: none;
   background-color: #333238;
 }
+hr.dashed {
+  background-color: transparent;
+  border-bottom: 1px dashed #333238;
+}
+hr.s {
+  width: 90%;
+}
 
 .btn {
   display: flex;
@@ -431,7 +438,7 @@ hr {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: #969e5d;
+  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
@@ -744,8 +751,8 @@ input[type=range]::-webkit-slider-thumb {
   --i-color: rgba(255, 133, 35);
 }
 #logs_container log-info._0 {
-  --bc-log: rgba(91, 178, 84, 0.3);
-  --i-color: rgb(91, 178, 84);
+  --bc-log: rgba(115, 142, 84, 0.3);
+  --i-color: #738e54;
 }
 #logs_container log-info._3 {
   --bc-log: rgba(130, 147, 169, 0.2);
@@ -788,7 +795,7 @@ input[type=range]::-webkit-slider-thumb {
   display: flex;
   margin: 10px auto;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 7.5px;
 }
 #vaults-list vault-li {
   display: flex;

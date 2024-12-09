@@ -61,8 +61,6 @@ export class VaultService {
             return false;
         }
         this.load_used_usernames();
-        // -- ordino l'array
-        this.vaults.sort((a, b) => a.secrets.T.localeCompare(b.secrets.T));
         return true;
     }
     /**

@@ -89,8 +89,8 @@
 		}
 
 		&._0 {
-            --bc-log: rgba(91, 178, 84, 0.3);
-            --i-color: rgb(91, 178, 84);
+            --bc-log: rgba(115, 142, 84, 0.3);
+            --i-color: #738e54;
 		}
 
         &._3 {
@@ -142,7 +142,7 @@
     display: flex;
     margin: 10px auto;
     flex-wrap: wrap;
-    gap: 7px;
+    gap: 7.5px;
 
     vault-li {
         display: flex;

@@ -194,6 +194,15 @@ hr {
     width: 98%;
     border: none;
     background-color: $border-color;
+
+    &.dashed {
+        background-color: transparent;
+        border-bottom: 1px dashed $border-color; 
+    }
+
+    &.s {
+        width: 90%;
+    }
 }
 
 .btn {

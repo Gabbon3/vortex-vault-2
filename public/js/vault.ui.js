@@ -72,7 +72,7 @@ $(document).ready(async () => {
         finestra.loader(true);
         // ---
         if (await VaultService.update(vault_id, elements)) {
-            Log.summon(0, `${elements.T} modificato con successo`);
+            Log.summon(0, `${elements.T} edited`);
             finestra.close('win-update-vault');
             $(form).trigger("reset");
             setTimeout(() => {
@@ -182,20 +182,44 @@ $(document).ready(async () => {
     /**
      * PASSWORD GENERATOR
      */
+    const psw_gen_test = document.getElementById('psw-generator-tester');
     $('#psw-gen-len').on('input', (e) => {
         document.getElementById('psw-gen-length-indicator').textContent = e.currentTarget.value;
     });
+    $(psw_gen_test).on('keyup', (e) => {
+        const password = psw_gen_test.textContent;
+        if (password.length < 1) return;
+        const test = ptg.test(password);
+        document.getElementById('psw-gen-str-bar').setAttribute('value', test);
+    });
     Form.onsubmit('form-psw-gen', (form, elements) => {
         const { length, az, AZ, _09, _$ } = elements;
-        const target = document.getElementById('psw-generator-tester');
         try {
             const password = ptg.generate(length, az, AZ, _09, _$);
             const test = ptg.test(password);
-            target.innerHTML = ptg.colorize_text(password);
+            psw_gen_test.innerHTML = ptg.colorize_text(password);
             document.getElementById('psw-gen-str-bar').setAttribute('value', test);
         } catch (error) {
             Log.summon(3, "Error while generating new password");
         }
+    });
+    /**
+     * Ordinamento
+     */
+    $('.order-vaults').on('click', (e) => {
+        const btn = e.currentTarget;
+        const order = btn.getAttribute('order');
+        const active = JSON.parse(btn.getAttribute('active'));
+        btn.setAttribute('active', !active);
+        const curr_order = 
+            order == 'az' ? 
+                active ? 'az' : 'za'
+                :
+                order == 'date' ? 
+                    active ? 'dateup' : 'datedown' : null;
+        // ---
+        if (!curr_order) return;
+        VaultUI.html_vaults(VaultService.vaults, curr_order);
     });
 });
 
@@ -239,11 +263,24 @@ export class VaultUI {
         this.html_used_usernames(VaultService.used_usernames);
     }
     /**
+     * funzioni di ordinamento
+     */
+    static order_functions = {
+        'az': (a, b) => a.secrets.T.localeCompare(b.secrets.T),
+        'za': (a, b) => b.secrets.T.localeCompare(a.secrets.T),
+        'dateup': (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
+        'datedown': (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    }
+    /**
      * This function generates HTML markup for a list of vaults.
      * @param {Array} vaults - An array of vault objects. Each vault object should have properties: T (title), updatedAt (date of last update).
+     * @param {string} order - az, za, dateup, datedown, secureup, securedown
      */
-    static html_vaults(vaults) {
-        let html = "";
+    static html_vaults(vaults, order = 'az') {
+        let html = ``;
+        // -- ordino
+        const order_function = this.order_functions[order];
+        vaults.sort(order_function);
         for (const vault of vaults) {
             // ---
             html += `<vault-li 
@@ -267,3 +304,5 @@ export class VaultUI {
         document.querySelector('#used-username').innerHTML = options;
     }
 }
+
+window.VaultUI = VaultUI;

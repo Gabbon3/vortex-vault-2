@@ -20,11 +20,11 @@ export class UserController {
     signup = async_handler(async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) {
-            throw new CError("ValidationError", "Username e password sono richiesti", 422);
+            throw new CError("ValidationError", "Username and password are required", 422);
         }
         // ---
         const user = await this.service.signup(username, password);
-        res.status(201).json({ message: 'Utente registrato con successo', id: user.id });
+        res.status(201).json({ message: 'User registered', id: user.id });
     })
     /**
      * Accede
@@ -35,7 +35,7 @@ export class UserController {
         const { username, password } = req.body;
         const refresh_token_cookie = req.cookies.refresh_token;
         if (!username || !password) {
-            throw new CError("ValidationError", "Username e password sono richiesti", 422);
+            throw new CError("ValidationError", "Username and password are required", 422);
         }
         // ---
         const user_agent = req.get('user-agent');
