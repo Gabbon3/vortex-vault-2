@@ -51,7 +51,7 @@ label {
 }
 
 label {
-  margin: 10px 0 7px 0;
+  margin: 7px 0 7px 0;
 }
 label .material-symbols-rounded {
   color: #878e54;
@@ -883,7 +883,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: #272222;
+  background-color: #221D1D;
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;

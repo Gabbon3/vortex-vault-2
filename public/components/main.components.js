@@ -66,14 +66,14 @@ $(document).ready(() => {
             target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ?
                 target.value = text :
                 target.textContent = text;
-                // --- simulo l'evento
-                const keyupevent = new KeyboardEvent('input', {
-                    key: '',
-                    bubbles: true,
-                    cancelable: true,
-                });
-                // ---
-                target.dispatchEvent(keyupevent);
+            // --- simulo l'evento
+            const keyupevent = new KeyboardEvent('input', {
+                key: '',
+                bubbles: true,
+                cancelable: true,
+            });
+            // ---
+            target.dispatchEvent(keyupevent);
         }).catch((error) => { console.warn(error) });
     });
     /**
