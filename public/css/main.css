@@ -438,7 +438,7 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: #969e5d;
+  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
@@ -835,6 +835,7 @@ input[type=range]::-webkit-slider-thumb {
   font-family: "JetBrains Mono", monospace !important;
 }
 #vaults-list vault-li .info strong {
+  font-weight: normal;
   font-size: calc(1em + 3px);
 }
 #vaults-list vault-li .info i {
