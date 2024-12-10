@@ -1,4 +1,5 @@
 class CustomVaultSection extends HTMLElement {
+    static id_ctr = 0;
     constructor() {
         super();
         this.input = null;
@@ -56,14 +57,18 @@ class CustomVaultSection extends HTMLElement {
     }
 
     render() {
+        CustomVaultSection.id_ctr++;
         const input_id = this.getAttribute('input-id');
         const input_value = this.getAttribute('input-value') ?? '';
         const section_name = this.getAttribute('section-name') ?? 'Custom';
         const paste = JSON.parse(this.getAttribute('paste'));
         // ---
+        const svg = CustomVaultSection.get_icon(section_name);
+        const is_password = ['password', 'key', 'key_vertical'].includes(svg);
+        // ---
         this.innerHTML = `
             <label for="${input_id}">
-                <span class="material-symbols-rounded">${CustomVaultSection.get_icon(section_name)}</span>
+                <span class="material-symbols-rounded">${svg}</span>
                 <input class="input-text input-name">
                 <button type="button" class="btn t remove-custom-section" title="Remove this section">
                     <span class="material-symbols-rounded">close</span>
@@ -75,6 +80,7 @@ class CustomVaultSection extends HTMLElement {
                     <span class="material-symbols-rounded">${paste ? 'content_paste' : 'content_copy'}</span>
                 </button>
             </div>
+            ${is_password ? `<password-strength-bar class="m-0 mt-2" value="${ptg.test(input_value)}" id="cvsp-${CustomVaultSection.id_ctr}" input-id="${input_id}"></password-strength-bar>` : ''}
         `;
         // -- VARIABILI
         this.input = this.querySelector('.custom-input');

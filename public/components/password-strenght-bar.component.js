@@ -1,9 +1,12 @@
+import { ptg } from "../utils/passwordtester.js";
+
 class PasswordStrengthBar extends HTMLElement {
     static id_ctr = 0;
     constructor() {
         super();
         this.bar_id = null;
         this.bar = null;
+        this.input = null;
     }
 
     static get observedAttributes() {
@@ -21,7 +24,7 @@ class PasswordStrengthBar extends HTMLElement {
         const value = this.getAttribute('value');
         const { lvl, icon } = this.calc_icon_lvl(value);
         // ---
-        this.setAttribute('class', '_' + lvl);
+        this.bar.setAttribute('class', 'bar _' + lvl);
         this.bar.style.width = `${value < 20 ? 20 : value}%`;
         this.bar.innerHTML = `<span class="material-symbols-rounded">${icon}</span>${value}`;
     }
@@ -47,11 +50,28 @@ class PasswordStrengthBar extends HTMLElement {
     }
     
     render() {
-        this.bar_id = `psbc-${PasswordStrengthBar.id_ctr}`; // password strength bar component
+        // -- psbc = password strength bar component
+        this.bar_id = `psbc-${PasswordStrengthBar.id_ctr}`;
         PasswordStrengthBar.id_ctr++;
         this.innerHTML = `<span class="bar" id="${this.bar_id}"></span>`;
         this.bar = document.getElementById(this.bar_id);
         this.updateValues();
+        // -- input collegato
+        const id_input = this.getAttribute('input-id') ?? null;
+        if (!id_input) return;
+        this.input = document.getElementById(id_input);
+        // -- evento collegato dell'input
+        this.input.addEventListener('keyup', this.input_listener.bind(this));
+    }
+    /**
+     * funzione che si attiva se this.input esegue keyup
+     * @param {Event} e 
+     */
+    input_listener(e) {
+        const password = e.currentTarget.textContent || e.currentTarget.value;
+        if (password.length < 1) return;
+        const test = ptg.test(password);
+        this.setAttribute('value', test);
     }
 }
 

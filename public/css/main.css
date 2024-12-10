@@ -438,7 +438,7 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
+  color: #969e5d;
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
@@ -810,6 +810,7 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 10px;
   background-color: #221D1D;
   transition: 0.15s;
+  flex-grow: 1;
 }
 #vaults-list vault-li:hover {
   background-color: #272222;
@@ -830,7 +831,6 @@ input[type=range]::-webkit-slider-thumb {
   flex-direction: column;
   gap: 7px;
 }
-#vaults-list vault-li .info strong,
 #vaults-list vault-li .info i {
   font-family: "JetBrains Mono", monospace !important;
 }
@@ -886,6 +886,9 @@ password-strength-bar {
   background-color: #272222;
   padding: 5px;
   border-radius: 5px;
+  font-size: 1em;
+}
+password-strength-bar.fs-l {
   font-size: 1.2em;
 }
 password-strength-bar .bar {
@@ -899,19 +902,19 @@ password-strength-bar .bar {
   gap: 7px;
   font-family: "JetBrains Mono", monospace;
 }
-password-strength-bar._1 .bar {
+password-strength-bar .bar._1 {
   background-color: rgba(238, 113, 132, 0.2);
   color: rgb(238, 113, 132);
 }
-password-strength-bar._2 .bar {
+password-strength-bar .bar._2 {
   background-color: rgba(238, 173, 113, 0.2);
   color: rgb(238, 173, 113);
 }
-password-strength-bar._3 .bar {
+password-strength-bar .bar._3 {
   background-color: rgba(115, 142, 84, 0.2);
   color: #738e54;
 }
-password-strength-bar._4 .bar {
+password-strength-bar .bar._4 {
   background-color: rgba(135, 142, 84, 0.2);
   color: #878e54;
 }

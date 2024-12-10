@@ -176,12 +176,13 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Password
             </label>
-            <div class="flex gap-75">
+            <div class="flex gap-75 mb-2 ">
                 <input name="P" type="text" class="input-text mono" id="update-password" autocomplete="off" required>
                 <button class="btn t CA copy-val" data-target-cc="update-password" type="button" title="Paste">
                     <span class="material-symbols-rounded">content_copy</span>
                 </button>
             </div>
+            <password-strength-bar class="m-0" id="update-psw-strength-bar" input-id="update-password"></password-strength-bar>
             <!-- CUSTOM -->
             <div class="custom-sections flex gap-50 d-column" id="custom-sections-update-vault">
                 <!-- ... -->
@@ -341,7 +342,7 @@
         <hr>
         <colored-password class="l mb-2" id="psw-generator-tester"></colored-password>
         <!-- strength bar -->
-        <password-strength-bar value="100" id="psw-gen-str-bar"></password-strength-bar>
+        <password-strength-bar class="fs-l" value="100" id="psw-gen-str-bar" input-id="psw-generator-tester"></password-strength-bar>
         <!-- actions -->
         <div class="flex gap-50 d-row y-center">
             <div class="flex gap-50">

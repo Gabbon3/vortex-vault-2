@@ -160,6 +160,7 @@
         border-radius: 10px;
         background-color: $bg-2;
         transition: 0.15s;
+        flex-grow: 1;
 
         &:hover {
             background-color: $bg-3;
@@ -184,7 +185,6 @@
             flex-direction: column;
             gap: 7px;
 
-            strong,
             i {
                 font-family: $monospace !important;
             }
@@ -255,7 +255,11 @@ password-strength-bar {
     background-color: $bg-3;
     padding: 5px;
     border-radius: 5px;
-    font-size: $fs-l;
+    font-size: $fs-m;
+
+    &.fs-l {
+        font-size: $fs-l;
+    }
 
     .bar {
         overflow: hidden;
@@ -267,27 +271,28 @@ password-strength-bar {
         justify-content: center;
         gap: 7px;
         font-family: $monospace;
+
+        &._1 {
+            background-color: rgba($c-danger, 0.2);
+            color: $c-danger;
+        }
+    
+        &._2 {
+            background-color: rgba($c-warning, 0.2);
+            color: $c-warning;
+        }
+    
+        &._3 {
+            background-color: rgba($c2, 0.2);
+            color: $c2;
+        }
+    
+        &._4 {
+            background-color: rgba($c1, 0.2);
+            color: $c1;
+        }
     }
 
-    &._1 .bar {
-        background-color: rgba($c-danger, 0.2);
-        color: $c-danger;
-    }
-
-    &._2 .bar {
-        background-color: rgba($c-warning, 0.2);
-        color: $c-warning;
-    }
-
-    &._3 .bar {
-        background-color: rgba($c2, 0.2);
-        color: $c2;
-    }
-
-    &._4 .bar {
-        background-color: rgba($c1, 0.2);
-        color: $c1;
-    }
 }
 
 #devices-list {

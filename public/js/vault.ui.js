@@ -86,21 +86,35 @@ $(document).ready(async () => {
     /**
      * ON CLICK VAULT-LI UPDATE
      */
+    const update_elements = {
+        win_title: document.querySelector('#vault-title-to-update'),
+        vault_id: document.querySelector('#update-vault-id'),
+        delete_btn: document.querySelector('#btn-delete-vault'),
+        title: document.querySelector('#update-titolo'),
+        username: document.querySelector('#update-username'),
+        password: document.querySelector('#update-password'),
+        note: document.querySelector('#update-note'),
+        created_date: document.querySelector('#update-created-date'),
+        last_modified_date: document.querySelector('#update-last-modified-date'),
+        psw_strength_bar: document.querySelector('#update-psw-strength-bar'),
+    }
     $('#vaults-list').on('click', 'vault-li', (e) => {
         const id = $(e.currentTarget).attr('id');
         finestra.open('win-update-vault');
         // --
         const vault = VaultService.get_vault(id);
+        const strength_value = ptg.test(vault.secrets.P);
         // -- riempio i campi
-        document.querySelector('#vault-title-to-update').textContent = vault.secrets.T;
-        document.querySelector('#update-vault-id').value = id;
-        document.querySelector('#btn-delete-vault').setAttribute('vault-id', id);
-        document.querySelector('#update-titolo').value = vault.secrets.T;
-        document.querySelector('#update-username').value = vault.secrets.U;
-        document.querySelector('#update-password').value = vault.secrets.P;
-        document.querySelector('#update-note').value = vault.secrets.N;
-        document.querySelector('#update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
-        document.querySelector('#update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
+        update_elements.win_title.textContent = vault.secrets.T;
+        update_elements.vault_id.value = id;
+        update_elements.delete_btn.setAttribute('vault-id', id);
+        update_elements.title.value = vault.secrets.T;
+        update_elements.username.value = vault.secrets.U;
+        update_elements.password.value = vault.secrets.P;
+        update_elements.note.value = vault.secrets.N;
+        update_elements.created_date.textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
+        update_elements.last_modified_date.textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
+        update_elements.psw_strength_bar.setAttribute('value', strength_value);
         // -- customs
         const custom_container = document.querySelector('#custom-sections-update-vault');
         custom_container.innerHTML = '';
@@ -186,12 +200,7 @@ $(document).ready(async () => {
     $('#psw-gen-len').on('input', (e) => {
         document.getElementById('psw-gen-length-indicator').textContent = e.currentTarget.value;
     });
-    $(psw_gen_test).on('keyup', (e) => {
-        const password = psw_gen_test.textContent;
-        if (password.length < 1) return;
-        const test = ptg.test(password);
-        document.getElementById('psw-gen-str-bar').setAttribute('value', test);
-    });
+    
     Form.onsubmit('form-psw-gen', (form, elements) => {
         const { length, az, AZ, _09, _$ } = elements;
         try {
@@ -282,11 +291,12 @@ export class VaultUI {
         const order_function = this.order_functions[order];
         vaults.sort(order_function);
         for (const vault of vaults) {
+            const strength_value = ptg.test(vault.secrets.P);
             // ---
             html += `<vault-li 
             title="${vault.secrets.T}"
             updated-at="${date.format("%j %M %y", new Date(vault.updatedAt))}"
-            secure="${ptg.test(vault.secrets.P) > 60}"
+            secure="${strength_value > 60}"
             id="${vault.id}"
         ></vault-li>`;
         }
