@@ -3,7 +3,7 @@ import './log.component.js';
 import './vault-li.component.js';
 import './footer.component.js';
 import './device-list-item.component.js';
-import './custom-vault-section.js';
+import './custom-vault-section.component.js';
 import './colored-password.component.js';
 import './password-strenght-bar.component.js'
 

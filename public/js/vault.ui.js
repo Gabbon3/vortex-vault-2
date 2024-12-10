@@ -285,7 +285,7 @@ export class VaultUI {
             // ---
             html += `<vault-li 
             title="${vault.secrets.T}"
-            updated-at="${date.format("%d %M %Y", new Date(vault.updatedAt))}"
+            updated-at="${date.format("%j %M %y", new Date(vault.updatedAt))}"
             secure="${ptg.test(vault.secrets.P) > 60}"
             id="${vault.id}"
         ></vault-li>`;

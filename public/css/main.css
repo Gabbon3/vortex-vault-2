@@ -695,7 +695,8 @@ input[type=range]::-webkit-slider-thumb {
   background-color: rgba(135, 142, 84, 0.1);
 }
 
-#accedi, #registrati {
+#accedi,
+#registrati {
   display: block;
   margin: 20px auto;
   background-color: #221D1D;
@@ -763,7 +764,8 @@ input[type=range]::-webkit-slider-thumb {
   display: flex;
   align-items: center;
 }
-#logs_container log-info .i-container i, #logs_container log-info .i-container .material-symbols-rounded {
+#logs_container log-info .i-container i,
+#logs_container log-info .i-container .material-symbols-rounded {
   color: var(--i-color);
   font-size: calc(1em + 8px);
   padding: 8px;
@@ -808,7 +810,6 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 10px;
   background-color: #221D1D;
   transition: 0.15s;
-  flex-grow: 1;
 }
 #vaults-list vault-li:hover {
   background-color: #272222;
@@ -828,6 +829,10 @@ input[type=range]::-webkit-slider-thumb {
   display: flex;
   flex-direction: column;
   gap: 7px;
+}
+#vaults-list vault-li .info strong,
+#vaults-list vault-li .info i {
+  font-family: "JetBrains Mono", monospace !important;
 }
 #vaults-list vault-li .info strong {
   font-size: calc(1em + 3px);
