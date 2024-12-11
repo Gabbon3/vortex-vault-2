@@ -22,6 +22,13 @@ export class Cripto {
         }
     }
     /**
+     * Return an high entropy random number
+     * @returns {number} 0 < number < 1
+     */
+    static random() {
+        return window.crypto.getRandomValues(new Uint32Array(1))[0] / (0xFFFFFFF + 1);
+    }
+    /**
      * Genera un codice di recupero crittograficamente sicuro
      * @param {number} size 
      * @returns {string}
