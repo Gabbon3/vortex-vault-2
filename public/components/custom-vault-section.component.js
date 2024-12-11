@@ -80,7 +80,7 @@ class CustomVaultSection extends HTMLElement {
                     <span class="material-symbols-rounded">${paste ? 'content_paste' : 'content_copy'}</span>
                 </button>
             </div>
-            ${is_password ? `<password-strength-bar class="m-0 mt-2" value="${ptg.test(input_value)}" id="cvsp-${CustomVaultSection.id_ctr}" input-id="${input_id}"></password-strength-bar>` : ''}
+            ${is_password ? `<password-strength-bar class="m-0 mt-2" value="${ptg.test(input_value).average}" id="cvsp-${CustomVaultSection.id_ctr}" input-id="${input_id}"></password-strength-bar>` : ''}
         `;
         // -- VARIABILI
         this.input = this.querySelector('.custom-input');

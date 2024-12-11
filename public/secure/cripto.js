@@ -22,12 +22,15 @@ export class Cripto {
         }
     }
     /**
-     * Return an high entropy random number
-     * @returns {number} 0 < number < 1
+     * Generate a high-entropy random number.
+     * A secure replacement for Math.random().
+     * @returns {number} A number in the range [0, 1).
      */
-    static random() {
-        return window.crypto.getRandomValues(new Uint32Array(1))[0] / (0xFFFFFFF + 1);
+    static random_ratio() {
+        const randomValue = window.crypto.getRandomValues(new Uint32Array(1))[0];
+        return randomValue / 4294967296; // ~ 2 ** 32
     }
+
     /**
      * Genera un codice di recupero crittograficamente sicuro
      * @param {number} size 
@@ -36,11 +39,9 @@ export class Cripto {
     static random_recovery_code(size = 20) {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         let recovery_code = "";
-        const buffer = new Uint8Array(size);
-        window.crypto.getRandomValues(buffer);
         // ---
         for (let i = 0; i < size; i++) {
-            recovery_code += chars[buffer[i] % chars.length];
+            recovery_code += chars[Math.floor(this.random() * chars.length)];
         }
         // ---
         return recovery_code.match(/.{1,4}/g).join('-');

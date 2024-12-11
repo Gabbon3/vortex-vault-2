@@ -103,7 +103,7 @@ $(document).ready(async () => {
         finestra.open('win-update-vault');
         // --
         const vault = VaultService.get_vault(id);
-        const strength_value = ptg.test(vault.secrets.P);
+        const strength_value = ptg.test(vault.secrets.P).average;
         // -- riempio i campi
         update_elements.win_title.textContent = vault.secrets.T;
         update_elements.vault_id.value = id;
@@ -205,7 +205,7 @@ $(document).ready(async () => {
         const { length, az, AZ, _09, _$ } = elements;
         try {
             const password = ptg.generate(length, az, AZ, _09, _$);
-            const test = ptg.test(password);
+            const test = ptg.test(password).average;
             psw_gen_test.innerHTML = ptg.colorize_text(password);
             document.getElementById('psw-gen-str-bar').setAttribute('value', test);
         } catch (error) {
@@ -291,7 +291,7 @@ export class VaultUI {
         const order_function = this.order_functions[order];
         vaults.sort(order_function);
         for (const vault of vaults) {
-            const strength_value = ptg.test(vault.secrets.P);
+            const strength_value = ptg.test(vault.secrets.P).average;
             // ---
             html += `<vault-li 
             title="${vault.secrets.T}"

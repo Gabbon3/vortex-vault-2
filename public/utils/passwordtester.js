@@ -1,3 +1,5 @@
+import { Cripto } from "../secure/cripto.js";
+
 // password tester gabbone
 export class ptg {
     // static chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!?+*#@$%&";
@@ -16,13 +18,13 @@ export class ptg {
     static sequence_map = {
         1: "12q", 2: "21qw3", 3: "32we4", 4: "43er5",
         5: "54rt6", 6: "65ty7", 7: "76yu8", 8: "87ui9",
-        9: "98io0", 0: "09op", q: "q12wa", w: "wq23esa",
-        e: "e3wsdr4", r: "r4edft5", t: "t5rfgy6", y: "y6tghu7",
-        u: "u7yhji8", i: "i8ujko9", o: "9iklp0", p: "p0ol",
-        a: "aqwsz", s: "swazxde", d: "desxcfr", f: "frdcvgt", 
+        9: "98io0", 0: "09op", q: "q12wa", w: "wxq23esa",
+        e: "ef3wsdr4", r: "rs4edft5", t: "tu5rfgy6", y: "yz6tghu7",
+        u: "uv7yhji8", i: "i8ujko9", o: "9iklp0", p: "pq0ol",
+        a: "abqwsz", s: "swazxde", d: "desxcfr", f: "frdcvgt", 
         g: "gtfvbhy", h: "hygbnju", j: "juhnmki", k: "kijmlo",
-        l: "lpokm", z: "zasx", x: "xzsdc", c: "xdfv",
-        v: "vcfgb", b: "bvghn", n: "nbhjm", m: "mnjkl"
+        l: "lpokm", z: "zasx", x: "xyzsdc", c: "xddfv",
+        v: "vwcfgb", b: "bcvghn", n: "nobhjm", m: "mnjkl"
     };
     /**
      * Genera una password
@@ -46,12 +48,9 @@ export class ptg {
         let ok = false;
         while (!ok) {
             password = '';
-            // -- per una scelta crittograficamente sicura
-            const buffer = new Uint8Array(len);
-            window.crypto.getRandomValues(buffer);
             // ---
             for (let i = 0; i < len; i++) {
-                password += chars[buffer[i] % chars.length];
+                password += chars[Math.floor((Cripto.random_ratio() * chars.length))];
             }
             // ---
             const check = this.check_types(password);
@@ -121,18 +120,21 @@ export class ptg {
     /**
      * Calcola in linea generale il punteggio di una password
      * @param {string} password 
-     * @returns {number}
+     * @returns {Object}
      */
     static test(password) {
-        const max_l = 200;
+        const max_l = 100;
         const max_t = 100;
-        const ppt_t = { az: 0.15, AZ: 0.15, _09: 0.3, _$: 0.4 }; // punti per tipo
-        const max_s = 70;
-        const max = max_l + max_t + max_s;
+        const ppt_t = { az: 0.2, AZ: 0.2, _09: 0.2, _$: 0.4 }; // punti per tipo
+        const char_set_size = { az: 26, AZ: 26, _09: 10, _$: 15 }
+        const max_e = 100; // max entropy
+        const max_s = 100;
+        const max = max_l + max_t + max_e + max_s;
         // ---
         let ppt = [
             0, // per la lunghezza
             0, // per i tipi di caratteri
+            0, // for entropy
             0, // per le sequenze
         ];
         // -- lunghezza
@@ -146,19 +148,47 @@ export class ptg {
         // -- tipi caratteri
         const types = this.check_types(password);
         const types_count = this.count_types(password);
+        let C = 0; // used for entropy calculation
         for (const c in types) {
-            if (types[c]) ppt[1] += ppt_t[c] * max_t;
+            if (types[c]) {
+                ppt[1] += ppt_t[c] * max_t;
+                C += char_set_size[c];
+            }
         }
         if (types_count < 3) ppt[1] *= 0.5;
+        // -- entropy
+        const entropy = this.entropy(l, C);
+        ppt[2] = entropy <= max_e ? entropy : max_e;
         // -- sequenze
         const sequences = this.search_sequence(password);
         const s_l = sequences.join('').length; // lunghezza totale delle sequenze
         // - esponente
         const ratio_s = s_l / l;
         const e_s = ratio_s >= 0.5 ? 2 : 1.5; // esponente sequenze
-        ppt[2] = max_s * (1 - Math.pow(ratio_s, e_s));
+        ppt[3] = max_s * (1 - Math.pow(ratio_s, e_s));
         // -- sum : max = x : 100
-        return Math.round(((ppt[0] + ppt[1] + ppt[2]) * 100) / max);
+        const final_ppt = ppt.map(point => { return Math.floor(point * 1000) / 1000;});
+        const table = { 
+            length: final_ppt[0], 
+            types: final_ppt[1], 
+            entropy: final_ppt[2], 
+            sequence: final_ppt[3] 
+        }
+        console.table(table);
+        return { 
+            average: Math.round(((final_ppt[0] + final_ppt[1] + final_ppt[2] + final_ppt[3]) * 100) / max),
+            table
+        };
+    }
+    /**
+     * Calculate the entropy of password
+     * H = L * log2(C)
+     * @param {number} L password length
+     * @param {number} C is the size of the character set used.
+     * @returns {number} entropy value in bits
+     */
+    static entropy(L, C) {
+        return L * Math.log2(C);
     }
     /**
      * UTILITY HTML

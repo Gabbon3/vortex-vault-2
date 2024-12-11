@@ -69,8 +69,8 @@ class PasswordStrengthBar extends HTMLElement {
      */
     input_listener(e) {
         const password = e.currentTarget.textContent || e.currentTarget.value;
-        if (password.length < 1) return;
-        const test = ptg.test(password);
+        if (!password || password.length < 1) return;
+        const test = ptg.test(password).average;
         this.setAttribute('value', test);
     }
 }

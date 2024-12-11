@@ -16,7 +16,7 @@ html {
   padding: 0;
   border: 0;
   scroll-behavior: smooth;
-  background-color: #181313;
+  background-color: #171414;
   color: #f5f5f5;
   font-family: "Rubik", sans-serif !important;
 }
@@ -408,11 +408,11 @@ hr {
   height: 1px;
   width: 98%;
   border: none;
-  background-color: #333238;
+  background-color: #584d4d;
 }
 hr.dashed {
   background-color: transparent;
-  border-bottom: 1px dashed #333238;
+  border-bottom: 1px dashed #584d4d;
 }
 hr.s {
   width: 90%;
@@ -438,13 +438,13 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
+  color: #969e5d;
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: #2C2727;
+  background-color: #383030;
   color: #ddd;
 }
 .btn.secondary:hover {
@@ -469,11 +469,11 @@ hr.s {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px #2C2727;
+  box-shadow: 0 0 0 4px #383030;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px #2C2727;
+  box-shadow: 0 0 0 6px #383030;
 }
 .btn.s {
   font-size: 0.9em;
@@ -502,7 +502,7 @@ hr.s {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: #221D1D;
+  background-color: #272222;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
 }
@@ -546,19 +546,19 @@ hr.s {
   border-radius: 7px;
 }
 .isle.bg-1 {
-  background-color: #181313;
+  background-color: #171414;
 }
 .isle.bg-15 {
-  background-color: #1D1818;
+  background-color: #1f1b1b;
 }
 .isle.bg-2 {
-  background-color: #221D1D;
-}
-.isle.bg-3 {
   background-color: #272222;
 }
+.isle.bg-3 {
+  background-color: #302929;
+}
 .isle.bg-4 {
-  background-color: #2C2727;
+  background-color: #383030;
 }
 
 #bc-finestre {
@@ -568,7 +568,7 @@ hr.s {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(24, 19, 19, 0.7);
+  background-color: rgba(23, 20, 20, 0.7);
   z-index: 9;
 }
 
@@ -583,7 +583,7 @@ monospace {
   border-radius: 7px;
   transition: 0.2s;
   outline: none;
-  background-color: #181313;
+  background-color: #171414;
   border: none;
   color: #f5f5f5;
   width: 100%;
@@ -599,7 +599,7 @@ monospace {
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: #221D1D;
+  background-color: #272222;
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -619,7 +619,7 @@ monospace {
   display: block;
   width: 2.4em;
   height: 1.2em;
-  background-color: #333238;
+  background-color: #584d4d;
   border-radius: 0.9em;
   cursor: pointer;
   position: relative;
@@ -675,7 +675,7 @@ input[type=range]::-webkit-slider-thumb {
   padding-bottom: 15px;
   padding: 5px;
   border-radius: 5px;
-  background-color: #272222;
+  background-color: #302929;
 }
 .navbar a {
   padding: 10px;
@@ -699,7 +699,7 @@ input[type=range]::-webkit-slider-thumb {
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: #221D1D;
+  background-color: #272222;
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -808,12 +808,12 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   padding: 10px;
   border-radius: 10px;
-  background-color: #221D1D;
+  background-color: #272222;
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: #272222;
+  background-color: #302929;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -848,7 +848,7 @@ input[type=range]::-webkit-slider-thumb {
   margin-top: 10px;
 }
 .custom-sections custom-vault-section {
-  background-color: #2C2727;
+  background-color: #383030;
   padding: 0 7px 7px 7px;
   border-radius: 7px;
 }
@@ -884,7 +884,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: #221D1D;
+  background-color: #272222;
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;
@@ -931,7 +931,7 @@ password-strength-bar .bar._4 {
   gap: 7px;
   padding: 7px;
   border-radius: 7px;
-  background-color: #2C2727;
+  background-color: #383030;
 }
 #devices-list device-list-item .token-id {
   display: flex;
@@ -966,7 +966,7 @@ password-strength-bar .bar._4 {
   z-index: 2000;
   width: 100%;
   height: 100%;
-  background-color: rgba(24, 19, 19, 0.5);
+  background-color: rgba(23, 20, 20, 0.5);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   display: none;
