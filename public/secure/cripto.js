@@ -27,8 +27,8 @@ export class Cripto {
      * @returns {number} A number in the range [0, 1).
      */
     static random_ratio() {
-        const randomValue = window.crypto.getRandomValues(new Uint32Array(1))[0];
-        return randomValue / 4294967296; // ~ 2 ** 32
+        const random_word = window.crypto.getRandomValues(new Uint32Array(1))[0];
+        return random_word / 4294967296; // ~ 2 ** 32
     }
 
     /**

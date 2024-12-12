@@ -6,7 +6,7 @@ import { date } from "../utils/dateUtils.js";
 import { finestra } from "../components/main.components.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { Search } from "../utils/search.js";
-import { ptg } from "../utils/passwordtester.js";
+import { ptg } from "../utils/ptg.js";
 import { SessionStorage } from "../utils/session.js";
 import { DeviceUI } from "./device.js";
 

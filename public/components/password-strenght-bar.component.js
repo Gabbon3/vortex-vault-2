@@ -1,4 +1,4 @@
-import { ptg } from "../utils/passwordtester.js";
+import { ptg } from "../utils/ptg.js";
 
 class PasswordStrengthBar extends HTMLElement {
     static id_ctr = 0;

@@ -174,8 +174,7 @@ export class ptg {
             entropy: final_ppt[2], 
             sequence: final_ppt[3] 
         }
-        console.table(table);
-        return { 
+        return {
             average: Math.round(((final_ppt[0] + final_ppt[1] + final_ppt[2] + final_ppt[3]) * 100) / max),
             table
         };
