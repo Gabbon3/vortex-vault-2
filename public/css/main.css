@@ -904,19 +904,19 @@ password-strength-bar .bar {
   font-family: "JetBrains Mono", monospace;
 }
 password-strength-bar .bar._1 {
-  background-color: rgba(238, 113, 132, 0.2);
+  background-color: rgba(238, 113, 132, 0.3);
   color: rgb(238, 113, 132);
 }
 password-strength-bar .bar._2 {
-  background-color: rgba(238, 173, 113, 0.2);
+  background-color: rgba(238, 173, 113, 0.3);
   color: rgb(238, 173, 113);
 }
 password-strength-bar .bar._3 {
-  background-color: rgba(115, 142, 84, 0.2);
+  background-color: rgba(115, 142, 84, 0.3);
   color: #738e54;
 }
 password-strength-bar .bar._4 {
-  background-color: rgba(135, 142, 84, 0.2);
+  background-color: rgba(135, 142, 84, 0.3);
   color: #878e54;
 }
 

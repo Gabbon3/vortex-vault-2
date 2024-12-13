@@ -274,22 +274,22 @@ password-strength-bar {
         font-family: $monospace;
 
         &._1 {
-            background-color: rgba($c-danger, 0.2);
+            background-color: rgba($c-danger, 0.3);
             color: $c-danger;
         }
     
         &._2 {
-            background-color: rgba($c-warning, 0.2);
+            background-color: rgba($c-warning, 0.3);
             color: $c-warning;
         }
     
         &._3 {
-            background-color: rgba($c2, 0.2);
+            background-color: rgba($c2, 0.3);
             color: $c2;
         }
     
         &._4 {
-            background-color: rgba($c1, 0.2);
+            background-color: rgba($c1, 0.3);
             color: $c1;
         }
     }

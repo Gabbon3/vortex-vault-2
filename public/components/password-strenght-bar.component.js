@@ -7,6 +7,7 @@ class PasswordStrengthBar extends HTMLElement {
         this.bar_id = null;
         this.bar = null;
         this.input = null;
+        this.xs = false;
     }
 
     static get observedAttributes() {
@@ -26,7 +27,8 @@ class PasswordStrengthBar extends HTMLElement {
         // ---
         this.bar.setAttribute('class', 'bar _' + lvl);
         this.bar.style.width = `${value < 20 ? 20 : value}%`;
-        this.bar.innerHTML = `<span class="material-symbols-rounded">${icon}</span>${value}`;
+        if (!this.xs)
+            this.bar.innerHTML = `<span class="material-symbols-rounded">${icon}</span>${value}`;
     }
 
     connectedCallback() {
@@ -40,7 +42,7 @@ class PasswordStrengthBar extends HTMLElement {
         else if (value >= 70 && value < 90) lvl = 3;
         else if (value >= 90 && value <= 100) lvl = 4;
         // -- icona
-        let icon = 'report';
+        let icon = 'warning';
         switch (lvl) {
             case 2: icon = 'error'; break;
             case 3: icon = 'check'; break;
@@ -50,6 +52,7 @@ class PasswordStrengthBar extends HTMLElement {
     }
     
     render() {
+        this.xs = this.getAttribute('xs') ? true : false;
         // -- psbc = password strength bar component
         this.bar_id = `psbc-${PasswordStrengthBar.id_ctr}`;
         PasswordStrengthBar.id_ctr++;

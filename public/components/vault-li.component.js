@@ -11,7 +11,7 @@ class VaultLi extends HTMLElement {
         // ---
         this.innerHTML = `
             <div class="simbolo ${!secure ? 'danger' : ''}">
-                <span class="material-symbols-rounded">${secure ? 'lock' : 'report'}</span>
+                <span class="material-symbols-rounded">${secure ? 'lock' : 'warning'}</span>
             </div>
             <div class="info">
                 <strong>${title}</strong>
