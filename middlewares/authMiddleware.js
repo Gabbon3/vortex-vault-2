@@ -49,7 +49,9 @@ export const verify_password = async_handler( async (req, res, next) => {
     if (!valid) throw new CError("AuthError", "Invalid password", 403);
     next();
 });
-
+/**
+ * verifica il codice mfa
+ */
 export const verify_mfa_code = async_handler(async (req, res, next) => {
     const from_token = req.user ? true : false;
     // -- ottengo un identificatore per l'utente
