@@ -1,10 +1,6 @@
 import { finestra } from "../components/main.components.js";
 import { DeviceService } from "../service/device.service.js";
-import { Bytes } from "../utils/bytes.js";
 import { date } from "../utils/dateUtils.js";
-import { LocalStorage } from "../utils/local.js";
-import { Log } from "../utils/log.js";
-import { qrcode } from "../utils/qrcode.js";
 
 $(document).ready(async () => {
     /**

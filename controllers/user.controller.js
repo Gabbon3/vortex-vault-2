@@ -51,7 +51,7 @@ export class UserController {
         // -- Access Token
         const { access_token, refresh_token, user } = await this.service.signin(username, password, user_agent, ip_address, old_refresh_token);
         const cke = Cripto.random_bytes(32, 'base64');
-        this.set_token_cookies(res, access_token, refresh_token, cke);
+        this.set_token_cookies(res, { access_token, refresh_token, cke });
         // ---
         if (!access_token) {
             return res.status(403).json({
@@ -80,6 +80,16 @@ export class UserController {
         if (affected !== 1) throw new CError("Internal error", "Not able to enable MFA", 500);
         // ---
         res.status(201).json({ secret: Bytes.hex.to(secret) });
+    });
+    /**
+     * Release sudo access token
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    start_sudo_session = async_handler(async (req, res) => {
+        const access_token = await this.service.generate_sudo_access_token();
+        this.set_token_cookies(res, { access_token });
+        res.status(201).json({ access_token });
     });
     /**
      * Just a test
@@ -129,11 +139,13 @@ export class UserController {
     /**
      * Imposta nei cookie l'access e il refresh token
      * @param {Response} res 
-     * @param {string} access_token 
-     * @param {string} refresh_token 
+     * @param {Object} cookies
+     * @param {*} [cookies.access_token]
+     * @param {*} [cookies.refresh_token]
+     * @param {*} [cookies.cke]
      */
-    set_token_cookies = (res, access_token, refresh_token, cke) => {
-        if (access_token) {
+    set_token_cookies = (res, cookies) => {
+        if (cookies.access_token) {
             res.cookie('access_token', access_token, {
                 httpOnly: true,
                 secure: TokenUtils.secure_option, // da mettere true in produzione
@@ -142,7 +154,7 @@ export class UserController {
                 path: '/', // disponibile per tutte le route
             });
         }
-        if (refresh_token) {
+        if (cookies.refresh_token) {
             res.cookie('refresh_token', refresh_token, {
                 httpOnly: true,
                 secure: TokenUtils.secure_option, // da mettere true in produzione
@@ -151,7 +163,7 @@ export class UserController {
                 path: '/auth',
             });
         }
-        if (cke) {
+        if (cookies.cke) {
             res.cookie('cke', cke, {
                 httpOnly: true,
                 secure: TokenUtils.secure_option, // da mettere true in produzione

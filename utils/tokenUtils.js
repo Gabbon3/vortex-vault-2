@@ -9,7 +9,7 @@ export class TokenUtils {
     static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, "hex");
     // -- proprietà dei jwt o cookie
     static secure_option = true;
-    // -- tempo di vita dei token in millisecondi
+    // -- tempo di vita dei token in secondi
     static access_token_lifetime = 60 * 60; // 1 ora
     static cke_lifetime = 60 * 60 * 24 * 31; // 31 giorni
     // -- tempo di vita dei cookie
@@ -21,17 +21,18 @@ export class TokenUtils {
 
     /**
      * Genera un access token con scadenza di 1 ora
-     * @param {number} uid - ID dell'utente
+     * @param {Object} payload - payload
+     * @param {number} lifetime - tempo di scadenza in secondi
      * @returns {string} - access token
      */
-    static genera_access_token(uid) {
+    static genera_access_token(payload, lifetime = this.access_token_lifetime) {
         const now = Math.floor(Date.now() / 1000);
         // ---
         const token = jwt.sign(
             {
-                uid: uid,
+                ...payload,
                 iat: now,
-                exp: now + this.access_token_lifetime,
+                exp: now + lifetime,
             },
             this.ACCESS_TOKEN_SECRET
         );

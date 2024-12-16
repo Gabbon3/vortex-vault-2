@@ -24,5 +24,7 @@ router.post('/recovery', verify_access_token, express.raw({ type: 'application/o
 // ---
 router.post('/mfa', verify_access_token, controller.enable_mfa);
 router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
+// ---
+router.post('/sudosession', verify_access_token, verify_mfa_code, controller.start_sudo_session);
 
 export default router;

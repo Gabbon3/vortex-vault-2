@@ -52,12 +52,13 @@ export class DeviceService {
     /**
      * Revoca o meno un dispositivo
      * @param {string} token_id 
+     * @param {string} code mfa code
      * @param {boolean} revoke 
      */
-    static async revoke(token_id, revoke) {
+    static async revoke(token_id, code, revoke) {
         const res = await API.fetch('/auth/token/revoke', {
             method: 'POST',
-            body: { token_id, revoke }
+            body: { token_id, revoke, code }
         });
         // ---
         if (!res) return false;
@@ -66,11 +67,15 @@ export class DeviceService {
     /**
      * Elimina un token
      * @param {string} token_id 
-     * @returns 
+     * @param {string} code mfa code
+     * @returns {boolean}
      */
-    static async delete(token_id) {
-        const res = await API.fetch(`/auth/token/${token_id}`, {
-            method: 'DELETE',
+    static async delete(token_id, code) {
+        const res = await API.fetch(`/auth/token/delete`, {
+            method: 'POST',
+            body: {
+                token_id, code
+            }
         });
         // ---
         if (!res) return false;

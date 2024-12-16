@@ -17,11 +17,11 @@ router.use(limiter);
 // /auth/token
 router.post('/refresh', controller.generate_access_token);
 router.post('/rename', verify_access_token, controller.rename);
-router.post('/revoke', verify_access_token, controller.revoke);
+router.post('/revoke', verify_access_token, verify_mfa_code, controller.revoke);
 // -- device recovery
 router.post('/unlock', verify_mfa_code, controller.unlock);
-router.post('/revoke-all', verify_access_token, controller.revoke_all);
+router.post('/revoke-all', verify_access_token, verify_mfa_code, controller.revoke_all);
 router.get('/', verify_access_token, controller.get_all);
-router.delete('/:token_id', verify_access_token, controller.delete)
+router.post('/delete', verify_access_token, verify_mfa_code, controller.delete)
 
 export default router;

@@ -70,4 +70,18 @@ class AuthUI {
             }, 20000);
         }, 1000);
     }
+    /**
+     * Start sudo session that release an advanced access token
+     * that allow the user to perform critical actions
+     * @param {string} code mfa code
+     */
+    static async start_sudo_session(code) {
+        // -- request mfa code
+        const code = prompt('This operation require multi factor auth, insert the code:');
+        if (!code || code.length != 6) return;
+        const res = await AuthService.start_sudo_session(code);
+        if (res) {
+            Log.summon('Sudo session started')
+        }
+    }
 }

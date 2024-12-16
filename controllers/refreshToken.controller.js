@@ -21,7 +21,7 @@ export class RefreshTokenController {
         const refresh_token = await this.service.verify(token_id, user_agent);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
-        const access_token = await TokenUtils.genera_access_token(refresh_token.user_id);
+        const access_token = await TokenUtils.genera_access_token({ uid: refresh_token.user_id });
         // -- ottengo l'ip adress del richiedente
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token

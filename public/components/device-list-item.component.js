@@ -60,26 +60,38 @@ class DeviceListItem extends HTMLElement {
         // -- pulsante cancella
         this.querySelector('.device-delete').addEventListener('click', this.delete_device.bind(this));
     }
-
+    /**
+     * Revoke a token
+     * @returns 
+     */
     async toggle_revoked() {
         const revoked = this.getAttribute('revoked') === 'true';
         const token_id = this.getAttribute('id');
         const device_name = this.getAttribute('device-name');
+        // -- request mfa code
+        const code = prompt('This operation require multi factor auth, insert the code:');
+        if (!code || code.length != 6) return;
         // -- business
-        const done = await DeviceService.revoke(token_id, !revoked);
+        const done = await DeviceService.revoke(token_id, code, !revoked);
         if (!done) return;
         // ---
         Log.summon(0, `${device_name} ${revoked ? 'un' : ''} revoked`);
         this.setAttribute('revoked', revoked ? 'false' : 'true');
     }
-
+    /**
+     * Delete a device from 
+     * @returns 
+     */
     async delete_device() {
         if (!confirm('Are you sure you want to delete this device?')) return;
+        // -- request mfa code
+        const code = prompt('This operation require multi factor auth, insert the code:');
+        if (!code || code.length != 6) return;
         // ---
         const token_id = this.getAttribute('id');
         // ---
         finestra.loader(true);
-        const deleted = await DeviceService.delete(token_id);
+        const deleted = await DeviceService.delete(token_id, code);
         finestra.loader(false);
         if (!deleted) return;
         this.remove();

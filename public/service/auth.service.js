@@ -88,6 +88,20 @@ export class AuthService {
         return res.secret;
     }
     /**
+     * Start sudo session that release an advanced access token
+     * that allow the user to perform critical actions
+     * @param {string} code mfa code
+     * @returns {boolean}
+     */
+    static async start_sudo_session(code) {
+        const res = await API.fetch('/auth/sudotoken', {
+            method: 'POST',
+            body: { code }
+        });
+        if (!res) return false;
+        return true;
+    }
+    /**
      * Cerca di ottenere un nuovo access token
      * @returns {boolean} true se rigenerato, false se non rigenerato
      */

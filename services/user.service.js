@@ -51,9 +51,17 @@ export class UserService {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
         }
         // -- Access Token
-        const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token(user.id);
+        const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token({ uid: user.id });
         // ---
         return { access_token, refresh_token: refresh_token.id, user };
+    }
+    /**
+     * Generate an advanced access token
+     * @param {number} uid user id
+     */
+    async generate_sudo_access_token(uid) {
+        const sudo_access_token = TokenUtils.genera_access_token({ uid, role: "sudo" }, 15 * 60);
+        return sudo_access_token;
     }
     /**
      * Esegue il cambio password
