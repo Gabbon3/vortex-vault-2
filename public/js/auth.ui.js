@@ -5,16 +5,26 @@ import { finestra } from "../components/main.components.js";
 import { Bytes } from "../utils/bytes.js";
 import { LocalStorage } from "../utils/local.js";
 import { qrcode } from "../utils/qrcode.js";
+import { VortexNavbar } from "../components/navbar.component.js";
 
 $(document).ready(() => {
     /**
      * ENABLE 2FA AUTH
      */
-    $('#btn-enable-2fa').on('click', async () => {
+    Form.onsubmit('form-new-mfa-secret', async (form, elements) => {
         if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
+        const { password } = elements;
+        // -- verifico la password dell'utente
+        if (!(await AuthService.verify_master_password(password))) {
+            Log.summon(2, "Password isn't correct");
+            return;
+        }
+        // ---
         finestra.loader(true);
-        await AuthUI.enable_mfa();
+        if (await AuthUI.enable_mfa(password)) {
+            $(form).trigger('reset');
+        }
         finestra.loader(false);
     });
     /**
@@ -34,15 +44,55 @@ $(document).ready(() => {
         }
         finestra.loader(false);
     });
+    /**
+     * GENERATE RECOVERY CODE
+     */
+    Form.onsubmit('form-new-recovery-code', async (form, elements) => {
+        const { password } = elements;
+        // -- verifico la password dell'utente
+        if (!(await AuthService.verify_master_password(password))) {
+            Log.summon(2, "Password isn't correct");
+            return;
+        }
+        // ---
+        finestra.loader(true);
+        // ---
+        const code = await AuthService.generate_recovery_code(password);
+        // ---
+        if (code) {
+            Log.summon(0, "Recovery code generated successfully");
+            navigator.clipboard.writeText(code);
+            Log.summon(3, "Recovery code has been copied on your clipboard");
+            FileUtils.download('Recovery Code', 'txt', code);
+            $(form).trigger('reset');
+        }
+        finestra.loader(false);
+    });
+    /**
+     * AVVIO SUDO SESSION
+     */
+    Form.onsubmit('form-start-sudo-session', async (form, elements) => {
+        if (await AuthService.start_sudo_session(elements.code)) {
+            Log.summon(0, 'Sudo session started successfully');
+            // ---
+            const expire = new Date(Date.now() + (20 * 60 * 1000));
+            await LocalStorage.set('session-expire', expire);
+            await LocalStorage.set('sudo-expire', expire);
+            await VortexNavbar.sudo_indicator_init();
+            // ---
+            $(form).trigger('reset');
+        }
+    });
 });
 
 class AuthUI {
     /**
      * Abilita MFA e lo mostra nell'html
+     * @param {string} password password dell'utente
      * @returns 
      */
-    static async enable_mfa() {
-        const secret = await AuthService.enable_mfa();
+    static async enable_mfa(password) {
+        const secret = await AuthService.enable_mfa(password);
         if (!secret) return;
         const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
         const app_name = 'Vortex Vault';
@@ -69,19 +119,5 @@ class AuthUI {
                 canvas.style.height = 0;
             }, 20000);
         }, 1000);
-    }
-    /**
-     * Start sudo session that release an advanced access token
-     * that allow the user to perform critical actions
-     * @param {string} code mfa code
-     */
-    static async start_sudo_session(code) {
-        // -- request mfa code
-        const code = prompt('This operation require multi factor auth, insert the code:');
-        if (!code || code.length != 6) return;
-        const res = await AuthService.start_sudo_session(code);
-        if (res) {
-            Log.summon('Sudo session started')
-        }
     }
 }

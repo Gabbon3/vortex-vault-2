@@ -160,30 +160,6 @@ $(document).ready(async () => {
         finestra.loader(false);
     });
     /**
-     * GENERATE RECOVERY CODE
-     */
-    Form.onsubmit('form-new-recovery-code', async (form, elements) => {
-        const { password } = elements;
-        // -- verifico la password dell'utente
-        if (!(await AuthService.verify_master_password(password))) {
-            Log.summon(2, "Password isn't correct");
-            return;
-        }
-        // ---
-        finestra.loader(true);
-        // ---
-        const code = await AuthService.generate_recovery_code(password);
-        // ---
-        if (code) {
-            Log.summon(0, "Recovery code generated successfully");
-            navigator.clipboard.writeText(code);
-            Log.summon(3, "Recovery code has been copied on your clipboard");
-            FileUtils.download('Recovery Code', 'txt', code);
-            $(form).trigger('reset');
-        }
-        finestra.loader(false);
-    });
-    /**
      * SEARCH VAULT
      */
     $('#search-vault').on('keyup', (e) => {

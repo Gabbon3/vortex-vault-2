@@ -14,7 +14,7 @@ const limiter = rateLimit({
     message: "Too many requests, try later",
 });
 router.use(limiter);
-router.use(verify_access_token);
+router.use(verify_access_token());
 // -- auth/cke
 router.post('/', controller.generate);
 router.get('/', controller.get);

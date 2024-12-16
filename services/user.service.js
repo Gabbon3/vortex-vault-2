@@ -4,6 +4,7 @@ import { RefreshTokenService } from "./refreshToken.service.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from '../models/user.js';
+import { Roles } from '../utils/roles.js';
 
 export class UserService {
     constructor() {
@@ -51,7 +52,7 @@ export class UserService {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
         }
         // -- Access Token
-        const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token({ uid: user.id });
+        const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token({ uid: user.id, role: Roles.BASE });
         // ---
         return { access_token, refresh_token: refresh_token.id, user };
     }
@@ -60,7 +61,10 @@ export class UserService {
      * @param {number} uid user id
      */
     async generate_sudo_access_token(uid) {
-        const sudo_access_token = TokenUtils.genera_access_token({ uid, role: "sudo" }, 15 * 60);
+        const sudo_access_token = TokenUtils.genera_access_token(
+            { uid, role: Roles.SUDO }, 
+            TokenUtils.sudo_token_lifetime
+        );
         return sudo_access_token;
     }
     /**

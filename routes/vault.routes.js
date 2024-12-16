@@ -14,7 +14,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- middleware
-router.use(verify_access_token);
+router.use(verify_access_token());
 // -- /vaults
 router.post('/create', controller.create);
 router.get('/count', controller.count);

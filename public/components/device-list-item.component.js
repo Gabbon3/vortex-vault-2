@@ -68,11 +68,8 @@ class DeviceListItem extends HTMLElement {
         const revoked = this.getAttribute('revoked') === 'true';
         const token_id = this.getAttribute('id');
         const device_name = this.getAttribute('device-name');
-        // -- request mfa code
-        const code = prompt('This operation require multi factor auth, insert the code:');
-        if (!code || code.length != 6) return;
         // -- business
-        const done = await DeviceService.revoke(token_id, code, !revoked);
+        const done = await DeviceService.revoke(token_id, !revoked);
         if (!done) return;
         // ---
         Log.summon(0, `${device_name} ${revoked ? 'un' : ''} revoked`);
@@ -84,14 +81,11 @@ class DeviceListItem extends HTMLElement {
      */
     async delete_device() {
         if (!confirm('Are you sure you want to delete this device?')) return;
-        // -- request mfa code
-        const code = prompt('This operation require multi factor auth, insert the code:');
-        if (!code || code.length != 6) return;
         // ---
         const token_id = this.getAttribute('id');
         // ---
         finestra.loader(true);
-        const deleted = await DeviceService.delete(token_id, code);
+        const deleted = await DeviceService.delete(token_id);
         finestra.loader(false);
         if (!deleted) return;
         this.remove();

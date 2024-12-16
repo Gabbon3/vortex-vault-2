@@ -408,11 +408,11 @@ hr {
   height: 1px;
   width: 98%;
   border: none;
-  background-color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  background-color: #584d4d;
 }
 hr.dashed {
   background-color: transparent;
-  border-bottom: 1px dashed rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  border-bottom: 1px dashed #584d4d;
 }
 hr.s {
   width: 90%;
@@ -438,13 +438,13 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
+  color: #969e5d;
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
   color: #ddd;
 }
 .btn.secondary:hover {
@@ -469,11 +469,11 @@ hr.s {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  box-shadow: 0 0 0 4px #383030;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  box-shadow: 0 0 0 6px #383030;
 }
 .btn.s {
   font-size: 0.9em;
@@ -502,7 +502,7 @@ hr.s {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
 }
@@ -549,16 +549,16 @@ hr.s {
   background-color: #171414;
 }
 .isle.bg-15 {
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
 }
 .isle.bg-2 {
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
 }
 .isle.bg-3 {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 .isle.bg-4 {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
 }
 
 #bc-finestre {
@@ -599,7 +599,7 @@ monospace {
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -619,7 +619,7 @@ monospace {
   display: block;
   width: 2.4em;
   height: 1.2em;
-  background-color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  background-color: #584d4d;
   border-radius: 0.9em;
   cursor: pointer;
   position: relative;
@@ -672,10 +672,6 @@ input[type=range]::-webkit-slider-thumb {
   gap: 5px;
   align-items: center;
   flex-wrap: wrap;
-  padding-bottom: 15px;
-  padding: 5px;
-  border-radius: 5px;
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
 }
 .navbar a {
   padding: 10px;
@@ -695,11 +691,36 @@ input[type=range]::-webkit-slider-thumb {
   background-color: rgba(135, 142, 84, 0.1);
 }
 
+vortex-navbar {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #302929;
+}
+
+#sudo-indicator {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #403838;
+  transition: 0.2s;
+  margin-left: auto;
+  margin-right: 20px;
+}
+#sudo-indicator.base {
+  background-color: #878e54;
+}
+#sudo-indicator.sudo {
+  background-color: rgb(238, 173, 113);
+}
+
 #accedi,
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -718,6 +739,7 @@ input[type=range]::-webkit-slider-thumb {
 #logs_container log-info {
   position: relative;
   padding: 6px 8px;
+  padding-right: 20px;
   padding-bottom: 13px;
   border-radius: 10px;
   overflow: hidden;
@@ -808,12 +830,12 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   padding: 10px;
   border-radius: 10px;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -848,7 +870,7 @@ input[type=range]::-webkit-slider-thumb {
   margin-top: 10px;
 }
 .custom-sections custom-vault-section {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
   padding: 0 7px 7px 7px;
   border-radius: 7px;
 }
@@ -884,7 +906,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;
@@ -931,7 +953,7 @@ password-strength-bar .bar._4 {
   gap: 7px;
   padding: 7px;
   border-radius: 7px;
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
 }
 #devices-list device-list-item .token-id {
   display: flex;

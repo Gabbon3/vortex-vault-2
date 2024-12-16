@@ -87,7 +87,7 @@ export class UserController {
      * @param {Response} res 
      */
     start_sudo_session = async_handler(async (req, res) => {
-        const access_token = await this.service.generate_sudo_access_token();
+        const access_token = await this.service.generate_sudo_access_token(req.user.uid);
         this.set_token_cookies(res, { access_token });
         res.status(201).json({ access_token });
     });
@@ -146,7 +146,7 @@ export class UserController {
      */
     set_token_cookies = (res, cookies) => {
         if (cookies.access_token) {
-            res.cookie('access_token', access_token, {
+            res.cookie('access_token', cookies.access_token, {
                 httpOnly: true,
                 secure: TokenUtils.secure_option, // da mettere true in produzione
                 maxAge: TokenUtils.access_token_cookie_lifetime,
@@ -155,7 +155,7 @@ export class UserController {
             });
         }
         if (cookies.refresh_token) {
-            res.cookie('refresh_token', refresh_token, {
+            res.cookie('refresh_token', cookies.refresh_token, {
                 httpOnly: true,
                 secure: TokenUtils.secure_option, // da mettere true in produzione
                 maxAge: TokenUtils.refresh_token_cookie_lifetime,
@@ -164,7 +164,7 @@ export class UserController {
             });
         }
         if (cookies.cke) {
-            res.cookie('cke', cke, {
+            res.cookie('cke', cookies.cke, {
                 httpOnly: true,
                 secure: TokenUtils.secure_option, // da mettere true in produzione
                 maxAge: TokenUtils.cke_cookie_lifetime,

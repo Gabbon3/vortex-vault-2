@@ -14,7 +14,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- middleware
-router.use(verify_access_token);
+router.use(verify_access_token(1));
 // -- /backup
 router.post('/', express.raw({ type: 'application/octet-stream' }), controller.create);
 router.get('/', controller.get);

@@ -1,6 +1,7 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { RefreshTokenService } from "../services/refreshToken.service.js";
+import { Roles } from "../utils/roles.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 
 export class RefreshTokenController {
@@ -21,7 +22,7 @@ export class RefreshTokenController {
         const refresh_token = await this.service.verify(token_id, user_agent);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
-        const access_token = await TokenUtils.genera_access_token({ uid: refresh_token.user_id });
+        const access_token = await TokenUtils.genera_access_token({ uid: refresh_token.user_id, role: Roles.BASE });
         // -- ottengo l'ip adress del richiedente
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token

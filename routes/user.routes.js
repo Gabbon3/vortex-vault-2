@@ -2,7 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 // import { verifica_jwt } from "../middlewares/authMiddleware.js";
 import { UserController } from "../controllers/user.controller.js";
-import { verify_access_token, verify_mfa_code } from "../middlewares/authMiddleware.js";
+import { verify_access_token, verify_mfa_code, verify_password } from "../middlewares/authMiddleware.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -17,14 +17,14 @@ router.use(limiter);
 // -- le routes con i controller associati
 router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
-router.post('/password', verify_access_token, controller.change_password);
+router.post('/password', verify_access_token(), controller.change_password);
 // -- password recovery
 router.get('/recovery/:username', controller.get_recovery);
-router.post('/recovery', verify_access_token, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
+router.post('/recovery', verify_access_token(), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // ---
-router.post('/mfa', verify_access_token, controller.enable_mfa);
+router.post('/mfa', verify_access_token(), verify_password, controller.enable_mfa);
 router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
 // ---
-router.post('/sudosession', verify_access_token, verify_mfa_code, controller.start_sudo_session);
+router.post('/sudotoken', verify_access_token(), verify_mfa_code, controller.start_sudo_session);
 
 export default router;

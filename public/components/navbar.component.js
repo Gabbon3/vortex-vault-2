@@ -1,6 +1,21 @@
-class Navbar extends HTMLElement {
+import { LocalStorage } from "../utils/local.js";
+
+export class VortexNavbar extends HTMLElement {
     constructor() {
         super();
+    }
+
+    static sudo_indicator = null;
+
+    static async sudo_indicator_init() {
+        const sudo_expire = await LocalStorage.get('sudo-expire');
+        if (!sudo_expire || new Date() > sudo_expire) return;
+        // ---
+        const diff = sudo_expire.getTime() - Date.now();
+        VortexNavbar.sudo_indicator.setAttribute('class', 'sudo');
+        setTimeout(() => {
+            VortexNavbar.sudo_indicator.setAttribute('class', 'base');
+        }, diff);
     }
     
     connectedCallback() {
@@ -37,8 +52,11 @@ class Navbar extends HTMLElement {
                     Sign Up
                 </a>` : ''}
             </nav>
+            <span id="sudo-indicator" class="base" title="Session status"></span>
         `;
+        VortexNavbar.sudo_indicator = document.getElementById('sudo-indicator');
+        VortexNavbar.sudo_indicator_init();
     }
 }
 // -- registro il componente nei custom elements
-customElements.define('vortex-navbar', Navbar);
+customElements.define('vortex-navbar', VortexNavbar);

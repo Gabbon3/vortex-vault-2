@@ -21,7 +21,7 @@ export class VaultService {
      */
     static async config_secrets() {
         // -- ottengo la scadenza dell'access token
-        const access_token_expire = await LocalStorage.get('access-token-expire');
+        const access_token_expire = await LocalStorage.get('session-expire');
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
         if (access_token_expire && access_token_expire < new Date()) return false; 
         this.master_key = await SessionStorage.get('master-key');

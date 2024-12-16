@@ -10,11 +10,13 @@ export class TokenUtils {
     // -- proprietà dei jwt o cookie
     static secure_option = true;
     // -- tempo di vita dei token in secondi
-    static access_token_lifetime = 60 * 60; // 1 ora
+    static sudo_token_lifetime = 20 * 60;
+    static access_token_lifetime = 60 * 60; // 30 ora
     static cke_lifetime = 60 * 60 * 24 * 31; // 31 giorni
     // -- tempo di vita dei cookie
     static access_token_cookie_lifetime = 60 * 60 * 24 * 31 * 1000; // 31 giorni
-    static refresh_token_cookie_lifetime = 60 * 60 * 24 * 31 * 1000; // 31 giorni
+    static sudo_token_cookie_lifetime = 20 * 60 * 1000; // 31 giorni
+    static refresh_token_cookie_lifetime = 60 * 60 * 24 * 365 * 1000; // 1 anno
     static cke_cookie_lifetime = 60 * 60 * 24 * 31 * 1000; // 31 giorni
     // -- cifra il contenuto del token
     static encrypt = false;

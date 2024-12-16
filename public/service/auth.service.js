@@ -31,7 +31,7 @@ export class AuthService {
         SessionStorage.set('master-key', key);
         SessionStorage.set('salt', salt);
         // --- imposto la scadenza dell'access token
-        await LocalStorage.set('access-token-expire', new Date(Date.now() + 3600000));
+        await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
         // ---
         return true;
     }
@@ -79,9 +79,10 @@ export class AuthService {
      * Attiva l'autenticazione a due fattori
      * @returns {boolean}
      */
-    static async enable_mfa() {
+    static async enable_mfa(password) {
         const res = await API.fetch('/auth/mfa', {
-            method: 'POST'
+            method: 'POST',
+            body: { password }
         });
         // ---
         if (!res) return false;
@@ -111,7 +112,7 @@ export class AuthService {
         });
         if (!res) return false;
         // -- imposto la scadenza dell'access token
-        await LocalStorage.set('access-token-expire', new Date(Date.now() + 3600000));
+        await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
         return true;
     }
     /**
@@ -160,7 +161,7 @@ export class AuthService {
      */
     static async start_session() {
         // -- verifico che ce bisogno di rigenerare l'access token
-        const access_token_expire = await LocalStorage.get('access-token-expire');
+        const access_token_expire = await LocalStorage.get('session-expire');
         if (!access_token_expire || Date.now() > access_token_expire.getTime()) {
             const created = await this.new_access_token();
             // -- se non è stato generato un nuovo access token fermo
@@ -201,10 +202,10 @@ export class AuthService {
     }
     /**
      * Restituisce la password dell'utente se il codice è corretto
-     * @param {string} code 
+     * @param {string} sudo_code 
      * @returns {string} Returns
      */
-    static async master_password_recovery(username, code) {
+    static async master_password_recovery(username, sudo_code) {
         const res = await API.fetch(`/auth/recovery/${username}`, {
             method: 'GET',
         });
@@ -214,7 +215,7 @@ export class AuthService {
         const salt = recovery.subarray(0, 16);
         const encrypted_password = recovery.subarray(16);
         // ---
-        const key = await Cripto.derive_key(code, salt);
+        const key = await Cripto.derive_key(sudo_code, salt);
         try {
             const master_password_bytes = await AES256GCM.decrypt(encrypted_password, key);
             const master_password = new TextDecoder().decode(master_password_bytes);

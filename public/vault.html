@@ -478,24 +478,6 @@
             </div>
         </form>
         <hr>
-        <!-- MFA -->
-        <h3 class="icon slider" slider="cont-mfa">
-            <span class="material-symbols-rounded">phonelink_lock</span>
-            MFA
-        </h3>
-        <div id="cont-mfa" class="isle bg-3" style="display: none;">
-            <p>
-                Enable the secondary authentication feature to protect your account.
-            </p>
-            <div class="flex gap-50">
-                <button class="btn primary" id="btn-enable-2fa">
-                    <span class="material-symbols-rounded">security</span>
-                    Enable
-                </button>
-            </div>
-            <canvas id="qrcode-2fa-secret"></canvas>
-        </div>
-        <hr>
         <!-- RECOVERY CODE -->
         <h3 class="icon slider" slider="cont-rec-code">
             <span class="material-symbols-rounded">lock_reset</span>
@@ -503,10 +485,10 @@
         </h3>
         <div id="cont-rec-code" class="isle bg-3" style="display: none;">
             <p>
-                Generate a recovery code to help you recover your password if you forget it.
+                Generate a sudo code to help you recover your password if you forget it and to activate MFA.
                 <br>
-                <strong>Pay attention!</strong> If you also lose your recovery code, 
-                you would be able to access your password anymore.
+                <strong>Pay attention!</strong> If you also lose your sudo code, 
+                you wouldn't be able to access your password or to generate other mfa secret also.
             </p>
             <form id="form-new-recovery-code">
                 <label for="password-recovery">
@@ -532,6 +514,39 @@
             </form>
         </div>
         <hr>
+        <!-- MFA -->
+        <h3 class="icon slider" slider="cont-mfa">
+            <span class="material-symbols-rounded">phonelink_lock</span>
+            MFA
+        </h3>
+        <div id="cont-mfa" class="isle bg-3" style="display: none;">
+            <p>
+                Enable the secondary authentication feature to protect your account.
+            </p>
+            <form id="form-new-mfa-secret">
+                <label for="password-new-mfa-secret">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Password
+                </label>
+                <div class="flex gap-50">
+                    <input name="password" type="password" class="input-text mono" id="password-new-mfa-secret" autocomplete="off" required>
+                    <button class="btn t CA paste-val" data-target-pa="password-new-mfa-secret" type="button" title="Paste">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                </div>
+                <p class="description">
+                    You need to enter your password to perform this operation.
+                </p>
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">security</span>
+                    Enable
+                </button>
+            </form>
+            <div class="flex gap-50">
+            </div>
+            <canvas id="qrcode-2fa-secret"></canvas>
+        </div>
+        <hr>
         <!-- Advanced session -->
         <h3 class="icon slider" slider="cont-sudo-session">
             <span class="material-symbols-rounded">admin_panel_settings</span>
@@ -540,14 +555,24 @@
         <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
             <p>
                 Enable sudo session to perform critical operations.
-                The session will only last 15 minutes for safety reasons.
+                The session will only last 20 minutes for safety reasons.
             </p>
-            <div class="flex gap-50">
-                <button class="btn primary" id="btn-enable-sudo-session">
+            <form id="form-start-sudo-session">
+                <label for="start-sudo-session-code">
+                    <span class="material-symbols-rounded">password</span>
+                    MFA Code
+                </label>
+                <div class="flex gap-75 mb-2">
+                    <input name="code" maxlength="6" type="text" class="input-text mfa" id="start-sudo-session-code" autocomplete="off" placeholder="******" required>
+                    <button class="btn t CA paste-val" data-target-pa="start-sudo-session-code" type="button" title="Paste">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                </div>
+                <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">security</span>
                     Enable
                 </button>
-            </div>
+            </form>
         </div>
     </div>
     <!-- FOOTER -->
