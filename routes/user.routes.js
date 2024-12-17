@@ -19,7 +19,7 @@ router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
 router.post('/password', verify_access_token(), controller.change_password);
 // -- password recovery
-router.get('/recovery/:username', controller.get_recovery);
+router.get('/recovery/:email', controller.get_recovery);
 router.post('/recovery', verify_access_token(), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // ---
 router.post('/mfa', verify_access_token(), verify_password, controller.enable_mfa);

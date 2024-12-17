@@ -8,15 +8,15 @@ $(document).ready(async () => {
     /**
      * Provo ad accedere automaticamente
      */
-    const saved_username = await LocalStorage.get('username-utente');
+    const saved_email = await LocalStorage.get('email-utente');
     // ---
-    document.getElementById('recovery-username').value = saved_username;
-    document.getElementById('recovery-device-username').value = saved_username;
-    document.getElementById('username').value = saved_username;
+    document.getElementById('recovery-email').value = saved_email;
+    document.getElementById('recovery-device-email').value = saved_email;
+    document.getElementById('email').value = saved_email;
     // ---
-    if (saved_username) {
+    if (saved_email) {
         setTimeout(async () => {
-            if (confirm(`Access saved as ${saved_username}, continue?`)) {
+            if (confirm(`Access saved as ${saved_email}, continue?`)) {
                 finestra.loader(true);
                 const session_started = await AuthService.start_session();
                 if (session_started) window.location.href = '/vault';
@@ -27,12 +27,12 @@ $(document).ready(async () => {
      * LOGIN
      */
     Form.onsubmit('accedi', async (form, elements) => {
-        const { username, password } = elements;
+        const { email, password } = elements;
         // ---
         finestra.loader(true);
-        if (await AuthService.login(username, password)) {
+        if (await AuthService.login(email, password)) {
             $(form).trigger('reset');
-            Log.summon(0, `Authenticated as ${username}`);
+            Log.summon(0, `Authenticated as ${email}`);
         } else {
             Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
@@ -42,9 +42,9 @@ $(document).ready(async () => {
      * PASSWORD DIMENTICATA
      */
     Form.onsubmit('form-password-recovery', async (form, elements) => {
-        const { username, code } = elements;
+        const { email, code } = elements;
         finestra.loader(true);
-        const password = await AuthService.master_password_recovery(username, code);
+        const password = await AuthService.master_password_recovery(email, code);
         // ---
         if (password) {
             Log.summon(0, 'Your password has been decrypted, we\'ve copied it into your clipboard.');
@@ -61,9 +61,9 @@ $(document).ready(async () => {
      * DEVICE RECOVERY
      */
     Form.onsubmit('form-device-recovery', async (form, elements) => {
-        const { username, code } = elements;
+        const { email, code } = elements;
         finestra.loader(true);
-        const message = await AuthService.device_recovery(username, code);
+        const message = await AuthService.device_recovery(email, code);
         if (message) {
             Log.summon(0, message);
             $(form).trigger('reset');

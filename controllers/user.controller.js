@@ -18,12 +18,12 @@ export class UserController {
      * @param {Response} res 
      */
     signup = async_handler(async (req, res) => {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            throw new CError("ValidationError", "Username and password are required", 422);
+        const { email, password } = req.body;
+        if (!email || !password) {
+            throw new CError("ValidationError", "Email and password are required", 422);
         }
         // ---
-        const user = await this.service.signup(username, password);
+        const user = await this.service.signup(email, password);
         res.status(201).json({ message: 'User registered', id: user.id });
     })
     /**
@@ -32,10 +32,10 @@ export class UserController {
      * @param {Response} res 
      */
     signin = async_handler(async (req, res) => {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
         const refresh_token_cookie = req.cookies.refresh_token;
-        if (!username || !password) {
-            throw new CError("ValidationError", "Username and password are required", 422);
+        if (!email || !password) {
+            throw new CError("ValidationError", "Email and password are required", 422);
         }
         // ---
         const user_agent = req.get('user-agent');
@@ -49,7 +49,7 @@ export class UserController {
             }
         }
         // -- Access Token
-        const { access_token, refresh_token, user } = await this.service.signin(username, password, user_agent, ip_address, old_refresh_token);
+        const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token);
         const cke = Cripto.random_bytes(32, 'base64');
         this.set_token_cookies(res, { access_token, refresh_token, cke });
         // ---
@@ -130,10 +130,10 @@ export class UserController {
      * @param {Response} res 
      */
     get_recovery = async_handler(async (req, res) => {
-        const { username } = req.params;
+        const { email } = req.params;
         // ---
-        const user = await this.service.find_by_username(username);
-        if (!user) throw new CError("ValidationError", "Username provided does not exist", 404);
+        const user = await this.service.find_by_email(email);
+        if (!user) throw new CError("ValidationError", "Email provided does not exist", 404);
         res.status(200).json({ recovery: user.recovery });
     });
     /**

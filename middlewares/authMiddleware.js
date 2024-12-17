@@ -36,13 +36,13 @@ export const verify_access_token = (required_role = Roles.BASE) => (req, res, ne
 export const verify_password = async_handler( async (req, res, next) => {
     const from_token = req.user ? true : false;
     // -- ottengo un identificatore per l'utente
-    if (!from_token && !req.body.username) throw new CError('ValidationError', 'Any information to identify user', 429);
+    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 429);
     // -- ottengo le variabili
     const password = req.body.password;
-    const uid = from_token ? req.user.uid : req.body.username;
+    const uid = from_token ? req.user.uid : req.body.email;
     // -- istanzio il servizio utente e recupero il segreto
     const service = new UserService();
-    const user = from_token ? await service.find_by_id(uid) : await service.find_by_username(uid);
+    const user = from_token ? await service.find_by_id(uid) : await service.find_by_email(uid);
     // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
     if (!user) throw new CError("ValidationError", "User not found", 404);
     const valid = await service.verify_password(password, user.password);
@@ -55,13 +55,13 @@ export const verify_password = async_handler( async (req, res, next) => {
 export const verify_mfa_code = async_handler(async (req, res, next) => {
     const from_token = req.user ? true : false;
     // -- ottengo un identificatore per l'utente
-    if (!from_token && !req.body.username) throw new CError('ValidationError', 'Any information to identify user', 429);
+    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 429);
     // -- ottengo le variabili
     const code = req.body.code;
-    const uid = from_token ? req.user.uid : req.body.username;
+    const uid = from_token ? req.user.uid : req.body.email;
     // -- istanzio il servizio utente e recupero il segreto
     const service = new UserService();
-    const user = from_token ? await service.find_by_id(uid) : await service.find_by_username(uid);
+    const user = from_token ? await service.find_by_id(uid) : await service.find_by_email(uid);
     // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
     if (!user) throw new CError("ValidationError", "User not found", 404);
     if (!user.mfa_secret) throw new CError("ValidationError", "Any secret to use", 404);

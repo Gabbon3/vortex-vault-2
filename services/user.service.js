@@ -12,41 +12,41 @@ export class UserService {
     }
     /**
      * Registra un utente sul db
-     * @param {string} username 
+     * @param {string} email 
      * @param {string} password 
      * @returns {string} id dell'utente appena inserito
      */
-    async signup(username, password) {
-        // -- verifico che l'username sia disponibile
+    async signup(email, password) {
+        // -- verifico che l'email sia disponibile
         const user_exist = await User.findOne({
-            where: { username }
+            where: { email }
         });
-        if (user_exist) throw new CError("UserExist", "Questo username non è disponibile", 409);
+        if (user_exist) throw new CError("UserExist", "This email is already in use", 409);
         // -- genero il salt di 16 byte
         const salt = Cripto.random_bytes(16, 'hex');
         // -- creo un nuovo utente
         const password_hash = await this.hash_password(password);
-        const user = new User({ username, password: password_hash, salt });
+        const user = new User({ email, password: password_hash, salt });
         // ---
         return await user.save();
     }
     /**
      * Esegue l'accesso e restituisce un utente 
-     * @param {string} username 
+     * @param {string} email 
      * @param {string} password 
      * @param {string} user_agent 
      * @param {string} ip_address
      * @returns {Object} - access_token, user
      */
-    async signin(username, password, user_agent, ip_address, refresh_token = null) {
+    async signin(email, password, user_agent, ip_address, refresh_token = null) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
-            where: { username }
+            where: { email }
         });
-        if (!user) throw new CError("AuthenticationError", "Username o password non validi", 401);
+        if (!user) throw new CError("AuthenticationError", "Invalid email or password", 401);
         // -- cerco se la password è corretta
         const password_is_correct = await this.verify_password(password, user.password);
-        if (!password_is_correct) throw new CError("AuthenticationError", "Username o password non validi", 401);
+        if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
         // -- Refresh Token
         if (!refresh_token) {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
@@ -95,13 +95,13 @@ export class UserService {
         })
     }
     /**
-     * Restituisce un utente tramite il suo username
-     * @param {string} username 
+     * Restituisce un utente tramite la sua email
+     * @param {string} email 
      * @returns 
      */
-    async find_by_username(username) {
+    async find_by_email(email) {
         return await User.findOne({
-            where: { username },
+            where: { email },
         })
     }
     /**

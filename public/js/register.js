@@ -8,14 +8,14 @@ $(document).ready(async () => {
      * REGISTER
      */
     Form.onsubmit('registrati', async (form, elements) => {
-        const { username, password, password2 } = elements;
+        const { email, password, password2 } = elements;
         // -- controllo sulle password
         if (password !== password2) return Log.summon(1, 'Passwords doesn\'t match');;
         // ---
         finestra.loader(true);
-        if (await AuthService.register(username, password)) {
+        if (await AuthService.register(email, password)) {
             $(form).trigger('reset');
-            Log.summon(0, `${username}, you have been successfully registered`);
+            Log.summon(0, `${email}, you have been successfully registered`);
         }
         finestra.loader(false);
     });

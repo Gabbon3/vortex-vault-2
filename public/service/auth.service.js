@@ -10,14 +10,14 @@ import { VaultService } from "./vault.service.js";
 export class AuthService {
     /**
      * Esegue l'accesso
-     * @param {string} username 
+     * @param {string} email 
      * @param {string} password 
      * @returns {boolean}
      */
-    static async login(username, password) {
+    static async login(email, password) {
         const res = await API.fetch('/auth/accedi', {
             method: 'POST',
-            body: { username, password },
+            body: { email, password },
         });
         if (!res) return false;
         // -- derivo la chiave crittografica
@@ -25,7 +25,7 @@ export class AuthService {
         const key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
         const cke_buffer = Bytes.base64.from(res.cke);
-        await LocalStorage.set('username-utente', username);
+        await LocalStorage.set('email-utente', email);
         await LocalStorage.set('master-key', key, cke_buffer);
         await LocalStorage.set('salt', salt, cke_buffer);
         SessionStorage.set('master-key', key);
@@ -37,14 +37,14 @@ export class AuthService {
     }
     /**
      * Esegue la registrazione di un nuovo utente
-     * @param {string} username 
+     * @param {string} email 
      * @param {string} password 
      * @returns {boolean}
      */
-    static async register(username, password) {
+    static async register(email, password) {
         const res = await API.fetch('/auth/registrati', {
             method: 'POST',
-            body: { username, password },
+            body: { email, password },
         });
         if (!res) return false;
         // -- cifro le credenziali sul localstorage
@@ -133,12 +133,12 @@ export class AuthService {
     static async config_session_vars(cke) {
         const master_key = await LocalStorage.get('master-key', cke);
         const salt = await LocalStorage.get('salt', cke);
-        const username = await LocalStorage.get('username-utente');
+        const email = await LocalStorage.get('email-utente');
         if (!master_key) return false;
         // ---
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
-        SessionStorage.set('username', username);
+        SessionStorage.set('email', email);
         // ---
         return true;
     }
@@ -205,8 +205,8 @@ export class AuthService {
      * @param {string} sudo_code 
      * @returns {string} Returns
      */
-    static async master_password_recovery(username, sudo_code) {
-        const res = await API.fetch(`/auth/recovery/${username}`, {
+    static async master_password_recovery(email, sudo_code) {
+        const res = await API.fetch(`/auth/recovery/${email}`, {
             method: 'GET',
         });
         if (!res) return false;
@@ -228,13 +228,13 @@ export class AuthService {
     } 
     /**
      * Recovery a device by using mfa
-     * @param {string} username 
+     * @param {string} email 
      * @param {string} code 
      */
-    static async device_recovery(username, code) {
+    static async device_recovery(email, code) {
         const res = await API.fetch('/auth/token/unlock', {
             method: 'POST',
-            body: { username, code }
+            body: { email, code }
         });
         if (!res) return false;
         return res.message;

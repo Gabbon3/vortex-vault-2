@@ -96,7 +96,7 @@ class AuthUI {
         if (!secret) return;
         const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
         const app_name = 'Vortex Vault';
-        const username = await LocalStorage.get('username-utente');
+        const username = await LocalStorage.get('email-utente');
         // ---
         const canvas = document.querySelector('#qrcode-2fa-secret');
         const uri = `otpauth://totp/${app_name}:${username}?secret=${base32_secret}&issuer=${app_name}`;

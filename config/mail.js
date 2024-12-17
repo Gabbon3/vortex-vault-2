@@ -18,6 +18,12 @@ export class Mailer {
      * @param {string} subject 
      * @param {string} text 
      * @returns {{status: boolean, message?: string, error?:string}}
+     * @example
+     * await Mailer.send(
+     *   "destinatario@example.com",
+     *   "Oggetto dell'email",
+     *   "Ciao, questa è un'email di test inviata con Nodemailer!"
+     * );
      */
     static async send(to, subject, text) {
         try {
