@@ -77,12 +77,14 @@ export class AuthService {
     }
     /**
      * Attiva l'autenticazione a due fattori
+     * @param {string} request_id - id richiesta de codice email
+     * @param {string} code - email code
      * @returns {boolean}
      */
-    static async enable_mfa(password) {
+    static async enable_mfa(request_id, code) {
         const res = await API.fetch('/auth/mfa', {
             method: 'POST',
-            body: { password }
+            body: { request_id, code }
         });
         // ---
         if (!res) return false;
@@ -231,10 +233,24 @@ export class AuthService {
      * @param {string} email 
      * @param {string} code 
      */
-    static async device_recovery(email, code) {
+    static async device_recovery_mfa(email, code) {
         const res = await API.fetch('/auth/token/unlock', {
             method: 'POST',
             body: { email, code }
+        });
+        if (!res) return false;
+        return res.message;
+    }
+    /**
+     * Recovery a device by using email
+     * @param {string} email 
+     * @param {string} request_id 
+     * @param {string} code 
+     */
+    static async device_recovery_email(email, request_id, code) {
+        const res = await API.fetch('/auth/token/unlockwithemail', {
+            method: 'POST',
+            body: { email, request_id, code }
         });
         if (!res) return false;
         return res.message;

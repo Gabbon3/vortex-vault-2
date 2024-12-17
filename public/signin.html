@@ -79,7 +79,7 @@
             <!-- SUDO CODE -->
             <label for="sudo-code">
                 <span class="material-symbols-rounded">password</span>
-                Sudo Code
+                Recovery Code
             </label>
             <div class="flex gap-75">
                 <input name="code" type="password" class="input-text mono" id="sudo-code" autocomplete="off" placeholder="****-****-****-****-****" required>
@@ -107,29 +107,67 @@
             </button>
         </div>
         <hr>
-        <form id="form-device-recovery">
-            <!-- EMAIL -->
-            <label for="recovery-device-email">
-                <span class="material-symbols-rounded">person</span>
-                Email
-            </label>
-            <input type="text" class="input-text" id="recovery-device-email" name="email" autocomplete="off" required>
-            <!-- RECOVERY CODE -->
-            <label for="recovery-device-code">
-                <span class="material-symbols-rounded">password</span>
-                Recovery Code
-            </label>
-            <div class="flex gap-75">
-                <input name="code" maxlength="6" type="text" class="input-text mfa" id="recovery-device-code" autocomplete="off" placeholder="******" required>
-                <button class="btn t CA paste-val" data-target-pa="recovery-device-code" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
+        <!-- RECOVER FROM AUTHENTICATOR -->
+        <h3 class="icon slider" slider="cont-mfa">
+            <span class="material-symbols-rounded">phonelink_lock</span>
+            From Authenticator
+            <span class="material-symbols-rounded warning">vpn_key</span>
+        </h3>
+        <div class="isle bg-3" id="cont-mfa" style="display: none;">
+            <form id="form-device-recovery-mfa">
+                <!-- EMAIL -->
+                <label for="recovery-device-mfa-email">
+                    <span class="material-symbols-rounded">person</span>
+                    Email
+                </label>
+                <input type="text" class="input-text" id="recovery-device-mfa-email" name="email" autocomplete="off" required>
+                <!-- RECOVERY CODE -->
+                <label for="recovery-device-mfa-code">
+                    <span class="material-symbols-rounded">password</span>
+                    Recovery Code
+                </label>
+                <div class="flex gap-75">
+                    <input name="code" maxlength="6" type="text" class="input-text mfa" id="recovery-device-mfa-code" autocomplete="off" placeholder="******" required>
+                    <button class="btn t CA paste-val" data-target-pa="recovery-device-mfa-code" type="button" title="Paste">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                </div>
+                <!-- --- -->
+                <button type="submit" class="btn primary mt-2">
+                    <span class="material-symbols-rounded">settings_backup_restore</span>
+                    Recover
                 </button>
-            </div>
-            <!-- --- -->
-            <button type="submit" class="btn primary mt-2">
-                Submit
-            </button>
-        </form>
+            </form>
+        </div>
+        <hr>
+        <!-- RECOVER FROM EMAIL -->
+        <h3 class="icon slider" slider="cont-email-recovery">
+            <span class="material-symbols-rounded">mail</span>
+            From Email
+            <span class="material-symbols-rounded warning">id_card</span>
+        </h3>
+        <div class="isle bg-3" id="cont-email-recovery" style="display: none;">
+            <form id="form-device-recovery-email">
+                <!-- EMAIL -->
+                <label for="recovery-device-email-email">
+                    <span class="material-symbols-rounded">person</span>
+                    Email
+                </label>
+                <input type="text" class="input-text mb-2" id="recovery-device-email-email" name="email" autocomplete="off" required>
+                <!-- code -->
+                <email-verify-btn email-id="recovery-device-email-email" target-id="recovery-device-email-code"></email-verify-btn>
+                <label for="recovery-device-email-code">
+                    <span class="material-symbols-rounded">password</span>
+                    Recovery Code
+                </label>
+                <input name="code" maxlength="6" type="text" class="input-text mfa" id="recovery-device-email-code" autocomplete="off" placeholder="******" required>
+                <!-- --- -->
+                <button type="submit" class="btn primary mt-2">
+                    <span class="material-symbols-rounded">settings_backup_restore</span>
+                    Recover
+                </button>
+            </form>
+        </div>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

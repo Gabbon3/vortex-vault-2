@@ -59,7 +59,6 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     if (db_code === null) throw new CError("TimeoutError", "Request expired", 404);
     if (db_code === false) throw new Error();
     // ---
-    console.log(db_code, code);
     const valid = code === db_code;
     if (!valid) throw new CError("AuthError", "Invalid code", 403);
     // -- elimino la richiesta dal db

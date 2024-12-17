@@ -97,17 +97,18 @@ export class UserController {
     });
     /**
      * Invia una mail con il codice di verifica
-     * @param {boolean} auth true per richiesta autenticata, false per non
      * @param {Request} req
      * @param {Response} res
      */
-    send_email_verification = async_handler( async (req, res) => {
+    send_email_verification = async_handler(async (req, res) => {
         const email = req.body.email;
         if (!email || !Validator.email(email)) throw new CError("ValidationError", "Any email founded", 422);
         const code = Cripto.random_mfa_code();
-        const request_id = `ear-` + UID.generate(4, true); // ear = email auth request
+        const request_id = `ear-${email}`; // ear = email auth request
+        // -- controllo che non sia gia stata fatta una richiesta
+        if (RamDB.get(request_id)) throw new CError("RequestError", "There's another active request, check or try again later", 400);
         // -- salvo nel ramdb
-        const is_set = RamDB.set(request_id, code, 60 * 3);
+        const is_set = RamDB.set(request_id, code, 150);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
         const is_send = await Mailer.send(

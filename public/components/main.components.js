@@ -5,7 +5,8 @@ import './footer.component.js';
 import './device-list-item.component.js';
 import './custom-vault-section.component.js';
 import './colored-password.component.js';
-import './password-strenght-bar.component.js'
+import './password-strenght-bar.component.js';
+import './email-verify-btn.component.js';
 
 $(document).ready(() => {
     /**

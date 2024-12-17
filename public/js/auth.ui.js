@@ -12,17 +12,13 @@ $(document).ready(() => {
      * ENABLE 2FA AUTH
      */
     Form.onsubmit('form-new-mfa-secret', async (form, elements) => {
+        if (!elements.code || elements.code.lenght != 6) return;
         if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
-        const { password } = elements;
-        // -- verifico la password dell'utente
-        if (!(await AuthService.verify_master_password(password))) {
-            Log.summon(2, "Password isn't correct");
-            return;
-        }
+        const { request_id, code } = elements;
         // ---
         finestra.loader(true);
-        if (await AuthUI.enable_mfa(password)) {
+        if (await AuthUI.enable_mfa(request_id, code)) {
             $(form).trigger('reset');
         }
         finestra.loader(false);
@@ -88,12 +84,12 @@ $(document).ready(() => {
 class AuthUI {
     /**
      * Abilita MFA e lo mostra nell'html
-     * @param {string} password password dell'utente
-     * @returns 
+     * @param {string} email_code password dell'utente
+     * @returns {boolean}
      */
-    static async enable_mfa(password) {
-        const secret = await AuthService.enable_mfa(password);
-        if (!secret) return;
+    static async enable_mfa(request_id, email_code) {
+        const secret = await AuthService.enable_mfa(request_id, email_code);
+        if (!secret) return false;
         const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
         const app_name = 'Vortex Vault';
         const username = await LocalStorage.get('email-utente');
@@ -119,5 +115,6 @@ class AuthUI {
                 canvas.style.height = 0;
             }, 20000);
         }, 1000);
+        return true;
     }
 }

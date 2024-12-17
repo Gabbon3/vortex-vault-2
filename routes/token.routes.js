@@ -20,7 +20,7 @@ router.post('/rename', verify_access_token(), controller.rename);
 router.post('/revoke', verify_access_token(1), controller.revoke);
 // -- device recovery
 router.post('/unlock', verify_mfa_code, controller.unlock);
-// router.post('/unlockwithemail', verify_email_code, controller.unlock);
+router.post('/unlockwithemail', verify_email_code, controller.unlock);
 router.post('/revoke-all', verify_access_token(1), controller.revoke_all);
 router.get('/', verify_access_token(), controller.get_all);
 router.post('/delete', verify_access_token(1), controller.delete)

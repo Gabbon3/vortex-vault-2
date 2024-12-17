@@ -246,6 +246,7 @@
             <h2 class="icon">
                 <span class="material-symbols-rounded">token</span>
                 Devices
+                <span class="material-symbols-rounded warning">vpn_key</span>
             </h2>
             <button class="btn t close l last" data-target-close="win-devices">
                 <span class="material-symbols-rounded">close</span>
@@ -281,8 +282,9 @@
         </div>
         <hr>
         <h3 class="icon">
-            <span class="material-symbols-rounded">dns</span>
+            <span class="material-symbols-rounded">database</span>
             Server
+            <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
         <p>
             You can save only one backup at time on server
@@ -299,8 +301,8 @@
         </div>
         <hr>
         <h3 class="icon">
-            <span class="material-symbols-rounded">devices</span>
-            Locally
+            <span class="material-symbols-rounded">hard_drive</span>
+            Download
         </h3>
         <form class="isle bg-4 mb-2" id="form-create-backup-locally">
             <label for="backup-custom-password">
@@ -321,7 +323,11 @@
                 Generate & Download
             </button>
         </form>
-        <hr>
+        <h3 class="icon">
+            <span class="material-symbols-rounded">draft</span>
+            Restore locally
+            <span class="material-symbols-rounded warning">vpn_key</span>
+        </h3>
         <form id="form-restore-backup-from-file" class="isle bg-4">
             <label for="backup-file">
                 <span class="material-symbols-rounded">draft</span>
@@ -444,6 +450,7 @@
         <h3 class="icon slider" slider="form-change-password">
             <span class="material-symbols-rounded">key</span>
             Change Password
+            <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
         <form id="form-change-password" class="isle bg-3" style="display: none;">
             <p>
@@ -477,6 +484,36 @@
                 </button>
             </div>
         </form>
+        <hr>
+        <!-- MFA -->
+        <h3 class="icon slider" slider="cont-mfa">
+            <span class="material-symbols-rounded">phonelink_lock</span>
+            MFA
+            <span class="material-symbols-rounded warning">id_card</span>
+        </h3>
+        <div id="cont-mfa" class="isle bg-3" style="display: none;">
+            <p>
+                Enable the secondary authentication feature to protect your account.
+            </p>
+            <form id="form-new-mfa-secret">
+                <email-verify-btn target-id="code-new-mfa-secret"></email-verify-btn>
+                <label for="code-new-mfa-secret">
+                    <span class="material-symbols-rounded">password</span>
+                    Code
+                </label>
+                <input name="code" type="text" maxlength="6" class="input-text mfa" id="code-new-mfa-secret" placeholder="******" autocomplete="off" required>
+                <p class="description">
+                    You must enter the code you will receive from the emails.
+                </p>
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">security</span>
+                    Enable
+                </button>
+            </form>
+            <div class="flex gap-50">
+            </div>
+            <canvas id="qrcode-2fa-secret"></canvas>
+        </div>
         <hr>
         <!-- RECOVERY CODE -->
         <h3 class="icon slider" slider="cont-rec-code">
@@ -514,48 +551,17 @@
             </form>
         </div>
         <hr>
-        <!-- MFA -->
-        <h3 class="icon slider" slider="cont-mfa">
-            <span class="material-symbols-rounded">phonelink_lock</span>
-            MFA
-        </h3>
-        <div id="cont-mfa" class="isle bg-3" style="display: none;">
-            <p>
-                Enable the secondary authentication feature to protect your account.
-            </p>
-            <form id="form-new-mfa-secret">
-                <label for="password-new-mfa-secret">
-                    <span class="material-symbols-rounded">key_vertical</span>
-                    Password
-                </label>
-                <div class="flex gap-50">
-                    <input name="password" type="password" class="input-text mono" id="password-new-mfa-secret" autocomplete="off" required>
-                    <button class="btn t CA paste-val" data-target-pa="password-new-mfa-secret" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
-                </div>
-                <p class="description">
-                    You need to enter your password to perform this operation.
-                </p>
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">security</span>
-                    Enable
-                </button>
-            </form>
-            <div class="flex gap-50">
-            </div>
-            <canvas id="qrcode-2fa-secret"></canvas>
-        </div>
-        <hr>
         <!-- Advanced session -->
         <h3 class="icon slider" slider="cont-sudo-session">
-            <span class="material-symbols-rounded">admin_panel_settings</span>
+            <span class="material-symbols-rounded warning">vpn_key</span>
             Sudo Session
         </h3>
         <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
             <p>
                 Enable sudo session to perform critical operations.
-                The session will only last 20 minutes for safety reasons.
+                The session will only last 20 minutes for safety reasons. <br>
+                All operations that require this session are marked with this symbol
+                <span class="material-symbols-rounded warning">vpn_key</span>
             </p>
             <form id="form-start-sudo-session">
                 <label for="start-sudo-session-code">

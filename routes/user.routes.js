@@ -19,13 +19,13 @@ router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
 router.post('/password', verify_access_token(), controller.change_password);
 // -- invio codici verifica via mail
-router.post('/email-verification-code-auth', verify_access_token(), controller.send_email_verification);
+router.post('/email-verification', controller.send_email_verification);
 router.post('/email-verification-test', verify_email_code, controller.test_email_auth);
 // -- password recovery
 router.get('/recovery/:email', controller.get_recovery);
-router.post('/recovery', verify_access_token(), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
+router.post('/recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // ---
-router.post('/mfa', verify_access_token(), verify_password, controller.enable_mfa);
+router.post('/mfa', verify_access_token(), verify_email_code, controller.enable_mfa);
 router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
 // ---
 router.post('/sudotoken', verify_access_token(), verify_mfa_code, controller.start_sudo_session);

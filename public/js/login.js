@@ -11,7 +11,8 @@ $(document).ready(async () => {
     const saved_email = await LocalStorage.get('email-utente');
     // ---
     document.getElementById('recovery-email').value = saved_email;
-    document.getElementById('recovery-device-email').value = saved_email;
+    document.getElementById('recovery-device-mfa-email').value = saved_email;
+    document.getElementById('recovery-device-email-email').value = saved_email;
     document.getElementById('email').value = saved_email;
     // ---
     if (saved_email) {
@@ -58,12 +59,27 @@ $(document).ready(async () => {
         finestra.loader(false);
     });
     /**
-     * DEVICE RECOVERY
+     * DEVICE RECOVERY MFA
      */
-    Form.onsubmit('form-device-recovery', async (form, elements) => {
+    Form.onsubmit('form-device-recovery-mfa', async (form, elements) => {
         const { email, code } = elements;
         finestra.loader(true);
-        const message = await AuthService.device_recovery(email, code);
+        const message = await AuthService.device_recovery_mfa(email, code);
+        if (message) {
+            Log.summon(0, message);
+            $(form).trigger('reset');
+            finestra.close('win-device-recovery');
+        }
+        finestra.loader(false);
+    });
+    /**
+     * DEVICE RECOVERY EMAIL
+     */
+    Form.onsubmit('form-device-recovery-email', async (form, elements) => {
+        const { email, request_id, code } = elements;
+        if (!code || code.length !== 6) return;
+        finestra.loader(true);
+        const message = await AuthService.device_recovery_email(email, request_id, code);
         if (message) {
             Log.summon(0, message);
             $(form).trigger('reset');

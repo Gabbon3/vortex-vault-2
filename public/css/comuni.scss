@@ -136,6 +136,10 @@ h5 {
     &.icon {
         .material-symbols-rounded {
             color: $c1;
+
+            &.warning {
+                color: $c-warning;
+            }
         }
     }
 }
@@ -408,6 +412,11 @@ monospace {
     &[disabled],
     &:read-only {
         color: $text-color-2;
+    }
+
+    &[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
     &.mfa {
