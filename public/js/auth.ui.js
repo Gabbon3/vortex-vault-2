@@ -6,6 +6,7 @@ import { Bytes } from "../utils/bytes.js";
 import { LocalStorage } from "../utils/local.js";
 import { qrcode } from "../utils/qrcode.js";
 import { VortexNavbar } from "../components/navbar.component.js";
+import { FileUtils } from "../utils/file.utils.js";
 
 $(document).ready(() => {
     /**

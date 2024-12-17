@@ -41,7 +41,7 @@ export class Cripto {
         let recovery_code = "";
         // ---
         for (let i = 0; i < size; i++) {
-            recovery_code += chars[Math.floor(this.random() * chars.length)];
+            recovery_code += chars[Math.floor(this.random_ratio() * chars.length)];
         }
         // ---
         return recovery_code.match(/.{1,4}/g).join('-');
