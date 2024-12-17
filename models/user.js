@@ -9,7 +9,7 @@ export const User = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
-        username: { type: DataTypes.STRING, allowNull: false, unique: true },
+        email: { type: DataTypes.STRING, allowNull: false, unique: true },
         password: { type: DataTypes.STRING, allowNull: false },
         salt: {
             type: DataTypes.STRING(32),
