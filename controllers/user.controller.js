@@ -6,6 +6,10 @@ import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { MFAService } from "../services/mfa.service.js";
+import { RamDB } from "../config/ramdb.js";
+import { Mailer } from "../config/mail.js";
+import { Validator } from "../public/utils/validator.js";
+import { UID } from "../utils/uid.js";
 
 export class UserController {
     constructor() {
@@ -91,6 +95,35 @@ export class UserController {
         this.set_token_cookies(res, { access_token });
         res.status(201).json({ access_token });
     });
+    /**
+     * Invia una mail con il codice di verifica
+     * @param {boolean} auth true per richiesta autenticata, false per non
+     * @param {Request} req
+     * @param {Response} res
+     */
+    send_email_verification = async_handler( async (req, res) => {
+        const email = req.body.email;
+        if (!email || !Validator.email(email)) throw new CError("ValidationError", "Any email founded", 422);
+        const code = Cripto.random_mfa_code();
+        const request_id = `ear-` + UID.generate(4, true); // ear = email auth request
+        // -- salvo nel ramdb
+        const is_set = RamDB.set(request_id, code, 60 * 3);
+        if (!is_set) throw new Error("Not able to generate verification code");
+        // ---
+        const is_send = await Mailer.send(
+            email,
+            'Vortex Verification Code',
+            code
+        );
+        if (!is_send) throw new Error("Not able to send the email");
+        res.status(201).json({ request_id });
+    });
+    /**
+     * Just a test
+     */
+    test_email_auth = async_handler(async (req, res) => {
+        res.status(200).json({ message: "Valid" });
+    })
     /**
      * Just a test
      * @param {Request} req 

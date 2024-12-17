@@ -5,6 +5,7 @@ import { TokenUtils } from "../utils/tokenUtils.js";
 import { TOTP } from "../utils/totp.js";
 import { MFAService } from "../services/mfa.service.js";
 import { Roles } from "../utils/roles.js";
+import { RamDB } from "../config/ramdb.js";
 /**
  * Middleware per la verifica del jwt e refresh 
  * dell'access token se scaduto
@@ -47,6 +48,22 @@ export const verify_password = async_handler( async (req, res, next) => {
     if (!user) throw new CError("ValidationError", "User not found", 404);
     const valid = await service.verify_password(password, user.password);
     if (!valid) throw new CError("AuthError", "Invalid password", 403);
+    next();
+});
+/**
+ * Verifica il codice inviato per mail
+ */
+export const verify_email_code = async_handler(async (req, res, next) => {
+    const { request_id, code } = req.body;
+    const db_code = RamDB.get(request_id);
+    if (db_code === null) throw new CError("TimeoutError", "Request expired", 404);
+    if (db_code === false) throw new Error();
+    // ---
+    console.log(db_code, code);
+    const valid = code === db_code;
+    if (!valid) throw new CError("AuthError", "Invalid code", 403);
+    // -- elimino la richiesta dal db
+    RamDB.delete(request_id);
     next();
 });
 /**

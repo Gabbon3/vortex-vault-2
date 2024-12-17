@@ -2,7 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 // import { verifica_jwt } from "../middlewares/authMiddleware.js";
 import { UserController } from "../controllers/user.controller.js";
-import { verify_access_token, verify_mfa_code, verify_password } from "../middlewares/authMiddleware.js";
+import { verify_access_token, verify_email_code, verify_mfa_code, verify_password } from "../middlewares/authMiddleware.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -18,6 +18,9 @@ router.use(limiter);
 router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
 router.post('/password', verify_access_token(), controller.change_password);
+// -- invio codici verifica via mail
+router.post('/email-verification-code-auth', verify_access_token(), controller.send_email_verification);
+router.post('/email-verification-test', verify_email_code, controller.test_email_auth);
 // -- password recovery
 router.get('/recovery/:email', controller.get_recovery);
 router.post('/recovery', verify_access_token(), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
