@@ -126,7 +126,7 @@ export class UserController {
         const { email } = req.body;
         // ---
         const [affected] = await this.service.update_user_info({ email }, { verified: true });
-        if (affected !== 1) throw new Error("Updated multiple emails");
+        if (affected > 1) throw new Error("Updated multiple emails");
         // ---
         res.status(200).json({ message: "Email verified" });
     });

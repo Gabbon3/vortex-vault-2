@@ -22,13 +22,13 @@
                 <span class="material-symbols-rounded">person_add</span>
                 Sign Up
             </h2>
-            <!-- --- -->
+            <!-- EMAIL -->
             <label for="email">
                 <span class="material-symbols-rounded">person</span>
                 Email
             </label>
-            <input type="text" class="input-text" id="email" name="email" autocomplete="off" required>
-            <!-- --- -->
+            <input type="email" class="input-text" id="email" name="email" autocomplete="off" required>
+            <!-- PASSWORD -->
             <hr>
             <label for="password">
                 <span class="material-symbols-rounded">key_vertical</span>
@@ -57,7 +57,7 @@
         <!-- 
             EMAIL VERIFY
         -->
-        <div class="window m pl" id="win-email-verify">
+        <div class="window m" id="win-email-verify">
             <div class="flex y-center">
                 <h2 class="icon">
                     <span class="material-symbols-rounded">mark_email_read</span>
@@ -74,7 +74,7 @@
                     <span class="material-symbols-rounded">person</span>
                     Email
                 </label>
-                <input type="text" class="input-text mb-2" id="verify-email-email" name="email" autocomplete="off" required>
+                <input type="email" class="input-text mb-2" id="verify-email-email" name="email" autocomplete="off" required>
                 <!-- code -->
                 <email-verify-btn email-id="verify-email-email" target-id="verify-email-code"></email-verify-btn>
                 <label for="recovery-device-email-code">
