@@ -715,16 +715,17 @@ vortex-navbar {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
+  color: #888;
   transition: 0.2s;
   margin-left: auto;
   margin-right: 20px;
+  cursor: default;
 }
 #sudo-indicator.base {
-  background-color: #878e54;
+  color: #878e54;
 }
 #sudo-indicator.sudo {
-  background-color: rgb(238, 173, 113);
+  color: rgb(238, 173, 113);
 }
 
 #accedi,
@@ -877,13 +878,11 @@ vortex-navbar {
   color: #888;
 }
 
-.custom-sections {
-  margin-top: 10px;
-}
 .custom-sections custom-vault-section {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
   padding: 0 7px 7px 7px;
   border-radius: 7px;
+  margin-bottom: 0.5rem;
 }
 .custom-sections custom-vault-section .remove-custom-section {
   padding: 3px;

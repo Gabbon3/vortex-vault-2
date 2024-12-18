@@ -52,7 +52,9 @@ export class VortexNavbar extends HTMLElement {
                     Sign Up
                 </a>` : ''}
             </nav>
-            <span id="sudo-indicator" class="base" title="Session status"></span>
+            <span id="sudo-indicator" class="base" title="Session status">
+                <span class="material-symbols-rounded">vpn_key</span>
+            </span>
         `;
         VortexNavbar.sudo_indicator = document.getElementById('sudo-indicator');
         VortexNavbar.sudo_indicator_init();

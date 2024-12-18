@@ -39,17 +39,18 @@ vortex-navbar {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: $bg-5;
+    color: $text-color-2;
     transition: 0.2s;
     margin-left: auto;
     margin-right: 20px;
+    cursor: default;
 
     &.base {
-        background-color: $c1;
+        color: $c1;
     }
 
     &.sudo {
-        background-color: $c-warning;
+        color: $c-warning;
     }
 }
 
@@ -229,12 +230,12 @@ vortex-navbar {
 }
 
 .custom-sections {
-    margin-top: 10px;
 
     custom-vault-section {
-        background-color: $bg-4;
+        background-color: $bg-3;
         padding: 0 7px 7px 7px;
         border-radius: 7px;
+        margin-bottom: 0.5rem;
 
         .remove-custom-section {
             padding: 3px;

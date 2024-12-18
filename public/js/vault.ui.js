@@ -24,6 +24,7 @@ $(document).ready(async () => {
             Log.summon(0, `${elements.T} saved`);
             finestra.close('win-create-vault');
             $(form).trigger("reset");
+            document.getElementById('custom-sections-new-vault').innerHTML = '';
             setTimeout(() => {
                 VaultUI.init_db_dom();
             }, 1000);

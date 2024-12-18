@@ -19,6 +19,7 @@ dotenv.config();
  * qui ci sono i middleware che verranno utilizzati in tutte le routes
  */
 const app = express();
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
 
