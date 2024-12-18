@@ -446,6 +446,66 @@
             </button>
         </div>
         <hr>
+        <!-- MFA -->
+        <h3 class="icon slider" slider="cont-mfa">
+            <span class="material-symbols-rounded">phonelink_lock</span>
+            MFA
+            <span class="material-symbols-rounded warning">id_card</span>
+        </h3>
+        <div id="cont-mfa" class="isle bg-3" style="display: none;">
+            <p>
+                Enable the secondary authentication feature to protect your account.
+            </p>
+            <form id="form-new-mfa-secret">
+                <email-verify-btn target-id="code-new-mfa-secret"></email-verify-btn>
+                <label for="code-new-mfa-secret">
+                    <span class="material-symbols-rounded">password</span>
+                    Code
+                </label>
+                <input name="code" type="text" maxlength="6" class="input-text mfa" id="code-new-mfa-secret" placeholder="******" autocomplete="off" required>
+                <p class="description">
+                    You must enter the code you will receive from the emails.
+                </p>
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">security</span>
+                    Enable
+                </button>
+            </form>
+            <div class="flex gap-50">
+            </div>
+            <canvas id="qrcode-2fa-secret"></canvas>
+        </div>
+        <hr>
+        <!-- SUDO SESSION -->
+        <h3 class="icon slider" slider="cont-sudo-session">
+            <span class="material-symbols-rounded warning">vpn_key</span>
+            Sudo Session
+        </h3>
+        <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
+            <p>
+                Enable sudo session to perform critical operations.
+                The session will only last 20 minutes for safety reasons. <br>
+                All operations that require this session are marked with this symbol
+                <span class="material-symbols-rounded warning">vpn_key</span>
+            </p>
+            <form id="form-start-sudo-session">
+                <label for="start-sudo-session-code">
+                    <span class="material-symbols-rounded">password</span>
+                    MFA Code
+                </label>
+                <div class="flex gap-75 mb-2">
+                    <input name="code" maxlength="6" type="text" class="input-text mfa" id="start-sudo-session-code" autocomplete="off" placeholder="******" required>
+                    <button class="btn t CA paste-val" data-target-pa="start-sudo-session-code" type="button" title="Paste">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                </div>
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">security</span>
+                    Enable
+                </button>
+            </form>
+        </div>
+        <hr>
         <!-- CHANGE PASSWORD -->
         <h3 class="icon slider" slider="form-change-password">
             <span class="material-symbols-rounded">key</span>
@@ -485,40 +545,11 @@
             </div>
         </form>
         <hr>
-        <!-- MFA -->
-        <h3 class="icon slider" slider="cont-mfa">
-            <span class="material-symbols-rounded">phonelink_lock</span>
-            MFA
-            <span class="material-symbols-rounded warning">id_card</span>
-        </h3>
-        <div id="cont-mfa" class="isle bg-3" style="display: none;">
-            <p>
-                Enable the secondary authentication feature to protect your account.
-            </p>
-            <form id="form-new-mfa-secret">
-                <email-verify-btn target-id="code-new-mfa-secret"></email-verify-btn>
-                <label for="code-new-mfa-secret">
-                    <span class="material-symbols-rounded">password</span>
-                    Code
-                </label>
-                <input name="code" type="text" maxlength="6" class="input-text mfa" id="code-new-mfa-secret" placeholder="******" autocomplete="off" required>
-                <p class="description">
-                    You must enter the code you will receive from the emails.
-                </p>
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">security</span>
-                    Enable
-                </button>
-            </form>
-            <div class="flex gap-50">
-            </div>
-            <canvas id="qrcode-2fa-secret"></canvas>
-        </div>
-        <hr>
         <!-- RECOVERY CODE -->
         <h3 class="icon slider" slider="cont-rec-code">
             <span class="material-symbols-rounded">lock_reset</span>
             Recovery Code
+            <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
         <div id="cont-rec-code" class="isle bg-3" style="display: none;">
             <p>
@@ -548,36 +579,6 @@
                         Generate Recovery Code
                     </button>
                 </div>
-            </form>
-        </div>
-        <hr>
-        <!-- Advanced session -->
-        <h3 class="icon slider" slider="cont-sudo-session">
-            <span class="material-symbols-rounded warning">vpn_key</span>
-            Sudo Session
-        </h3>
-        <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
-            <p>
-                Enable sudo session to perform critical operations.
-                The session will only last 20 minutes for safety reasons. <br>
-                All operations that require this session are marked with this symbol
-                <span class="material-symbols-rounded warning">vpn_key</span>
-            </p>
-            <form id="form-start-sudo-session">
-                <label for="start-sudo-session-code">
-                    <span class="material-symbols-rounded">password</span>
-                    MFA Code
-                </label>
-                <div class="flex gap-75 mb-2">
-                    <input name="code" maxlength="6" type="text" class="input-text mfa" id="start-sudo-session-code" autocomplete="off" placeholder="******" required>
-                    <button class="btn t CA paste-val" data-target-pa="start-sudo-session-code" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
-                </div>
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">security</span>
-                    Enable
-                </button>
             </form>
         </div>
     </div>
