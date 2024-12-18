@@ -10,7 +10,7 @@ import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
-import { Mailer } from './config/mail.js';
+// import { Mailer } from './config/mail.js';
 
 dotenv.config();
 
@@ -19,6 +19,7 @@ dotenv.config();
  * qui ci sono i middleware che verranno utilizzati in tutte le routes
  */
 const app = express();
+app.use('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
 
