@@ -23,7 +23,6 @@
         "nodemailer": "^6.9.16",
         "pg": "^8.13.1",
         "pg-hstore": "^2.3.4",
-        "redis": "^4.7.0",
         "sequelize": "^6.37.5",
         "ua-parser-js": "^2.0.0-rc.1"
     },

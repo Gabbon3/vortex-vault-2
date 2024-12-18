@@ -43,13 +43,54 @@
             <input type="password" class="input-text" id="password2" name="password2" required>
             <!-- --- -->
             <hr>
-            <button class="btn primary w-100">
-                <span class="material-symbols-rounded">person_add</span>
-                Sign Up
-            </button>
+            <div class="flex gap-50 d-column">
+                <button class="btn primary w-100">
+                    <span class="material-symbols-rounded">person_add</span>
+                    Sign Up
+                </button>
+                <button type="button" class="btn warning w-100 open" data-target-open="win-email-verify">
+                    <span class="material-symbols-rounded">mark_email_read</span>
+                    Verify Email
+                </button>
+            </div>
         </form>
+        <!-- 
+            EMAIL VERIFY
+        -->
+        <div class="window m pl" id="win-email-verify">
+            <div class="flex y-center">
+                <h2 class="icon">
+                    <span class="material-symbols-rounded">mark_email_read</span>
+                    Verify email
+                </h2>
+                <button class="btn t close l last" data-target-close="win-email-verify">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <hr>
+            <form id="email-verify">
+                <!-- --- -->
+                <label for="verify-email-email">
+                    <span class="material-symbols-rounded">person</span>
+                    Email
+                </label>
+                <input type="text" class="input-text mb-2" id="verify-email-email" name="email" autocomplete="off" required>
+                <!-- code -->
+                <email-verify-btn email-id="verify-email-email" target-id="verify-email-code"></email-verify-btn>
+                <label for="recovery-device-email-code">
+                    <span class="material-symbols-rounded">password</span>
+                    Code
+                </label>
+                <input name="code" maxlength="6" type="text" class="input-text mfa mb-2" id="verify-email-code" autocomplete="off" placeholder="******" required>
+                <!-- SUBMIT -->
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">check</span>
+                    Verify
+                </button>
+            </form>
+        </div>
     </main>
-    <!-- container dei log -->
-    <div id="logs_container"></div>
+    <!-- footer -->
+    <vortex-footer></vortex-footer>
 </body>
 </html>

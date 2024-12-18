@@ -16,7 +16,21 @@ $(document).ready(async () => {
         if (await AuthService.register(email, password)) {
             $(form).trigger('reset');
             Log.summon(0, `${email}, you have been successfully registered`);
+            Log.summon(1, "Now verify your email clicking the button below so you can then sign-in with no problems");
+            document.getElementById('verify-email-email').value = email;
         }
         finestra.loader(false);
+    });
+    /**
+     * EMAIL VERIFY
+     */
+    Form.onsubmit('email-verify', async (form, elements) => {
+        const { email, request_id, code } = elements;
+        if (!code || code.length !== 6) return Log.summon(1, "Invalid code");
+        // ---
+        if (await AuthService.verify_email(email, request_id, code)) {
+            Log.summon(0, 'Email verified now you can sign-in');
+            $(form).trigger('reset');
+        }
     });
 });

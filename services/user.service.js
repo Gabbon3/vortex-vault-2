@@ -5,6 +5,9 @@ import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from '../models/user.js';
 import { Roles } from '../utils/roles.js';
+import { Mailer } from '../config/mail.js';
+import { date } from '../utils/dateUtils.js';
+import automated_emails from '../public/utils/automated.mails.js';
 
 export class UserService {
     constructor() {
@@ -44,12 +47,29 @@ export class UserService {
             where: { email }
         });
         if (!user) throw new CError("AuthenticationError", "Invalid email or password", 401);
+        if (user.verified !== true) throw new CError("AuthenticationError", "Email is not verified", 401);
         // -- cerco se la password è corretta
         const password_is_correct = await this.verify_password(password, user.password);
         if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
         // -- Refresh Token
         if (!refresh_token) {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
+            // -- avviso l'utente se un nuovo dispositivo accede
+            if (refresh_token.is_revoked) {
+                // -- ottengo il testo
+                const { text, html } = automated_emails.newSignIn({
+                    email,
+                    user_agent: refresh_token.user_agent_summary,
+                    ip_address,
+                });
+                // -- invio la mail
+                await Mailer.send(
+                    email, 
+                    'New device Sign-In', 
+                    text,
+                    html
+                );
+            }
         }
         // -- Access Token
         const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token({ uid: user.id, role: Roles.BASE });
@@ -82,7 +102,7 @@ export class UserService {
         if (!password_is_correct) throw new CError("AuthenticationError", "Password is not valid", 401);
         // ---
         const password_hash = await this.hash_password(password);
-        return this.update_user_info(uid, { password: password_hash });
+        return this.update_user_info({ id: uid }, { password: password_hash });
     }
     /**
      * Restituisce un utente tramite il suo id
@@ -106,14 +126,16 @@ export class UserService {
     }
     /**
      * Aggiorna un qualunque campo dell'utente
-     * @param {string} uid
+     * @param {string} id - user id
      * @param {Object} updated_info un oggetto con le informazioni da modificare
      * @returns {Array} [affectedCount]
      */
-    async update_user_info(uid, updated_info) {
+    async update_user_info({ id, email }, updated_info) {
+        const where = id ? { id } : { email };
+        // ---
         return await User.update(
             updated_info,
-            { where: { id: uid } }
+            { where }
         );
     }
     /**

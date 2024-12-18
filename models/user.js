@@ -10,6 +10,7 @@ export const User = sequelize.define(
             autoIncrement: true,
         },
         email: { type: DataTypes.STRING, allowNull: false, unique: true },
+        verified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
         password: { type: DataTypes.STRING, allowNull: false },
         salt: {
             type: DataTypes.STRING(32),

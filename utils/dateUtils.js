@@ -47,6 +47,7 @@ export class date {
      * date.format('Y-m-d H:i:s'); // "2024-10-07 14:30:45"
      */
     static format(format, date = new Date()) {
+        const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
         const map = {
             // Anno
             Y: date.getFullYear(),
@@ -55,15 +56,15 @@ export class date {
             // Mese
             m: String(date.getMonth() + 1).padStart(2, "0"),
             n: date.getMonth() + 1,
-            M: date.toLocaleString("default", { month: "short" }),
-            F: date.toLocaleString("default", { month: "long" }),
+            M: capitalize(date.toLocaleString("default", { month: "short" })),
+            F: capitalize(date.toLocaleString("default", { month: "long" })),
             t: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),
 
             // Giorno
             d: String(date.getDate()).padStart(2, "0"),
             j: date.getDate(),
-            D: date.toLocaleString("default", { weekday: "short" }),
-            l: date.toLocaleString("default", { weekday: "long" }),
+            D: capitalize(date.toLocaleString("default", { weekday: "short" })),
+            l: capitalize(date.toLocaleString("default", { weekday: "long" })),
             w: date.getDay(),
             N: date.getDay() === 0 ? 7 : date.getDay(),
             S: (() => {
@@ -100,11 +101,6 @@ export class date {
             s: String(date.getSeconds()).padStart(2, "0"),
         };
         // ---
-        return format.replace(/%(\w)/g, (match, p1) => {
-            return map[p1] !== undefined ? map[p1] : match;
-        }).replace(
-            /Y|y|m|n|M|F|t|d|j|D|l|w|N|S|z|W|H|G|h|g|A|a|i|s/g,
-            (match) => map[match]
-        );
+        return format.replace(/%(\w)/g, (match, p1) => map[p1] !== undefined ? map[p1] : match);
     }
 }

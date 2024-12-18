@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { sequelize } from './config/db.js';
 import user_routes from './routes/user.routes.js';
 import token_routes from './routes/token.routes.js';
@@ -11,8 +11,6 @@ import static_routes from './routes/static.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 import { Mailer } from './config/mail.js';
-
-dotenv.config();
 
 /**
  * MIDDLEWARES
