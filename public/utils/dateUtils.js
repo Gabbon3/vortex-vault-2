@@ -104,3 +104,5 @@ export class date {
         return format.replace(/%(\w)/g, (match, p1) => map[p1] !== undefined ? map[p1] : match);
     }
 }
+
+window.dateg = date;

@@ -103,7 +103,7 @@ export class RefreshTokenController {
      * @param {*} res 
      */
     delete = async_handler(async (req, res) => {
-        const { token_id } = req.params;
+        const { token_id } = req.body;
         await this.service.delete(token_id, req.user.uid);
         res.status(200).json({ "deleted": true });
     });

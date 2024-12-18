@@ -79,7 +79,7 @@ export class UserController {
     enable_mfa = async_handler(async (req, res) => {
         const { final, secret } = MFAService.generate();
         // -- salvo nel db
-        const [affected] = await this.service.update_user_info(req.user.uid, { mfa_secret: Buffer.from(final) });
+        const [affected] = await this.service.update_user_info({ id: req.user.uid }, { mfa_secret: Buffer.from(final) });
         // ---
         if (affected !== 1) throw new CError("Internal error", "Not able to enable MFA", 500);
         // ---
@@ -120,6 +120,17 @@ export class UserController {
         res.status(201).json({ request_id });
     });
     /**
+     * Verifica un email
+     */
+    verify_email = async_handler(async (req, res) => {
+        const { email } = req.body;
+        // ---
+        const [affected] = await this.service.update_user_info({ email }, { verified: true });
+        if (affected > 1) throw new Error("Updated multiple emails");
+        // ---
+        res.status(200).json({ message: "Email verified" });
+    });
+    /**
      * Just a test
      */
     test_email_auth = async_handler(async (req, res) => {
@@ -153,7 +164,7 @@ export class UserController {
     set_recovery = async_handler(async (req, res) => {
         const recovery = req.body;
         // -- salvo sul db
-        const [ affected ] = await this.service.update_user_info(req.user.uid, { recovery });
+        const [ affected ] = await this.service.update_user_info({ id: req.user.uid }, { recovery });
         if (affected !== 1) throw new CError("ServerError", "Not able to set recovery informations", 500);
         // ---
         res.status(200).json({ message: 'Recovery access enabled successfully' });

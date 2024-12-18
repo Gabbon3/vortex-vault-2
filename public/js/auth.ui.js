@@ -13,7 +13,7 @@ $(document).ready(() => {
      * ENABLE 2FA AUTH
      */
     Form.onsubmit('form-new-mfa-secret', async (form, elements) => {
-        if (!elements.code || elements.code.length != 6) return;
+        if (!elements.code || elements.code.length != 6) return Log.summon(1, "Invalid code");
         if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
         const { request_id, code } = elements;

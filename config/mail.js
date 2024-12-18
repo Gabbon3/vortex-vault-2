@@ -25,13 +25,16 @@ export class Mailer {
      *   "Ciao, questa è un'email di test inviata con Nodemailer!"
      * );
      */
-    static async send(to, subject, text) {
+    static async send(to, subject, text, html) {
+        // -- aggiungo la firma
+        text += `\n\nThe Vortex Vault Team`
         try {
             const mail_options = {
                 from: process.env.EMAIL_USER,
                 to,
                 subject,
                 text,
+                html
             };
             const info = await this.transporter.sendMail(mail_options);
             return { status: true, message: info.response };

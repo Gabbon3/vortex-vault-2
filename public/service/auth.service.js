@@ -51,6 +51,22 @@ export class AuthService {
         return true;
     }
     /**
+     * Verifica un email
+     * @param {string} email 
+     * @param {string} request_id 
+     * @param {string} code 
+     * @returns {boolean}
+     */
+    static async verify_email(email, request_id, code) {
+        const res = await API.fetch('/auth/verify-email', {
+            method: 'POST',
+            body: { email, request_id, code }
+        });
+        // ---
+        if (!res) return false;
+        return true;
+    }
+    /**
      * Cambio password
      * @param {string} old_password 
      * @param {string} new_password 
