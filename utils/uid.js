@@ -14,9 +14,9 @@ export class UID {
         return BaseConverter.to_string(Number(random_number), this.base);
     }
     /**
-     * Genera un identificatore unico con formato c1-t-c2
-     * dove c1 e c2 sono le parti casuali, mentre t è il tempo in ms
-     * il generatore lavora con numeri in base 36
+     * Genera un identificatore unico con formato c1-t-n-c2
+     * dove 'c1' e 'c2' sono le parti casuali, 't' è il tempo in ms e 'n' sono i nanosecondi che aggiungono entropia e univocità
+     * il generatore lavora con numeri in base 62
      * @param {number} [byte_size=3] - Dimensione in byte delle parti casuali c1 e c2
      * @param {boolean} [better_entropy=false] - aggiunge i microsecondi
      * @returns {string} - l'identificatore univoco

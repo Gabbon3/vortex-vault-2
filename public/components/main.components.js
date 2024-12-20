@@ -7,6 +7,8 @@ import './custom-vault-section.component.js';
 import './colored-password.component.js';
 import './password-strenght-bar.component.js';
 import './email-verify-btn.component.js';
+import './btn-copy.component.js';
+import './btn-paste.component.js';
 
 $(document).ready(() => {
     /**

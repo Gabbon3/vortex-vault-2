@@ -18,6 +18,8 @@ router.use(limiter);
 router.post('/registrati', controller.signup);
 router.post('/accedi', controller.signin);
 router.post('/password', verify_access_token(), controller.change_password);
+// -- accesso veloce
+router.post('/quick-sign-in', verify_access_token(), controller.quick_signin);
 // -- invio codici verifica via mail
 router.post('/email-verification', controller.send_email_verification);
 router.post('/email-verification-test', verify_email_code, controller.test_email_auth);

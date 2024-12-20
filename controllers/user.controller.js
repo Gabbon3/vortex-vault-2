@@ -120,6 +120,20 @@ export class UserController {
         res.status(201).json({ request_id });
     });
     /**
+     * Memorizza temporaneamente le credenziali cifrate di un utente
+     * sul ramdb per poterlo farlo accedere rapidamente da un dispositivo
+     * autenticato A ad uno non autenticato B
+     */
+    quick_signin = async_handler(async (req, res) => {
+        const { credentials } = req.body;
+        // ---
+        const id = 'fsi' + UID.generate(3, true); // fsi = fast sign-in
+        const is_set = RamDB.set(id, credentials, 150);
+        if (!is_set) throw new Error("RamDB error");
+        // ---
+        res.status(201).json({ id });
+    });
+    /**
      * Verifica un email
      */
     verify_email = async_handler(async (req, res) => {

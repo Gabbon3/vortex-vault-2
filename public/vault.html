@@ -581,6 +581,36 @@
                 </div>
             </form>
         </div>
+        <hr>
+        <!-- FAST SIGN-IN -->
+        <h3 class="icon slider" slider="cont-fsi">
+            <span class="material-symbols-rounded">id_card</span>
+            Quick Sign-in
+        </h3>
+        <div id="cont-fsi" class="isle bg-3" style="display: none;">
+            <p>
+                Generate a QR code for quick sign-in from another device.
+            </p>
+            <form id="form-fsi">
+                <label for="password-fsi">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Password
+                </label>
+                <div class="flex gap-50">
+                    <input name="password" type="password" class="input-text mono" id="password-fsi" autocomplete="off" required>
+                    <btn-paste target="password-fsi"></btn-paste>
+                </div>
+                <p class="description">
+                    You need to enter your password to perform this operation.
+                </p>
+                <!-- --- -->
+                <button type="submit" class="btn primary mt-2">
+                    <span class="material-symbols-rounded">qr_code</span>
+                    Generate QR Code
+                </button>
+            </form>
+            <canvas id="qrcode-fsi"></canvas>
+        </div>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

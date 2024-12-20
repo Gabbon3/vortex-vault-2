@@ -80,9 +80,35 @@ $(document).ready(() => {
             $(form).trigger('reset');
         }
     });
+    /**
+     * QUICK SIGN-IN
+     */
+    Form.onsubmit('form-fsi', async (form, elements) => {
+        const { password } = elements;
+        const url = await AuthService.request_quick_signin(password);
+        if (url) {
+            AuthUI.show_quick_signin(url);
+        }
+    });
 });
 
 class AuthUI {
+    /**
+     * Mostra il qrcode per accedere rapidamente su un altro dispositivo
+     * @param {string} url 
+     */
+    static async show_quick_signin(url) {
+        const canvas = document.getElementById('qrcode-fsi');
+        qrcode.toCanvas(canvas, url, {
+            width: 200,
+            margin: 2,
+            color: {
+                dark: "#FFFFFF",
+                light: "#272727"
+            }
+        });
+        canvas.style.height = 200;
+    }
     /**
      * Abilita MFA e lo mostra nell'html
      * @param {string} email_code password dell'utente

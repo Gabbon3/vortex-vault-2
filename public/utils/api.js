@@ -6,7 +6,7 @@ export class API {
      * Eseguo una richiesta fetch centralizzata con endpoint, opzioni e tipo di dato.
      * @param {string} endpoint - L'endpoint a cui fare la richiesta.
      * @param {Object} options - Le opzioni da utilizzare nella chiamata fetch.
-     * @param {Object} type - Contiene i tipi di ritorno e contenuto: { return_type, content_type }.
+     * @param {Object} type - Contiene i tipi di ritorno e contenuto: { return_type, content_type }. (json, form-data, bin)
      * @returns {Promise<any|null>} - Restituisco il risultato della chiamata o null in caso di errore.
      */
     static async fetch(endpoint, options = {}, type = {}) {

@@ -6,6 +6,7 @@ import { API } from "../utils/api.js";
 import { AES256GCM } from "../secure/aesgcm.js";
 import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
+import msgpack from "../utils/msgpack.min.js";
 
 export class AuthService {
     /**
@@ -172,6 +173,37 @@ export class AuthService {
         // ---
         const key = await Cripto.derive_key(password, salt);
         return Bytes.compare(key, master_key);
+    }
+    /**
+     * Genera una richiesta di accesso rapido
+     * @param {string} password
+     * @returns {string} url per accedere
+     */
+    static async request_quick_signin(password) {
+        const verify_password = this.verify_master_password(password);
+        if (!verify_password) return null;
+        // ---
+        const email = await LocalStorage.get('email-utente');
+        const credentials = msgpack.encode([
+            email,
+            password
+        ]);
+        // -- cifro le credenziali
+        const key = Cripto.random_bytes(32);
+        const encrypted_credentials = await AES256GCM.encrypt(credentials, key);
+        // -- faccio la richiesta
+        const res = await API.fetch('/auth/quick-sign-in', {
+            method: 'POST',
+            body: {
+                credentials: Bytes.base64.to(encrypted_credentials)
+            }
+        });
+        if (!res) return false;
+        const { id } = res;
+        const key_hex = Bytes.hex.to(key);
+        // -- compongo l'url
+        const url = `http://localhost:3000/signin?id=${id}&key=${key_hex}`;
+        return url;
     }
     /**
      * Tenta di avviare automaticamente una sessione
