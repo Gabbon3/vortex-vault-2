@@ -450,7 +450,7 @@
         <h3 class="icon slider" slider="cont-mfa">
             <span class="material-symbols-rounded">phonelink_lock</span>
             MFA
-            <span class="material-symbols-rounded warning">id_card</span>
+            <span class="material-symbols-rounded warning" title="Email verification required">id_card</span>
         </h3>
         <div id="cont-mfa" class="isle bg-3" style="display: none;">
             <p>
@@ -510,7 +510,7 @@
         <h3 class="icon slider" slider="form-change-password">
             <span class="material-symbols-rounded">key</span>
             Change Password
-            <span class="material-symbols-rounded warning">vpn_key</span>
+            <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
         </h3>
         <form id="form-change-password" class="isle bg-3" style="display: none;">
             <p>
@@ -549,7 +549,7 @@
         <h3 class="icon slider" slider="cont-rec-code">
             <span class="material-symbols-rounded">lock_reset</span>
             Recovery Code
-            <span class="material-symbols-rounded warning">vpn_key</span>
+            <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
         </h3>
         <div id="cont-rec-code" class="isle bg-3" style="display: none;">
             <p>
@@ -586,6 +586,7 @@
         <h3 class="icon slider" slider="cont-fsi">
             <span class="material-symbols-rounded">id_card</span>
             Quick Sign-in
+            <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
         </h3>
         <div id="cont-fsi" class="isle bg-3" style="display: none;">
             <p>
@@ -610,6 +611,13 @@
                 </button>
             </form>
             <canvas id="qrcode-fsi"></canvas>
+        </div>
+        <hr>
+        <div class="flex gap-50">
+            <button class="btn danger" id="logout-btn">
+                <span class="material-symbols-rounded">logout</span>
+                Sign-out
+            </button>
         </div>
     </div>
     <!-- FOOTER -->

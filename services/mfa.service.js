@@ -1,4 +1,4 @@
-import { Bytes } from '../public/utils/bytes.js';
+import { Bytes } from '../utils/bytes.js';
 import { AES256GCM } from '../utils/aesgcm.js';
 import { Cripto } from '../utils/cryptoUtils.js';
 import dotenv from "dotenv";

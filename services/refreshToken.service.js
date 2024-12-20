@@ -2,6 +2,7 @@ import { UAParser } from "ua-parser-js";
 import { RefreshToken } from "../models/refreshToken.js";
 import { UID } from "../utils/uid.js";
 import { Cripto } from "../utils/cryptoUtils.js";
+import { RamDB } from "../config/ramdb.js";
 
 export class RefreshTokenService {
     static random_c_length = 10;
@@ -12,14 +13,19 @@ export class RefreshTokenService {
      * @param {string} ip_address
      * @returns {string}
      */
-    async create(user_id, user_agent, ip_address) {
+    async create(user_id, user_agent, ip_address, passKey) {
         const token_id = UID.generate(RefreshTokenService.random_c_length, true);
         // -- User Agent
         const ua = UAParser(user_agent);
         const user_agent_summary = `${ua.browser.name ?? ""}-${ua.browser.major ?? ""}-${ua.os.name ?? ""}-${ua.os.version ?? ""}`;
         const user_agent_hash = this.user_agent_hash(user_agent);
+        // -- verifico se la passKey è valida
+        const is_valid_passkey = RamDB.get('passKey' + passKey);
+        let count = 0;
+        // - se è valida elimino la chiave e lascio il refresh token valido
+        if (is_valid_passkey) RamDB.delete('passKey' + passKey);
+        else count = await this.count(user_id);
         // -- conto i refresh token
-        const count = await this.count(user_id);
         // -- se non ci sono token associati quindi si tratta del primo accesso
         // -- abilito il token, se no bisogna approvarlo
         const revoke_this_token = count > 0;

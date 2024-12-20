@@ -276,5 +276,3 @@ export class Bytes {
         return true;
     }
 }
-
-window.Bytes = Bytes;

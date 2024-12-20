@@ -6,6 +6,23 @@ import { Log } from "../utils/log.js";
 
 $(document).ready(async () => {
     /**
+     * Micro utility per l'accesso
+     */
+    const auth_success = async () => {
+        finestra.loader(true);
+        const session_started = await AuthService.start_session();
+        finestra.loader(false);
+        return session_started;
+    }
+    /**
+     * Verifico se ci sono dei parametri per l'accesso rapido
+     */
+    const quick_signin = await AuthService.quick_signin();
+    if (quick_signin) {
+        const session_started = auth_success();
+        if (session_started) Log.summon(0, `Authenticated as ${await LocalStorage.get('email-utente')}`);
+    }
+    /**
      * Provo ad accedere automaticamente
      */
     const saved_email = await LocalStorage.get('email-utente');
@@ -15,11 +32,10 @@ $(document).ready(async () => {
     document.getElementById('recovery-device-email-email').value = saved_email;
     document.getElementById('email').value = saved_email;
     // ---
-    if (saved_email) {
+    if (saved_email && !quick_signin) {
         setTimeout(async () => {
             if (confirm(`Access saved as ${saved_email}, continue?`)) {
-                finestra.loader(true);
-                const session_started = await AuthService.start_session();
+                const session_started = auth_success();
                 if (session_started) window.location.href = '/vault';
             }
         }, 1000);
@@ -31,7 +47,7 @@ $(document).ready(async () => {
         const { email, password } = elements;
         // ---
         finestra.loader(true);
-        if (await AuthService.login(email, password)) {
+        if (await AuthService.signin(email, password)) {
             $(form).trigger('reset');
             Log.summon(0, `Authenticated as ${email}`);
         } else {

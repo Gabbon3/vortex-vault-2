@@ -1,6 +1,6 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { Bytes } from "../public/utils/bytes.js";
+import { Bytes } from "../utils/bytes.js";
 import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
@@ -36,7 +36,7 @@ export class UserController {
      * @param {Response} res 
      */
     signin = async_handler(async (req, res) => {
-        const { email, password } = req.body;
+        const { email, password, passKey } = req.body;
         const refresh_token_cookie = req.cookies.refresh_token;
         if (!email || !password) {
             throw new CError("ValidationError", "Email and password are required", 422);
@@ -53,7 +53,7 @@ export class UserController {
             }
         }
         // -- Access Token
-        const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token);
+        const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
         const cke = Cripto.random_bytes(32, 'base64');
         this.set_token_cookies(res, { access_token, refresh_token, cke });
         // ---
@@ -70,6 +70,20 @@ export class UserController {
             cke,
             salt: user.salt
         });
+    });
+    /**
+     * Effettua la disconnessione eliminando i cookie e il refresh token
+     */
+    signout = async_handler(async (req, res) => {
+        const refresh_token = req.cookies.refresh_token;
+        // -- elimino il refresh token
+        await this.refresh_token_service.delete(refresh_token, req.user.uid);
+        // -- elimino i cookie
+        Object.keys(req.cookies).forEach((cookie_name) => {
+            res.clearCookie(cookie_name, { path: '/' });
+        });
+        // ---
+        res.status(200).json({ message: 'Disconnected' });
     });
     /**
      * Abilita l'autenticazione a 2 fattori
@@ -127,11 +141,24 @@ export class UserController {
     quick_signin = async_handler(async (req, res) => {
         const { credentials } = req.body;
         // ---
-        const id = 'fsi' + UID.generate(3, true); // fsi = fast sign-in
-        const is_set = RamDB.set(id, credentials, 150);
+        const id = UID.generate(6, true);
+        const is_set = 
+            RamDB.set('fsi' + id, credentials, 150) // fsi = fast sign-in 
+            && RamDB.set('passKey' + id, true, 150); // passKey = per saltare il controllo del refresh token
         if (!is_set) throw new Error("RamDB error");
         // ---
         res.status(201).json({ id });
+    });
+    /**
+     * Restituisce le credenziali cifrate di un utente che ha richiesto l'accesso rapido
+     */
+    get_quick_signin = async_handler(async (req, res) => {
+        const { id } = req.params;
+        const credentials = RamDB.get('fsi' + id);
+        if (!credentials) throw new CError("NotFoundError", "Credentials not found", 404);
+        RamDB.delete('fsi' + id);
+        // ---
+        res.status(200).json({ credentials });
     });
     /**
      * Verifica un email

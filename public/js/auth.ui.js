@@ -88,6 +88,23 @@ $(document).ready(() => {
         const url = await AuthService.request_quick_signin(password);
         if (url) {
             AuthUI.show_quick_signin(url);
+            $(form).trigger('reset');
+        } else if (url === null) {
+            Log.summon(2, "Invalid password");
+        }
+    });
+    /**
+     * SIGN-OUT
+     */
+    $('#logout-btn').on('click', async () => {
+        if (!confirm('Are you sure you want to sign out?')) return;
+        // ---
+        const signed_out = await AuthService.signout();
+        if (signed_out) {
+            Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
+            setTimeout(() => {
+                window.location.href = '/signin';
+            }, 3000);
         }
     });
 });
@@ -104,10 +121,19 @@ class AuthUI {
             margin: 2,
             color: {
                 dark: "#FFFFFF",
-                light: "#272727"
+                light: "#302929"
             }
         });
         canvas.style.height = 200;
+        // -- copio negli appunti il link
+        navigator.clipboard.writeText(url);
+        // --
+        setTimeout(() => {
+            Log.summon(1, "Pay attention! The Qr Code will be hidden in 30 seconds");
+            setTimeout(() => {
+                canvas.style.height = 0;
+            }, 30000);
+        }, 1000);
     }
     /**
      * Abilita MFA e lo mostra nell'html
@@ -128,7 +154,7 @@ class AuthUI {
             margin: 2,
             color: {
                 dark: "#FFFFFF",
-                light: "#272727"
+                light: "#302929"
             }
         });
         canvas.style.height = 200;

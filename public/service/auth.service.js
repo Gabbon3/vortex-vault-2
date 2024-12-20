@@ -15,10 +15,10 @@ export class AuthService {
      * @param {string} password 
      * @returns {boolean}
      */
-    static async login(email, password) {
-        const res = await API.fetch('/auth/accedi', {
+    static async signin(email, password, passKey = null) {
+        const res = await API.fetch('/auth/signin', {
             method: 'POST',
-            body: { email, password },
+            body: { email, password, passKey },
         });
         if (!res) return false;
         // -- derivo la chiave crittografica
@@ -49,6 +49,19 @@ export class AuthService {
         });
         if (!res) return false;
         // -- cifro le credenziali sul localstorage
+        return true;
+    }
+    /**
+     * Effettua il logout eliminando ogni traccia dell'utente dal client
+     */
+    static async signout() {
+        const res = await API.fetch('/auth/signout', {
+            method: 'POST',
+        });
+        if (!res) return false;
+        // ---
+        localStorage.clear();
+        sessionStorage.clear();
         return true;
     }
     /**
@@ -180,7 +193,7 @@ export class AuthService {
      * @returns {string} url per accedere
      */
     static async request_quick_signin(password) {
-        const verify_password = this.verify_master_password(password);
+        const verify_password = await this.verify_master_password(password);
         if (!verify_password) return null;
         // ---
         const email = await LocalStorage.get('email-utente');
@@ -200,10 +213,31 @@ export class AuthService {
         });
         if (!res) return false;
         const { id } = res;
-        const key_hex = Bytes.hex.to(key);
+        const key_base64 = Bytes.base64.to(key, true);
         // -- compongo l'url
-        const url = `http://localhost:3000/signin?id=${id}&key=${key_hex}`;
+        const url = `https://vortexvault.fly.dev/signin?id=${id}&key=${key_base64}`;
         return url;
+    }
+    /**
+     * Restituisce le credenziali utente
+     * @returns {boolean}
+     */
+    static async quick_signin() {
+        const { id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        if (!id || !key_base64) return false;
+        // -- ottengo dal server le credenziali
+        const res = await API.fetch(`/auth/quick-sign-in/${id}`, {
+            method: 'GET'
+        });
+        if (!res) return false;
+        const { credentials: base64_credentials } = res;
+        // -- decifro
+        const key = Bytes.base64.from(key_base64, true);
+        const encrypted_credentials = Bytes.base64.from(base64_credentials);
+        const credentials = await AES256GCM.decrypt(encrypted_credentials, key);
+        const [email, password] = msgpack.decode(credentials);
+        // -- eseguo l'accesso passando la passkey
+        return await AuthService.signin(email, password, id);
     }
     /**
      * Tenta di avviare automaticamente una sessione

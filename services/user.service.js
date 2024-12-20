@@ -39,9 +39,10 @@ export class UserService {
      * @param {string} password 
      * @param {string} user_agent 
      * @param {string} ip_address
-     * @returns {Object} - access_token, user
+     * @param {string} passKey
+     * @returns {{ access_token: string, refresh_token: string, user: User }} - access_token, user
      */
-    async signin(email, password, user_agent, ip_address, refresh_token = null) {
+    async signin(email, password, user_agent, ip_address, refresh_token, passKey) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { email }
@@ -53,7 +54,7 @@ export class UserService {
         if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
         // -- Refresh Token
         if (!refresh_token) {
-            refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address);
+            refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
             // -- avviso l'utente se un nuovo dispositivo accede
             if (refresh_token.is_revoked) {
                 // -- ottengo il testo
