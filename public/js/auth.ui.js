@@ -84,8 +84,7 @@ $(document).ready(() => {
      * QUICK SIGN-IN
      */
     Form.onsubmit('form-fsi', async (form, elements) => {
-        const { password } = elements;
-        const url = await AuthService.request_quick_signin(password);
+        const url = await AuthService.request_quick_signin();
         if (url) {
             AuthUI.show_quick_signin(url);
             $(form).trigger('reset');

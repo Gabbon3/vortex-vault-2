@@ -27,6 +27,7 @@ export class AuthService {
         // -- cifro le credenziali sul localstorage
         const cke_buffer = Bytes.base64.from(res.cke);
         await LocalStorage.set('email-utente', email);
+        await LocalStorage.set('password-utente', password, key);
         await LocalStorage.set('master-key', key, cke_buffer);
         await LocalStorage.set('salt', salt, cke_buffer);
         SessionStorage.set('master-key', key);
@@ -189,12 +190,11 @@ export class AuthService {
     }
     /**
      * Genera una richiesta di accesso rapido
-     * @param {string} password
      * @returns {string} url per accedere
      */
-    static async request_quick_signin(password) {
-        const verify_password = await this.verify_master_password(password);
-        if (!verify_password) return null;
+    static async request_quick_signin() {
+        const password = await LocalStorage.get('password-utente', VaultService.master_key);
+        if (!password) return null;
         // ---
         const email = await LocalStorage.get('email-utente');
         const credentials = msgpack.encode([
