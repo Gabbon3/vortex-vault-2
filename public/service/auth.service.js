@@ -216,6 +216,8 @@ export class AuthService {
         if (!id || !key_base64) return false;
         // -- ottengo dal server le credenziali
         const [email, password] = await SecureLink.get('qsi', id, key_base64);
+        if (!email || !password) return false;
+        window.history.replaceState(null, '', window.location.origin + window.location.pathname);
         // -- eseguo l'accesso passando la passkey
         return await AuthService.signin(email, password, id);
     }

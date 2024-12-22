@@ -234,7 +234,7 @@ export class VaultUI {
             DeviceUI.init();
             // ---
             finestra.loader(false);
-            if (timeout > 0) Log.summon(0, `Signed as ${SessionStorage.get('email')}`);
+            if (timeout > 0) Log.summon(0, `Welcome back ${SessionStorage.get('email')}`);
         }, timeout);
     }
     /**
