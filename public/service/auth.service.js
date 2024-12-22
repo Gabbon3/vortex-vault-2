@@ -6,7 +6,7 @@ import { API } from "../utils/api.js";
 import { AES256GCM } from "../secure/aesgcm.js";
 import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
-import msgpack from "../utils/msgpack.min.js";
+import { SecureLink } from "../utils/secure-link.js";
 
 export class AuthService {
     /**
@@ -197,25 +197,14 @@ export class AuthService {
         if (!password) return null;
         // ---
         const email = await LocalStorage.get('email-utente');
-        const credentials = msgpack.encode([
-            email,
-            password
-        ]);
-        // -- cifro le credenziali
-        const key = Cripto.random_bytes(32);
-        const encrypted_credentials = await AES256GCM.encrypt(credentials, key);
-        // -- faccio la richiesta
-        const res = await API.fetch('/auth/quick-sign-in', {
-            method: 'POST',
-            body: {
-                credentials: Bytes.base64.to(encrypted_credentials)
-            }
+        const { id, key } = await SecureLink.generate({
+            scope: 'qsi',
+            ttl: 60 * 3,
+            data: [email, password],
+            passKey: true,
         });
-        if (!res) return false;
-        const { id } = res;
-        const key_base64 = Bytes.base64.to(key, true);
         // -- compongo l'url
-        const url = `https://vortexvault.fly.dev/signin?id=${id}&key=${key_base64}`;
+        const url = `https://vortexvault.fly.dev/signin?id=${id}&key=${key}`;
         return url;
     }
     /**
@@ -226,16 +215,7 @@ export class AuthService {
         const { id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
         if (!id || !key_base64) return false;
         // -- ottengo dal server le credenziali
-        const res = await API.fetch(`/auth/quick-sign-in/${id}`, {
-            method: 'GET'
-        });
-        if (!res) return false;
-        const { credentials: base64_credentials } = res;
-        // -- decifro
-        const key = Bytes.base64.from(key_base64, true);
-        const encrypted_credentials = Bytes.base64.from(base64_credentials);
-        const credentials = await AES256GCM.decrypt(encrypted_credentials, key);
-        const [email, password] = msgpack.decode(credentials);
+        const [email, password] = await SecureLink.get('qsi', id, key_base64);
         // -- eseguo l'accesso passando la passkey
         return await AuthService.signin(email, password, id);
     }

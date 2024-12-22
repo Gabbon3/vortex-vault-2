@@ -8,8 +8,10 @@ import vault_routes from './routes/vault.routes.js';
 import cke_routes from './routes/cke.routes.js';
 import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
+import secure_link_routes from './routes/secure-link.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
+// import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
 
 /**
@@ -29,6 +31,7 @@ app.use('/auth/cke', cke_routes);
 app.use('/auth/token', token_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);
+app.use('/secure-link', secure_link_routes);
 /**
  * Pubbliche
  */

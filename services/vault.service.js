@@ -4,7 +4,7 @@ import { UID } from "../utils/uid.js";
 import { sequelize } from "../config/db.js";
 
 export class VaultService {
-    static id_random_length = 5;
+    static id_random_length = 8;
     /**
      * Crea un nuovo vault sul db
      * @param {number} user_id 

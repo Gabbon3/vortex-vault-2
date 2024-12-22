@@ -20,10 +20,10 @@ export class RefreshTokenService {
         const user_agent_summary = `${ua.browser.name ?? ""}-${ua.browser.major ?? ""}-${ua.os.name ?? ""}-${ua.os.version ?? ""}`;
         const user_agent_hash = this.user_agent_hash(user_agent);
         // -- verifico se la passKey è valida
-        const is_valid_passkey = RamDB.get('passKey' + passKey);
+        const is_valid_passkey = RamDB.get(`pk${passKey}`);
         let count = 0;
         // - se è valida elimino la chiave e lascio il refresh token valido
-        if (is_valid_passkey) RamDB.delete('passKey' + passKey);
+        if (is_valid_passkey) RamDB.delete(`pk${passKey}`);
         else count = await this.count(user_id);
         // -- conto i refresh token
         // -- se non ci sono token associati quindi si tratta del primo accesso
