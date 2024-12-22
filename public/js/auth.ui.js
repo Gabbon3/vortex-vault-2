@@ -126,6 +126,7 @@ class AuthUI {
         canvas.style.height = 200;
         // -- copio negli appunti il link
         navigator.clipboard.writeText(url);
+        Log.summon(0, 'Link copied into your clipboard');
         // --
         setTimeout(() => {
             Log.summon(1, "Pay attention! The Qr Code will be hidden in 30 seconds");

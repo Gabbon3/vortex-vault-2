@@ -141,7 +141,7 @@ export class UserController {
     quick_signin = async_handler(async (req, res) => {
         const { credentials } = req.body;
         // ---
-        const id = UID.generate(6, true);
+        const id = UID.generate();
         const is_set = 
             RamDB.set('fsi' + id, credentials, 150) // fsi = fast sign-in 
             && RamDB.set('passKey' + id, true, 150); // passKey = per saltare il controllo del refresh token

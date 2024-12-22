@@ -1,4 +1,4 @@
-import msgpack from 'msgpack-lite';
+import msgpack from "msgpack-lite";
 
 export class RamDB {
     static db = {};
@@ -8,8 +8,8 @@ export class RamDB {
     /**
      * Imposta un valore nel ramdb, serializzato con msgpack
      * ha una scadenza di default di 1 ora che non puo essere superata
-     * @param {string} key 
-     * @param {*} value 
+     * @param {string} key
+     * @param {*} value
      * @param {number} ttl - seconds - 0 > ttl => 3600
      * @returns {boolean}
      */
@@ -19,7 +19,7 @@ export class RamDB {
         let encoded_value = null;
         // -- prima provo a convertire
         try {
-            encoded_value = msgpack.encode(value)
+            encoded_value = msgpack.encode(value);
         } catch (error) {
             console.warn("RAMDB: Error while encoding " + key + error);
             return false;
@@ -27,7 +27,7 @@ export class RamDB {
         // -- poi elimino il vecchio dato se si sta rimpiazzando
         if (this.has(key)) this.delete(key);
         // ---
-        const expire = Date.now() + (ttl * 1000);
+        const expire = Date.now() + ttl * 1000;
         // -- memorizzo il dato
         this.db[key] = [encoded_value, expire];
         // ---
@@ -35,7 +35,7 @@ export class RamDB {
     }
     /**
      * Verifica se un dato esiste nel db
-     * @param {string} key 
+     * @param {string} key
      * @returns {boolean}
      */
     static has(key) {
@@ -43,7 +43,7 @@ export class RamDB {
     }
     /**
      * Restituisce un valore dal ramdb
-     * @param {string} key 
+     * @param {string} key
      * @returns {*}
      */
     static get(key) {
@@ -52,7 +52,10 @@ export class RamDB {
         // -- controllo se scaduto
         const record = this.db[key];
         const expire = record[1];
-        if (Date.now() > expire) return null;
+        if (Date.now() > expire) {
+            this.delete(key);
+            return null;
+        }
         // ---
         try {
             const decoded_value = msgpack.decode(record[0]);
@@ -64,7 +67,7 @@ export class RamDB {
     }
     /**
      * Elimina un record dal db
-     * @param {string} key 
+     * @param {string} key
      * @returns {boolean}
      */
     static delete(key) {
@@ -81,20 +84,24 @@ export class RamDB {
         this.db = {};
     }
     /**
-     * Periodicamente vengono controllati i record scaduti 
+     * Periodicamente vengono controllati i record scaduti
      * e se lo sono vengono eliminati
      */
     static start_cleanup() {
         if (this.cleanup) return;
         this.cleanup = true;
-        setInterval(() => {
+        // ---
+        const cleanupFn = () => {
             const now = Date.now();
             for (const key in this.db) {
-                if (this.db[key].expire <= now) {
-                    this.delete(key); // Elimina i record scaduti
+                if (this.db[key][1] <= now) {
+                    this.delete(key);
                 }
             }
-        }, this.cleanup_interval);
+            setTimeout(cleanupFn, this.cleanup_interval);
+        };
+        // ---
+        cleanupFn();
     }
 }
 
