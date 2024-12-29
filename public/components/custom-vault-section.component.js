@@ -31,12 +31,12 @@ class CustomVaultSection extends HTMLElement {
         const iconMap = [
             { keywords: ["username", "user", "utente", "profilo"], svg: "person" },
             { keywords: ["password", "psw", "codice"], svg: "key_vertical" },
-            { keywords: ["chiave", "key", "accesso"], svg: "key" },
+            { keywords: ["chiave", "key", "accesso", "secret"], svg: "key" },
             { keywords: ["titolo", "nome", "label"], svg: "tag" },
             { keywords: ["private", "privato", "sicuro"], svg: "lock" },
             { keywords: ["mail", "email", "posta"], svg: "alternate_email" },
             { keywords: ["note", "info", "informazioni"], svg: "info" },
-            { keywords: ["pin", "number", "numero"], svg: "pin" },
+            { keywords: ["pin", "number", "numero", "cvv"], svg: "pin" },
             { keywords: ["codice", "code"], svg: "password" },
             { keywords: ["address", "indirizzo", "location", "via"], svg: "location_on" },
             { keywords: ["card", "credito", "debit", "carta", "visa", "mastercard"], svg: "credit_card" },
@@ -48,6 +48,7 @@ class CustomVaultSection extends HTMLElement {
             { keywords: ["security", "domanda", "answer", "risposta"], svg: "help" },
             { keywords: ["bank", "conto", "iban", "swift", "banca"], svg: "account_balance" },
             { keywords: ["personal", "note", "appunto", "memo"], svg: "sticky_note_2" },
+            { keywords: ["date"], svg: "calendar_today" }
         ];
         // -- cerco l'icona
         svg = iconMap.find((item) =>
