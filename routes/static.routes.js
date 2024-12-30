@@ -27,7 +27,6 @@ router.get('/:page', async (req, res) => {
         await fs.access(requested_file, fs.constants.F_OK);
         res.sendFile(requested_file);
     } catch (err) {
-        // console.log(err);
         // se il file non esiste 404
         res.status(404).send('File not found');
     }

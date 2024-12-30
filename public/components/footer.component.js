@@ -20,6 +20,13 @@ class Footer extends HTMLElement {
                 </svg>
             </div>
         </div>
+
+        <!-- 
+        QRCODE DISPLAY
+        -->
+        <div class="window auto" id="win-qrcode-display">
+            <canvas id="qrcode-display"></canvas>
+        </div>
         `;
     }
 }

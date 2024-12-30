@@ -113,7 +113,10 @@ export class VaultService {
                     secrets: secrets_buffer,
                     createdAt,
                     updatedAt
-                }, { transaction: t });
+                }, { 
+                    transaction: t,
+                    silent: true
+                });
             }
             // -- committo la transazione
             await t.commit();

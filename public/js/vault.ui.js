@@ -3,12 +3,12 @@ import { AuthService } from "../service/auth.service.js";
 import { Form } from "../utils/form.js";
 import { Log } from "../utils/log.js";
 import { date } from "../utils/dateUtils.js";
-import { finestra } from "../components/main.components.js";
-import { FileUtils } from "../utils/file.utils.js";
+import { Windows } from "../utils/windows.js";
 import { Search } from "../utils/search.js";
 import { ptg } from "../utils/ptg.js";
 import { SessionStorage } from "../utils/session.js";
-import { DeviceUI } from "./device.js";
+import { DeviceUI } from "./device.ui.js";
+import { LocalStorage } from "../utils/local.js";
 
 $(document).ready(async () => {
     if (window.location.pathname !== '/vault') return;
@@ -19,10 +19,10 @@ $(document).ready(async () => {
     Form.onsubmit("form-create-vault", async (form, elements) => {
         if (!confirm(`Have you entered everything for ${elements.T}`)) return;
         // ---
-        finestra.loader(true);
+        Windows.loader(true);
         if (await VaultService.create(elements)) {
             Log.summon(0, `${elements.T} saved`);
-            finestra.close('win-create-vault');
+            Windows.close('win-create-vault');
             $(form).trigger("reset");
             document.getElementById('custom-sections-new-vault').innerHTML = '';
             setTimeout(() => {
@@ -31,7 +31,7 @@ $(document).ready(async () => {
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
         }
-        finestra.loader(false);
+        Windows.loader(false);
     });
     /**
      * NEW VAULT CUSTOM SECTION
@@ -70,11 +70,11 @@ $(document).ready(async () => {
         const { vault_id } = elements;
         delete elements.vault_id;
         // ---
-        finestra.loader(true);
+        Windows.loader(true);
         // ---
         if (await VaultService.update(vault_id, elements)) {
             Log.summon(0, `${elements.T} edited`);
-            finestra.close('win-update-vault');
+            Windows.close('win-update-vault');
             $(form).trigger("reset");
             setTimeout(() => {
                 VaultUI.init_db_dom();
@@ -82,7 +82,7 @@ $(document).ready(async () => {
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
         }
-        finestra.loader(false);
+        Windows.loader(false);
     });
     /**
      * ON CLICK VAULT-LI UPDATE
@@ -101,7 +101,7 @@ $(document).ready(async () => {
     }
     $('#vaults-list').on('click', 'vault-li', (e) => {
         const id = $(e.currentTarget).attr('id');
-        finestra.open('win-update-vault');
+        Windows.open('win-update-vault');
         // --
         const vault = VaultService.get_vault(id);
         const strength_value = ptg.test(vault.secrets.P).average;
@@ -134,9 +134,9 @@ $(document).ready(async () => {
     $('#btn-sync-vault').on('click', async () => {
         if (!confirm('Do you confirm that you want to synchronize with the server?')) return;
         // ---
-        finestra.loader(true);
+        Windows.loader(true);
         await VaultService.syncronize(true);
-        finestra.loader(false);
+        Windows.loader(false);
         VaultUI.html_vaults(VaultService.vaults);
         VaultUI.html_used_usernames(VaultService.used_usernames);
     });
@@ -149,16 +149,16 @@ $(document).ready(async () => {
         const title = vault.secrets.T;
         if (!confirm(`Are you sure you want to delete permanently ${title}?`)) return;
         // ---
-        finestra.loader(true);
+        Windows.loader(true);
         // ---
         if (await VaultService.delete(vault_id)) {
             Log.summon(0, `${title} deleted`);
-            finestra.close('win-update-vault');
+            Windows.close('win-update-vault');
             VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Error while deleting ${title}`);
         }
-        finestra.loader(false);
+        Windows.loader(false);
     });
     /**
      * SEARCH VAULT
@@ -207,6 +207,18 @@ $(document).ready(async () => {
         if (!curr_order) return;
         VaultUI.html_vaults(VaultService.vaults, curr_order);
     });
+    /**
+     * Vista dei vault
+     */
+    const vaults_grid = document.getElementById('vaults-list');
+    let vaults_view_active = await LocalStorage.get('vaults-view') ?? false;
+    if (vaults_view_active) vaults_grid.classList.toggle('list');
+    $('.vaults-view').on('click', () => {
+        vaults_grid.classList.toggle('list');
+        // ---
+        vaults_view_active = !vaults_view_active;
+        LocalStorage.set('vaults-view', vaults_view_active);
+    })
 });
 
 export class VaultUI {
@@ -220,7 +232,7 @@ export class VaultUI {
         let timeout = 0;
         // -- se non ci sono provo ad avviare la sessione
         if (!configured) {
-            finestra.loader(true);
+            Windows.loader(true);
             const started = await AuthService.start_session();
             // --- se non viene avviata fermo e restituisco errore
             if (!started) return Log.summon(2, "Not able to get Cripto Key, please sign in");
@@ -233,7 +245,7 @@ export class VaultUI {
             this.init_db_dom();
             DeviceUI.init();
             // ---
-            finestra.loader(false);
+            Windows.loader(false);
             if (timeout > 0) Log.summon(0, `Welcome back ${SessionStorage.get('email')}`);
         }, timeout);
     }

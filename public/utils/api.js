@@ -1,4 +1,4 @@
-import { finestra } from "../components/main.components.js";
+import { Windows } from "./windows.js";
 import { CError } from "./error.js";
 
 export class API {
@@ -64,7 +64,7 @@ export class API {
                     return null;
             }
         } catch (error) {
-            finestra.loader(false);
+            Windows.loader(false);
             // -- gestisco eventuali errori nella chiamata
             console.warn(`fetch error: ${error.message}`);
             return null;
