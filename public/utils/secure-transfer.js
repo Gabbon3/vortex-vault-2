@@ -48,7 +48,7 @@ export class SecureTransfer {
         // -- unisco l'id ai dati cifrati
         const data = Bytes.merge([salt, encrypted_data], 8);
         // -- calcolo l'id della richiesta unendo lo scope con lo SHA-1(codice)
-        const request_id = options.scope + await Cripto.hash(options.code, { algorithm: 'SHA-1' });
+        const request_id = options.scope + Bytes.base64.to(await Cripto.hash(options.code, { algorithm: 'SHA-1' }), true);
         // -- invio al server
         const res = await API.fetch('/secure-transfer/', {
             method: 'POST',
@@ -70,7 +70,7 @@ export class SecureTransfer {
      */
     static async get(scope, code) {
         // -- calcolo l'id della richiesta
-        const request_id = scope + await Cripto.hash(code, { algorithm: 'SHA-1' });
+        const request_id = scope + Bytes.base64.to(await Cripto.hash(code, { algorithm: 'SHA-1' }), true);
         // -- ottengo le risorse
         const res = await API.fetch(`/secure-transfer/${request_id}`, {
             method: 'GET'
