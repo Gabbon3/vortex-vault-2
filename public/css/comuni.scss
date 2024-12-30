@@ -142,6 +142,13 @@ h5 {
             }
         }
     }
+
+    &.code {
+        font-family: $monospace;
+        justify-content: center;
+        letter-spacing: 10px;
+        color: $c1;
+    }
 }
 
 p {
@@ -415,14 +422,18 @@ monospace {
     font-size: $fs-m;
     resize: none;
 
-    &[disabled],
+    &.fs-l {
+        font-size: $fs-l;
+    }
+
     &:read-only {
-        color: $text-color-2;
+        cursor: default;
     }
 
     &[disabled] {
         opacity: 0.5;
         cursor: not-allowed;
+        color: $text-color-2;
     }
 
     &.mfa {

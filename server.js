@@ -9,6 +9,7 @@ import cke_routes from './routes/cke.routes.js';
 import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
+import secure_transfer_routes from './routes/secure-transfer.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 // import { UID } from './utils/uid.js';
@@ -32,6 +33,7 @@ app.use('/auth/token', token_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);
 app.use('/secure-link', secure_link_routes);
+app.use('/secure-transfer', secure_transfer_routes);
 /**
  * Pubbliche
  */

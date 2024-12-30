@@ -3,8 +3,10 @@ import { AuthService } from "../service/auth.service.js";
 import { Form } from "../utils/form.js";
 import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
+import { SecureTransfer } from "../utils/secure-transfer.js";
 
 $(document).ready(async () => {
+    SignInUI.init();
     /**
      * Micro utility per l'accesso
      */
@@ -39,10 +41,7 @@ $(document).ready(async () => {
     // ---
     if (saved_email && !quick_signin) {
         setTimeout(async () => {
-            if (confirm(`Access saved as ${saved_email}, continue?`)) {
-                const session_started = auth_success();
-                if (session_started) window.location.href = '/vault';
-            }
+            Log.summon(3, `Access saved as ${saved_email}`);
         }, 1000);
     }
     /**
@@ -109,4 +108,44 @@ $(document).ready(async () => {
         }
         Windows.loader(false);
     });
+    /**
+     * Generate code
+     */
+    $('#btn-request-sign-in').on('click', () => {
+        SignInUI.generate_code();
+    });
+    /**
+     * GET SHARED SIGN-IN CREDENTIALS
+     */
+    Form.onsubmit('get-ssic', async (form, elements) => {
+        const { code } = elements;
+        // ---
+        const res = await SecureTransfer.get('ssic', code);
+        if (!res) return;
+        const [email, password] = res.data;
+        const passKey = res.passKey;
+        // ---
+        if (await AuthService.signin(email, password, passKey)) {
+            Log.summon(0, `Hi ${email}`);
+            $(form).trigger('reset');
+            Windows.loader(true);
+            setTimeout(() => {
+                window.location.href = '/vault';
+            }, 3000);
+        }
+    });
 });
+
+class SignInUI {
+    static rsicode = null;
+    static init() {
+        this.rsicode = document.getElementById('rsicode');
+        this.generate_code();
+    }
+    /**
+     * Genera un codice casuale
+     */
+    static generate_code() {
+        this.rsicode.value = SecureTransfer.random_code();
+    }
+}

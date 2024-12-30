@@ -7,6 +7,7 @@ import { AES256GCM } from "../secure/aesgcm.js";
 import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
+import { SecureTransfer } from "../utils/secure-transfer.js";
 
 export class AuthService {
     /**

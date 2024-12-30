@@ -7,6 +7,8 @@ import { VortexNavbar } from "../components/navbar.component.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../../utils/windows.js";
+import { SecureTransfer } from "../utils/secure-transfer.js";
+import { SessionStorage } from "../utils/session.js";
 
 $(document).ready(() => {
     /**
@@ -101,9 +103,30 @@ $(document).ready(() => {
         const signed_out = await AuthService.signout();
         if (signed_out) {
             Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
+            Windows.loader(true);
             setTimeout(() => {
                 window.location.href = '/signin';
             }, 3000);
+        }
+    });
+    /**
+     * SHARE SIGN-IN CREDENTIALS
+     */
+    Form.onsubmit('form-ssic', async (form, elements) => {
+        const { code } = elements;
+        // -- recupero i dati
+        const data = [await LocalStorage.get('email-utente'), await LocalStorage.get('password-utente', SessionStorage.get('master-key'))];
+        // ---
+        const res = await SecureTransfer.set({
+            scope: "ssic",
+            code,
+            ttl: 120,
+            passKey: true,
+            data
+        });
+        if (res) {
+            Log.summon(0, 'Credentials shared successfully, will be invalidated in 2 minutes');
+            $(form).trigger('reset');
         }
     });
 });

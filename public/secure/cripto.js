@@ -17,6 +17,8 @@ export class Cripto {
             return Bytes.hex.to(bytes);
         } else if (encoding === 'base64') {
             return Bytes.base64.to(bytes);
+        } else if (encoding === 'base64url') {
+            return Bytes.base64.to(bytes, true);
         } else {
             return bytes;
         }
@@ -36,7 +38,7 @@ export class Cripto {
      * @param {number} size 
      * @returns {string}
      */
-    static random_recovery_code(size = 20) {
+    static random_alphanumeric_code(size = 20, divisor = '-') {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         let recovery_code = "";
         // ---
@@ -44,7 +46,7 @@ export class Cripto {
             recovery_code += chars[Math.floor(this.random_ratio() * chars.length)];
         }
         // ---
-        return recovery_code.match(/.{1,4}/g).join('-');
+        return divisor ? recovery_code.match(/.{1,4}/g).join(divisor) : recovery_code;
     }
 
     /**
@@ -74,6 +76,8 @@ export class Cripto {
             return Bytes.hex.to(new Uint8Array(hmac_buffer));
         } else if (options.output_encoding === 'base64') {
             return Bytes.base64.to(new Uint8Array(hmac_buffer));
+        } else if (options.encoding === 'base64url') {
+            return Bytes.base64.to(hmac_buffer, true);
         } else {
             return new Uint8Array(hmac_buffer);
         }
@@ -97,6 +101,8 @@ export class Cripto {
             return Bytes.hex.to(new Uint8Array(hashBuffer));
         } else if (options.encoding === 'base64') {
             return Bytes.base64.to(new Uint8Array(hashBuffer));
+        } else if (options.encoding === 'base64url') {
+            return Bytes.base64.to(new Uint8Array(hashBuffer), true);
         } else {
             return new Uint8Array(hashBuffer);
         }

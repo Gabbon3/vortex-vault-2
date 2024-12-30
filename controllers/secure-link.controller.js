@@ -16,7 +16,7 @@ export class SecureLinkController {
         // -- imposto sul ramdb
         const is_set = 
             RamDB.set(`${scope}sl${id}`, data, ttl)
-            && passKey ? RamDB.set(`pk${id}`, true, ttl) : true; // pk = pass key
+            && passKey ? RamDB.set(`pk${id}`, true, 120) : true; // pk = pass key
         if (!is_set) throw new Error("RamDB error");
         // --
         res.status(201).json({ id });
