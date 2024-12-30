@@ -388,6 +388,7 @@ p a {
   color: #738e54;
   text-decoration: none;
   border-bottom: 2px dashed #738e54;
+  cursor: pointer;
 }
 p a:hover {
   border-bottom: 2px solid #738e54;
@@ -615,6 +616,9 @@ monospace {
 .input-text.fs-l {
   font-size: 1.2em;
 }
+.input-text.uppercase {
+  text-transform: uppercase;
+}
 .input-text:read-only {
   cursor: default;
 }
@@ -812,8 +816,8 @@ vortex-navbar {
   --i-color: #738e54;
 }
 #logs_container log-info._3 {
-  --bc-log: rgba(130, 147, 169, 0.2);
-  --i-color: rgb(196, 210, 224);
+  --bc-log: rgba(115, 142, 84, 0.2);
+  --i-color: #7b955c;
 }
 #logs_container log-info .i-container {
   height: 100%;

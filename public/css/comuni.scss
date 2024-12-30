@@ -161,6 +161,7 @@ p {
         color: $c2;
         text-decoration: none;
         border-bottom: 2px dashed $c2;
+        cursor: pointer;
 
         &:hover {
             border-bottom: 2px solid $c2;
@@ -424,6 +425,10 @@ monospace {
 
     &.fs-l {
         font-size: $fs-l;
+    }
+
+    &.uppercase {
+        text-transform: uppercase;
     }
 
     &:read-only {

@@ -23,7 +23,7 @@
                 Sign In
             </h2>
             <p class="secondary">
-                Don't have an account? <a href="/signup">Sign Up</a>
+                Your device is locked? <a class="open" data-target-open="win-device-recovery">Recover device</a> <br>
             </p>
             <!-- --- -->
             <label for="email">
@@ -37,22 +37,15 @@
                 Password
             </label>
             <input type="password" class="input-text" id="password" name="password" required>
+            <p class="description">
+                Forgot your password? <a class="open" data-target-open="win-password-recovery">Recover password</a> <br>
+            </p>
             <!-- --- -->
             <hr>
             <button type="submit" class="btn primary w-100 mb-2">
                 <span class="material-symbols-rounded">login</span>
                 Sign In
             </button>
-            <div class="flex gap-50 d-row mb-2">
-                <button type="button" class="btn warning fg-1 open" data-target-open="win-device-recovery">
-                    <span class="material-symbols-rounded">mobile_friendly</span>
-                    Device Recovery
-                </button>
-                <button type="button" class="btn warning fg-1 open" data-target-open="win-password-recovery">
-                    <span class="material-symbols-rounded">lock_reset</span>
-                    Password Recovery
-                </button>
-            </div>
             <button type="button" class="btn warning w-100 open" data-target-open="win-request-sign-in">
                 <span class="material-symbols-rounded">id_card</span>
                 Request Sign-in
@@ -174,7 +167,7 @@
         </div>
     </div>
     <!-- 
-    REQUEST SIGN-IN
+    SIGN-IN WITH SHARED SIGN-IN CREDENTIALS
     -->
     <div class="window m" id="win-request-sign-in">
         <div class="flex y-center">
@@ -197,6 +190,9 @@
         <form id="get-ssic" class="isle bg-3">
             <!-- CODE -->
             <input name="code" maxlength="8" type="text" class="input-text mfa mb-2 fs-l" id="rsicode" autocomplete="off" required readonly>
+            <p class="description">
+                Enter this code into another authenticated device.
+            </p>
             <!-- SUBMIT -->
             <button type="submit" class="btn primary">
                 <span class="material-symbols-rounded">login</span>
