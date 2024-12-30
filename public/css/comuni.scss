@@ -343,6 +343,12 @@ hr {
         opacity: 1;
     }
 
+    &.auto {
+        overflow: hidden !important;
+        width: auto;
+        height: auto;
+    }
+
     // small
     &.s {
         max-width: 400px;

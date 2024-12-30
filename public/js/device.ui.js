@@ -1,6 +1,6 @@
-import { finestra } from "../components/main.components.js";
 import { DeviceService } from "../service/device.service.js";
 import { date } from "../utils/dateUtils.js";
+import { Windows } from "../utils/windows.js";
 
 $(document).ready(async () => {
     /**
@@ -11,7 +11,7 @@ $(document).ready(async () => {
         const token_id = e.currentTarget.parentElement.parentElement.getAttribute('id');
         // ---
         if (key === 'Enter') {
-            finestra.loader(true);
+            Windows.loader(true);
             const device_name = e.currentTarget.value;
             const device = DeviceService.get_device(token_id);
             if (confirm(`Are you sure you want to rename this device into "${device_name}"?`)) {
@@ -21,15 +21,15 @@ $(document).ready(async () => {
                 e.currentTarget.value = device.device_name;
             }
         }
-        finestra.loader(false);
+        Windows.loader(false);
     })
     /**
      * SYNC
      */
     $('#btn-sync-devices').on('click', async () => {
-        finestra.loader(true);
+        Windows.loader(true);
         await DeviceUI.init();
-        finestra.loader(false);
+        Windows.loader(false);
     });
 });
 

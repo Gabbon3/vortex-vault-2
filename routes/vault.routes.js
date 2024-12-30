@@ -13,15 +13,16 @@ const limiter = rateLimit({
     message: "Too many requests, try later",
 });
 router.use(limiter);
-// -- middleware
-router.use(verify_access_token());
 // -- /vaults
+// -- routes that require sudo access token
+router.post('/restore', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.restore);
+// -- routes that require simple access token
+router.use(verify_access_token());
 router.post('/create', controller.create);
 router.get('/count', controller.count);
 router.get('/:vault_id', controller.get_id);
 router.get('', controller.get);
 router.post('/update', controller.update);
 router.delete('/:vault_id', controller.delete);
-router.post('/restore', express.raw({ type: 'application/octet-stream' }), controller.restore);
 
 export default router;

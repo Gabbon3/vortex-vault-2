@@ -4,21 +4,14 @@ class CustomVaultSection extends HTMLElement {
         super();
         this.input = null;
         this.name = null;
+        this.icon = null;
+        this.svg = null;
     }
-
-    // static get observedAttributes() {
-    //     return ['input-id'];
-    // }
 
     connectedCallback() {
         this.render();
     }
-
-    // attributeChangedCallback(name, oldValue, newValue) {
-    //     if (oldValue !== newValue) {
-    //         this.render();
-    //     }
-    // }
+    
     /**
      * Restituisce un icona adatta a rappresentare la sezione indicata
      * @param {string} section_name 
@@ -31,12 +24,12 @@ class CustomVaultSection extends HTMLElement {
         const iconMap = [
             { keywords: ["username", "user", "utente", "profilo"], svg: "person" },
             { keywords: ["password", "psw", "codice"], svg: "key_vertical" },
-            { keywords: ["chiave", "key", "accesso"], svg: "key" },
+            { keywords: ["chiave", "key", "accesso", "secret"], svg: "key" },
             { keywords: ["titolo", "nome", "label"], svg: "tag" },
             { keywords: ["private", "privato", "sicuro"], svg: "lock" },
             { keywords: ["mail", "email", "posta"], svg: "alternate_email" },
             { keywords: ["note", "info", "informazioni"], svg: "info" },
-            { keywords: ["pin", "number", "numero"], svg: "pin" },
+            { keywords: ["pin", "number", "numero", "cvv"], svg: "pin" },
             { keywords: ["codice", "code"], svg: "password" },
             { keywords: ["address", "indirizzo", "location", "via"], svg: "location_on" },
             { keywords: ["card", "credito", "debit", "carta", "visa", "mastercard"], svg: "credit_card" },
@@ -48,6 +41,7 @@ class CustomVaultSection extends HTMLElement {
             { keywords: ["security", "domanda", "answer", "risposta"], svg: "help" },
             { keywords: ["bank", "conto", "iban", "swift", "banca"], svg: "account_balance" },
             { keywords: ["personal", "note", "appunto", "memo"], svg: "sticky_note_2" },
+            { keywords: ["date"], svg: "calendar_today" }
         ];
         // -- cerco l'icona
         svg = iconMap.find((item) =>
@@ -63,12 +57,12 @@ class CustomVaultSection extends HTMLElement {
         const section_name = this.getAttribute('section-name') ?? 'Custom';
         const paste = JSON.parse(this.getAttribute('paste'));
         // ---
-        const svg = CustomVaultSection.get_icon(section_name);
-        const is_password = ['password', 'key', 'key_vertical'].includes(svg);
+        this.svg = CustomVaultSection.get_icon(section_name);
+        const is_password = ['password', 'key', 'key_vertical'].includes(this.svg);
         // ---
         this.innerHTML = `
             <label for="${input_id}">
-                <span class="material-symbols-rounded">${svg}</span>
+                <span class="material-symbols-rounded custom-input-icon">${this.svg}</span>
                 <input class="input-text input-name">
                 <button type="button" class="btn t remove-custom-section" title="Remove this section">
                     <span class="material-symbols-rounded">close</span>
@@ -85,12 +79,16 @@ class CustomVaultSection extends HTMLElement {
         // -- VARIABILI
         this.input = this.querySelector('.custom-input');
         this.name = this.querySelector('.input-name');
+        this.icon = this.querySelector('.custom-input-icon');
         this.name.value = section_name;
         // -- EVENTI
         this.querySelector('.remove-custom-section').addEventListener('click', this.delete.bind(this));
         // - modifica il name dell'input quando l'input dedicato al nome appunto viene modificato
+        // - modifica anche l'icona in tempo reale in base a quello che scrive
         this.name.addEventListener('keyup', () => {
             this.input.name = this.name.value;
+            const svg = CustomVaultSection.get_icon(this.name.value);
+            if (svg !== this.svg) this.icon.textContent = svg;
         });
     }
     /**

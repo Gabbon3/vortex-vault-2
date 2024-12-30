@@ -40,7 +40,7 @@ export class VortexNavbar extends HTMLElement {
                     Generator
                 </a>` : ''}
                 ${path !== '/vault' ? `<a href="/vault"'>
-                    <span class="material-symbols-rounded">lock</span>
+                    <span class="material-symbols-rounded">encrypted</span>
                     Vault
                 </a>` : ''}
                 ${path !== '/signin' ? `<a href="/signin"'>

@@ -9,25 +9,28 @@ import './password-strenght-bar.component.js';
 import './email-verify-btn.component.js';
 import './btn-copy.component.js';
 import './btn-paste.component.js';
+import { Windows } from '../utils/windows.js';
+import { QrCodeDisplay } from '../utils/qrcode-display.js';
 
 $(document).ready(() => {
+    QrCodeDisplay.init();
     /**
      * FINESTRE
      */
     $(document).on("click", ".close", (btn) => {
         btn = btn.currentTarget;
         const target = $(btn).attr("data-target-close");
-        finestra.close(target);
+        Windows.close(target);
     });
     $(document).on("click", ".open", (btn) => {
         btn = btn.currentTarget;
         const target = $(btn).attr("data-target-open");
-        finestra.open(target);
+        Windows.open(target);
     });
     $("#bc-finestre").click((bc) => {
         bc = bc.currentTarget;
         const target = $(bc).attr("data-target");
-        finestra.close(target);
+        Windows.close(target);
     });
     /**
      * pulsanti con open-close aprono e chiudono finestre
@@ -38,7 +41,7 @@ $(document).ready(() => {
         // ---
         const [open, close] = $(btn).attr("data-target").split(';');
         dom.hide('#' + close);
-        finestra.open(open);
+        Windows.open(open);
     });
     /**
      * pulsanti che richiedono l'animazione di check

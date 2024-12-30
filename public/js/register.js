@@ -1,7 +1,7 @@
-import { finestra } from "../components/main.components.js";
 import { AuthService } from "../service/auth.service.js";
 import { Form } from "../utils/form.js";
 import { Log } from "../utils/log.js";
+import { Windows } from "../utils/windows.js";
 
 $(document).ready(async () => {
     /**
@@ -12,14 +12,14 @@ $(document).ready(async () => {
         // -- controllo sulle password
         if (password !== password2) return Log.summon(1, 'Passwords doesn\'t match');;
         // ---
-        finestra.loader(true);
+        Windows.loader(true);
         if (await AuthService.register(email, password)) {
             $(form).trigger('reset');
             Log.summon(0, `${email}, you have been successfully registered`);
             Log.summon(1, "Now verify your email clicking the button below so you can then sign-in with no problems");
             document.getElementById('verify-email-email').value = email;
         }
-        finestra.loader(false);
+        Windows.loader(false);
     });
     /**
      * EMAIL VERIFY

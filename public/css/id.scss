@@ -171,9 +171,13 @@ vortex-navbar {
 
 #vaults-list {
     display: flex;
-    margin: 10px auto;
+    margin: 0 auto;
     flex-wrap: wrap;
     gap: 7.5px;
+
+    &.list {
+        flex-direction: column;
+    }
 
     vault-li {
         display: flex;

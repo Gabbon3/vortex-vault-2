@@ -36,12 +36,11 @@
                 </button>
             </div>
         </div>
-        <div class="flex gap-50 wrap">
+        <div class="flex gap-50 wrap mb-2">
             <!-- Sync & New Vault -->
             <div class="flex gap-50">
-                <button class="btn primary" id="btn-sync-vault">
+                <button class="btn primary" id="btn-sync-vault" title="Syncronize with Server">
                     <span class="material-symbols-rounded">sync_alt</span>
-                    Sync
                 </button>
                 <button class="btn primary open" data-target-open="win-create-vault">
                     <span class="material-symbols-rounded">add</span>
@@ -50,13 +49,14 @@
             </div>
             <!-- Order Buttons -->
             <div class="flex gap-50 last">
-                <button class="btn secondary order-vaults" order="az" active="false">
+                <button class="btn secondary order-vaults" order="az" active="false" title="Order by title">
                     <span class="material-symbols-rounded">title</span>
-                    <span class="material-symbols-rounded">sort</span>
                 </button>
-                <button class="btn secondary order-vaults" order="date" active="false">
+                <button class="btn secondary order-vaults" order="date" active="false" title="Order by date">
                     <span class="material-symbols-rounded">calendar_today</span>
-                    <span class="material-symbols-rounded">sort</span>
+                </button>
+                <button class="btn secondary vaults-view" active="false" title="Change list view">
+                    <span class="material-symbols-rounded">dashboard</span>
                 </button>
             </div>
         </div>
@@ -258,16 +258,16 @@
             The <b>highlighted</b> device represents the current one.
         </p>
         <div class="flex gap-50 mb-2">
-            <button class="btn primary" id="btn-sync-devices">
+            <button class="btn primary" id="btn-sync-devices" title="Syncronize">
                 <span class="material-symbols-rounded">sync_alt</span>
-                Sync
+                Syncronize
             </button>
         </div>
         <div id="devices-list">
             <!-- ... -->
         </div>
     </div>
-    <!-- 
+    <!--
     BACKUP
     -->
     <div class="window m pl" id="win-backups">
@@ -289,7 +289,7 @@
         <p>
             You can save only one backup at time on server
         </p>
-        <div class="isle bg-4 flex gap-50">
+        <div class="isle bg-3 flex gap-50">
             <button class="btn primary fg-1" id="btn-create-backup">
                 <span class="material-symbols-rounded">add</span>
                 Generate
@@ -304,7 +304,7 @@
             <span class="material-symbols-rounded">hard_drive</span>
             Download
         </h3>
-        <form class="isle bg-4 mb-2" id="form-create-backup-locally">
+        <form class="isle bg-3 mb-2" id="form-create-backup-locally">
             <label for="backup-custom-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
@@ -328,7 +328,7 @@
             Restore locally
             <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
-        <form id="form-restore-backup-from-file" class="isle bg-4">
+        <form id="form-restore-backup-from-file" class="isle bg-3">
             <label for="backup-file">
                 <span class="material-symbols-rounded">draft</span>
                 Backup file
@@ -432,7 +432,7 @@
         </form>
         
     </div>
-    <!-- 
+    <!--
     SETTINGS
     -->
     <div class="window m pl" id="win-settings">
@@ -471,9 +471,6 @@
                     Enable
                 </button>
             </form>
-            <div class="flex gap-50">
-            </div>
-            <canvas id="qrcode-2fa-secret"></canvas>
         </div>
         <hr>
         <!-- SUDO SESSION -->

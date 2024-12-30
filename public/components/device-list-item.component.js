@@ -1,6 +1,7 @@
 import { Log } from "../utils/log.js";
 import { DeviceService } from "../service/device.service.js";
-import { finestra } from "./main.components.js";
+import { Windows } from "../utils/windows.js";
+import { Cripto } from "../secure/cripto.js";
 
 class DeviceListItem extends HTMLElement {
     constructor() {
@@ -21,7 +22,7 @@ class DeviceListItem extends HTMLElement {
         }
     }
 
-    render() {
+    async render() {
         // -- imposto livello e messaggio in base agli attributi
         const token_id = this.getAttribute('id');
         const device_name = this.getAttribute('device-name');
@@ -35,7 +36,7 @@ class DeviceListItem extends HTMLElement {
         this.innerHTML = `
             <span class="token-id">
                 <span class="material-symbols-rounded">tag</span>
-                <i>${token_id}</i>
+                <i>${await Cripto.hash(token_id, { algorithm: 'SHA-1', encoding: 'base64' })}</i>
             </span>
             <div class="flex gap-50 d-row">
                 <input type="text" class="input-text device-name" title="Device name" value="${device_name}">
@@ -84,9 +85,9 @@ class DeviceListItem extends HTMLElement {
         // ---
         const token_id = this.getAttribute('id');
         // ---
-        finestra.loader(true);
+        Windows.loader(true);
         const deleted = await DeviceService.delete(token_id);
-        finestra.loader(false);
+        Windows.loader(false);
         if (!deleted) return;
         this.remove();
         Log.summon(0, "Device deleted successfully");
