@@ -20,6 +20,8 @@ export class UserService {
      * @returns {string} id dell'utente appena inserito
      */
     async signup(email, password) {
+        // -- verifico che l'indirizzo email sia valido
+        if (!this.verify_email(email)) throw new CError("InvalidEmailDomain", "The email domain is not supported. Please use a well-known email provider like Gmail, iCloud, or Outlook.", 422);
         // -- verifico che l'email sia disponibile
         const user_exist = await User.findOne({
             where: { email }
@@ -32,6 +34,24 @@ export class UserService {
         const user = new User({ email, password: password_hash, salt });
         // ---
         return await user.save();
+    }
+    /**
+     * Utility per verificare l'email dell'utente
+     * @param {string} email 
+     * @returns {boolean}
+     */
+    verify_email(email) {
+        const verified_domains = [
+            'gmail.com',    // Google
+            'icloud.com',   // Apple
+            'outlook.com',  // Microsoft
+            'hotmail.com',  // Microsoft (più vecchio, ma ancora usato)
+            'yahoo.com',    // Yahoo
+            'live.com',     // Microsoft
+            'libero.it'     // Libero
+        ];
+        // ---
+        return verified_domains.includes(email.split('@')[1]);
     }
     /**
      * Esegue l'accesso e restituisce un utente 

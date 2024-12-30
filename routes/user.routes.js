@@ -24,13 +24,13 @@ router.get('/quick-sign-in/:id', controller.get_quick_signin);
 // -- invio codici verifica via mail
 router.post('/email-verification', controller.send_email_verification);
 router.post('/email-verification-test', verify_email_code, controller.test_email_auth);
-// -- verifica della email
-router.post('/verify-email', verify_email_code, controller.verify_email);
+// -- verifica dell'account
+router.post('/verify-account', verify_mfa_code, controller.verify_account);
 // -- password recovery
 router.get('/recovery/:email', controller.get_recovery);
 router.post('/recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // ---
-router.post('/mfa', verify_access_token(), verify_email_code, controller.enable_mfa);
+router.post('/mfa', verify_email_code, controller.enable_mfa);
 router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
 // ---
 router.post('/sudotoken', verify_access_token(), verify_mfa_code, controller.start_sudo_session);

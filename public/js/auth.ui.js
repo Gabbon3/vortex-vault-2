@@ -127,7 +127,8 @@ class AuthUI {
      * @returns {boolean}
      */
     static async enable_mfa(request_id, email_code) {
-        const secret = await AuthService.enable_mfa(request_id, email_code);
+        const email = await LocalStorage.get('email-utente');
+        const secret = await AuthService.enable_mfa(email, request_id, email_code);
         if (!secret) return false;
         const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
         // -- copio negli appunti il segreto
@@ -135,9 +136,8 @@ class AuthUI {
         Log.summon(3, 'Secret copied into your clipboard');
         // ---
         const app_name = 'Vortex Vault';
-        const username = await LocalStorage.get('email-utente');
         // ---
-        const uri = `otpauth://totp/${app_name}:${username}?secret=${base32_secret}&issuer=${app_name}`;
+        const uri = `otpauth://totp/${app_name}:${email}?secret=${base32_secret}&issuer=${app_name}`;
         QrCodeDisplay.generate({
             data: uri,
             timeout: 20000,

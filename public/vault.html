@@ -86,9 +86,7 @@
                 </label>
                 <div class="flex gap-50">
                     <input name="T" type="text" class="input-text mono" id="titolo" autocomplete="off" required>
-                    <button class="btn t CA paste-val" data-target-pa="titolo" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
+                    <btn-paste target="titolo"></btn-paste>
                 </div>
             </div>
             <!-- USERNAME -->
@@ -99,9 +97,7 @@
                 </label>
                 <div class="flex gap-50">
                     <input name="U" type="text" class="input-text mono" list="used-username" id="username" autocomplete="off">
-                    <button class="btn t CA paste-val" data-target-pa="username" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
+                    <btn-paste target="username"></btn-paste>
                 </div>
                 <datalist id="used-username"></datalist>
             </div>
@@ -113,9 +109,7 @@
                 </label>
                 <div class="flex gap-50 mb-2">
                     <input name="P" type="text" class="input-text mono" id="password" autocomplete="off" required>
-                    <button class="btn t CA paste-val" data-target-pa="password" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
+                    <btn-paste target="password"></btn-paste>
                 </div>
                 <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password"></password-strength-bar>
             </div>
@@ -167,9 +161,7 @@
                 </label>
                 <div class="flex gap-75">
                     <input name="T" type="text" class="input-text mono" id="update-titolo" autocomplete="off" required>
-                    <button class="btn t CA copy-val" data-target-cc="update-titolo" type="button" title="Copy">
-                        <span class="material-symbols-rounded">content_copy</span>
-                    </button>
+                    <btn-copy target="update-titolo"></btn-copy>
                 </div>
             </div>
             <!-- USERNAME -->
@@ -180,9 +172,7 @@
                 </label>
                 <div class="flex gap-75">
                     <input name="U" type="text" class="input-text mono" id="update-username" autocomplete="off">
-                    <button class="btn t CA copy-val" data-target-cc="update-username" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_copy</span>
-                    </button>
+                    <btn-copy target="update-username"></btn-copy>
                 </div>
             </div>
             <!-- PASSWORD -->
@@ -193,9 +183,7 @@
                 </label>
                 <div class="flex gap-75 mb-2">
                     <input name="P" type="text" class="input-text mono" id="update-password" autocomplete="off" required>
-                    <button class="btn t CA copy-val" data-target-cc="update-password" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_copy</span>
-                    </button>
+                    <btn-copy target="update-password"></btn-copy>
                 </div>
                 <password-strength-bar class="m-0" id="update-psw-strength-bar" xs="true" input-id="update-password"></password-strength-bar>
             </div>
@@ -370,12 +358,8 @@
         <!-- actions -->
         <div class="flex gap-50 d-row y-center">
             <div class="flex gap-50">
-                <button class="btn t CA copy-val" data-target-cc="psw-generator-tester" title="Copy">
-                    <span class="material-symbols-rounded">content_copy</span>
-                </button>
-                <button class="btn t CA paste-val" data-target-pa="psw-generator-tester" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
-                </button>
+                <btn-copy target="psw-generator-tester"></btn-copy>
+                <btn-paste target="psw-generator-tester"></btn-paste>
                 <button class="btn t CA del-val" data-target-del="psw-generator-tester" title="Cancel">
                     <span class="material-symbols-rounded">backspace</span>
                 </button>
@@ -454,7 +438,7 @@
         </h3>
         <div id="cont-mfa" class="isle bg-3" style="display: none;">
             <p>
-                Enable the secondary authentication feature to protect your account.
+                Here you can generate new MFA secret
             </p>
             <form id="form-new-mfa-secret">
                 <email-verify-btn target-id="code-new-mfa-secret"></email-verify-btn>
@@ -462,10 +446,7 @@
                     <span class="material-symbols-rounded">password</span>
                     Code
                 </label>
-                <input name="code" type="text" maxlength="6" class="input-text mfa" id="code-new-mfa-secret" placeholder="******" autocomplete="off" required>
-                <p class="description">
-                    You must enter the code you will receive from the emails.
-                </p>
+                <input name="code" type="text" maxlength="6" class="input-text mfa mb-2" id="code-new-mfa-secret" placeholder="******" autocomplete="off" required>
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">security</span>
                     Enable
@@ -492,9 +473,7 @@
                 </label>
                 <div class="flex gap-75 mb-2">
                     <input name="code" maxlength="6" type="text" class="input-text mfa" id="start-sudo-session-code" autocomplete="off" placeholder="******" required>
-                    <button class="btn t CA paste-val" data-target-pa="start-sudo-session-code" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
+                    <btn-paste target="start-sudo-session-code"></btn-paste>
                 </div>
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">security</span>
@@ -562,9 +541,7 @@
                 </label>
                 <div class="flex gap-50">
                     <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
-                    <button class="btn t CA paste-val" data-target-pa="password-recovery" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
+                    <btn-paste target="password-recovery"></btn-paste>
                 </div>
                 <p class="description">
                     You need to enter your password to perform this operation.

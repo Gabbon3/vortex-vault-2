@@ -22,14 +22,22 @@
                 <span class="material-symbols-rounded">person_add</span>
                 Sign Up
             </h2>
+            <p class="description">
+                To register, you'll need to verify your email, 
+                set up Multi-Factor Authentication (MFA), 
+                and activate your account. Don't worry, we'll guide you through each step.
+            </p>
             <!-- EMAIL -->
             <label for="email">
                 <span class="material-symbols-rounded">person</span>
                 Email
             </label>
             <input type="email" class="input-text" id="email" name="email" autocomplete="off" required>
+            <p class="description">
+                We only support popular email providers like Gmail, iCloud, Yahoo, or Microsoft accounts.
+                This helps ensure the security and legitimacy of accounts, reducing the risk of spam and fraudulent activity.
+            </p>
             <!-- PASSWORD -->
-            <hr>
             <label for="password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Password
@@ -40,35 +48,43 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Repeat password
             </label>
-            <input type="password" class="input-text" id="password2" name="password2" required>
+            <input type="password" class="input-text mb-2" id="password2" name="password2" required>
             <!-- --- -->
+            <button class="btn primary w-100">
+                <span class="material-symbols-rounded">person_add</span>
+                Sign Up
+            </button>
             <hr>
             <div class="flex gap-50 d-column">
-                <button class="btn primary w-100">
-                    <span class="material-symbols-rounded">person_add</span>
-                    Sign Up
-                </button>
                 <button type="button" class="btn warning w-100 open" data-target-open="win-email-verify">
-                    <span class="material-symbols-rounded">mark_email_read</span>
-                    Verify Email
+                    <span class="material-symbols-rounded">phonelink_lock</span>
+                    Set up MFA
+                </button>
+                <button type="button" class="btn warning w-100 open" data-target-open="win-account-verify">
+                    <span class="material-symbols-rounded">verified_user</span>
+                    Verify Account
                 </button>
             </div>
         </form>
         <!-- 
-            EMAIL VERIFY
+            SET UP MFA
         -->
         <div class="window m" id="win-email-verify">
             <div class="flex y-center">
                 <h2 class="icon">
-                    <span class="material-symbols-rounded">mark_email_read</span>
-                    Verify email
+                    <span class="material-symbols-rounded">phonelink_lock</span>
+                    Set up MFA
                 </h2>
                 <button class="btn t close l last" data-target-close="win-email-verify">
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>
             <hr>
-            <form id="email-verify">
+            <p>
+                Verify your email to activate multi-factor authentication via Google Authenticator or similar.
+                You need it to verify your account in the next step.
+            </p>
+            <form id="setup-mfa">
                 <!-- --- -->
                 <label for="verify-email-email">
                     <span class="material-symbols-rounded">person</span>
@@ -85,7 +101,39 @@
                 <!-- SUBMIT -->
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">check</span>
-                    Verify
+                    Verify & Activate MFA
+                </button>
+            </form>
+        </div>
+        <!-- 
+            ACCOUNT VERIFY
+        -->
+        <div class="window m" id="win-account-verify">
+            <div class="flex y-center">
+                <h2 class="icon">
+                    <span class="material-symbols-rounded">verified_user</span>
+                    Verify Account
+                </h2>
+                <button class="btn t close l last" data-target-close="win-account-verify">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <hr>
+            <form id="account-verify">
+                <input type="email" class="none" id="verify-account-email" name="email" autocomplete="off" required>
+                <!-- code -->
+                <label for="account-verify-code">
+                    <span class="material-symbols-rounded">password</span>
+                    Code
+                </label>
+                <input name="code" maxlength="6" type="text" class="input-text mfa" id="account-verify-code" autocomplete="off" placeholder="******" required>
+                <p class="description">
+                    Insert OTP code from your Authenticator app
+                </p>
+                <!-- SUBMIT -->
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">check</span>
+                    Verify account
                 </button>
             </form>
         </div>

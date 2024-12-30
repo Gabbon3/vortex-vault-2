@@ -23,33 +23,33 @@ export class VortexNavbar extends HTMLElement {
         // ---
         this.innerHTML = `
             <nav class="navbar">
-                ${path === '/vault' ? `<a class="open" data-target-open="win-settings">
+                ${path === '/vault' ? `<a class="open" data-target-open="win-settings" title="Settings">
                     <span class="material-symbols-rounded">settings</span>
-                    Settings
+                    <i>Settings</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-devices">
+                ${path === '/vault' ? `<a class="open" data-target-open="win-devices" title="Devices">
                     <span class="material-symbols-rounded">token</span>
-                    Devices
+                    <i>Devices</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-backups">
+                ${path === '/vault' ? `<a class="open" data-target-open="win-backups" title="Backup">
                     <span class="material-symbols-rounded">cloud</span>
-                    Backup
+                    <i>Backup</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-psw-generator">
+                ${path === '/vault' ? `<a class="open" data-target-open="win-psw-generator" title="Psw Generator">
                     <span class="material-symbols-rounded">key_vertical</span>
-                    Generator
+                    <i>Generator</i>
                 </a>` : ''}
-                ${path !== '/vault' ? `<a href="/vault"'>
+                ${path !== '/vault' ? `<a href="/vault"' title="Vault">
                     <span class="material-symbols-rounded">encrypted</span>
-                    Vault
+                    <i>Vault</i>
                 </a>` : ''}
-                ${path !== '/signin' ? `<a href="/signin"'>
+                ${path !== '/signin' ? `<a href="/signin"' title="Sign In">
                     <span class="material-symbols-rounded">login</span>
-                    Sign In
+                    <i>Sign In</i>
                 </a>` : ''}
-                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"'>
+                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up">
                     <span class="material-symbols-rounded">person_add</span>
-                    Sign Up
+                    <i>Sign Up</i>
                 </a>` : ''}
             </nav>
             <span id="sudo-indicator" class="base" title="Session status">

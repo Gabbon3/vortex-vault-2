@@ -46,6 +46,7 @@ class EmailVerifyBtn extends HTMLElement {
      * @returns 
      */
     async send_email() {
+        this.button.disabled = true;
         // ---
         const email = this.email ? this.email.value : await LocalStorage.get('email-utente');
         // ---
@@ -53,13 +54,15 @@ class EmailVerifyBtn extends HTMLElement {
             method: "POST",
             body: { email }
         });
-        if (!res) return;
+        if (!res) {
+            this.button.disabled = false;
+            return;
+        }
         Log.summon(0, "Email sent, check your inbox");
         // ---
         const { request_id } = res;
         this.request_id_input.value = request_id;
-        // -- disabilito il bottone
-        this.button.disabled = true;
+        // -- disabilito e riabilito poi il buttone e l'input
         this.target.disabled = false;
         setTimeout(() => {
             this.button.disabled = false;

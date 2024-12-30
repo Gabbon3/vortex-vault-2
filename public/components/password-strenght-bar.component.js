@@ -64,7 +64,7 @@ class PasswordStrengthBar extends HTMLElement {
         if (!id_input) return;
         this.input = document.getElementById(id_input);
         // -- evento collegato dell'input
-        this.input.addEventListener('keyup', this.input_listener.bind(this));
+        this.input.addEventListener('input', this.input_listener.bind(this));
     }
     /**
      * funzione che si attiva se this.input esegue keyup

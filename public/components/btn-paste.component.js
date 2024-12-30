@@ -27,6 +27,14 @@ class BtnPaste extends HTMLElement {
             this.target.tagName === 'INPUT' || this.target.tagName === 'TEXTAREA' ?
                 this.target.value = text :
                 this.target.textContent = text;
+            // --- simulo l'evento
+            const keyupevent = new KeyboardEvent('input', {
+                key: '',
+                bubbles: true,
+                cancelable: true,
+            });
+            // ---
+            this.target.dispatchEvent(keyupevent);
         }).catch((error) => { console.warn(error) });
     }
 

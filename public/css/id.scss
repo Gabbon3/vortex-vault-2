@@ -15,6 +15,10 @@
         transition: 0.1s;
         cursor: pointer;
 
+        i {
+            font-style: normal;
+        }
+
         span {
             color: $c1;
         }

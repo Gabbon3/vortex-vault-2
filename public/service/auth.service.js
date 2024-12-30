@@ -68,14 +68,13 @@ export class AuthService {
     /**
      * Verifica un email
      * @param {string} email 
-     * @param {string} request_id 
      * @param {string} code 
      * @returns {boolean}
      */
-    static async verify_email(email, request_id, code) {
-        const res = await API.fetch('/auth/verify-email', {
+    static async verify_account(email, code) {
+        const res = await API.fetch('/auth/verify-account', {
             method: 'POST',
-            body: { email, request_id, code }
+            body: { email, code }
         });
         // ---
         if (!res) return false;
@@ -112,10 +111,10 @@ export class AuthService {
      * @param {string} code - email code
      * @returns {boolean}
      */
-    static async enable_mfa(request_id, code) {
+    static async enable_mfa(email, request_id, code) {
         const res = await API.fetch('/auth/mfa', {
             method: 'POST',
-            body: { request_id, code }
+            body: { email, request_id, code }
         });
         // ---
         if (!res) return false;

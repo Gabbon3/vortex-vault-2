@@ -91,9 +91,10 @@ export class UserController {
      * @param {Response} res 
      */
     enable_mfa = async_handler(async (req, res) => {
+        const { email } = req.body;
         const { final, secret } = MFAService.generate();
         // -- salvo nel db
-        const [affected] = await this.service.update_user_info({ id: req.user.uid }, { mfa_secret: Buffer.from(final) });
+        const [affected] = await this.service.update_user_info({ email }, { mfa_secret: Buffer.from(final) });
         // ---
         if (affected !== 1) throw new CError("Internal error", "Not able to enable MFA", 500);
         // ---
@@ -163,13 +164,13 @@ export class UserController {
     /**
      * Verifica un email
      */
-    verify_email = async_handler(async (req, res) => {
+    verify_account = async_handler(async (req, res) => {
         const { email } = req.body;
         // ---
         const [affected] = await this.service.update_user_info({ email }, { verified: true });
         if (affected > 1) throw new Error("Updated multiple emails");
         // ---
-        res.status(200).json({ message: "Email verified" });
+        res.status(200).json({ message: "Account verified" });
     });
     /**
      * Just a test

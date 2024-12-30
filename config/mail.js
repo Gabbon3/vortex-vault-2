@@ -26,8 +26,6 @@ export class Mailer {
      * );
      */
     static async send(to, subject, text, html) {
-        // -- aggiungo la firma
-        text += `\n\nThe Vortex Vault Team`
         try {
             const mail_options = {
                 from: process.env.EMAIL_USER,

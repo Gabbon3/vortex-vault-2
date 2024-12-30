@@ -700,6 +700,9 @@ input[type=range]::-webkit-slider-thumb {
   transition: 0.1s;
   cursor: pointer;
 }
+.navbar a i {
+  font-style: normal;
+}
 .navbar a span {
   color: #878e54;
 }
@@ -1152,6 +1155,34 @@ password-strength-bar .bar._4 {
     -webkit-transform: scale(1);
     transform: scale(1);
     opacity: 1;
+  }
+}
+@media screen and (max-width: 700px) {
+  .pagina {
+    margin-bottom: 70px;
+  }
+  vortex-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: 0 0 5px 0 rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  }
+  vortex-navbar .navbar {
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+  vortex-navbar .navbar a {
+    justify-content: center;
+    flex-grow: 1;
+    font-size: 1.2em;
+  }
+  vortex-navbar .navbar a i {
+    display: none;
+  }
+  vortex-navbar #sudo-indicator {
+    display: none;
   }
 }
 
