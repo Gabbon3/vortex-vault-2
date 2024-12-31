@@ -18,6 +18,7 @@ export class SecureLinkController {
             RamDB.set(`${scope}sl${id}`, data, ttl)
             && passKey ? RamDB.set(`pk${id}`, true, 120) : true; // pk = pass key
         if (!is_set) throw new Error("RamDB error");
+        console.log("SL - new item, scope: " + scope);
         // --
         res.status(201).json({ id });
     });
@@ -39,6 +40,7 @@ export class SecureLinkController {
         const data = RamDB.get(`${scope}sl${id}`); // sl = secure link
         if (!data) throw new CError("NotFoundError", "Not found", 404);
         RamDB.delete(`${scope}sl${id}`);
+        console.log("SL - get item, scope: " + scope);
         // --
         res.status(200).json({ data });
     });

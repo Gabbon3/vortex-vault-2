@@ -263,7 +263,13 @@ export class AuthService {
         // ---
         const key = Bytes.base64.from(key_base64, true);
         // -- recupero la password
-        const password = await LocalStorage.get('password-utente', SessionStorage.get('master-key'));
+        const master_key = SessionStorage.get('master-key');
+        if (!master_key) {
+            console.warn("Master key not found");
+            return null;
+        }
+        // ---
+        const password = await LocalStorage.get('password-utente', master_key);
         if (!password) return null;
         // ---
         const email = await LocalStorage.get('email-utente');
@@ -299,9 +305,9 @@ export class AuthService {
         // -- se non è stato possibile ottenere la cke, l'utente dovrebbe accedere nuovamente
         if (!cke) return false;
         // -- imposto la master key
-        this.config_session_vars(cke);
+        const initialized = await this.config_session_vars(cke);
         // ---
-        return true;
+        return initialized;
     }
     /**
      * Genera e cifra la master password dell'utente con un codice di recupero
@@ -381,4 +387,4 @@ export class AuthService {
     }
 }
 
-window.Auth = AuthService;
+window.AuthService = AuthService;

@@ -19,7 +19,7 @@ $(document).ready(async () => {
      */
     const quick_signin = await AuthService.quick_signin();
     if (quick_signin) {
-        const session_started = auth_success();
+        const session_started = await auth_success();
         if (session_started) {
             Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
             setTimeout(() => {
@@ -38,12 +38,14 @@ $(document).ready(async () => {
     document.getElementById('email').value = saved_email;
     // ---
     if (saved_email && !quick_signin) {
-        const session_started = auth_success();
+        const session_started = await auth_success();
         if (session_started) {
             // -- verifico se ci sono richieste di autenticazione
             const res = await AuthService.check_signin_request();
             if (res) {
                 Log.summon(0, "Authentication request accepted");
+            } else if (res === null) {
+                Log.summon(2, "Something is missing here");
             }
             // ---
             Log.summon(3, `Access saved as ${saved_email}`);
