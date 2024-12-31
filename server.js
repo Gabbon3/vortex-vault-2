@@ -9,11 +9,12 @@ import cke_routes from './routes/cke.routes.js';
 import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
-import secure_transfer_routes from './routes/secure-transfer.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 // import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
+import https from 'https';
+import fs from 'fs';
 
 /**
  * MIDDLEWARES
@@ -33,7 +34,6 @@ app.use('/auth/token', token_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);
 app.use('/secure-link', secure_link_routes);
-app.use('/secure-transfer', secure_transfer_routes);
 /**
  * Pubbliche
  */
@@ -45,6 +45,27 @@ app.use('/', static_routes);
 app.use(error_handler_middleware);
 
 const PORT = process.env.PORT || 3000;
+
+/**
+ * HTTPS
+ */
+// const options = {
+//     key: fs.readFileSync('./localhost-key.pem'),
+//     cert: fs.readFileSync('./localhost.pem'),
+// };
+// try {
+//     await sequelize.authenticate();
+//     console.log('☑️ DB');
+//     https.createServer(options, app).listen(PORT, () => {
+//         console.log(`☑️ Server`);
+//     })   
+// } catch (error) {
+//     console.error('❌ Errore durante l\'avvio del server => ', error);
+// }
+/**
+ * _____
+ */
+
 
 try {
     await sequelize.authenticate();

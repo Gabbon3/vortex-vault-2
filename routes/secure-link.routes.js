@@ -16,6 +16,7 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- secure-link/
 router.post('/', verify_access_token(), controller.generate_secret);
+router.post('/id', controller.generate_id);
 router.get('/:scope_id', controller.get_secret);
 
 export default router;

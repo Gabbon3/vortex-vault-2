@@ -22,13 +22,13 @@ export class QrCodeDisplay {
     /**
      * Genera e mostra un qrcode a schermo
      * @param {Object} options 
-     * @param {string|Uint8Array} options.data - data to show in qrcode
-     * @param {number} options.l - larghezza e altezza del qrcode in px
-     * @param {number} options.m - margine del qrcode
-     * @param {string} options.light - colore esadecimale per il bianco
-     * @param {string} options.dark - colore esadecimale per il nero
-     * @param {number} options.timeout - tempo di scadenza del qrcode in ms
-     * @param {Function} options.callback - colore esadecimale per il bianco
+     * @param {string|Uint8Array} [options.data] - data to show in qrcode
+     * @param {number} [options.l] - larghezza e altezza del qrcode in px
+     * @param {number} [options.m=2] - margine del qrcode
+     * @param {string} [options.light] - colore esadecimale per il bianco
+     * @param {string} [options.dark] - colore esadecimale per il nero
+     * @param {number} [options.timeout] - tempo di scadenza del qrcode in ms
+     * @param {Function} [options.callback] - colore esadecimale per il bianco
      */
     static generate(options) {
         Windows.close();

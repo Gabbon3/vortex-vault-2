@@ -46,10 +46,14 @@
                 <span class="material-symbols-rounded">login</span>
                 Sign In
             </button>
-            <button type="button" class="btn warning w-100 open" data-target-open="win-request-sign-in">
+            <button type="button" class="btn warning w-100" id="btn-request-sign-in">
                 <span class="material-symbols-rounded">id_card</span>
                 Request Sign-in
             </button>
+            <!-- <button type="button" class="btn warning w-100 open" data-target-open="win-request-sign-in">
+                <span class="material-symbols-rounded">id_card</span>
+                Request Sign-in
+            </button> -->
         </form>
     </main>
     <!--
@@ -189,9 +193,9 @@
         </button>
         <form id="get-ssic" class="isle bg-3">
             <!-- CODE -->
-            <input name="code" maxlength="8" type="text" class="input-text mfa mb-2 fs-l" id="rsicode" autocomplete="off" required readonly>
+            <input name="code" type="text" class="input-text mfa mb-2 fs-l" id="rsicode" autocomplete="off" required readonly>
             <p class="description">
-                Enter this code into another authenticated device.
+                Enter this 8 digit code into another authenticated device.
             </p>
             <!-- SUBMIT -->
             <button type="submit" class="btn primary">

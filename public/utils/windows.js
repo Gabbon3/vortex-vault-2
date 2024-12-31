@@ -19,6 +19,7 @@ export class Windows {
      * @param {String} target id della finestra html
      */
     static close(target = this.current) {
+        if (!target) return;
         document.getElementById(target).classList.remove('open');
         $("#bc-finestre").fadeOut(150);
     }

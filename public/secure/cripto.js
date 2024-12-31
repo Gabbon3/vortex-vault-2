@@ -5,6 +5,26 @@ import { Bytes } from "../utils/bytes.js";
  */
 export class Cripto {
     /**
+     * Utility per la codifica in output
+     * @param {Uint8Array} bytes 
+     * @param {string} encoding hex, base64, base64url, base32
+     * @returns 
+     */
+    static encoding(bytes, encoding) {
+        switch (encoding) {
+            case 'hex':
+                return Bytes.hex.to(bytes);
+            case 'base64':
+                return Bytes.base64.to(bytes);
+            case 'base64url':
+                return Bytes.base64.to(bytes, true);
+            case 'base32':
+                return Bytes.base32.to(bytes);
+            default:
+                return bytes;
+        }
+    }
+    /**
      * Genera una serie di byte casuali crittograficamente sicuri.
      * @param {number} size - Numero di byte da generare casualmente.
      * @param {string} [encoding=null] - Formato dell'output (optional: 'hex' o 'base64').
@@ -13,15 +33,7 @@ export class Cripto {
     static random_bytes(size, encoding = null) {
         const bytes = crypto.getRandomValues(new Uint8Array(size));
         // -- se l'encoding è hex o base64, utilizzo la classe Bytes per la conversione
-        if (encoding === 'hex') {
-            return Bytes.hex.to(bytes);
-        } else if (encoding === 'base64') {
-            return Bytes.base64.to(bytes);
-        } else if (encoding === 'base64url') {
-            return Bytes.base64.to(bytes, true);
-        } else {
-            return bytes;
-        }
+        return this.encoding(bytes, encoding);
     }
     /**
      * Generate a high-entropy random number.
@@ -72,15 +84,7 @@ export class Cripto {
         // -- genero l'HMAC
         const hmac_buffer = await crypto.subtle.sign('HMAC', crypto_key, message_bytes);
         // -- converto l'output nel formato desiderato (hex, base64 o Uint8Array)
-        if (options.output_encoding === 'hex') {
-            return Bytes.hex.to(new Uint8Array(hmac_buffer));
-        } else if (options.output_encoding === 'base64') {
-            return Bytes.base64.to(new Uint8Array(hmac_buffer));
-        } else if (options.encoding === 'base64url') {
-            return Bytes.base64.to(hmac_buffer, true);
-        } else {
-            return new Uint8Array(hmac_buffer);
-        }
+        return this.encoding(new Uint8Array(hmac_buffer), options.encoding);
     }
 
     /**
@@ -97,15 +101,7 @@ export class Cripto {
             message instanceof Uint8Array ? message : new TextEncoder().encode(message)
         );
         // -- converto l'output nel formato desiderato (hex, base64 o Uint8Array)
-        if (options.encoding === 'hex') {
-            return Bytes.hex.to(new Uint8Array(hashBuffer));
-        } else if (options.encoding === 'base64') {
-            return Bytes.base64.to(new Uint8Array(hashBuffer));
-        } else if (options.encoding === 'base64url') {
-            return Bytes.base64.to(new Uint8Array(hashBuffer), true);
-        } else {
-            return new Uint8Array(hashBuffer);
-        }
+        return this.encoding(new Uint8Array(hashBuffer), options.encoding);
     }
 
     /**

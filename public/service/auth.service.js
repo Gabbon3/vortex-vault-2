@@ -7,7 +7,7 @@ import { AES256GCM } from "../secure/aesgcm.js";
 import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
-import { SecureTransfer } from "../utils/secure-transfer.js";
+import { QrCodeDisplay } from "../utils/qrcode-display.js";
 
 export class AuthService {
     /**
@@ -204,7 +204,7 @@ export class AuthService {
             passKey: true,
         });
         // -- compongo l'url
-        const url = `https://vortexvault.fly.dev/signin?id=${id}&key=${key}`;
+        const url = `https://vortexvault.fly.dev/signin?action=qsi&id=${id}&key=${key}`;
         return url;
     }
     /**
@@ -212,7 +212,9 @@ export class AuthService {
      * @returns {boolean}
      */
     static async quick_signin() {
-        const { id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        // -- verifico se ce bisogno di eseguire questa operazione
+        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        if (!action || action !== 'qsi') return false;
         if (!id || !key_base64) return false;
         // -- ottengo dal server le credenziali
         const [email, password] = await SecureLink.get('qsi', id, key_base64);
@@ -220,6 +222,64 @@ export class AuthService {
         window.history.replaceState(null, '', window.location.origin + window.location.pathname);
         // -- eseguo l'accesso passando la passkey
         return await AuthService.signin(email, password, id);
+    }
+    /**
+     * Genera un qr code da usare su un altro dispositivo per far condividere le credenziali
+     */
+    static async request_signin() {
+        // -- genero una chiave casuale e un id utilizzabile
+        const key = Cripto.random_bytes(32, 'base64url');
+        const id = await SecureLink.request_id();
+        if (!id) return false;
+        // ---
+        const url = `http://localhost:3000/signin?action=rsi&id=${id}&key=${key}`; // rsi = request sign in
+        QrCodeDisplay.generate({
+            data: url,
+        });
+        navigator.clipboard.writeText(url);
+        Log.summon(3, 'Link copied into your clipboard');
+        return { key, id };
+    }
+    /**
+     * Verifica e accede se da una richiesta di autenticazione ce stata una risposta
+     * @param {string} id 
+     * @param {Uint8Array} key 
+     * @returns {boolean}
+     */
+    static async check_signin_response(id, key) {
+        const [email, password] = await SecureLink.get('rsi', id, key);
+        if (!email || !password) return false;
+        // -- eseguo l'accesso passando la passkey
+        return await AuthService.signin(email, password, id);
+    }
+    /**
+     * Dal dispositivo autenticato si inviano le credenziali per accedere
+     * @returns {boolean}
+     */
+    static async check_signin_request() {
+        // -- controllo la correttezza dei parametri
+        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        if (!action || action !== 'rsi' || !key_base64 || !id) return false;
+        // ---
+        const key = Bytes.base64.from(key_base64, true);
+        // -- recupero la password
+        const password = await LocalStorage.get('password-utente', SessionStorage.get('master-key'));
+        if (!password) return null;
+        // ---
+        const email = await LocalStorage.get('email-utente');
+        const res = await SecureLink.generate({
+            key,
+            id,
+            scope: 'rsi',
+            ttl: 60 * 3,
+            data: [email, password],
+            passKey: true,
+        });
+        if (!res) return false;
+        // -- pulisco l'url
+        window.history.replaceState(null, '', window.location.origin + window.location.pathname);
+        // ---
+        return true;
     }
     /**
      * Tenta di avviare automaticamente una sessione

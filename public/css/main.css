@@ -1202,6 +1202,9 @@ password-strength-bar .bar._4 {
   vortex-navbar #sudo-indicator {
     display: none;
   }
+  #logs_container {
+    bottom: 60px;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

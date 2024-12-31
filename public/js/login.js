@@ -3,10 +3,8 @@ import { AuthService } from "../service/auth.service.js";
 import { Form } from "../utils/form.js";
 import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
-import { SecureTransfer } from "../utils/secure-transfer.js";
 
 $(document).ready(async () => {
-    SignInUI.init();
     /**
      * Micro utility per l'accesso
      */
@@ -40,9 +38,16 @@ $(document).ready(async () => {
     document.getElementById('email').value = saved_email;
     // ---
     if (saved_email && !quick_signin) {
-        setTimeout(async () => {
+        const session_started = auth_success();
+        if (session_started) {
+            // -- verifico se ci sono richieste di autenticazione
+            const res = await AuthService.check_signin_request();
+            if (res) {
+                Log.summon(0, "Authentication request accepted");
+            }
+            // ---
             Log.summon(3, `Access saved as ${saved_email}`);
-        }, 1000);
+        }
     }
     /**
      * LOGIN
@@ -109,43 +114,46 @@ $(document).ready(async () => {
         Windows.loader(false);
     });
     /**
-     * Generate code
+     * REQUEST SIGN-IN
      */
-    $('#btn-request-sign-in').on('click', () => {
-        SignInUI.generate_code();
-    });
-    /**
-     * GET SHARED SIGN-IN CREDENTIALS
-     */
-    Form.onsubmit('get-ssic', async (form, elements) => {
-        const { code } = elements;
-        // ---
-        const res = await SecureTransfer.get('ssic', code);
-        if (!res) return;
-        const [email, password] = res.data;
-        const passKey = res.passKey;
-        // ---
-        if (await AuthService.signin(email, password, passKey)) {
-            Log.summon(0, `Hi ${email}`);
-            $(form).trigger('reset');
-            Windows.loader(true);
-            setTimeout(() => {
-                window.location.href = '/vault';
-            }, 3000);
-        }
-    });
+    RequestSignIn.init();
 });
 
-class SignInUI {
-    static rsicode = null;
+class RequestSignIn {
+    static btn = null;
+    static used = true;
+    static request_id = null;
+    static key = null;
+
     static init() {
-        this.rsicode = document.getElementById('rsicode');
-        this.generate_code();
-    }
-    /**
-     * Genera un codice casuale
-     */
-    static generate_code() {
-        this.rsicode.value = SecureTransfer.random_code();
+        this.btn = document.getElementById('btn-request-sign-in');
+        this.btn.addEventListener('click', async () => {
+            RequestSignIn.used = !RequestSignIn.used;
+            if (RequestSignIn.used) {
+                // ---
+                const authenticated = await AuthService.check_signin_response(RequestSignIn.request_id, RequestSignIn.key);
+                if (!authenticated) {
+                    Log.summon(1, 'Authentication failed, please try again');
+                    return false;
+                }
+                // ---
+                const session_started = await AuthService.start_session();
+                if (!session_started) return false;
+                // ---
+                Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
+                setTimeout(() => {
+                    window.location.href = '/vault';
+                }, 3000);
+            } else {
+                if (!confirm(`attention, a qr code will be shown for you to scan with an authenticated device, then you can close the qrcode window and re-click on “Request Sign-in” to authenticate`)) {
+                    RequestSignIn.used = !RequestSignIn.used;
+                    return false;
+                }
+                // -- effettuo una richiesta
+                const res = await AuthService.request_signin();
+                RequestSignIn.request_id = res.id;
+                RequestSignIn.key = res.key;
+            }
+        });
     }
 }
