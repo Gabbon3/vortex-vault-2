@@ -232,7 +232,7 @@ export class AuthService {
         const id = await SecureLink.request_id();
         if (!id) return false;
         // ---
-        const url = `http://localhost:3000/signin?action=rsi&id=${id}&key=${key}`; // rsi = request sign in
+        const url = `https://vortexvault.fly.dev/signin?action=rsi&id=${id}&key=${key}`; // rsi = request sign in
         QrCodeDisplay.generate({
             data: url,
         });
