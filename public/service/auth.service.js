@@ -314,7 +314,7 @@ export class AuthService {
      * @param {string} master_password 
      */
     static async generate_recovery_code(master_password) {
-        const code = Cripto.random_recovery_code();
+        const code = Cripto.random_alphanumeric_code(20);
         const salt = Cripto.random_bytes(16);
         const master_password_bytes = new TextEncoder().encode(master_password);
         // ---

@@ -20,7 +20,7 @@ class MfaInput extends HTMLElement {
             ${label_text}
         </label>
         <div class="flex gap-75">
-            <input name="${name}" maxlength="6" type="text" inputmode="numeric" class="input-text mfa" id="${id}" autocomplete="off" placeholder="******" required>
+            <input name="${name}" maxlength="6" type="text" pattern="\\d{6}" inputmode="numeric" class="input-text mfa" id="${id}" autocomplete="off" placeholder="******" required>
             <btn-paste target="${id}"></btn-paste>
         </div>`;
     }
