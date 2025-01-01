@@ -35,3 +35,5 @@ export class Windows {
         }
     }
 }
+
+window.Windows = Windows;

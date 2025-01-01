@@ -442,11 +442,7 @@
             </p>
             <form id="form-new-mfa-secret">
                 <email-verify-btn target-id="code-new-mfa-secret"></email-verify-btn>
-                <label for="code-new-mfa-secret">
-                    <span class="material-symbols-rounded">password</span>
-                    Code
-                </label>
-                <input name="code" type="text" maxlength="6" class="input-text mfa mb-2" id="code-new-mfa-secret" placeholder="******" autocomplete="off" required>
+                <mfa-input input-id="code-new-mfa-secret"></mfa-input>
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">security</span>
                     Enable
@@ -467,14 +463,7 @@
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </p>
             <form id="form-start-sudo-session">
-                <label for="start-sudo-session-code">
-                    <span class="material-symbols-rounded">password</span>
-                    MFA Code
-                </label>
-                <div class="flex gap-75 mb-2">
-                    <input name="code" maxlength="6" type="text" class="input-text mfa" id="start-sudo-session-code" autocomplete="off" placeholder="******" required>
-                    <btn-paste target="start-sudo-session-code"></btn-paste>
-                </div>
+                <mfa-input></mfa-input>
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">security</span>
                     Enable

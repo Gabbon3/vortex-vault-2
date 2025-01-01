@@ -42,18 +42,16 @@
             </p>
             <!-- --- -->
             <hr>
-            <button type="submit" class="btn primary w-100 mb-2">
-                <span class="material-symbols-rounded">login</span>
-                Sign In
-            </button>
-            <button type="button" class="btn warning w-100" id="btn-request-sign-in">
-                <span class="material-symbols-rounded">id_card</span>
-                Request Sign-in
-            </button>
-            <!-- <button type="button" class="btn warning w-100 open" data-target-open="win-request-sign-in">
-                <span class="material-symbols-rounded">id_card</span>
-                Request Sign-in
-            </button> -->
+            <div class="flex gap-50 d-column">
+                <button type="submit" class="btn primary">
+                    <span class="material-symbols-rounded">login</span>
+                    Sign In
+                </button>
+                <button type="button" class="btn warning" id="btn-request-sign-in">
+                    <span class="material-symbols-rounded">id_card</span>
+                    Sign-in with another device
+                </button>
+            </div>
         </form>
     </main>
     <!--
@@ -123,16 +121,7 @@
                 </label>
                 <input type="email" class="input-text" id="recovery-device-mfa-email" name="email" autocomplete="off" required>
                 <!-- RECOVERY CODE -->
-                <label for="recovery-device-mfa-code">
-                    <span class="material-symbols-rounded">password</span>
-                    Recovery Code
-                </label>
-                <div class="flex gap-75">
-                    <input name="code" maxlength="6" type="text" class="input-text mfa" id="recovery-device-mfa-code" autocomplete="off" placeholder="******" required>
-                    <button class="btn t CA paste-val" data-target-pa="recovery-device-mfa-code" type="button" title="Paste">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
-                </div>
+                <mfa-input></mfa-input>
                 <!-- --- -->
                 <button type="submit" class="btn primary mt-2">
                     <span class="material-symbols-rounded">settings_backup_restore</span>
@@ -157,11 +146,7 @@
                 <input type="email" class="input-text mb-2" id="recovery-device-email-email" name="email" autocomplete="off" required>
                 <!-- code -->
                 <email-verify-btn email-id="recovery-device-email-email" target-id="recovery-device-email-code"></email-verify-btn>
-                <label for="recovery-device-email-code">
-                    <span class="material-symbols-rounded">password</span>
-                    Code
-                </label>
-                <input name="code" maxlength="6" type="text" class="input-text mfa" id="recovery-device-email-code" autocomplete="off" placeholder="******" required>
+                <mfa-input input-id="recovery-device-email-code"></mfa-input>
                 <!-- --- -->
                 <button type="submit" class="btn primary mt-2">
                     <span class="material-symbols-rounded">settings_backup_restore</span>
@@ -169,40 +154,6 @@
                 </button>
             </form>
         </div>
-    </div>
-    <!-- 
-    SIGN-IN WITH SHARED SIGN-IN CREDENTIALS
-    -->
-    <div class="window m" id="win-request-sign-in">
-        <div class="flex y-center">
-            <h2 class="icon">
-                <span class="material-symbols-rounded">id_card</span>
-                Request Sign-in
-            </h2>
-            <button class="btn t close l last" data-target-close="win-request-sign-in">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </div>
-        <hr>
-        <p>
-            Click here to generate a code that you can use to sign-in here from another authenticated device
-        </p>
-        <button class="btn primary mb-2" id="btn-request-sign-in">
-            <span class="material-symbols-rounded">sync</span>
-            Generate Code
-        </button>
-        <form id="get-ssic" class="isle bg-3">
-            <!-- CODE -->
-            <input name="code" type="text" class="input-text mfa mb-2 fs-l" id="rsicode" autocomplete="off" required readonly>
-            <p class="description">
-                Enter this 8 digit code into another authenticated device.
-            </p>
-            <!-- SUBMIT -->
-            <button type="submit" class="btn primary">
-                <span class="material-symbols-rounded">login</span>
-                Sign In
-            </button>
-        </form>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

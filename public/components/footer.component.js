@@ -21,11 +21,15 @@ class Footer extends HTMLElement {
             </div>
         </div>
 
-        <!-- 
+        <!--
         QRCODE DISPLAY
         -->
         <div class="window auto" id="win-qrcode-display">
             <canvas id="qrcode-display"></canvas>
+            <input type="text" class="none" id="qrcode-display-content">
+            <btn-copy target="qrcode-display-content" class="primary w-100">
+                Copy QR Code content
+            </btn-copy>
         </div>
         `;
     }

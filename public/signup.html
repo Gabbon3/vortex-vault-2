@@ -93,11 +93,7 @@
                 <input type="email" class="input-text mb-2" id="verify-email-email" name="email" autocomplete="off" required>
                 <!-- code -->
                 <email-verify-btn email-id="verify-email-email" target-id="verify-email-code"></email-verify-btn>
-                <label for="recovery-device-email-code">
-                    <span class="material-symbols-rounded">password</span>
-                    Code
-                </label>
-                <input name="code" maxlength="6" type="text" class="input-text mfa mb-2" id="verify-email-code" autocomplete="off" placeholder="******" required>
+                <mfa-input input-id="verify-email-code"></mfa-input>
                 <!-- SUBMIT -->
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">check</span>
@@ -122,11 +118,7 @@
             <form id="account-verify">
                 <input type="email" class="none" id="verify-account-email" name="email" autocomplete="off" required>
                 <!-- code -->
-                <label for="account-verify-code">
-                    <span class="material-symbols-rounded">password</span>
-                    Code
-                </label>
-                <input name="code" maxlength="6" type="text" class="input-text mfa" id="account-verify-code" autocomplete="off" placeholder="******" required>
+                <mfa-input></mfa-input>
                 <p class="description">
                     Insert OTP code from your Authenticator app
                 </p>

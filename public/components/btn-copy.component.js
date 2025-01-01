@@ -8,8 +8,11 @@ class BtnCopy extends HTMLElement {
     connectedCallback() {
         // -- variables
         const target = this.getAttribute('target');
+        const class_ = this.getAttribute('class') ?? 't';
+        const text = this.textContent;
         // -- html
-        this.innerHTML = `<button type="button" class="btn t" title="Copy">
+        this.innerHTML = `<button type="button" class="btn ${class_}" title="Copy">
+            ${text}
             <span class="material-symbols-rounded">content_copy</span>
         </button>`;
         // ---

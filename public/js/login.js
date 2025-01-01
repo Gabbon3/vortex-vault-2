@@ -63,6 +63,9 @@ $(document).ready(async () => {
             // Log.summon(0, `Authenticated as ${email}`);
             window.location.href = '/vault';
         } else {
+            document.getElementById('recovery-email').value = email;
+            document.getElementById('recovery-device-mfa-email').value = email;
+            document.getElementById('recovery-device-email-email').value = email;
             Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
         Windows.loader(false);
@@ -147,7 +150,7 @@ class RequestSignIn {
                     window.location.href = '/vault';
                 }, 3000);
             } else {
-                if (!confirm(`attention, a qr code will be shown for you to scan with an authenticated device, then you can close the qrcode window and re-click on “Request Sign-in” to authenticate`)) {
+                if (!confirm(`attention, a qr code will be shown for you to scan with an authenticated device, then you can close the qrcode window and re-click on "Sign-in with another device" to authenticate`)) {
                     RequestSignIn.used = !RequestSignIn.used;
                     return false;
                 }

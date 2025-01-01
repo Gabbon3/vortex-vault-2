@@ -9,8 +9,8 @@ const controller = new SecureLinkController();
 // -- middlewares
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({
-    windowMs: 5 * 60 * 1000,
-    max: 250, // massimo 10 richieste per 2 minuti
+    windowMs:  60 * 1000,
+    max: 50,
     message: "Too many requests, try later",
 });
 router.use(limiter);
