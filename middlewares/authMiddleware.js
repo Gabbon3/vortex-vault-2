@@ -81,7 +81,7 @@ export const verify_mfa_code = async_handler(async (req, res, next) => {
     // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
     if (!user) throw new CError("ValidationError", "User not found", 404);
     if (!user.mfa_secret) throw new CError("ValidationError", "Any secret to use", 404);
-    const secret = MFAService.decrypt(user.mfa_secret);
+    const secret = MFAService.decrypt(user.id, user.mfa_secret);
     // -- verifico il codice
     const valid = await TOTP.verify(code, secret);
     if (!valid) throw new CError("AuthError", "Invalid code", 403);

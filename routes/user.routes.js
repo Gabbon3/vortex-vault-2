@@ -1,6 +1,5 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-// import { verifica_jwt } from "../middlewares/authMiddleware.js";
 import { UserController } from "../controllers/user.controller.js";
 import { verify_access_token, verify_email_code, verify_mfa_code, verify_password } from "../middlewares/authMiddleware.js";
 // -- router
@@ -31,7 +30,7 @@ router.get('/recovery/:email', controller.get_recovery);
 router.post('/recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // ---
 router.post('/mfa', verify_email_code, controller.enable_mfa);
-router.post('/mfa_test', verify_mfa_code, controller.test_2fa);
+router.post('/mfa_test', verify_access_token(), verify_mfa_code, controller.test_2fa);
 // ---
 router.post('/sudotoken', verify_access_token(), verify_mfa_code, controller.start_sudo_session);
 // -- SIGN-OUT

@@ -1,5 +1,5 @@
 export class BaseConverter {
-    static chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    static chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     
     /**
      * Converte un BigInt in una stringa rappresentativa nella base specificata.

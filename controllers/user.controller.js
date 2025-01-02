@@ -92,7 +92,11 @@ export class UserController {
      */
     enable_mfa = async_handler(async (req, res) => {
         const { email } = req.body;
-        const { final, secret } = MFAService.generate();
+        // -- ottengo lo uid
+        const { id } = await this.service.find_by_email(email);
+        if (!id) throw new CError("UserNotFound", "User not found", 422);
+        // --
+        const { final, secret } = MFAService.generate(id);
         // -- salvo nel db
         const [affected] = await this.service.update_user_info({ email }, { mfa_secret: Buffer.from(final) });
         // ---

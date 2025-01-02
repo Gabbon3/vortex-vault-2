@@ -38,7 +38,7 @@ export class Cripto {
      * @param {string} [options.key_encoding] - Encoding della chiave, se fornita come stringa (es: 'hex' o 'base64'). Se non specificato, si assume che `key` sia già un `Buffer`.
      * @param {string} [options.algo='sha256'] - Algoritmo di hash da usare per l'HMAC (es: 'sha256').
      * @param {string} [options.output_encoding='hex'] - Encoding per l'output HMAC, default 'hex'.
-     * @returns {string} HMAC del messaggio in formato specificato.
+     * @returns {*} HMAC del messaggio in formato specificato.
      */
     static hmac(message, key, options = {}) {
         const key_buffer = options.key_encoding ? Buffer.from(key, options.key_encoding) : key;

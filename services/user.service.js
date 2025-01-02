@@ -6,7 +6,6 @@ import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from '../models/user.js';
 import { Roles } from '../utils/roles.js';
 import { Mailer } from '../config/mail.js';
-import { date } from '../utils/dateUtils.js';
 import automated_emails from '../public/utils/automated.mails.js';
 
 export class UserService {

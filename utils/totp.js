@@ -20,7 +20,7 @@ export class TOTP {
             time >>= 8;
         }
         // -- calcolo l'hmac con SHA-1
-        const hmac = await Cripto.hmac(time_bytes, secret, {
+        const hmac = await Cripto.hmac(time_bytes, Buffer.from(secret), {
             algo: "sha1"
         });
         /* -- estraggo l'offset (deve essere compreso tra 0 e 15)

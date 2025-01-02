@@ -7,6 +7,7 @@ import msgpack from "../utils/msgpack.min.js";
 import { API } from "../utils/api.js";
 import { LocalStorage } from "../utils/local.js";
 import { VaultLocal } from "./vault.local.js";
+import { BaseConverter } from "../utils/baseConverter.js";
 
 window.VaultLocal = VaultLocal;
 
