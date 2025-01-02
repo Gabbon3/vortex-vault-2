@@ -200,12 +200,10 @@ p {
 }
 
 hr {
-    display: block;
-    margin: 13px auto;
-    height: 1px;
-    width: 98%;
-    border: none;
-    background-color: $border-color;
+    margin: 1rem 0;
+    color: $border-color;
+    border: 0;
+    border-top: 1px solid $border-color;
 
     &.dashed {
         background-color: transparent;
