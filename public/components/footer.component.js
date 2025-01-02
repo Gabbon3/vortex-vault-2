@@ -8,8 +8,8 @@ class Footer extends HTMLElement {
         <!-- container dei log -->
         <div id="logs_container"></div>
 
-        <!-- background delle finestre -->
-        <div id="bc-finestre"></div>
+        <!-- modal backdrop -->
+        <div id="modal-backdrop"></div>
         
         <!-- caricamento -->
         <div id="loader">

@@ -67,6 +67,20 @@ export class AuthService {
         return true;
     }
     /**
+     * Effettua la cancellazione di un account
+     */
+    static async delete_account(request_id, code) {
+        const res = await API.fetch('/auth/delete', {
+            method: "POST",
+            body: { request_id, code }
+        });
+        if (!res) return false;
+        // ---
+        localStorage.clear();
+        sessionStorage.clear();
+        return true;
+    }
+    /**
      * Verifica un email
      * @param {string} email 
      * @param {string} code 

@@ -151,6 +151,15 @@ h5 {
     }
 }
 
+.color {
+    &.warn {
+        color: $c-warning !important;
+    }
+    &.danger {
+        color: $c-danger !important;
+    }
+}
+
 p {
     font-size: $fs-m;
     color: $text-color;
@@ -331,7 +340,7 @@ hr {
         transform: translate(50%, -50%) scale(0);
         left: unset;
 
-        &.open {
+        &.show {
             right: 50%;
             left: unset;
             transform: translate(50%, -50%) scale(1);
@@ -343,7 +352,7 @@ hr {
         left: 100%;
     }
 
-    &.open {
+    &.show {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(1);
@@ -392,17 +401,6 @@ hr {
     &.bg-4 {
         background-color: $bg-4;
     }
-}
-
-#bc-finestre {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba($bg-1, 0.7);
-    z-index: 9;
 }
 
 monospace {

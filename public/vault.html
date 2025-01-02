@@ -567,7 +567,40 @@
                 <span class="material-symbols-rounded">logout</span>
                 Sign-out
             </button>
+            <button class="btn danger last open" data-target-open="win-delete-account">
+                <span class="material-symbols-rounded">delete_forever</span>
+                Delete Account
+            </button>
         </div>
+    </div>
+    <!-- 
+    DELETE ACCOUNT WINDOW
+    -->
+    <div class="window m pl" id="win-delete-account">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded color danger">delete_forever</span>
+                Delete Account
+            </h2>
+            <button class="btn t close l last" data-target-close="win-delete-account">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <p>
+            All data associated with your account will be permanently deleted, so it will no longer be accessible.
+        </p>
+        <form id="form-delete-account">
+            <email-verify-btn target-id="code-delete-account"></email-verify-btn>
+            <mfa-input input-id="code-delete-account"></mfa-input>
+            <p class="description">
+                We need to verify your identity via e-mail for security reasons before proceeding with the deletion of your account.
+            </p>
+            <button type="submit" class="btn danger mt-2">
+                <span class="material-symbols-rounded">delete_forever</span>
+                Confirm Account Deletion
+            </button>
+        </form>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

@@ -107,6 +107,21 @@ $(document).ready(() => {
             }, 3000);
         }
     });
+    /**
+     * DELETE ACCOUNT
+     */
+    Form.onsubmit('form-delete-account', async (form, elements) => {
+        const { request_id, code } = elements;
+        if (!code || code.length !== 6) return;
+        // ---
+        const deleted = await AuthService.delete_account(request_id, code);
+        if (deleted) {
+            Log.summon(0, "Your account has been deleted successfully, you will be disconnected from this page in a moment.");
+            setTimeout(() => {
+                window.location.href = '/signin';
+            }, 3000);
+        }
+    });
 });
 
 class AuthUI {

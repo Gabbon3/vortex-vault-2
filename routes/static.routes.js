@@ -13,7 +13,7 @@ const router = express.Router();
 // -- rate limiter
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 500,
+    max: 250,
     message: "Too many requests, try later",
 });
 router.use(limiter);
@@ -28,7 +28,7 @@ router.get('/:page', async (req, res) => {
         res.sendFile(requested_file);
     } catch (err) {
         // se il file non esiste 404
-        res.status(404).send('File not found');
+        res.redirect('/signin');
     }
 });
 
