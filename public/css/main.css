@@ -378,6 +378,13 @@ h5.code {
   color: #878e54;
 }
 
+.color.warn {
+  color: rgb(238, 173, 113) !important;
+}
+.color.danger {
+  color: rgb(238, 113, 132) !important;
+}
+
 p {
   font-size: 1em;
   color: #f5f5f5;
@@ -531,7 +538,7 @@ hr.s {
   transform: translate(50%, -50%) scale(0);
   left: unset;
 }
-.window.pl.open {
+.window.pl.show {
   right: 50%;
   left: unset;
   transform: translate(50%, -50%) scale(1);
@@ -540,7 +547,7 @@ hr.s {
   top: 50%;
   left: 100%;
 }
-.window.open {
+.window.show {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
@@ -580,17 +587,6 @@ hr.s {
 }
 .isle.bg-4 {
   background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
-}
-
-#bc-finestre {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(23, 20, 20, 0.7);
-  z-index: 9;
 }
 
 monospace {
@@ -1038,6 +1034,23 @@ password-strength-bar .bar._4 {
 #loader svg {
   width: calc((15vw + 15vh) / 2);
   animation: ease-out loader infinite 2s;
+}
+
+#modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(23, 20, 20, 0.7);
+  z-index: 9;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+#modal-backdrop.show {
+  opacity: 1;
+  visibility: visible;
 }
 
 @keyframes bounce {

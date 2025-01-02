@@ -35,5 +35,7 @@ router.post('/mfa_test', verify_access_token(), verify_mfa_code, controller.test
 router.post('/sudotoken', verify_access_token(), verify_mfa_code, controller.start_sudo_session);
 // -- SIGN-OUT
 router.post('/signout', verify_access_token(), controller.signout);
+// -- DELETE
+router.post('/delete', verify_access_token(1), verify_email_code, controller.delete);
 
 export default router;

@@ -75,16 +75,14 @@
                 Email
             </label>
             <input type="email" class="input-text" id="recovery-email" name="email" autocomplete="off" required>
-            <!-- SUDO CODE -->
+            <!-- RECOVERY CODE -->
             <label for="sudo-code">
                 <span class="material-symbols-rounded">password</span>
                 Recovery Code
             </label>
             <div class="flex gap-75">
-                <input name="code" type="password" class="input-text mono" id="sudo-code" autocomplete="off" placeholder="****-****-****-****-****" required>
-                <button class="btn t CA paste-val" data-target-pa="sudo-code" type="button" title="Paste">
-                    <span class="material-symbols-rounded">content_paste</span>
-                </button>
+                <input name="code" type="password" class="input-text mono" id="recovery-code" autocomplete="off" placeholder="****-****-****-****-****" required>
+                <btn-paste target="recovery-code"></btn-paste>
             </div>
             <!-- --- -->
             <button type="submit" class="btn primary mt-2">

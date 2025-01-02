@@ -50,7 +50,10 @@ export class Form {
      * @param {FormOnSubmitCallback} callback - La funzione di callback eseguita al submit.
      */
     static onsubmit(form_id, callback) {
-        document.getElementById(form_id).addEventListener('submit', async (e) => {
+        const form = document.getElementById(form_id);
+        if (!form) return;
+        // ---
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             callback(e.currentTarget, Form.get_data(e.currentTarget));
         });

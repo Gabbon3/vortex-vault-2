@@ -13,7 +13,7 @@ import './mfa-input.component.js';
 import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
 
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', async () => {
     QrCodeDisplay.init();
     /**
      * FINESTRE
@@ -28,22 +28,6 @@ $(document).ready(() => {
         const target = $(btn).attr("data-target-open");
         Windows.open(target);
     });
-    $("#bc-finestre").click((bc) => {
-        bc = bc.currentTarget;
-        const target = $(bc).attr("data-target");
-        Windows.close(target);
-    });
-    /**
-     * pulsanti con open-close aprono e chiudono finestre
-     * data-target = finestra_da_aprire;finestra_da_chiudere
-     */
-    $(document).on("click", '.open-close', (e) => {
-        const btn = e.currentTarget;
-        // ---
-        const [open, close] = $(btn).attr("data-target").split(';');
-        dom.hide('#' + close);
-        Windows.open(open);
-    });
     /**
      * pulsanti che richiedono l'animazione di check
      */
@@ -56,32 +40,6 @@ $(document).ready(() => {
         setTimeout(() => {
             btn.textContent = current_icon;
         }, 1000);
-    });
-    /**
-     * pulsanti copia
-     */
-    $(document).on('click', '.copy-val', (e) => {
-        const target = document.getElementById(e.currentTarget.getAttribute('data-target-cc')); // cc sta per copy
-        navigator.clipboard.writeText(target.value ?? target.textContent);
-    });
-    /**
-     * pulsanti incolla
-     */
-    $(document).on('click', '.paste-val', (e) => {
-        const target = document.getElementById(e.currentTarget.getAttribute('data-target-pa')); // pa sta per paste
-        navigator.clipboard.readText().then((text) => {
-            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ?
-                target.value = text :
-                target.textContent = text;
-            // --- simulo l'evento
-            const keyupevent = new KeyboardEvent('input', {
-                key: '',
-                bubbles: true,
-                cancelable: true,
-            });
-            // ---
-            target.dispatchEvent(keyupevent);
-        }).catch((error) => { console.warn(error) });
     });
     /**
      * Pulsanti cancella testo
@@ -109,6 +67,7 @@ $(document).ready(() => {
     /**
      * sliders
      */
+    
     $('.slider').on('click', (e) => {
         // -- id del container
         const target = document.getElementById(e.currentTarget.getAttribute('slider'));
@@ -116,37 +75,3 @@ $(document).ready(() => {
         $(target).slideToggle(200);
     });
 });
-
-export const finestra = {
-    /**
-     * Apre una finestra nel document
-     * @param {String} target id della finestra html
-     */
-    open(target) {
-        const div = $("#" + target);
-        if (div.length > 0) {
-            document.getElementById(target).classList.add('open');
-            $("#bc-finestre").attr("data-target", target);
-            $("#bc-finestre").fadeIn(150);
-        }
-    },
-    /**
-     * Chiude una finestra nel document
-     * @param {String} target id della finestra html
-     */
-    close(target) {
-        document.getElementById(target).classList.remove('open');
-        $("#bc-finestre").fadeOut(150);
-    },
-    /**
-     * schermata di caricamento
-     * @param {boolean} active 
-     */
-    loader(active) {
-        if (active) {
-            $("#loader").fadeIn(150);
-        } else {
-            $("#loader").fadeOut(150);
-        }
-    },
-};

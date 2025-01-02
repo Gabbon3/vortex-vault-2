@@ -135,6 +135,16 @@ export class UserService {
         })
     }
     /**
+     * Elimina un utente e tutti i dati associati
+     * @param {number} id 
+     * @returns {Object}
+     */
+    async delete_by_id(id) {
+        return await User.destroy({
+            where: { id }
+        })
+    }
+    /**
      * Restituisce un utente tramite la sua email
      * @param {string} email 
      * @returns 

@@ -86,6 +86,19 @@ export class UserController {
         res.status(200).json({ message: 'Disconnected' });
     });
     /**
+     * Elimina un account
+     */
+    delete = async_handler(async (req, res) => {
+        const deleted = await this.service.delete_by_id(req.user.uid);
+        if (deleted === 0) throw new Error("Nessun utente eliminato");
+        // -- elimino i cookie
+        Object.keys(req.cookies).forEach((cookie_name) => {
+            res.clearCookie(cookie_name, { path: '/' });
+        });
+        // ---
+        res.status(200).json({ message: "All data deleted successfully" });
+    })
+    /**
      * Abilita l'autenticazione a 2 fattori
      * @param {Request} req 
      * @param {Response} res 
