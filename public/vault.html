@@ -545,7 +545,7 @@
             </form>
         </div>
         <hr>
-        <!-- FAST SIGN-IN -->
+        <!-- QUICK SIGN-IN -->
         <h3 class="icon slider" slider="cont-fsi">
             <span class="material-symbols-rounded">id_card</span>
             Quick Sign-in
@@ -561,6 +561,41 @@
                 </button>
             </form>
         </div>
+        <hr>
+        <!-- CHECK MESSAGE AUTHENTICATION CODE -->
+        <h3 class="icon slider" slider="cont-cmac">
+            <span class="material-symbols-rounded">mark_email_read</span>
+            Check Message Authentication Code
+        </h3>
+        <div id="cont-cmac" class="isle bg-3" style="display: none;">
+            <p class="mb-3">
+                Here you can check the validity of the message authentication codes 
+                in the emails you receive from us, which is useful for verifying 
+                whether the emails actually come from us or are instead phishing 
+                attempts.
+            </p>
+            <form id="form-cmac">
+                <label for="cmac-code">
+                    <span class="material-symbols-rounded">password</span>
+                    Message Authentication Code
+                </label>
+                <div class="flex gap-75">
+                    <input name="code" type="text" class="input-text mono" id="cmac-code" autocomplete="off" placeholder="**.**.******" required>
+                    <btn-paste target="cmac-code"></btn-paste>
+                </div>
+                <div class="flex gap-50">
+                    <button type="submit" class="btn primary mt-2">
+                        <span class="material-symbols-rounded">check</span>
+                        Check
+                    </button>
+                    <button type="reset" class="btn secondary CA mt-2">
+                        <span class="material-symbols-rounded">close</span>
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- ---- -->
         <hr>
         <div class="flex gap-50">
             <button class="btn warning" id="logout-btn">

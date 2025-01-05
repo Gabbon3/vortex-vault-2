@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { Cripto } from '../utils/cryptoUtils.js';
 import 'dotenv/config';
 import { Bytes } from '../utils/bytes.js';
+import { BaseConverter } from '../utils/baseConverter.js';
 
 export class Mailer {
     static fish_key = Buffer.from(process.env.FISH_SECRET, "hex");
@@ -17,14 +18,18 @@ export class Mailer {
     });
     /**
      * Genera un codice di verifica da includere nelle mail per legittimare la mail
-     * @param {string} email 
+     * @param {string} email_
      * @returns {string}
      */
-    static generate_antiphish_code(email) {
-        const payload = `${email.split('@')[0]}.${Date.now()}`;
+    static message_authentication_code(email_) {
+        let [email, timestamp] = [email_.split('@')[0], Math.floor(Date.now() / 1000)];
+        // -- comprimo e riduco la dimensione dei dati
+        timestamp = BaseConverter.to_string(timestamp, 62);
+        // ---
+        const payload = `${email}.${timestamp}`;
         const signature = Cripto.hmac(payload, this.fish_key);
         // ---
-        const encoded_signature = Bytes.base64.to(signature, true);
+        const encoded_signature = Bytes.base62.encode(signature.subarray(0, 12), true);
         return `${payload}.${encoded_signature}`;
     }
     /**
@@ -32,18 +37,18 @@ export class Mailer {
      * @param {string} code 
      * @returns {number} 1 codice e data validi, 2 codice valido ma scaduto, 3 codice non valido
      */
-    static verify_antiphish_code(code) {
+    static verify_message_authentication_code(code) {
         const code_parts = code.split('.');
-        // ----
-        const encoded_signature = Bytes.base64.from(code_parts.pop(), true);
-        // ---
+        // -- decodifico la firma in binario
+        const encoded_signature = Bytes.base62.decode(code_parts.pop());
+        // -- reimposto il payload
         const payload = code_parts.join('.');
-        // ---
-        const date = Number(code_parts.pop());
+        // -- ottengo la data per fare il confronto temporale
+        const date = Number(BaseConverter.from_string(code_parts.pop(), 62)) * 1000;
         // -- calcolo nuovamente la signature
         const signature = Cripto.hmac(payload, this.fish_key);
         // -- verifico le condizioni
-        const valid_signature = Bytes.compare(signature, encoded_signature);
+        const valid_signature = Bytes.compare(signature.subarray(0, 12), encoded_signature);
         const valid_date = Date.now() < new Date(date + (24 * 60 * 60 * 1000));
         // ---
         return valid_signature ? (valid_date ? 1 : 2) : 3;
