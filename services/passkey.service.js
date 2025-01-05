@@ -36,7 +36,7 @@ export class PasskeyService {
         });
         if (!user) throw new CError("UserNotFound", "User not found", 422);
         // -- genero la challenge
-        const challenge = Cripto.random_bytes(64, "base64");
+        const challenge = Cripto.random_bytes(32, "base64");
         // -- salvo nel RamDB
         RamDB.set(`psk-chl-${email}`, { challenge, user_id: user.id }, 60);
         // ---
@@ -54,28 +54,32 @@ export class PasskeyService {
             ],
         };
     }
-
-    async complete_registration() {
+    /**
+     * Completa la registrazione di una passkey
+     * @param {string} id 
+     * @param {Uint8Array} public_key 
+     * @param {Uint8Array} signature 
+     * @param {string} email 
+     * @returns {boolean}
+     */
+    async complete_registration(id, public_key, signature, email) {
         const entry = RamDB.get(`psk-chl-${email}`);
         if (!entry) throw new CError("", "Request expired", 400);
         // ---
+        const challenge = entry.challenge;
+        const is_valid = ECDSA.verify(challenge, signature, public_key);
+        if (!is_valid) throw new CError("", "Invalid signature", 401);
         // ---
-        // const signature = Bytes.base64.from(signature_base64);
-        // const public_key = Bytes.base64.from(public_key_base64);
-        // // ---
-        // const is_valid = ECDSA.verify(challenge, signature, public_key);
-        // if (!is_valid) throw new CError("", "Invalid signature", 401);
-        // // ---
-        // await Passkey.create({
-        //     credential_id: credential_id,
-        //     public_key: Buffer.from(public_key),
-        //     user_id: entry.user_id,
-        // });
-        // // -- invio la mail
-        // const { text, html } = automated_emails.newPasskeyAdded(email);
-        // Mailer.send(email, "New Passkey", text, html);
-        // // ---
-        // return verification;
+        await Passkey.create({
+            credential_id: credential_id,
+            public_key: Buffer.from(public_key),
+            user_id: entry.user_id,
+        });
+        // -- invio la mail
+        const { text, html } = automated_emails.newPasskeyAdded(email);
+        Mailer.send(email, "New Passkey", text, html);
+        // ---
+        return true;
     }
     /**
      * Genera le opzioni di autenticazione per il login dell'utente.

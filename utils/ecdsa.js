@@ -32,18 +32,49 @@ export class ECDSA {
     static verify(data, signature, public_key) {
         const buffer_data = Buffer.from(data);
         const buffer_signature = Buffer.from(signature);
-        const buffer_public_key = Buffer.from(public_key);
-        // -- cerifico la firma con la chiave pubblica
+        const public_key_pem = this.rawToPem(public_key);
+        console.log(public_key_pem);
+        // -- verifico la firma con la chiave pubblica
         const verify = crypto.createVerify("SHA256");
         verify.update(buffer_data);
         const is_valid = verify.verify(
             {
-                key: buffer_public_key,
+                key: public_key_pem,
                 dsaEncoding: "ieee-p1363", // Standard per ECDSA
             },
             buffer_signature
         );
         // ---
         return is_valid;
+    }
+    /**
+     * Converte una chiave COSE a PEM
+     * @param {Uint8Array} coseKey 
+     * @returns {string}
+     */
+    static rawToPem(publicKeyRaw) {
+        // La chiave raw è composta da x (32 byte) + y (32 byte)
+        const x = publicKeyRaw.slice(0, 32);
+        const y = publicKeyRaw.slice(32, 64);
+    
+        // Costruzione del formato DER
+        const publicKeyDer = Buffer.concat([
+            Buffer.from('3059', 'hex'), // SEQUENCE
+            Buffer.from('3013', 'hex'), // SEQUENCE
+            Buffer.from('0607', 'hex'), // OBJECT IDENTIFIER
+            Buffer.from('2A8648CE3D0201', 'hex'), // id-ecPublicKey
+            Buffer.from('0608', 'hex'), // OBJECT IDENTIFIER
+            Buffer.from('2A8648CE3D030107', 'hex'), // secp256r1
+            Buffer.from('0344', 'hex'), // BIT STRING
+            Buffer.concat([
+                Buffer.from('00', 'hex'), // BIT STRING padding
+                Buffer.from('04', 'hex'), // Uncompressed point indicator
+                x,
+                y,
+            ]),
+        ]);
+    
+        // Convertire in formato PEM
+        return `-----BEGIN PUBLIC KEY-----\n${publicKeyDer.toString('base64')}\n-----END PUBLIC KEY-----`;
     }
 }

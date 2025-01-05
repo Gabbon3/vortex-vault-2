@@ -22,11 +22,12 @@ export class PasskeyController {
      * Gestisce la risposta della registrazione inviata dal client (fase 2 del flusso WebAuthn).
      */
     complete_registration = async_handler(async (req, res) => {
-        
+        const { data } = req.body;
+        const { id, email, public_key, challenge } = msgpack.decode(Bytes.base64.from(data));
         // --
-        const result = await this.service.complete_registration();
+        await this.service.complete_registration(id, public_key, challenge, email);
         // ---
-        res.status(201).json({ success: result.verified });
+        res.status(201).json({ message: 'Passkey added successfully.' });
     });
     /**
      * Genera delle opzioni di accesso (la challenge)

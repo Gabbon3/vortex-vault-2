@@ -31,16 +31,26 @@ export class PasskeyService {
             type: credential_.type,
             email,
         }
-        // const essentials = {
-        //     id: 
-        // }
-        console.log(credential);
-        return;
-        // ---
+        // ---------------------------
+        // const credential = msgpack.decode(Bytes.base64.from('haJpZLZwVGJxUVN6TE9yQnVNc0hvdmN0Q1NnpXJhd0lk2BKlNupBLMs6sG4ywei9y0JKqHJlc3BvbnNlgrFhdHRlc3RhdGlvbk9iamVjdMeyEqNjZm10ZG5vbmVnYXR0U3RtdKBoYXV0aERhdGFYlEmWDeWIDoxodDQXD2R2YFuP5K65ooYyx5lc87qDHZdjXQAAAADqm41mTQEdITzktrSMtXXUABClNupBLMs6sG4ywei9y0JKpQECAyYgASFYILvYzppiqhsZ/XwZZyinD+KOB2Gc13EVby7WUsn4hlwgIlggxABEnr4a77/zLyxX9sjCPefmQAs3+hJWO3FUySwlC8OuY2xpZW50RGF0YUpTT07HiRJ7InR5cGUiOiJ3ZWJhdXRobi5jcmVhdGUiLCJjaGFsbGVuZ2UiOiJrZFhUU1IyVzVyTXlVQ2ZZZ3lGRU5lY3FwSmtOVERPN3JvTzdJYU82N1BZIiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfaR0eXBlqnB1YmxpYy1rZXmlZW1haWyzMjAwNGdhYmJvQGdtYWlsLmNvbQ=='));
+        // console.log(credential);
+        // -- estraggo la chiave pubblica
+        const authData = cborJs.decode(credential.response.attestationObject.buffer).authData;
+        const public_key = authData.slice(65, 130);
+        // -- estraggo la challenge
+        const clientData = JSON.parse(new TextDecoder().decode(credential.response.clientDataJSON))
+        const challenge = Bytes.base64.from(clientData.challenge, true);
+        // -- esporto i dati essenziali
+        const essentials = {
+            id: credential.id,
+            email,
+            public_key: public_key,
+            challenge: challenge,
+        }
         // --- completo la registrazione
         const res = await API.fetch('/auth/passkey/register', {
             method: 'POST',
-            body: { data: Bytes.base64.to(msgpack.encode(credential)) }
+            body: { data: Bytes.base64.to(msgpack.encode(essentials)) }
         });
         // ---
         console.log(res);
@@ -52,5 +62,5 @@ export class PasskeyService {
 window.PasskeyService = PasskeyService;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await PasskeyService.request_new_passkey('2004gabbo@gmail.com')
+    if (confirm('')) await PasskeyService.request_new_passkey('2004gabbo@gmail.com')
 })
