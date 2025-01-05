@@ -8,6 +8,7 @@ import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
+import { PasskeyService } from "./passkey.public.service.js";
 
 export class AuthService {
     /**

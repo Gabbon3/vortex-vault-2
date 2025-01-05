@@ -21,7 +21,7 @@ export class Bytes {
          * @returns {string}
          */
         to(buffer, urlsafe = false) {
-            const base64 = btoa(String.fromCharCode(...buffer));
+            const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
             return urlsafe
                 ? base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
                 : base64;

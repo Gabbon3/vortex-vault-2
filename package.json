@@ -13,6 +13,7 @@
     "description": "Struttura base per un API in Node con Express che include l'autenticazione e gestione di access e refresh tokens",
     "dependencies": {
         "bcryptjs": "^2.4.3",
+        "cbor": "^10.0.3",
         "cookie-parser": "^1.4.7",
         "dotenv": "^16.4.5",
         "express": "^4.21.1",

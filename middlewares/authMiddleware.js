@@ -4,6 +4,7 @@ import { UserService } from "../services/user.service.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { TOTP } from "../utils/totp.js";
 import { MFAService } from "../services/mfa.service.js";
+import { PasskeyService } from "../services/passkey.service.js";
 import { Roles } from "../utils/roles.js";
 import { RamDB } from "../config/ramdb.js";
 /**
@@ -85,5 +86,19 @@ export const verify_mfa_code = async_handler(async (req, res, next) => {
     // -- verifico il codice
     const valid = await TOTP.verify(code, secret);
     if (!valid) throw new CError("AuthError", "Invalid code", 403);
+    next();
+});
+/**
+ * Verifica una passkey
+ */
+export const verify_passkey = async_handler(async (req, res, next) => {
+    const { response } = req.body;
+    const service = new PasskeyService();
+    // -- verifico la risposta
+    const verification = service.verify_auth_response();
+    // --
+    if (!verification.verified) throw new CError('', "Access denied", 403);
+    // -- se è tutto ok aggiungo il payload dell'utente alla request
+    req.user = { id: verification.userId };
     next();
 });
