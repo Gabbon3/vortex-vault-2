@@ -37,5 +37,7 @@ router.post('/sudotoken', verify_access_token(), verify_mfa_code, controller.sta
 router.post('/signout', verify_access_token(), controller.signout);
 // -- DELETE
 router.post('/delete', verify_access_token(1), verify_email_code, controller.delete);
+// -- Verify Message Authentication Code
+router.post('/vmac', controller.verify_message_authentication_code);
 
 export default router;
