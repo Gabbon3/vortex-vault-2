@@ -265,7 +265,7 @@ export class Bytes {
      * @returns 
      */
     static compare(a, b) {
-        if (a.length != b.length) throw new Error("Invalid size a is different than b");
+        if (a.length != b.length) return false;
         // ---
         const L = a.length;
         // ---

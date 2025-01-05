@@ -14,14 +14,14 @@ export class MFAService {
      */
     static get_key(uid, salt) {
         // -- calcolo l'indice della chiave da utilizzare
-        const base = Bytes.bigint.to(Cripto.hmac(`${uid}`, Buffer.from(salt)));
+        const base = Bytes.bigint.to(Cripto.hmac(`${uid}`, salt));
         const index = Number(base % 16n);
         // -- calcolo le posizioni per ottenere la chiave
         const start = index * 32;
         const end = start + 32;
         const env_key = this.keys.subarray(start, end);
         // -- calcolo la chiave
-        const key = Cripto.hmac(salt, Buffer.from(env_key));
+        const key = Cripto.hmac(salt, env_key);
         return key;
     }
     /**

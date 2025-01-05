@@ -41,7 +41,7 @@ export class Cripto {
      * @returns {*} HMAC del messaggio in formato specificato.
      */
     static hmac(message, key, options = {}) {
-        const key_buffer = options.key_encoding ? Buffer.from(key, options.key_encoding) : key;
+        const key_buffer = options.key_encoding ? Buffer.from(key, options.key_encoding) : Buffer.from(key);
         // ---
         const hmac_buffer = crypto.createHmac(options.algo ?? 'sha256', key_buffer)
             .update(message)

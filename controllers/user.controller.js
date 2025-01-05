@@ -241,6 +241,14 @@ export class UserController {
         res.status(200).json({ recovery: user.recovery });
     });
     /**
+     * Verifica la validità di un message authentication code
+     */
+    verify_message_authentication_code = async_handler(async (req, res) => {
+        const { mac } = req.body; // mac = message_authentication_code
+        const status = Mailer.verify_antiphish_code(mac);
+        res.status(200).json({ status });
+    });
+    /**
      * Imposta nei cookie l'access e il refresh token
      * @param {Response} res 
      * @param {Object} cookies
