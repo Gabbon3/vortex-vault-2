@@ -35,7 +35,7 @@ export class Bytes {
             return BaseConverter.to_string(Bytes.bigint.decode(blob), 62);
         },
         decode(base62string) {
-            return Bytes.bigint.from(BaseConverter.from_string(base62string, 62));
+            return Bytes.bigint.encode(BaseConverter.from_string(base62string, 62));
         }
     }
 
