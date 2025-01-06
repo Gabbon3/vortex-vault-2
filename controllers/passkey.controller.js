@@ -15,17 +15,19 @@ export class PasskeyController {
         const { email } = req.params;
         // ---
         const options = await this.service.start_registration(email);
+        // -- codifico con msgpack per compattare e mantenere i dati
+        const encoded_options = Bytes.base64.encode(msgpack.encode(options));
         // ---
-        res.status(200).json(options);
+        res.status(200).json({ options: encoded_options });
     });
     /**
      * Gestisce la risposta della registrazione inviata dal client (fase 2 del flusso WebAuthn).
      */
     complete_registration = async_handler(async (req, res) => {
-        const { data } = req.body;
-        const { id, email, public_key, challenge } = msgpack.decode(Bytes.base64.decode(data));
+        const { publicKeyCredential: encodedPublicKeyCredential, email } = req.body;
+        const publicKeyCredential = msgpack.decode(Bytes.base64.decode(encodedPublicKeyCredential));
         // --
-        await this.service.complete_registration(id, public_key, challenge, email);
+        await this.service.complete_registration(publicKeyCredential, email);
         // ---
         res.status(201).json({ message: 'Passkey added successfully.' });
     });

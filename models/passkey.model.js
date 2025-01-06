@@ -16,12 +16,12 @@ export const Passkey = sequelize.define(
             comment: "ID univoco della credenziale WebAuth"
         },
         public_key: {
-            type: DataTypes.BLOB,
+            type: DataTypes.TEXT,
             allowNull: false,
             comment: "Chiave pubblica in binario per verificare le challenge"
         },
         sign_count: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             defaultValue: 0,
             comment: "Contatore di sicurezza per prevenire replay attacks"
@@ -29,7 +29,12 @@ export const Passkey = sequelize.define(
         user_id: {
             type: DataTypes.BIGINT,
             allowNull: false
-        }
+        },
+        attestation_format: {
+            type: DataTypes.STRING(50),
+            allowNull: true,
+            comment: "Formato della attestation (es. packed, fido-u2f, ecc.)",
+        },
     },
     {
         tableName: "passkey",

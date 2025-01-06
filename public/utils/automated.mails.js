@@ -72,6 +72,9 @@ const automated_emails = {
      * @returns 
      */
     newPasskeyAdded: (email) => {
+      // -- anti phishing text
+      const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+
       const text = `
   Hello ${email.split('@')[0]},
   We noticed that a new passkey has been associated with your account, for more information visit the app.
@@ -79,17 +82,15 @@ const automated_emails = {
   Thank you for your attention
   
   The Vortex Vault team
-      `;
+  ${aptext}`;
 
         const html = `
   <html>
     <body>
       <h4>Hello ${email.split('@')[0]},</h4>
       <p>We noticed that a new passkey has been associated with your account, for more information visit the app.</p>
-      <p>
-        If it wasn't you, you can still rest assured since that device is blocked, but you need to change your password immediately as your vault could be at risk.
-      </p>
       <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+      ${aphtml}
     </body>
   </html>
       `;

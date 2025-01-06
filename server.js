@@ -16,6 +16,7 @@ import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 // import { Mailer } from './config/mail.js';
 import https from 'https';
 import fs from 'fs';
+import { date } from './utils/dateUtils.js';
 
 /**
  * MIDDLEWARES
@@ -78,6 +79,7 @@ try {
     // ---
     app.listen(PORT, () => {
         console.log(`☑️ Server`);
+        console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
 } catch (error) {
     console.error('❌ Errore durante l\'avvio del server => ', error);

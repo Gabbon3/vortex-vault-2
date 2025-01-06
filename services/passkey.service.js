@@ -4,10 +4,10 @@ import { User } from "../models/user.js";
 import { Mailer } from "../config/mail.js";
 import "dotenv/config";
 import automated_emails from "../public/utils/automated.mails.js";
-import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
 import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";
+import { UID } from "../utils/uid.js";
 
 export class PasskeyService {
     static rpName = "Vortex Vault";
@@ -45,48 +45,55 @@ export class PasskeyService {
         // -- genero la challenge e le options
         const options = await this.fido2.assertionOptions();
         options.user = {
-            id: user.id,
+            id: Bytes.bigint.encode(BigInt(user.id)),
             name: user.email,
             displayName: user.email.split('@')[0],
         };
-        options.challenge = Bytes.base64.encode(options.challenge);
+        options.challenge = new Uint8Array(options.challenge);
+        options.rp = {
+            name: PasskeyService.rpName,
+            id: PasskeyService.rpId,
+        }
+        options.pubKeyCredParams = [
+            { type: "public-key", alg: -7 }, // ES256: ECDSA w/ SHA-256
+            { type: "public-key", alg: -257 }, // RS256: RSASSA-PKCS1-v1_5 w/ SHA-256
+        ];
         // -- salvo nel RamDB
-        RamDB.set(`psk-chl-${email}`, { challenge, user_id: user.id }, 60);
+        RamDB.set(`psk-chl-${email}`, { challenge: options.challenge, user_id: user.id }, 60);
         // ---
-        return {
-            challenge: challenge,
-            rp: { id: PasskeyService.rpId, name: PasskeyService.rpName },
-            user: {
-                id: user.id,
-                name: user.email,
-                displayName: user.email.split('@')[0],
-            },
-            pubKeyCredParams: [
-                { type: "public-key", alg: -7 }, // ECDSA
-                { type: "public-key", alg: -257 }, // RSA
-            ],
-        };
+        return options;
     }
     /**
      * Completa la registrazione di una passkey
-     * @param {string} id 
-     * @param {Uint8Array} public_key 
-     * @param {Uint8Array} signature 
-     * @param {string} email 
+     * @param {object} credentials
      * @returns {boolean}
      */
-    async complete_registration(id, public_key, signature, email) {
+    async complete_registration(credentials, email) {
         const entry = RamDB.get(`psk-chl-${email}`);
         if (!entry) throw new CError("", "Request expired", 400);
         // ---
-        const challenge = entry.challenge;
-        const is_valid = ECDSA.verify(challenge, signature, public_key);
-        if (!is_valid) throw new CError("", "Invalid signature", 401);
-        // ---
+        const { challenge, user_id } = entry;
+        // -- verifico la challenge
+        const attestation = await this.fido2.attestationResult({
+            id: credentials.id,
+            rawId: credentials.rawId.buffer,
+            response: {
+                attestationObject: credentials.response.attestationObject.buffer,
+                clientDataJSON: credentials.response.clientDataJSON.buffer,
+            },
+        }, { challenge: challenge, origin: PasskeyService.origin, factor: "either", });
+        // -- estraggo i dati necessari
+        const credential_id = Bytes.base64.encode(attestation.authnrData.get('credId'), true);
+        const public_key = attestation.authnrData.get('credentialPublicKeyPem'); // Chiave pubblica in formato PEM
+        const sign_count = attestation.authnrData.get('counter');
+        const attestation_format = attestation.fmt;
+        // -- salvo sul db
         await Passkey.create({
-            credential_id: credential_id,
-            public_key: Buffer.from(public_key),
-            user_id: entry.user_id,
+            credential_id,
+            public_key,
+            sign_count,
+            user_id,
+            attestation_format,
         });
         // -- invio la mail
         const { text, html } = automated_emails.newPasskeyAdded(email);
@@ -95,44 +102,15 @@ export class PasskeyService {
         return true;
     }
     /**
-     * Genera le opzioni di autenticazione per il login dell'utente.
-     *
+     * Genera le opzioni di autenticazione per l'utente.
      * @returns {object} - Le opzioni di autenticazione da inviare al client.
      */
     async generate_auth_options() {
-        return this.webauthn.authenticationOptions();
-    }
-    /**
-     * Verifica la risposta dell'autenticazione inviata dal client.
-     *
-     * @param {object} response - La risposta del client contenente i dati dell'autenticazione.
-     * @returns {object} - I dettagli della verifica dell'autenticazione.
-     * @throws {CError} - Se l'autenticazione non è verificata o se ci sono errori nei dati.
-     */
-    async verify_auth_response(response) {
-        const passkey = await Passkey.findOne({
-            where: { credentialId: response.id },
-        });
-        if (!passkey)
-            throw new CError(
-                "CredentialsNotFound",
-                "Credentials not found",
-                404
-            );
-        // ---
-        const verification = await this.webauthn.verifyAuthenticationResponse({
-            response,
-            expectedChallenge: response.challenge,
-            expectedRPID: Passkey.rpId,
-            expectedOrigin: Passkey.origin,
-            credentialPublicKey: passkey.public_key,
-            credentialCurrentSignCount: passkey.sign_count,
-        });
-        if (!verification.verified) throw new CError("", "Access denied", 403);
-        // ---
-        passkey.sign_count = verification.authenticationInfo.newSignCount;
-        await passkey.save();
-        // ---
-        return verification;
+        const request_id = UID.generate();
+        // -- creo una challenge unica
+        const options = await this.fido2.assertionOptions();
+        const challenge = options.challenge;
+        // -- salvo nel RamDB
+        RamDB.set(`chl-${request_id}`, {}, 60);
     }
 }
