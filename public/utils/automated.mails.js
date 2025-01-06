@@ -2,13 +2,14 @@ import { date } from "../../utils/dateUtils.js";
 import { Mailer } from "../../config/mail.js";
 
 const automated_emails = {
+    css: `<style>body{background-color:#171414;color:#fff}h1,h2,h3,h4,h5{color:#878e54}</style>`,
     /**
      * genera il testo e l'html che inserisce il codice anti phishing
      * @param {string} email 
      */
     antiphishing_code: (email) => {
-        const code = Mailer.generate_antiphish_code(email);
-        const html = `
+        const code = Mailer.message_authentication_code(email);
+        const html = `${automated_emails.css}
   <p>Message Authentication Code: <strong>${code}</strong></p>
   <p>Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.</p>`
         const text = `

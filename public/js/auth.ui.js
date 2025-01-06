@@ -7,6 +7,7 @@ import { VortexNavbar } from "../components/navbar.component.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../../utils/windows.js";
+import { API } from "../utils/api.js";
 
 $(document).ready(() => {
     /**
@@ -91,6 +92,20 @@ $(document).ready(() => {
         } else if (url === null) {
             Log.summon(2, "Invalid password");
         }
+    });
+    /**
+     * CHECK MESSAGE AUTHENTICATION CODE
+     */
+    Form.onsubmit('form-cmac', async (form, elements) => {
+        const { code } = elements;
+        if (!code.includes('.')) return Log.summon(1, "Invalid format");
+        const { status } = await API.fetch('/auth/vmac', {
+            method: 'POST',
+            body: { mac: code.trim() }
+        });
+        if (status === 1) Log.summon(0, 'Valid');
+        if (status === 2) Log.summon(1, 'Valid but expired');
+        if (status === 3) Log.summon(2, 'Not valid');
     });
     /**
      * SIGN-OUT
