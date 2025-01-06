@@ -49,6 +49,7 @@ export const verify_passkey = async_handler(async (req, res, next) => {
         passkey.sign_count = assertionResult.authnrData.get("counter");
         await passkey.save();
     } catch (error) {
+        console.warn(error);
         throw new CError("", "Authentication failed", 401);
     }
     // ---

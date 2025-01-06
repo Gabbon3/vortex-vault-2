@@ -13,7 +13,6 @@ export class PasskeyController {
      */
     start_registration = async_handler(async (req, res) => {
         const { email } = req.body;
-        console.log(email);
         // ---
         const options = await this.service.start_registration(email);
         // -- codifico con msgpack per compattare e mantenere i dati

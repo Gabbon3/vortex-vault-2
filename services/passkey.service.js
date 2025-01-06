@@ -100,6 +100,7 @@ export class PasskeyService {
         // -- invio la mail
         const { text, html } = automated_emails.newPasskeyAdded(email);
         Mailer.send(email, "New Passkey", text, html);
+        RamDB.delete(`psk-chl-${email}`);
         // ---
         return true;
     }
