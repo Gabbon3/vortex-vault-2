@@ -41,7 +41,7 @@ export const verify_passkey = async_handler(async (req, res, next) => {
                 origin,
                 factor: "either",
                 publicKey: passkey.public_key,
-                prevCounter: BigInt(passkey.sign_count),
+                prevCounter: passkey.sign_count,
                 userHandle: credential.userHandle
             }
         );
