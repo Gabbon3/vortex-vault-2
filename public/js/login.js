@@ -33,11 +33,10 @@ $(document).ready(async () => {
     const saved_email = await LocalStorage.get('email-utente');
     // ---
     document.getElementById('recovery-email').value = saved_email;
-    document.getElementById('recovery-device-mfa-email').value = saved_email;
     document.getElementById('recovery-device-email-email').value = saved_email;
     document.getElementById('email').value = saved_email;
     // ---
-    if (saved_email && !quick_signin) {
+    if (saved_email && !quick_signin && AuthService.check_signin_request_url()) {
         const session_started = await auth_success();
         if (session_started) {
             // -- verifico se ci sono richieste di autenticazione
@@ -64,7 +63,6 @@ $(document).ready(async () => {
             window.location.href = '/vault';
         } else {
             document.getElementById('recovery-email').value = email;
-            document.getElementById('recovery-device-mfa-email').value = email;
             document.getElementById('recovery-device-email-email').value = email;
             Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
@@ -86,20 +84,6 @@ $(document).ready(async () => {
             Windows.close('win-password-recovery');
         } else {
             Log.summon(2, 'Decryption failed');
-        }
-        Windows.loader(false);
-    });
-    /**
-     * DEVICE RECOVERY MFA
-     */
-    Form.onsubmit('form-device-recovery-mfa', async (form, elements) => {
-        const { email, code } = elements;
-        Windows.loader(true);
-        const message = await AuthService.device_recovery_mfa(email, code);
-        if (message) {
-            Log.summon(0, message);
-            $(form).trigger('reset');
-            Windows.close('win-device-recovery');
         }
         Windows.loader(false);
     });

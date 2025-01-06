@@ -79,7 +79,7 @@ export class VaultService {
         const res = await API.fetch("/vaults/create", {
             method: 'POST',
             body: {
-                secrets: Bytes.base64.to(encrypted_bytes)
+                secrets: Bytes.base64.encode(encrypted_bytes)
             }
         });
         // ---
@@ -140,7 +140,7 @@ export class VaultService {
             method: 'POST',
             body: {
                 vault_id,
-                secrets: Bytes.base64.to(encrypted_bytes)
+                secrets: Bytes.base64.encode(encrypted_bytes)
             }
         });
         // ---

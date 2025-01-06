@@ -227,7 +227,34 @@
         </form>
     </div>
     <!-- 
-    DEVICES
+    PASSKEY
+    -->
+    <div class="window m pl" id="win-passkey">
+        <div class="flex y-center">
+            <h2 class="icon">
+                <span class="material-symbols-rounded">passkey</span>
+                Passkey
+            </h2>
+            <button class="btn t close l last" data-target-close="win-passkey">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <hr>
+        <p>
+            Here is a list of all passkey associated to your account.
+        </p>
+        <div class="flex gap-50 mb-2">
+            <button class="btn primary" id="btn-sync-passkey" title="Syncronize">
+                <span class="material-symbols-rounded">sync_alt</span>
+                Syncronize
+            </button>
+        </div>
+        <div id="passkey-list">
+            <!-- ... -->
+        </div>
+    </div>
+    <!-- 
+    DEVICE
     -->
     <div class="window m pl" id="win-devices">
         <div class="flex y-center">
@@ -430,8 +457,8 @@
             </button>
         </div>
         <hr>
-        <!-- MFA -->
-        <h3 class="icon slider" slider="cont-mfa">
+        <!-- MFA deprecated -->
+        <!-- <h3 class="icon slider" slider="cont-mfa">
             <span class="material-symbols-rounded">phonelink_lock</span>
             MFA
             <span class="material-symbols-rounded warning" title="Email verification required">id_card</span>
@@ -449,7 +476,7 @@
                 </button>
             </form>
         </div>
-        <hr>
+        <hr> -->
         <!-- SUDO SESSION -->
         <h3 class="icon slider" slider="cont-sudo-session">
             <span class="material-symbols-rounded warning">vpn_key</span>
@@ -462,13 +489,9 @@
                 All operations that require this session are marked with this symbol
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </p>
-            <form id="form-start-sudo-session">
-                <mfa-input></mfa-input>
-                <button type="submit" class="btn primary mt-2">
-                    <span class="material-symbols-rounded">security</span>
-                    Enable
-                </button>
-            </form>
+            <passkey-btn endpoint="/auth/sudotoken" callback="sudosession">
+                Authenticate
+            </passkey-btn>
         </div>
         <hr>
         <!-- CHANGE PASSWORD -->
@@ -625,17 +648,9 @@
         <p>
             All data associated with your account will be permanently deleted, so it will no longer be accessible.
         </p>
-        <form id="form-delete-account">
-            <email-verify-btn target-id="code-delete-account"></email-verify-btn>
-            <mfa-input input-id="code-delete-account"></mfa-input>
-            <p class="description">
-                We need to verify your identity via e-mail for security reasons before proceeding with the deletion of your account.
-            </p>
-            <button type="submit" class="btn danger mt-2">
-                <span class="material-symbols-rounded">delete_forever</span>
-                Confirm Account Deletion
-            </button>
-        </form>
+        <passkey-btn b-class="danger" endpoint="/auth/delete" callback="deleteaccount">
+            Authenticate & delete your account
+        </passkey-btn>
     </div>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>

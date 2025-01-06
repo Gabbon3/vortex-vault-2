@@ -34,12 +34,22 @@ export class RamDB {
         return true;
     }
     /**
-     * Verifica se un dato esiste nel db
+     * Verifica se un dato esiste nel db (verificando anche se non è scaduto)
      * @param {string} key
      * @returns {boolean}
      */
     static has(key) {
-        return this.db.hasOwnProperty(key);
+        const exist = this.db.hasOwnProperty(key);
+        if (!exist) return false;
+        // -- se esiste verifico che non sia scaduta
+        // -- se scaduta elimino e restituisco false
+        const record = this.db[key];
+        const expire = record[1];
+        if (Date.now() > expire) {
+            this.delete(key);
+            return false;
+        }
+        return true;
     }
     /**
      * Restituisce un valore dal ramdb
@@ -49,13 +59,8 @@ export class RamDB {
     static get(key) {
         const exist = this.has(key);
         if (!exist) return null;
-        // -- controllo se scaduto
+        // ---
         const record = this.db[key];
-        const expire = record[1];
-        if (Date.now() > expire) {
-            this.delete(key);
-            return null;
-        }
         // ---
         try {
             const decoded_value = msgpack.decode(record[0]);
@@ -71,9 +76,6 @@ export class RamDB {
      * @returns {boolean}
      */
     static delete(key) {
-        const exist = this.has(key);
-        if (!exist) return false;
-        // -- elimino dal db
         delete this.db[key];
         return true;
     }

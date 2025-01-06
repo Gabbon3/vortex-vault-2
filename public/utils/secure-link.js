@@ -25,14 +25,14 @@ export class SecureLink {
                 id: options.id ?? null,
                 scope: options.scope ?? '',
                 ttl: options.ttl ?? 60 * 5,
-                data: Bytes.base64.to(encrypted_data),
+                data: Bytes.base64.encode(encrypted_data),
                 passKey: options.passKey ?? false,
             }
         });
         if (!res) return false;
         return {
             id: res.id,
-            key: Bytes.base64.to(key, true)
+            key: Bytes.base64.encode(key, true)
         };
     }
     /**
@@ -58,9 +58,9 @@ export class SecureLink {
         });
         if (!res) return false;
         // ---
-        const key = key_ instanceof Uint8Array ? key_ : Bytes.base64.from(key_, true);
+        const key = key_ instanceof Uint8Array ? key_ : Bytes.base64.decode(key_, true);
         // -- decodifico da msgpack e da base64 e decifro
-        const decoded_data = Bytes.base64.from(res.data);
+        const decoded_data = Bytes.base64.decode(res.data);
         const data = await AES256GCM.decrypt(decoded_data, key);
         return msgpack.decode(data);
     }

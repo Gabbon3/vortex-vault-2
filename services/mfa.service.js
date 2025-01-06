@@ -14,7 +14,7 @@ export class MFAService {
      */
     static get_key(uid, salt) {
         // -- calcolo l'indice della chiave da utilizzare
-        const base = Bytes.bigint.to(Cripto.hmac(`${uid}`, salt));
+        const base = Bytes.bigint.decode(Cripto.hmac(`${uid}`, salt));
         const index = Number(base % 16n);
         // -- calcolo le posizioni per ottenere la chiave
         const start = index * 32;

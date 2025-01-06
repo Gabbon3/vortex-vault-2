@@ -9,12 +9,14 @@ import cke_routes from './routes/cke.routes.js';
 import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
+import passkey_routes from './routes/passkey.routes.js';
 import './models/associations.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 // import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
 import https from 'https';
 import fs from 'fs';
+import { date } from './utils/dateUtils.js';
 
 /**
  * MIDDLEWARES
@@ -31,6 +33,7 @@ app.use(cookieParser());
 app.use('/auth', user_routes);
 app.use('/auth/cke', cke_routes);
 app.use('/auth/token', token_routes);
+app.use('/auth/passkey', passkey_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);
 app.use('/secure-link', secure_link_routes);
@@ -76,6 +79,7 @@ try {
     // ---
     app.listen(PORT, () => {
         console.log(`☑️ Server`);
+        console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
 } catch (error) {
     console.error('❌ Errore durante l\'avvio del server => ', error);

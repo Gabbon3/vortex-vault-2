@@ -16,7 +16,7 @@ export class LocalStorage {
         // ---
         const data = crypto_key instanceof Uint8Array ? await AES256GCM.encrypt(buffer, crypto_key) : buffer;
         // ---
-        localStorage.setItem(`${LocalStorage.prefix}-${key}`, Bytes.base64.to(data));
+        localStorage.setItem(`${LocalStorage.prefix}-${key}`, Bytes.base64.encode(data));
     }
     /**
      * Ricava qualcosa dal localstorage
@@ -28,7 +28,7 @@ export class LocalStorage {
         const data = localStorage.getItem(`${LocalStorage.prefix}-${key}`);
         if (!data) return null;
         // ---
-        const buffer = Bytes.base64.from(data);
+        const buffer = Bytes.base64.decode(data);
         let value = crypto_key instanceof Uint8Array ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
         return msgpack.decode(value);
     }

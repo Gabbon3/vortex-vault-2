@@ -8,6 +8,7 @@ import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
+import { PasskeyService } from "./passkey.public.service.js";
 
 export class AuthService {
     /**
@@ -23,10 +24,10 @@ export class AuthService {
         });
         if (!res) return false;
         // -- derivo la chiave crittografica
-        const salt = Bytes.hex.from(res.salt);
+        const salt = Bytes.hex.decode(res.salt);
         const key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
-        const cke_buffer = Bytes.base64.from(res.cke);
+        const cke_buffer = Bytes.base64.decode(res.cke);
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, key);
         await LocalStorage.set('master-key', key, cke_buffer);
@@ -86,10 +87,10 @@ export class AuthService {
      * @param {string} code 
      * @returns {boolean}
      */
-    static async verify_account(email, code) {
+    static async verify_account(email, request_id, code) {
         const res = await API.fetch('/auth/verify-account', {
             method: 'POST',
-            body: { email, code }
+            body: { email, request_id, code }
         });
         // ---
         if (!res) return false;
@@ -112,7 +113,7 @@ export class AuthService {
         const key = await Cripto.derive_key(new_password, salt);
         VaultService.master_key = key;
         // -- la salvo localmente
-        const cke_buffer = Bytes.base64.from(res.cke);
+        const cke_buffer = Bytes.base64.decode(res.cke);
         await LocalStorage.set('master-key', key, cke_buffer);
         await SessionStorage.set('master-key', key);
         // -- creo e genero un backup per l'utente
@@ -136,20 +137,6 @@ export class AuthService {
         return res.secret;
     }
     /**
-     * Start sudo session that release an advanced access token
-     * that allow the user to perform critical actions
-     * @param {string} code mfa code
-     * @returns {boolean}
-     */
-    static async start_sudo_session(code) {
-        const res = await API.fetch('/auth/sudotoken', {
-            method: 'POST',
-            body: { code }
-        });
-        if (!res) return false;
-        return true;
-    }
-    /**
      * Cerca di ottenere un nuovo access token
      * @returns {boolean} true se rigenerato, false se non rigenerato
      */
@@ -171,7 +158,7 @@ export class AuthService {
             method: 'GET'
         });
         if (!res) return null;
-        return Bytes.base64.from(res.cke);
+        return Bytes.base64.decode(res.cke);
     }
     /**
      * Imposta la chiave master dell'utente nel session storage
@@ -267,15 +254,23 @@ export class AuthService {
         return await AuthService.signin(email, password, id);
     }
     /**
+     * Controlla solo l'url
+     * @returns {boolean}
+     */
+    static check_signin_request_url() {
+        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        if (!action || action !== 'rsi' || !key_base64 || !id) return false;
+        return true;
+    }
+    /**
      * Dal dispositivo autenticato si inviano le credenziali per accedere
      * @returns {boolean}
      */
     static async check_signin_request() {
         // -- controllo la correttezza dei parametri
-        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
-        if (!action || action !== 'rsi' || !key_base64 || !id) return false;
+        if (!this.check_signin_request_url()) return false;
         // ---
-        const key = Bytes.base64.from(key_base64, true);
+        const key = Bytes.base64.decode(key_base64, true);
         // -- recupero la password
         const master_key = SessionStorage.get('master-key');
         if (!master_key) {

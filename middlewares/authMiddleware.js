@@ -4,6 +4,7 @@ import { UserService } from "../services/user.service.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { TOTP } from "../utils/totp.js";
 import { MFAService } from "../services/mfa.service.js";
+import { PasskeyService } from "../services/passkey.service.js";
 import { Roles } from "../utils/roles.js";
 import { RamDB } from "../config/ramdb.js";
 /**

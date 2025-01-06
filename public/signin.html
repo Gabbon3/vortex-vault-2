@@ -105,34 +105,16 @@
         </div>
         <hr>
         <!-- RECOVER FROM AUTHENTICATOR -->
-        <h3 class="icon slider" slider="cont-mfa">
-            <span class="material-symbols-rounded">phonelink_lock</span>
-            From Authenticator
-            <span class="material-symbols-rounded warning">vpn_key</span>
+        <h3 class="icon mb-3">
+            <span class="material-symbols-rounded">passkey</span>
+            With Passkey
         </h3>
-        <div class="isle bg-3" id="cont-mfa" style="display: none;">
-            <form id="form-device-recovery-mfa">
-                <!-- EMAIL -->
-                <label for="recovery-device-mfa-email">
-                    <span class="material-symbols-rounded">person</span>
-                    Email
-                </label>
-                <input type="email" class="input-text" id="recovery-device-mfa-email" name="email" autocomplete="off" required>
-                <!-- RECOVERY CODE -->
-                <mfa-input></mfa-input>
-                <!-- --- -->
-                <button type="submit" class="btn primary mt-2">
-                    <span class="material-symbols-rounded">settings_backup_restore</span>
-                    Recover
-                </button>
-            </form>
-        </div>
+        <passkey-btn endpoint="/auth/token/unlock" method="POST">Unlock</passkey-btn>
         <hr>
         <!-- RECOVER FROM EMAIL -->
         <h3 class="icon slider" slider="cont-email-recovery">
             <span class="material-symbols-rounded">mail</span>
-            From Email
-            <span class="material-symbols-rounded warning">id_card</span>
+            With Email
         </h3>
         <div class="isle bg-3" id="cont-email-recovery" style="display: none;">
             <form id="form-device-recovery-email">

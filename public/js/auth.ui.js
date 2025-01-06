@@ -67,21 +67,6 @@ $(document).ready(() => {
         Windows.loader(false);
     });
     /**
-     * AVVIO SUDO SESSION
-     */
-    Form.onsubmit('form-start-sudo-session', async (form, elements) => {
-        if (await AuthService.start_sudo_session(elements.code)) {
-            Log.summon(0, 'Sudo session started successfully');
-            // ---
-            const expire = new Date(Date.now() + (20 * 60 * 1000));
-            await LocalStorage.set('session-expire', expire);
-            await LocalStorage.set('sudo-expire', expire);
-            await VortexNavbar.sudo_indicator_init();
-            // ---
-            $(form).trigger('reset');
-        }
-    });
-    /**
      * QUICK SIGN-IN
      */
     Form.onsubmit('form-fsi', async (form, elements) => {
@@ -122,21 +107,6 @@ $(document).ready(() => {
             }, 3000);
         }
     });
-    /**
-     * DELETE ACCOUNT
-     */
-    Form.onsubmit('form-delete-account', async (form, elements) => {
-        const { request_id, code } = elements;
-        if (!code || code.length !== 6) return;
-        // ---
-        const deleted = await AuthService.delete_account(request_id, code);
-        if (deleted) {
-            Log.summon(0, "Your account has been deleted successfully, you will be disconnected from this page in a moment.");
-            setTimeout(() => {
-                window.location.href = '/signin';
-            }, 3000);
-        }
-    });
 });
 
 class AuthUI {
@@ -161,7 +131,7 @@ class AuthUI {
         const email = await LocalStorage.get('email-utente');
         const secret = await AuthService.enable_mfa(email, request_id, email_code);
         if (!secret) return false;
-        const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
+        const base32_secret = Bytes.base32.encode(Bytes.hex.decode(secret));
         // -- copio negli appunti il segreto
         navigator.clipboard.writeText(base32_secret);
         Log.summon(3, 'Secret copied into your clipboard');

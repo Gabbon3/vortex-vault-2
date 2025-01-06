@@ -13,13 +13,13 @@ export class Cripto {
     static encoding(bytes, encoding) {
         switch (encoding) {
             case 'hex':
-                return Bytes.hex.to(bytes);
+                return Bytes.hex.encode(bytes);
             case 'base64':
-                return Bytes.base64.to(bytes);
+                return Bytes.base64.encode(bytes);
             case 'base64url':
-                return Bytes.base64.to(bytes, true);
+                return Bytes.base64.encode(bytes, true);
             case 'base32':
-                return Bytes.base32.to(bytes);
+                return Bytes.base32.encode(bytes);
             default:
                 return bytes;
         }

@@ -66,6 +66,37 @@ const automated_emails = {
 
         return { text, html };
     },
+    /**
+     * Testo per la nuova Passkey aggiunta all'account
+     * @param {string} email 
+     * @returns 
+     */
+    newPasskeyAdded: (email) => {
+      // -- anti phishing text
+      const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+
+      const text = `
+  Hello ${email.split('@')[0]},
+  We noticed that a new passkey has been associated with your account, for more information visit the app.
+
+  Thank you for your attention
+  
+  The Vortex Vault team
+  ${aptext}`;
+
+        const html = `
+  <html>
+    <body>
+      <h4>Hello ${email.split('@')[0]},</h4>
+      <p>We noticed that a new passkey has been associated with your account, for more information visit the app.</p>
+      <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+      ${aphtml}
+    </body>
+  </html>
+      `;
+
+        return { text, html };
+    },
 };
 
 export default automated_emails;
