@@ -31,7 +31,7 @@ class PasskeyBtn extends HTMLElement {
             .addEventListener("click", async () => {
                 const res = await PasskeyService.authenticate(endpoint, method);
                 if (res) {
-                    if (!callback) return Log.summon('Operation performed successfully');
+                    if (!callback) return Log.summon(0, 'Operation performed successfully');
                     // ---
                     if (PasskeyBtn.callbacks[callback]) {
                         await PasskeyBtn.callbacks[callback]();
@@ -62,6 +62,12 @@ class PasskeyBtn extends HTMLElement {
                 window.location.href = '/signin';
             }, 3000);
         },
+        /**
+         * PASSKEY TEST
+         */
+        'passkeytest': async () => {
+            Log.summon(0, "Passkey test performed successfully");
+        }
     };
 }
 

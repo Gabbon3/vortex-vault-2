@@ -44,7 +44,7 @@ $(document).ready(async () => {
         // ---
         Log.summon(0, "Email verified successfully");
         // -- registro la passkey
-        const passkey_registered = await PasskeyService.activate_new_passkey(email);
+        const passkey_registered = await PasskeyService.activate_new_passkey(email, request_id, code);
         if (!passkey_registered) return Log.summon(1, 'Try again');
         // ---
         Log.summon(0, "Everything is ready, welcome to Vortex Vault");

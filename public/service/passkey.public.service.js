@@ -1,6 +1,5 @@
 import { Bytes } from "../../utils/bytes.js";
 import { API } from "../utils/api.js";
-import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 
 export class PasskeyService {
@@ -9,9 +8,10 @@ export class PasskeyService {
      * @param {string} email 
      * @returns {boolean}
      */
-    static async activate_new_passkey(email) {
-        const req = await API.fetch(`/auth/passkey/register/${email}`, {
-            method: "GET",
+    static async activate_new_passkey(email, request_id = null, code = null) {
+        const req = await API.fetch(`/auth/passkey/register-${request_id ? 'e' : 'a'}`, {
+            method: "POST",
+            body: { email, request_id, code }
         });
         if (!req) return false;
         // ---

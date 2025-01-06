@@ -15,6 +15,7 @@
     <script type="module" src="./js/vault.ui.js"></script>
     <script type="module" src="./js/backup.ui.js"></script>
     <script type="module" src="./js/auth.ui.js"></script>
+    <script type="module" src="./js/passkey.ui.js"></script>
 </head>
 <body>
     <vortex-navbar></vortex-navbar>
@@ -240,14 +241,19 @@
             </button>
         </div>
         <hr>
-        <p>
-            Here is a list of all passkey associated to your account.
-        </p>
         <div class="flex gap-50 mb-2">
-            <button class="btn primary" id="btn-sync-passkey" title="Syncronize">
-                <span class="material-symbols-rounded">sync_alt</span>
-                Syncronize
+            <button class="btn primary" id="btn-new-passkey" title="New passkey">
+                <span class="material-symbols-rounded">add</span>
+                New Passkey
             </button>
+            <!-- <button class="btn primary" id="btn-sync-passkey" title="Syncronize">
+                <span class="material-symbols-rounded">sync_alt</span>
+            </button> -->
+            <passkey-btn 
+                b-class="secondary" class="last"
+                icon="labs" 
+                endpoint="/auth/passkey/test" 
+                callback="passkeytest">Test</passkey-btn>
         </div>
         <div id="passkey-list">
             <!-- ... -->
@@ -324,12 +330,12 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *">
-            <label for="backup-custom-password-">
+            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *" autocomplete="off">
+            <label for="backup-custom-password-2">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Repeat custom password
             </label>
-            <input type="password" name="key_r" id="backup-custom-password-" class="input-text mb-2"  placeholder="* * *">
+            <input type="password" name="key_r" id="backup-custom-password-2" class="input-text mb-2"  placeholder="* * *" autocomplete="off">
             <p class="description">
                 Leave blank if you want to use the default master key.
             </p>
@@ -357,7 +363,7 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2" placeholder="* * *">
+            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2" placeholder="* * *" autocomplete="off">
             <p class="description">
                 Leave blank if you had not used a custom password for backup.
             </p>
