@@ -31,13 +31,6 @@ export class PasskeyService {
      * @throws {CError} - Se l'utente non viene trovato.
      */
     async start_registration(email) {
-        if (RamDB.has(`psk-chl-${email}`))
-            throw new CError(
-                "",
-                "A registration request already exists for this account",
-                400
-            );
-        // ---
         const user = await User.findOne({
             where: { email },
         });
@@ -117,5 +110,40 @@ export class PasskeyService {
         RamDB.set(`chl-${request_id}`, challenge, 60);
         // -- invio la challenge e la request id
         return { challenge, request_id };
+    }
+    /**
+     * Restituisce la lista di tutte le passkeys
+     * @param {number} uid 
+     */
+    async list(uid) {
+        return await Passkey.findAll({ 
+            where: { user_id: uid },
+            attributes: ['id', 'name', 'created_at', 'updated_at']
+        });
+    }
+    /**
+     * Aggiorna un qualunque campo della passkey
+     * @param {string} id
+     * @param {Object} updated_info un oggetto con le informazioni da modificare
+     * @returns {Array} [affectedCount]
+     */
+    async update(id, updated_info) {
+        return await Passkey.update(
+            updated_info,
+            { where: { id } }
+        );
+    }
+    /**
+     * Elimina una passkey
+     * @param {BigInt} id 
+     * @param {number} uid 
+     */
+    async delete(id, uid) {
+        return await Passkey.destroy({
+            where: {
+                user_id: uid,
+                id: id
+            }
+        })
     }
 }

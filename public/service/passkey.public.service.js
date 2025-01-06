@@ -110,6 +110,38 @@ export class PasskeyService {
         if (!authorizated) return false;
         return true;
     }
+    /**
+     * Restituisce la lista delle passkeys dell'utente
+     */
+    static async list() {
+        const res = await API.fetch('/auth/passkey/list', {
+            method: 'GET',
+        });
+        if (!res) return null;
+        return res;
+    }
+    /**
+     * Rinomina
+     */
+    static async rename(id, name) {
+        const res = await API.fetch(`/auth/passkey/rename/${id}`, {
+            method: 'POST',
+            body: { name },
+        });
+        if (!res) return false;
+        return true;
+    }
+    /**
+     * Elimina una passkey
+     * @param {BigInt} id 
+     */
+    static async delete(id) {
+        const res = await API.fetch(`/auth/passkey/${id}`, {
+            method: 'DELETE',
+        });
+        if (!res) return false;
+        return true;
+    }
 }
 
 window.PasskeyService = PasskeyService;

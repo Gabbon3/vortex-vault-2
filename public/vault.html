@@ -235,20 +235,24 @@
             <h2 class="icon">
                 <span class="material-symbols-rounded">passkey</span>
                 Passkey
+                <span class="material-symbols-rounded warning">vpn_key</span>
             </h2>
             <button class="btn t close l last" data-target-close="win-passkey">
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
         <hr>
+        <p>
+            Below there's the list of all passkeys associated with your account.
+        </p>
         <div class="flex gap-50 mb-2">
             <button class="btn primary" id="btn-new-passkey" title="New passkey">
                 <span class="material-symbols-rounded">add</span>
                 New Passkey
             </button>
-            <!-- <button class="btn primary" id="btn-sync-passkey" title="Syncronize">
+            <button class="btn primary" id="btn-list-passkey" title="Syncronize">
                 <span class="material-symbols-rounded">sync_alt</span>
-            </button> -->
+            </button>
             <passkey-btn 
                 b-class="secondary" class="last"
                 icon="labs" 
@@ -256,6 +260,7 @@
                 callback="passkeytest">Test</passkey-btn>
         </div>
         <div id="passkey-list">
+            
             <!-- ... -->
         </div>
     </div>

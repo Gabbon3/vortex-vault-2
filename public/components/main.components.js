@@ -11,6 +11,7 @@ import './btn-copy.component.js';
 import './btn-paste.component.js';
 import './mfa-input.component.js';
 import './passkey-btn.component.js';
+import './passkey-list-item.component.js';
 import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
 

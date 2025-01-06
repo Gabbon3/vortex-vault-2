@@ -21,10 +21,16 @@ export const Passkey = sequelize.define(
             comment: "Chiave pubblica in binario per verificare le challenge"
         },
         sign_count: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
             comment: "Contatore di sicurezza per prevenire replay attacks"
+        },
+        name: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+            defaultValue: "New passkey *",
+            comment: "Nome della passkey",
         },
         user_id: {
             type: DataTypes.BIGINT,

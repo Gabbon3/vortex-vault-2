@@ -42,4 +42,36 @@ export class PasskeyController {
             challenge: Bytes.base64.encode(challenge)
         });
     });
+    /**
+     * Restituisce la lista di tutte le passkey
+     */
+    list = async_handler(async (req, res) => {
+        const passkeys = await this.service.list(req.user.uid);
+        // ---
+        res.status(200).json(passkeys);
+    });
+    /**
+     * Rinonima una passkey
+     */
+    rename = async_handler(async (req, res) => {
+        const { id } = req.params;
+        const { name } = req.body;
+        // ---
+        const [affectedCount] = await this.service.update(id, { name });
+        // ---
+        res.status(200).json({ message: 'Passkey renamed successfully.' });
+    });
+    /**
+     * Elimina una passkey
+     */
+    delete = async_handler(async (req, res) => {
+        const { id } = req.params;
+        // ---
+        const deleted = await this.service.delete(id, req.user.uid);
+        if (!deleted) {
+            throw new CError('', 'Passkey not found.', 404);
+        }
+        // ---
+        res.status(200).json({ deleted: true });
+    });
 }

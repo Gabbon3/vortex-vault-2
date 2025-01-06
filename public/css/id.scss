@@ -330,43 +330,43 @@ password-strength-bar {
 
 }
 
-#devices-list {
+#devices-list, #passkey-list {
     display: flex;
     flex-direction: column;
     gap: 7px;
+}
 
-    device-list-item {
+device-list-item, passkey-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 7px;
+    border-radius: 7px;
+    background-color: $bg-4;
+
+    .token-id {
         display: flex;
-        flex-direction: column;
-        gap: 7px;
-        padding: 7px;
-        border-radius: 7px;
-        background-color: $bg-4;
+        gap: 5px;
+        align-items: center;
+        color: $text-color-2;
+        font-size: $fs-s;
 
+        i {
+            font-family: $monospace !important;
+            font-style: normal !important;
+        }
+    }
+
+    &.current {
         .token-id {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            color: $text-color-2;
-            font-size: $fs-s;
-
-            i {
-                font-family: $monospace !important;
-                font-style: normal !important;
-            }
+            color: $c1;
         }
+    }
 
-        &.current {
-            .token-id {
-                color: $c1;
-            }
-        }
-
-        .info {
-            display: flex;
-            flex-direction: row;
-            gap: 7px;
-        }
+    .info {
+        display: flex;
+        flex-direction: row;
+        gap: 7px;
     }
 }
 

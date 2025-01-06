@@ -2,91 +2,81 @@ import { Log } from "../utils/log.js";
 import { DeviceService } from "../service/device.service.js";
 import { Windows } from "../utils/windows.js";
 import { Cripto } from "../secure/cripto.js";
+import { PasskeyService } from "../service/passkey.public.service.js";
+import { date } from "../utils/dateUtils.js";
 
 class PasskeyListItem extends HTMLElement {
     constructor() {
         super();
-    }
-
-    static get observedAttributes() {
-        return ['id', 'device-name', 'user-agent-summary', 'lua', 'revoked'];
+        this.id = null;
     }
 
     connectedCallback() {
         this.render();
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            this.render();
-        }
-    }
-
     async render() {
-        // -- imposto livello e messaggio in base agli attributi
-        const token_id = this.getAttribute('id');
-        const device_name = this.getAttribute('device-name');
-        const user_agent_summary = this.getAttribute('user-agent-summary');
-        const lua = this.getAttribute('lua'); // last used at
-        const revoked = this.getAttribute('revoked');
-        const current = JSON.parse(this.getAttribute('current'));
+        const id = this.getAttribute('passkey-id');
+        this.id = BigInt(id);
+        const name = this.getAttribute('name');
+        const updated_at = this.getAttribute('updated-at');
+        const created_at = this.getAttribute('created-at');
         // ---
-        if (current) this.classList.add('current');
-        // -- imposto la struttura HTML interna del log
         this.innerHTML = `
             <span class="token-id">
                 <span class="material-symbols-rounded">tag</span>
-                <i>${await Cripto.hash(token_id, { algorithm: 'SHA-1', encoding: 'base64' })}</i>
+                <i>${await Cripto.hash(id, { algorithm: 'SHA-1', encoding: 'base64' })}</i>
             </span>
             <div class="flex gap-50 d-row">
-                <input type="text" class="input-text device-name" title="Device name" value="${device_name}">
-                <button 
-                    title="Revoke or not this device"
-                    class="btn ${revoked === 'true' ? 'danger' : 'primary'} revoke-device"
-                    ${current ? 'disabled' : ''}>
-                    <span class="material-symbols-rounded">${revoked === 'true' ? 'close' : 'check'}</span>
-                </button>
-                <button class="btn danger device-delete" title="Delete this device" ${current ? 'disabled' : ''}>
+                <input type="text" class="input-text passkey-name" title="Passkey name" value="${name}">
+                <button class="btn danger passkey-delete" title="Delete this passkey">
                     <span class="material-symbols-rounded">delete</span>
                 </button>
             </div>
-            <div class="info">
-                <input type="text" class="input-text" title="User Agent" value="${user_agent_summary}" readonly>
-                <input type="text" class="input-text" title="Last used at" value="${lua}" readonly>
+            <div class="flex gap-50 wrap isle bg-3">
+                <label class="isle bg-1 fg-1 icon m-0" title="Created Date">
+                    <span class="material-symbols-rounded">calendar_add_on</span>
+                    <span id="update-created-date">${date.format('%j %M %y at %H:%i', new Date(created_at))}</span>
+                </label>
+                <label class="isle bg-1 fg-1 icon m-0" title="Last Update Date">
+                    <span class="material-symbols-rounded">edit_calendar</span>
+                    <span id="update-last-modified-date">${date.format('%j %M %y at %H:%i', new Date(updated_at))}</span>
+                </label>
             </div>
         `;
         // -- EVENTI
-        // -- pulsante revoca
-        this.querySelector('.revoke-device').addEventListener('click', this.toggle_revoked.bind(this));
+        this.querySelector('.passkey-name').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                this.rename_passkey(event);
+            }
+        });
         // -- pulsante cancella
-        this.querySelector('.device-delete').addEventListener('click', this.delete_device.bind(this));
+        this.querySelector('.passkey-delete').addEventListener('click', this.delete_passkey.bind(this));
     }
     /**
-     * Revoke a token
-     * @returns 
+     * Rinomina una passkey
      */
-    async toggle_revoked() {
-        const revoked = this.getAttribute('revoked') === 'true';
-        const token_id = this.getAttribute('id');
-        const device_name = this.getAttribute('device-name');
-        // -- business
-        const done = await DeviceService.revoke(token_id, !revoked);
-        if (!done) return;
+    async rename_passkey(event) {
+        if (event.key !== 'Enter') return;
+        const name = event.currentTarget.value;
+        if (!confirm('Are you sure you want to rename this passkey into ' + name + '?')) return;
         // ---
-        Log.summon(0, `${device_name} ${revoked ? 'un' : ''} revoked`);
-        this.setAttribute('revoked', revoked ? 'false' : 'true');
+        Windows.loader(true);
+        const updated = await PasskeyService.rename(this.id, name);
+        Windows.loader(false);
+        if (!updated) return;
+        this.querySelector('.passkey-name').value = name;
+        Log.summon(0, "Passkey renamed in " + name);
     }
     /**
      * Delete a device from 
      * @returns 
      */
-    async delete_device() {
-        if (!confirm('Are you sure you want to delete this device?')) return;
-        // ---
-        const token_id = this.getAttribute('id');
+    async delete_passkey() {
+        if (!confirm('Are you sure you want to delete this passkey?')) return;
         // ---
         Windows.loader(true);
-        const deleted = await DeviceService.delete(token_id);
+        const deleted = await PasskeyService.delete(this.id);
         Windows.loader(false);
         if (!deleted) return;
         this.remove();

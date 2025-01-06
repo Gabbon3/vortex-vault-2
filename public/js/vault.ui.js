@@ -9,6 +9,7 @@ import { ptg } from "../utils/ptg.js";
 import { SessionStorage } from "../utils/session.js";
 import { DeviceUI } from "./device.ui.js";
 import { LocalStorage } from "../utils/local.js";
+import { PasskeyUI } from "./passkey.ui.js";
 
 $(document).ready(async () => {
     if (window.location.pathname !== '/vault') return;
@@ -244,6 +245,7 @@ export class VaultUI {
             // ---
             this.init_db_dom();
             DeviceUI.init();
+            PasskeyUI.init();
             // ---
             Windows.loader(false);
             if (timeout > 0) Log.summon(0, `Welcome back ${SessionStorage.get('email')}`);

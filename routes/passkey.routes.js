@@ -21,6 +21,12 @@ router.post('/register-a', verify_access_token(), controller.start_registration)
 // -- COMPLETE REGISTRATION
 router.post('/register', controller.complete_registration);
 router.get('/', controller.get_auth_options);
+// -- PASSKEY-LIST
+router.get('/list', verify_access_token(), controller.list);
+// -- RENAME
+router.post('/rename/:id', verify_access_token(), controller.rename);
+// -- DELETE
+router.delete('/:id', verify_access_token(1), controller.delete);
 router.post('/test', verify_passkey, (req, res) => {
     res.status(200).json({ message: "Hi user " + req.user.uid });
 });
