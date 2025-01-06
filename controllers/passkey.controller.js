@@ -12,7 +12,8 @@ export class PasskeyController {
      * Gestisce la richiesta per ottenere le opzioni di registrazione (fase 1 del flusso WebAuthn).
      */
     start_registration = async_handler(async (req, res) => {
-        const { email } = req.params;
+        const { email } = req.body;
+        console.log(email);
         // ---
         const options = await this.service.start_registration(email);
         // -- codifico con msgpack per compattare e mantenere i dati

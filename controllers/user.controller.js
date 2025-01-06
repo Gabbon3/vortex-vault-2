@@ -140,7 +140,7 @@ export class UserController {
         // -- controllo che non sia gia stata fatta una richiesta
         if (RamDB.get(request_id)) throw new CError("RequestError", "There's another active request, check or try again later", 400);
         // -- salvo nel ramdb
-        const is_set = RamDB.set(request_id, code, 150);
+        const is_set = RamDB.set(request_id, code, 60);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
         const is_send = await Mailer.send(

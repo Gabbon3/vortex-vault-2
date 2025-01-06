@@ -1,6 +1,6 @@
 import express from "express";
 import { PasskeyController } from "../controllers/passkey.controller.js";
-import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { verify_access_token, verify_email_code } from "../middlewares/authMiddleware.js";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
 import rateLimit from "express-rate-limit";
 // -- router
@@ -16,7 +16,9 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- auth/passkey
-router.get('/register/:email', controller.start_registration);
+router.post('/register-e', verify_email_code, controller.start_registration);
+router.post('/register-a', verify_access_token(), controller.start_registration);
+// -- COMPLETE REGISTRATION
 router.post('/register', controller.complete_registration);
 router.get('/', controller.get_auth_options);
 router.post('/test', verify_passkey, (req, res) => {

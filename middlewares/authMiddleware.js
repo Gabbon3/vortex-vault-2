@@ -63,7 +63,7 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     const valid = code === db_code;
     if (!valid) throw new CError("AuthError", "Invalid code", 403);
     // -- elimino la richiesta dal db
-    RamDB.delete(request_id);
+    // RamDB.delete(request_id);
     next();
 });
 /**
