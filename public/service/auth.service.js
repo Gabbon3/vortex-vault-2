@@ -87,10 +87,10 @@ export class AuthService {
      * @param {string} code 
      * @returns {boolean}
      */
-    static async verify_account(email, code) {
+    static async verify_account(email, request_id, code) {
         const res = await API.fetch('/auth/verify-account', {
             method: 'POST',
-            body: { email, code }
+            body: { email, request_id, code }
         });
         // ---
         if (!res) return false;
@@ -135,20 +135,6 @@ export class AuthService {
         // ---
         if (!res) return false;
         return res.secret;
-    }
-    /**
-     * Start sudo session that release an advanced access token
-     * that allow the user to perform critical actions
-     * @param {string} code mfa code
-     * @returns {boolean}
-     */
-    static async start_sudo_session(code) {
-        const res = await API.fetch('/auth/sudotoken', {
-            method: 'POST',
-            body: { code }
-        });
-        if (!res) return false;
-        return true;
     }
     /**
      * Cerca di ottenere un nuovo access token
@@ -268,13 +254,21 @@ export class AuthService {
         return await AuthService.signin(email, password, id);
     }
     /**
+     * Controlla solo l'url
+     * @returns {boolean}
+     */
+    static check_signin_request_url() {
+        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        if (!action || action !== 'rsi' || !key_base64 || !id) return false;
+        return true;
+    }
+    /**
      * Dal dispositivo autenticato si inviano le credenziali per accedere
      * @returns {boolean}
      */
     static async check_signin_request() {
         // -- controllo la correttezza dei parametri
-        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
-        if (!action || action !== 'rsi' || !key_base64 || !id) return false;
+        if (!this.check_signin_request_url()) return false;
         // ---
         const key = Bytes.base64.decode(key_base64, true);
         // -- recupero la password

@@ -1,0 +1,68 @@
+import { PasskeyService } from "../service/passkey.public.service.js";
+import { LocalStorage } from "../utils/local.js";
+import { Log } from "../utils/log.js";
+import { VortexNavbar } from "./navbar.component.js";
+
+class PasskeyBtn extends HTMLElement {
+    static counter = 1;
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        // -- variabili
+        const endpoint = this.getAttribute("endpoint");
+        const method = this.getAttribute("method") ?? "POST";
+        const callback = this.getAttribute("callback") ?? false;
+        // ---
+        const icon = this.getAttribute("icon") ?? "passkey";
+        const btn_class = this.getAttribute("b-class") ?? "primary";
+        const text_content = this.textContent || "Authorize";
+        const button_id = "pskbtn-" + PasskeyBtn.counter;
+        PasskeyBtn.counter++;
+        // -- HTML
+        this.innerHTML = `<button type="button" id="${button_id}" class="btn ${btn_class}">
+            <span class="material-symbols-rounded">${icon}</span>
+            ${text_content}
+        </button>`;
+        // -- ELEMENTI
+        document
+            .getElementById(button_id)
+            .addEventListener("click", async () => {
+                const res = await PasskeyService.authenticate(endpoint, method);
+                if (res) {
+                    if (!callback) return Log.summon('Operation performed successfully');
+                    // ---
+                    if (PasskeyBtn.callbacks[callback]) {
+                        await PasskeyBtn.callbacks[callback]();
+                    }
+                }
+            });
+    }
+
+    static callbacks = {
+        'sudosession': async () => {
+            /**
+             * AVVIO SUDO SESSION
+             */
+            Log.summon(0, 'Sudo session started');
+            const expire = new Date(Date.now() + 20 * 60 * 1000);
+            await LocalStorage.set("session-expire", expire);
+            await LocalStorage.set("sudo-expire", expire);
+            await VortexNavbar.sudo_indicator_init();
+        },
+        /**
+         * DELETE ACCOUNT
+         */
+        'deleteaccount': async () => {
+            localStorage.clear();
+            sessionStorage.clear();
+            Log.summon(0, "Your account has been deleted, you will be disconnected from this page in a moment.");
+            setTimeout(() => {
+                window.location.href = '/signin';
+            }, 3000);
+        },
+    };
+}
+
+customElements.define("passkey-btn", PasskeyBtn);

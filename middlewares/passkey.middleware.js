@@ -13,6 +13,7 @@ export const verify_passkey = async_handler(async (req, res, next) => {
     const origin = process.env.ORIGIN;
     // ---
     const { request_id, auth_data } = req.body;
+    if (!request_id || !auth_data) throw new CError("", "Invalid request", 422);
     // -- decodifico gli auth data
     const credential = msgpack.decode(Bytes.base64.decode(auth_data));
     // -- recupero la challenge dal ramdb
@@ -24,29 +25,35 @@ export const verify_passkey = async_handler(async (req, res, next) => {
     });
     if (!passkey) throw new CError("", "Passkey not found", 404);
     // -- verifico la challenge
-    const assertionResult = await fido2.assertionResult(
-        {
-            id: credential.id,
-            rawId: credential.rawId.buffer,
-            response: {
-                authenticatorData: credential.response.authenticatorData.buffer,
-                clientDataJSON: credential.response.clientDataJSON.buffer,
-                signature: credential.response.signature.buffer,
+    try {
+        const assertionResult = await fido2.assertionResult(
+            {
+                id: credential.id,
+                rawId: credential.rawId.buffer,
+                response: {
+                    authenticatorData: credential.response.authenticatorData.buffer,
+                    clientDataJSON: credential.response.clientDataJSON.buffer,
+                    signature: credential.response.signature.buffer,
+                },
             },
-        },
-        {
-            challenge,
-            origin,
-            factor: "either",
-            publicKey: passkey.public_key,
-            prevCounter: passkey.sign_count,
-            userHandle: credential.userHandle
-        }
-    );
-    // -- aumento faccio corrispondere il sign count sul db
-    passkey.sign_count = assertionResult.authnrData.get("counter");
-    await passkey.save();
+            {
+                challenge,
+                origin,
+                factor: "either",
+                publicKey: passkey.public_key,
+                prevCounter: passkey.sign_count,
+                userHandle: credential.userHandle
+            }
+        );
+        // -- aumento faccio corrispondere il sign count sul db
+        passkey.sign_count = assertionResult.authnrData.get("counter");
+        await passkey.save();
+    } catch (error) {
+        throw new CError("", "Authentication failed", 401);
+    }
     // ---
-    req.user = { id: passkey.user_id };
+    RamDB.delete(`chl-${request_id}`);
+    // ---
+    req.user = { uid: passkey.user_id };
     next();
 });

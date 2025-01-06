@@ -5,12 +5,12 @@ import { Windows } from "../utils/windows.js";
 import { Bytes } from "../utils/bytes.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { LocalStorage } from "../utils/local.js";
+import { PasskeyService } from "../service/passkey.public.service.js";
 
 $(document).ready(async () => {
     const email = await LocalStorage.get('email-utente');
     if (email) {
         document.getElementById('verify-email-email').value = email;
-        document.getElementById('verify-account-email').value = email;
     }
     /**
      * REGISTER
@@ -24,41 +24,30 @@ $(document).ready(async () => {
         if (await AuthService.register(email, password)) {
             LocalStorage.set('email-utente', email);
             $(form).trigger('reset');
-            Log.summon(1, "Almost done! Now you need to 'Set up MFA'.");
-            document.getElementById('verify-account-email').value = email;
+            Log.summon(1, "Almost done! Now you need to verify your email and create your first passkey.");
             document.getElementById('verify-email-email').value = email;
         }
         Windows.loader(false);
     });
     /**
-     * ACCOUNT VERIFY
-     */
-    Form.onsubmit('account-verify', async (form, elements) => {
-        const { email, code } = elements;
-        if (!code || code.length !== 6) return Log.summon(1, "Invalid code");
-        // ---
-        if (await AuthService.verify_account(email, code)) {
-            Log.summon(0, 'Account verified now you can sign-in');
-            $(form).trigger('reset');
-        }
-    });
-    /**
      * EMAIL VERIFY & ENABLE 2FA AUTH
      */
-    Form.onsubmit('setup-mfa', async (form, elements) => {
+    Form.onsubmit('setup-passkey', async (form, elements) => {
         if (!elements.code || elements.code.length != 6) return Log.summon(1, "Invalid code");
-        if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
         const { email, request_id, code } = elements;
         // ---
         Windows.loader(true);
-        if (await RegisterUI.enable_mfa(email, request_id, code)) {
-            setTimeout(() => {
-                Log.summon(1, "Now, you need to Verify your account.")
-            }, 10000);
-            $(form).trigger('reset');
-        }
+        const email_verification = await AuthService.verify_account(email, request_id, code)
         Windows.loader(false);
+        if (!email_verification) return;
+        // ---
+        Log.summon(0, "Email verified successfully");
+        // -- registro la passkey
+        const passkey_registered = await PasskeyService.activate_new_passkey(email);
+        if (!passkey_registered) return Log.summon(1, 'Try again');
+        // ---
+        Log.summon(0, "Everything is ready, welcome to Vortex Vault");
     });
 });
 

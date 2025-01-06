@@ -15,13 +15,12 @@ const limiter = rateLimit({
     message: "Too many requests, try later",
 });
 router.use(limiter);
-router.use(verify_access_token());
 // -- auth/passkey
 router.get('/register/:email', controller.start_registration);
 router.post('/register', controller.complete_registration);
 router.get('/', controller.get_auth_options);
 router.post('/test', verify_passkey, (req, res) => {
-    res.status(200).json({ message: "Hi user " + req.user.id });
+    res.status(200).json({ message: "Hi user " + req.user.uid });
 });
 
 export default router;

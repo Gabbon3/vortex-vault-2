@@ -1,9 +1,15 @@
 import { Bytes } from "../../utils/bytes.js";
 import { API } from "../utils/api.js";
+import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 
 export class PasskeyService {
-    static async request_new_passkey(email) {
+    /**
+     * Registra una nuova passkey
+     * @param {string} email 
+     * @returns {boolean}
+     */
+    static async activate_new_passkey(email) {
         const req = await API.fetch(`/auth/passkey/register/${email}`, {
             method: "GET",
         });
@@ -11,9 +17,15 @@ export class PasskeyService {
         // ---
         const options = msgpack.decode(Bytes.base64.decode(req.options));
         // -- genero le credenziali
-        const credential = await navigator.credentials.create({
-            publicKey: options,
-        });
+        let credential = null;
+        try {
+            credential = await navigator.credentials.create({
+                publicKey: options,
+            });
+        } catch (error) {
+            console.log('Aborted');
+            return null;
+        }
         // -- preparo i dati da inviare al server
         const publicKeyCredential = {
             id: credential.id,
@@ -49,7 +61,7 @@ export class PasskeyService {
      * @param {string} method POST, GET...
      * @returns {boolean}
      */
-    static async sign_challenge(endpoint, method) {
+    static async authenticate(endpoint, method = 'POST') {
         const chl_req_id = await API.fetch(`/auth/passkey/`, {
             method: "GET",
         });
@@ -64,9 +76,15 @@ export class PasskeyService {
             userVerification: "preferred",
         };
         // -- seleziono la passkey e firmo
-        const credential = await navigator.credentials.get({
-            publicKey: publicKeyCredentialRequestOptions,
-        });
+        let credential = null;
+        try {
+            credential = await navigator.credentials.get({
+                publicKey: publicKeyCredentialRequestOptions,
+            });
+        } catch (error) {
+            console.log('Passkey auth request Aborted');
+            return null;
+        } 
         // -- invio la challenge firmata al client
         const auth_data = {
             id: credential.id,

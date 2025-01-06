@@ -32,7 +32,7 @@ export class Bytes {
 
     static base62 = {
         encode(blob) {
-            return BaseConverter.to_string(Bytes.bigint.to(blob), 62);
+            return BaseConverter.to_string(Bytes.bigint.decode(blob), 62);
         },
         decode(base62string) {
             return Bytes.bigint.from(BaseConverter.from_string(base62string, 62));

@@ -67,21 +67,6 @@ $(document).ready(() => {
         Windows.loader(false);
     });
     /**
-     * AVVIO SUDO SESSION
-     */
-    Form.onsubmit('form-start-sudo-session', async (form, elements) => {
-        if (await AuthService.start_sudo_session(elements.code)) {
-            Log.summon(0, 'Sudo session started successfully');
-            // ---
-            const expire = new Date(Date.now() + (20 * 60 * 1000));
-            await LocalStorage.set('session-expire', expire);
-            await LocalStorage.set('sudo-expire', expire);
-            await VortexNavbar.sudo_indicator_init();
-            // ---
-            $(form).trigger('reset');
-        }
-    });
-    /**
      * QUICK SIGN-IN
      */
     Form.onsubmit('form-fsi', async (form, elements) => {
@@ -117,21 +102,6 @@ $(document).ready(() => {
         if (signed_out) {
             Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
             Windows.loader(true);
-            setTimeout(() => {
-                window.location.href = '/signin';
-            }, 3000);
-        }
-    });
-    /**
-     * DELETE ACCOUNT
-     */
-    Form.onsubmit('form-delete-account', async (form, elements) => {
-        const { request_id, code } = elements;
-        if (!code || code.length !== 6) return;
-        // ---
-        const deleted = await AuthService.delete_account(request_id, code);
-        if (deleted) {
-            Log.summon(0, "Your account has been deleted successfully, you will be disconnected from this page in a moment.");
             setTimeout(() => {
                 window.location.href = '/signin';
             }, 3000);

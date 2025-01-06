@@ -76,9 +76,6 @@ export class RamDB {
      * @returns {boolean}
      */
     static delete(key) {
-        const exist = this.has(key);
-        if (!exist) return false;
-        // -- elimino dal db
         delete this.db[key];
         return true;
     }
