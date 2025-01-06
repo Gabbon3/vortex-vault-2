@@ -35,8 +35,11 @@ export class PasskeyController {
      * Genera delle opzioni di accesso (la challenge)
      */
     get_auth_options = async_handler(async (req, res) => {
-        const options = await this.service.generate_auth_options();
+        const { challenge, request_id } = await this.service.generate_auth_options();
         // ---
-        res.status(201).json({ options });
+        res.status(201).json({
+            request_id,
+            challenge: Bytes.base64.encode(challenge)
+        });
     });
 }

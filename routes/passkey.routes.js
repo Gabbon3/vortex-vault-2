@@ -1,6 +1,7 @@
 import express from "express";
 import { PasskeyController } from "../controllers/passkey.controller.js";
-import { verify_access_token, verify_passkey } from "../middlewares/authMiddleware.js";
+import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { verify_passkey } from "../middlewares/passkey.middleware.js";
 import rateLimit from "express-rate-limit";
 // -- router
 const router = express.Router();

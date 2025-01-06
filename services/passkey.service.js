@@ -9,20 +9,20 @@ import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";
 import { UID } from "../utils/uid.js";
 
+export const fido2 = new Fido2Lib({
+    timeout: 60000,
+    rpId: process.env.RPID,
+    rpName: "Vortex Vault",
+    challengeSize: 32,
+    attestation: 'direct'
+});
+
 export class PasskeyService {
     static rpName = "Vortex Vault";
     static rpId = process.env.RPID;
     static origin = process.env.ORIGIN;
     // ---
-    constructor() {
-        this.fido2 = new Fido2Lib({
-            timeout: 60000,
-            rpId: PasskeyService.rpId,
-            rpName: PasskeyService.rpName,
-            challengeSize: 32,
-            attestation: 'direct'
-        });
-    }
+    constructor() {}
     /**
      * Genera le opzioni di registrazione per un utente.
      *
@@ -43,7 +43,7 @@ export class PasskeyService {
         });
         if (!user) throw new CError("UserNotFound", "User not found", 422);
         // -- genero la challenge e le options
-        const options = await this.fido2.assertionOptions();
+        const options = await fido2.assertionOptions();
         options.user = {
             id: Bytes.bigint.encode(BigInt(user.id)),
             name: user.email,
@@ -74,7 +74,7 @@ export class PasskeyService {
         // ---
         const { challenge, user_id } = entry;
         // -- verifico la challenge
-        const attestation = await this.fido2.attestationResult({
+        const attestation = await fido2.attestationResult({
             id: credentials.id,
             rawId: credentials.rawId.buffer,
             response: {
@@ -108,9 +108,11 @@ export class PasskeyService {
     async generate_auth_options() {
         const request_id = UID.generate();
         // -- creo una challenge unica
-        const options = await this.fido2.assertionOptions();
-        const challenge = options.challenge;
+        const options = await fido2.assertionOptions();
+        const challenge = new Uint8Array(options.challenge);
         // -- salvo nel RamDB
-        RamDB.set(`chl-${request_id}`, {}, 60);
+        RamDB.set(`chl-${request_id}`, challenge, 60);
+        // -- invio la challenge e la request id
+        return { challenge, request_id };
     }
 }

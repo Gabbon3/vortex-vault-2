@@ -88,17 +88,3 @@ export const verify_mfa_code = async_handler(async (req, res, next) => {
     if (!valid) throw new CError("AuthError", "Invalid code", 403);
     next();
 });
-/**
- * Verifica una passkey
- */
-export const verify_passkey = async_handler(async (req, res, next) => {
-    const { response } = req.body;
-    const service = new PasskeyService();
-    // -- verifico la risposta
-    const verification = service.verify_auth_response();
-    // --
-    if (!verification.verified) throw new CError('', "Access denied", 403);
-    // -- se è tutto ok aggiungo il payload dell'utente alla request
-    req.user = { id: verification.userId };
-    next();
-});
