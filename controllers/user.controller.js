@@ -115,7 +115,7 @@ export class UserController {
         // ---
         if (affected !== 1) throw new CError("Internal error", "Not able to enable MFA", 500);
         // ---
-        res.status(201).json({ secret: Bytes.hex.to(secret) });
+        res.status(201).json({ secret: Bytes.hex.encode(secret) });
     });
     /**
      * Release sudo access token

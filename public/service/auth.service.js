@@ -24,10 +24,10 @@ export class AuthService {
         });
         if (!res) return false;
         // -- derivo la chiave crittografica
-        const salt = Bytes.hex.from(res.salt);
+        const salt = Bytes.hex.decode(res.salt);
         const key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
-        const cke_buffer = Bytes.base64.from(res.cke);
+        const cke_buffer = Bytes.base64.decode(res.cke);
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, key);
         await LocalStorage.set('master-key', key, cke_buffer);
@@ -113,7 +113,7 @@ export class AuthService {
         const key = await Cripto.derive_key(new_password, salt);
         VaultService.master_key = key;
         // -- la salvo localmente
-        const cke_buffer = Bytes.base64.from(res.cke);
+        const cke_buffer = Bytes.base64.decode(res.cke);
         await LocalStorage.set('master-key', key, cke_buffer);
         await SessionStorage.set('master-key', key);
         // -- creo e genero un backup per l'utente
@@ -172,7 +172,7 @@ export class AuthService {
             method: 'GET'
         });
         if (!res) return null;
-        return Bytes.base64.from(res.cke);
+        return Bytes.base64.decode(res.cke);
     }
     /**
      * Imposta la chiave master dell'utente nel session storage
@@ -276,7 +276,7 @@ export class AuthService {
         const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
         if (!action || action !== 'rsi' || !key_base64 || !id) return false;
         // ---
-        const key = Bytes.base64.from(key_base64, true);
+        const key = Bytes.base64.decode(key_base64, true);
         // -- recupero la password
         const master_key = SessionStorage.get('master-key');
         if (!master_key) {

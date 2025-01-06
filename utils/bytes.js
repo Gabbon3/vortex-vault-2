@@ -5,7 +5,7 @@ export class Bytes {
          * @param {string} base64 
          * @returns {Uint8Array}
          */
-        from(base64, urlsafe = false) {
+        decode(base64, urlsafe = false) {
             if (urlsafe) {
                 // -- ripristino i caratteri non sicuri per Base64 standard
                 base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
@@ -20,7 +20,7 @@ export class Bytes {
          * @param {Uint8Array} buffer 
          * @returns {string}
          */
-        to(buffer, urlsafe = false) {
+        encode(buffer, urlsafe = false) {
             const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
             return urlsafe
                 ? base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -34,7 +34,7 @@ export class Bytes {
          * @param {string} base32String 
          * @returns 
          */
-        from(base32String) {
+        decode(base32String) {
             const base32Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
             const output = [];
             let buffer = 0;
@@ -60,7 +60,7 @@ export class Bytes {
          * @param {Uint8Array} uint8Array 
          * @returns 
          */
-        to(uint8Array) {
+        encode(uint8Array) {
             const base32Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
             let output = '';
             let buffer = 0;
@@ -110,7 +110,7 @@ export class Bytes {
          * @param {string} hex 
          * @returns {Uint8Array}
          */
-        from(hex) {
+        decode(hex) {
             hex = hex.replace(/\s+/g, '').toLowerCase();
             if (hex.length % 2 !== 0) {
                 throw new Error('Hex string must have an even length');
@@ -127,7 +127,7 @@ export class Bytes {
          * @param {string} array 
          * @returns {string}
          */
-        to(array) {
+        encode(array) {
             return Array.from(array)
                 .map(byte => byte.toString(16).padStart(2, '0'))
                 .join('');
@@ -140,7 +140,7 @@ export class Bytes {
          * @param {string} txt 
          * @returns {Uint8Array}
          */
-        from(txt) {
+        encode(txt) {
             return new TextEncoder().encode(txt);
         },
         /**
@@ -148,7 +148,7 @@ export class Bytes {
          * @param {Uint8Array} buffer 
          * @returns {string}
          */
-        to(buffer) {
+        decode(buffer) {
             return new TextDecoder().decode(buffer);
         },
         /**
@@ -193,7 +193,7 @@ export class Bytes {
          * @param {Uint8Array} buffer 
          * @returns {BigInt}
          */
-        to(byte) {
+        decode(byte) {
             let n = 0n;
             const L = byte.length;
             // ---
@@ -208,7 +208,7 @@ export class Bytes {
          * @param {BigInt} n 
          * @returns {Uint8Array}
          */
-        from(n) {
+        encode(n) {
             const L = Math.ceil(n.toString(2).length / 8);
             // ---
             const B = new Uint8Array(L);

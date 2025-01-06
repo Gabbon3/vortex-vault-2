@@ -23,7 +23,7 @@ export class PasskeyController {
      */
     complete_registration = async_handler(async (req, res) => {
         const { data } = req.body;
-        const { id, email, public_key, challenge } = msgpack.decode(Bytes.base64.from(data));
+        const { id, email, public_key, challenge } = msgpack.decode(Bytes.base64.decode(data));
         // --
         await this.service.complete_registration(id, public_key, challenge, email);
         // ---

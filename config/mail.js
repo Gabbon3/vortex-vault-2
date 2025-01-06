@@ -24,7 +24,7 @@ export class Mailer {
         const payload = `${email.split('@')[0]}.${Date.now()}`;
         const signature = Cripto.hmac(payload, this.fish_key);
         // ---
-        const encoded_signature = Bytes.base64.to(signature, true);
+        const encoded_signature = Bytes.base64.encode(signature, true);
         return `${payload}.${encoded_signature}`;
     }
     /**
@@ -35,7 +35,7 @@ export class Mailer {
     static verify_antiphish_code(code) {
         const code_parts = code.split('.');
         // ----
-        const encoded_signature = Bytes.base64.from(code_parts.pop(), true);
+        const encoded_signature = Bytes.base64.decode(code_parts.pop(), true);
         // ---
         const payload = code_parts.join('.');
         // ---

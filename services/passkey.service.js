@@ -1,5 +1,4 @@
 import { CError } from "../helpers/cError.js";
-import { ECDSA } from "../utils/ecdsa.js";
 import { Passkey } from "../models/passkey.model.js";
 import { User } from "../models/user.js";
 import { Mailer } from "../config/mail.js";
@@ -7,15 +6,23 @@ import "dotenv/config";
 import automated_emails from "../public/utils/automated.mails.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
+import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";
-import cbor from 'cbor';
 
 export class PasskeyService {
     static rpName = "Vortex Vault";
     static rpId = process.env.RPID;
     static origin = process.env.ORIGIN;
     // ---
-    constructor() {}
+    constructor() {
+        this.fido2 = new Fido2Lib({
+            timeout: 60000,
+            rpId: PasskeyService.rpId,
+            rpName: PasskeyService.rpName,
+            challengeSize: 32,
+            attestation: 'direct'
+        });
+    }
     /**
      * Genera le opzioni di registrazione per un utente.
      *
@@ -35,8 +42,14 @@ export class PasskeyService {
             where: { email },
         });
         if (!user) throw new CError("UserNotFound", "User not found", 422);
-        // -- genero la challenge
-        const challenge = Cripto.random_bytes(32, "base64");
+        // -- genero la challenge e le options
+        const options = await this.fido2.assertionOptions();
+        options.user = {
+            id: user.id,
+            name: user.email,
+            displayName: user.email.split('@')[0],
+        };
+        options.challenge = Bytes.base64.encode(options.challenge);
         // -- salvo nel RamDB
         RamDB.set(`psk-chl-${email}`, { challenge, user_id: user.id }, 60);
         // ---

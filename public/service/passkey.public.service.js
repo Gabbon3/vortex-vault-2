@@ -12,10 +12,10 @@ export class PasskeyService {
         // ---
         const publicKey = {
             ...options,
-            challenge: Bytes.base64.from(options.challenge),
+            challenge: Bytes.base64.decode(options.challenge),
             user: {
                 ...options.user,
-                id: Bytes.bigint.from(BigInt(options.user.id))
+                id: Bytes.bigint.encode(BigInt(options.user.id))
             }
         };
         const credential_ = await navigator.credentials.create({ publicKey });
@@ -39,7 +39,7 @@ export class PasskeyService {
         const public_key = authData.slice(65, 130);
         // -- estraggo la challenge
         const clientData = JSON.parse(new TextDecoder().decode(credential.response.clientDataJSON))
-        const challenge = Bytes.base64.from(clientData.challenge, true);
+        const challenge = Bytes.base64.decode(clientData.challenge, true);
         // -- esporto i dati essenziali
         const essentials = {
             id: credential.id,
@@ -50,7 +50,7 @@ export class PasskeyService {
         // --- completo la registrazione
         const res = await API.fetch('/auth/passkey/register', {
             method: 'POST',
-            body: { data: Bytes.base64.to(msgpack.encode(essentials)) }
+            body: { data: Bytes.base64.encode(msgpack.encode(essentials)) }
         });
         // ---
         console.log(res);
@@ -62,5 +62,5 @@ export class PasskeyService {
 window.PasskeyService = PasskeyService;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (confirm('')) await PasskeyService.request_new_passkey('2004gabbo@gmail.com')
+    if (confirm('passkey?')) await PasskeyService.request_new_passkey('2004gabbo@gmail.com')
 })

@@ -9,7 +9,7 @@ export class SessionStorage {
      * @param {*} value puo essere qualsiasi tanto viene compressa con msgpack
      */
     static set(key, value) {
-        sessionStorage.setItem(`${SessionStorage.prefix}-${key}`, Bytes.base64.to(msgpack.encode(value)));
+        sessionStorage.setItem(`${SessionStorage.prefix}-${key}`, Bytes.base64.encode(msgpack.encode(value)));
     }
     /**
      * Restituisce una risorsa dal session storage
@@ -18,7 +18,7 @@ export class SessionStorage {
      */
     static get(key) {
         const value = sessionStorage.getItem(`${SessionStorage.prefix}-${key}`);
-        return value ? msgpack.decode(Bytes.base64.from(value)) : null;
+        return value ? msgpack.decode(Bytes.base64.decode(value)) : null;
     }
     /**
      * Elimina una risorsa sul session storage

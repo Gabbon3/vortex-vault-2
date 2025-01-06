@@ -71,7 +71,7 @@ class RegisterUI {
     static async enable_mfa(email, request_id, email_code) {
         const secret = await AuthService.enable_mfa(email, request_id, email_code);
         if (!secret) return false;
-        const base32_secret = Bytes.base32.to(Bytes.hex.from(secret));
+        const base32_secret = Bytes.base32.encode(Bytes.hex.decode(secret));
         // -- copio negli appunti il segreto
         navigator.clipboard.writeText(base32_secret);
         Log.summon(3, 'Secret copied into your clipboard');
