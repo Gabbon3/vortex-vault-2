@@ -84,13 +84,18 @@ $(document).ready(() => {
     Form.onsubmit('form-cmac', async (form, elements) => {
         const { code } = elements;
         if (!code.includes('.')) return Log.summon(1, "Invalid format");
+        // -- email
+        const email = await LocalStorage.get('email-utente');
+        // ---
         const { status } = await API.fetch('/auth/vmac', {
             method: 'POST',
-            body: { mac: code.trim() }
+            body: { email, mac: code.trim() }
         });
         if (status === 1) Log.summon(0, 'Valid');
-        if (status === 2) Log.summon(1, 'Valid but expired');
-        if (status === 3) Log.summon(2, 'Not valid');
+        else if (status === 2) Log.summon(1, 'Valid but expired');
+        else if (status === 3) Log.summon(2, 'Not valid');
+        else if (status === 4) Log.summon(1, 'It looks like the receiver is not you, someone tried to use their valid code against you.');
+        else Log.summon(1, 'Invalid status code');
     });
     /**
      * SIGN-OUT

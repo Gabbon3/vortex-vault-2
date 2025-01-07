@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { Bytes } from './bytes.js';
 
 export class Cripto {
     /**
@@ -32,7 +33,7 @@ export class Cripto {
     }
     /**
      * Genera un hash HMAC di un messaggio con una chiave specifica.
-     * @param {string} message - Messaggio da crittografare.
+     * @param {string|crypto.BinaryLike} message - Messaggio da crittografare.
      * @param {Buffer|string} key - Chiave segreta per l'HMAC; può essere una stringa o un buffer.
      * @param {Object} [options={}] - Opzioni per configurare l'HMAC.
      * @param {string} [options.key_encoding] - Encoding della chiave, se fornita come stringa (es: 'hex' o 'base64'). Se non specificato, si assume che `key` sia già un `Buffer`.
@@ -50,6 +51,30 @@ export class Cripto {
         return options.output_encoding ?
             hmac_buffer.toString(options.output_encoding) :
             new Uint8Array(hmac_buffer);
+    }
+    /**
+     * Esegue hash con salt usando hmac
+     * @param {string|crypto.BinaryLike} message 
+     * @param {*} key 
+     * @param {*} options 
+     */
+    static salting(message) {
+        const salt = crypto.randomBytes(16);
+        const hash = Buffer.from(this.hmac(message, salt));
+        return new Uint8Array(Buffer.concat([salt, hash]));
+    }
+    /**
+     * Verifica un salting
+     * @param {string|crypto.BinaryLike} message 
+     * @param {Uint8Array} salt_hash 
+     * @returns {boolean}
+     */
+    static verify_salting(message, salt_hash) {
+        const salt = salt_hash.subarray(0, 16);
+        const hash = salt_hash.subarray(16);
+        // ---
+        const new_hash = this.hmac(message, salt);
+        return Buffer.compare(hash, new_hash) === 0;
     }
     /**
      * Calcola l'hash di un messaggio.

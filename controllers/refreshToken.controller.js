@@ -1,12 +1,15 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
+import { CKEService } from "../services/cke.service.js";
 import { RefreshTokenService } from "../services/refreshToken.service.js";
+import { Bytes } from "../utils/bytes.js";
 import { Roles } from "../utils/roles.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 
 export class RefreshTokenController {
     constructor() {
         this.service = new RefreshTokenService();
+        this.cke_service = new CKEService();
     }
     /**
      * Genera un nuovo access token se il refresh token è valido
@@ -15,6 +18,7 @@ export class RefreshTokenController {
      */
     generate_access_token = async_handler(async (req, res) => {
         const token_id = req.cookies.refresh_token;
+        const cke = req.cookies.cke;
         if (!token_id) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
         const user_agent = req.get('user-agent');
@@ -38,8 +42,10 @@ export class RefreshTokenController {
             sameSite: 'Strict',
             path: '/', // disponibile per tutte le route
         });
+        // -- restituisco anche la passkey
+        const key = await this.cke_service.key(cke, req.user.uid);
         // ---
-        res.status(201).json({ access_token });
+        res.status(201).json({ access_token, key: Bytes.base64.encode(key) });
     })
     /**
      * Restituisce tutti i token associati ad un utente

@@ -74,7 +74,6 @@ vortex-navbar {
     left: 5px;
     display: flex;
     gap: 5px;
-    // flex-direction: column;
     z-index: 2050;
     max-width: 350px;
     flex-wrap: wrap;
@@ -91,6 +90,7 @@ vortex-navbar {
         -webkit-backdrop-filter: blur(5px);
         backdrop-filter: blur(5px);
         animation: bounce 500ms linear both;
+        cursor: default;
 
         .log-container {
             display: inline-flex;
@@ -111,7 +111,7 @@ vortex-navbar {
 
         &._2 {
             --bc-log: rgba(255, 83, 83, 0.3);
-            --i-color: rgb(255, 83, 83);
+            --i-color: rgb(255, 114, 114);
         }
 
         &._1 {
@@ -125,8 +125,8 @@ vortex-navbar {
         }
 
         &._3 {
-            --bc-log: rgba(115, 142, 84, 0.2);
-            --i-color: #7b955c;
+            --bc-log: rgba(179, 223, 129, 0.1);
+            --i-color: #a0bd80;
         }
 
         background-color: var(--bc-log);

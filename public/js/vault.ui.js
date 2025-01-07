@@ -236,7 +236,13 @@ export class VaultUI {
             Windows.loader(true);
             const started = await AuthService.start_session();
             // --- se non viene avviata fermo e restituisco errore
-            if (!started) return Log.summon(2, "Not able to get Cripto Key, please sign in");
+            if (started !== true && started !== 0) {
+                Log.summon(2, "Authentication failed, you will be redirected to the sign-in page");
+                setTimeout(() => {
+                    window.location.href = '/signin';
+                }, 4000);
+                return false;
+            }
             // --- se la sessione viene avviata, eseguo init_db_dom() e avvio il vault
             timeout = 1000;
         }

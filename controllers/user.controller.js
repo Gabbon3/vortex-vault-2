@@ -10,11 +10,13 @@ import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
 import { UID } from "../utils/uid.js";
+import { CKEService } from "../services/cke.service.js";
 
 export class UserController {
     constructor() {
         this.service = new UserService();
         this.refresh_token_service = new RefreshTokenService();
+        this.cke_service = new CKEService();
     }
     /**
      * Registra utente
@@ -54,7 +56,7 @@ export class UserController {
         }
         // -- Access Token
         const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
-        const cke = Cripto.random_bytes(32, 'base64');
+        const { cke, key } = await this.cke_service.generate(null, user.salt);
         this.set_token_cookies(res, { access_token, refresh_token, cke });
         // ---
         if (!access_token) {
@@ -67,7 +69,7 @@ export class UserController {
         res.status(201).json({
             access_token,
             refresh_token,
-            cke,
+            key: Bytes.base64.encode(key),
             salt: user.salt
         });
     });
@@ -140,7 +142,13 @@ export class UserController {
         // -- controllo che non sia gia stata fatta una richiesta
         if (RamDB.get(request_id)) throw new CError("RequestError", "There's another active request, check or try again later", 400);
         // -- salvo nel ramdb
-        const is_set = RamDB.set(request_id, code, 60);
+        const salted_hash = Cripto.salting(code);
+        // memorizzo il codice hashato con salt con hmac
+        const db_data = [
+            salted_hash,
+            0 // tentativi
+        ];
+        const is_set = RamDB.set(request_id, db_data, 60);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
         const is_send = await Mailer.send(
@@ -210,10 +218,26 @@ export class UserController {
      */
     change_password = async_handler(async (req, res) => {
         const { old_password, new_password } = req.body;
+        const cookie_cke = req.cookies.cke;
+        // ---
+        let cke = null;
+        let key = null;
+        // -- se la cke ce ottengo la key, se non ce la cke genero entrambe
+        if (cookie_cke) {
+            key = await this.cke_service.key(cookie_cke);
+            cke = cookie_cke;
+        } else {
+            const new_ = await this.cke_service.generate(req.user.uid);
+            key = new_.key;
+            cke = new_.cke;
+            // imposto il cookie se mancante
+            this.set_token_cookies(res, { cke });
+        }
         // ---
         const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
         if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
-        res.status(200).json({ message: "Password changed!", cke: req.cookies.cke });
+        // ---
+        res.status(200).json({ message: "Password changed!", key });
     });
     /**
      * Imposta le informazioni di recupero password
@@ -244,8 +268,8 @@ export class UserController {
      * Verifica la validità di un message authentication code
      */
     verify_message_authentication_code = async_handler(async (req, res) => {
-        const { mac } = req.body; // mac = message_authentication_code
-        const status = Mailer.verify_message_authentication_code(mac);
+        const { email, mac } = req.body; // mac = message_authentication_code
+        const status = Mailer.verify_message_authentication_code(email, mac);
         res.status(200).json({ status });
     });
     /**

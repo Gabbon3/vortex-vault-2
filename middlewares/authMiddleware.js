@@ -4,9 +4,9 @@ import { UserService } from "../services/user.service.js";
 import { TokenUtils } from "../utils/tokenUtils.js";
 import { TOTP } from "../utils/totp.js";
 import { MFAService } from "../services/mfa.service.js";
-import { PasskeyService } from "../services/passkey.service.js";
 import { Roles } from "../utils/roles.js";
 import { RamDB } from "../config/ramdb.js";
+import { Cripto } from "../utils/cryptoUtils.js";
 /**
  * Middleware per la verifica del jwt e refresh 
  * dell'access token se scaduto
@@ -35,7 +35,7 @@ export const verify_access_token = (required_role = Roles.BASE) => (req, res, ne
 /**
  * Verifica la password di un utente
  */
-export const verify_password = async_handler( async (req, res, next) => {
+export const verify_password = async_handler(async (req, res, next) => {
     const from_token = req.user ? true : false;
     // -- ottengo un identificatore per l'utente
     if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 429);
@@ -56,14 +56,33 @@ export const verify_password = async_handler( async (req, res, next) => {
  */
 export const verify_email_code = async_handler(async (req, res, next) => {
     const { request_id, code } = req.body;
-    const db_code = RamDB.get(request_id);
-    if (db_code === null) throw new CError("TimeoutError", "Request expired", 404);
-    if (db_code === false) throw new Error();
-    // ---
-    const valid = code === db_code;
-    if (!valid) throw new CError("AuthError", "Invalid code", 403);
+    const record = RamDB.get(request_id);
+    // -- se il codice è scaduto
+    if (record === null) {
+        throw new CError("TimeoutError", "Request expired", 404);
+    }
+    // -- recupero i dati
+    const [salted_hash, tryes] = record;
+    // -- verifico il numero di tentativi
+    if (tryes >= 3) {
+        RamDB.delete(request_id);
+        throw new CError("", "Maximum attempts achieved", 429);
+    }
+    // -- se il codice non è valido
+    if (salted_hash === false) {
+        throw new Error();
+    }
+    // -- verifica il codice
+    const valid = Cripto.verify_salting(code, salted_hash);
+    if (!valid) {
+        // -- aumento il numero di tentativi
+        RamDB.update(request_id, [salted_hash, tryes + 1]);
+        // --
+        throw new CError("AuthError", "Invalid code", 403);
+    }
     // -- elimino la richiesta dal db
-    // RamDB.delete(request_id);
+    // RamDB.delete(request_id); // Decommenta se vuoi eliminare la richiesta
+    // -- se il codice è valido, passo al prossimo middleware
     next();
 });
 /**

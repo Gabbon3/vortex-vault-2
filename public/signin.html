@@ -20,32 +20,36 @@
         <form id="accedi">
             <h2 class="icon">
                 <span class="material-symbols-rounded">login</span>
-                Sign In
+                Sign-in
             </h2>
-            <p class="secondary">
-                Your device is locked? <a class="open" data-target-open="win-device-recovery">Recover device</a> <br>
-            </p>
             <!-- --- -->
-            <label for="email">
-                <span class="material-symbols-rounded">person</span>
-                Email
-            </label>
-            <input type="email" class="input-text" id="email" name="email" autocomplete="off" required>
-            <!-- --- -->
-            <label for="password">
-                <span class="material-symbols-rounded">key_vertical</span>
-                Password
-            </label>
-            <input type="password" class="input-text" id="password" name="password" autocomplete="current-password" required>
-            <p class="description">
-                Forgot your password? <a class="open" data-target-open="win-password-recovery">Recover password</a> <br>
-            </p>
+            <div class="isle bg-3">
+                <label for="email">
+                    <span class="material-symbols-rounded">person</span>
+                    Email
+                </label>
+                <input type="email" class="input-text" id="email" name="email" autocomplete="off" required>
+                <!-- --- -->
+                <label for="password">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Password
+                </label>
+                <input type="password" class="input-text" id="password" name="password" autocomplete="current-password" required>
+                <p class="description">
+                    Forgot your password? <a class="open" data-target-open="win-password-recovery">Recover here</a> <br>
+                </p>
+                <button type="submit" class="btn primary w-100 mt-2">
+                    <span class="material-symbols-rounded">login</span>
+                    Sign-in
+                </button>
+            </div>
             <!-- --- -->
             <hr>
+            <!-- --- -->
             <div class="flex gap-50 d-column">
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">login</span>
-                    Sign In
+                <button type="button" id="signin-passkey" class="btn primary">
+                    <span class="material-symbols-rounded">passkey</span>
+                    Sign-in with Passkey
                 </button>
                 <button type="button" class="btn warning" id="btn-request-sign-in">
                     <span class="material-symbols-rounded">id_card</span>
@@ -57,7 +61,7 @@
     <!--
         PASSWORD DIMENTICATA
     -->
-    <div class="window m pr" id="win-password-recovery">
+    <div class="window m" id="win-password-recovery">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">lock_reset</span>
@@ -93,7 +97,7 @@
     <!--
         DEVICE RECOVERY
     -->
-    <div class="window m pl" id="win-device-recovery">
+    <div class="window m" id="win-device-recovery">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">mobile_friendly</span>
@@ -104,17 +108,22 @@
             </button>
         </div>
         <hr>
-        <!-- RECOVER FROM AUTHENTICATOR -->
-        <h3 class="icon mb-3">
+        <!-- RECOVER WITH PASSKEY -->
+        <h3 class="icon slider" slider="cont-passkey-recovery">
             <span class="material-symbols-rounded">passkey</span>
-            With Passkey
+            Recover with Passkey
         </h3>
-        <passkey-btn endpoint="/auth/token/unlock" method="POST">Unlock</passkey-btn>
+        <div class="isle bg-3" id="cont-passkey-recovery" style="display: none;">
+            <p>
+                Use a passkey to unlock this device.
+            </p>
+            <passkey-btn endpoint="/auth/token/unlock" method="POST">Recover</passkey-btn>
+        </div>
         <hr>
-        <!-- RECOVER FROM EMAIL -->
+        <!-- RECOVER WITH EMAIL -->
         <h3 class="icon slider" slider="cont-email-recovery">
             <span class="material-symbols-rounded">mail</span>
-            With Email
+            Recover with Email
         </h3>
         <div class="isle bg-3" id="cont-email-recovery" style="display: none;">
             <form id="form-device-recovery-email">

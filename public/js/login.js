@@ -12,7 +12,7 @@ $(document).ready(async () => {
         Windows.loader(true);
         const session_started = await AuthService.start_session();
         Windows.loader(false);
-        return session_started;
+        return session_started !== true;
     }
     /**
      * Verifico se ci sono dei parametri per l'accesso rapido
@@ -67,6 +67,28 @@ $(document).ready(async () => {
             Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
         Windows.loader(false);
+    });
+    /**
+     * LOGGA CON LA PASSKEY
+     */
+    document.getElementById('signin-passkey').addEventListener('click', async (e) => {
+        const email = await LocalStorage.get('email-utente');
+        const master_key_exist = await LocalStorage.get('master-key') !== null;
+        // ---
+        const was_logged = email !== null && master_key_exist;
+        // -- se non ci sono informazioni locali salvate non è possibile accedere con la passkey
+        if (!was_logged) return Log.summon(3, 'There are no data required to sign you in with the passkey, please sign-in with password.');
+        // -- accedo
+        const session_started = await AuthService.start_session();
+        if (session_started !== true) {
+            if (session_started === 0) Log.summon(3, `You are already signed in as ${email}`);
+            return;
+        }
+        // ---
+        Log.summon(0, `Welcome back ${email}`);
+        setTimeout(() => {
+            window.location.href = '/vault';
+        }, 3000);
     });
     /**
      * PASSWORD DIMENTICATA
@@ -127,7 +149,7 @@ class RequestSignIn {
                 }
                 // ---
                 const session_started = await AuthService.start_session();
-                if (!session_started) return false;
+                if (session_started !== true) return false;
                 // ---
                 Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
                 setTimeout(() => {

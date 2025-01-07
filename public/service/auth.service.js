@@ -9,6 +9,7 @@ import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { PasskeyService } from "./passkey.public.service.js";
+import { Log } from "../utils/log.js";
 
 export class AuthService {
     /**
@@ -27,11 +28,11 @@ export class AuthService {
         const salt = Bytes.hex.decode(res.salt);
         const key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
-        const cke_buffer = Bytes.base64.decode(res.cke);
+        const cke_key = Bytes.base64.decode(res.key);
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, key);
-        await LocalStorage.set('master-key', key, cke_buffer);
-        await LocalStorage.set('salt', salt, cke_buffer);
+        await LocalStorage.set('master-key', key, cke_key);
+        await LocalStorage.set('salt', salt, cke_key);
         SessionStorage.set('master-key', key);
         SessionStorage.set('salt', salt);
         // --- imposto la scadenza dell'access token
@@ -113,8 +114,8 @@ export class AuthService {
         const key = await Cripto.derive_key(new_password, salt);
         VaultService.master_key = key;
         // -- la salvo localmente
-        const cke_buffer = Bytes.base64.decode(res.cke);
-        await LocalStorage.set('master-key', key, cke_buffer);
+        const cke_key = Bytes.base64.decode(res.key);
+        await LocalStorage.set('master-key', key, cke_key);
         await SessionStorage.set('master-key', key);
         // -- creo e genero un backup per l'utente
         await BackupService.create_locally();
@@ -138,35 +139,39 @@ export class AuthService {
     }
     /**
      * Cerca di ottenere un nuovo access token
-     * @returns {boolean} true se rigenerato, false se non rigenerato
+     * @returns {boolean|object} restituisce un oggetto con degli auth data (la cke), false se non rigenerato
      */
     static async new_access_token() {
-        const res = await API.fetch('/auth/token/refresh', {
-            method: 'POST',
-        });
-        if (!res) return false;
+        const key = await PasskeyService.authenticate(
+            '/auth/token/refresh',
+            'POST',
+            (response) => {
+                return Bytes.base64.decode(response.key);
+            }
+        );
+        if (!key) return false;
         // -- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
-        return true;
+        return { key };
     }
     /**
      * Recupera la cke dai cookie
-     * @returns {Promise<Uint8Array>} 
+     * @returns {Promise<Uint8Array>}
      */
     static async get_cke() {
         const res = await API.fetch('/auth/cke', {
             method: 'GET'
         });
         if (!res) return null;
-        return Bytes.base64.decode(res.cke);
+        return Bytes.base64.decode(res.key);
     }
     /**
      * Imposta la chiave master dell'utente nel session storage
-     * @param {Uint8Array} cke 
+     * @param {Uint8Array} key 
      */
-    static async config_session_vars(cke) {
-        const master_key = await LocalStorage.get('master-key', cke);
-        const salt = await LocalStorage.get('salt', cke);
+    static async config_session_vars(key) {
+        const master_key = await LocalStorage.get('master-key', key);
+        const salt = await LocalStorage.get('salt', key);
         const email = await LocalStorage.get('email-utente');
         if (!master_key) return false;
         // ---
@@ -298,23 +303,27 @@ export class AuthService {
     }
     /**
      * Tenta di avviare automaticamente una sessione
-     * @returns {boolean}
+     * @returns {number} 0 già loggato, -1 nuovo access token non ottenuto, -2 nessuna chiave restituita
      */
     static async start_session() {
         // -- verifico che ce bisogno di rigenerare l'access token
         const access_token_expire = await LocalStorage.get('session-expire');
-        if (!access_token_expire || Date.now() > access_token_expire.getTime()) {
-            const created = await this.new_access_token();
-            // -- se non è stato generato un nuovo access token fermo
-            // - l'utente dovrebbe accedere nuovamente
-            if (!created) return false;
-        }
-        // -- recupero la cke
-        const cke = await this.get_cke();
-        // -- se non è stato possibile ottenere la cke, l'utente dovrebbe accedere nuovamente
-        if (!cke) return false;
+        const session_storage_init = SessionStorage.get('master-key') !== null;
+        // -- con questa condizione capisco se ce bisogno di accedere o meno
+        const signin_need = !access_token_expire || Date.now() > access_token_expire.getTime() || !session_storage_init;
+        // -- nessuna necessita di accedere
+        if (!signin_need) return 0;
+        // -- provo ad ottenere le informazioni per accedere (la chiave)
+        const auth_data = await this.new_access_token();
+        // -- se non è stato generato un nuovo access token fermo
+        // - l'utente dovrebbe accedere nuovamente
+        if (!auth_data) return -1;
+        // -- se non ce la chiave mi fermo
+        if (!auth_data.key) return -2;
+        // ---
+        const { key } = auth_data;
         // -- imposto la master key
-        const initialized = await this.config_session_vars(cke);
+        const initialized = await this.config_session_vars(key);
         // ---
         return initialized;
     }

@@ -54,9 +54,10 @@ export class RamDB {
     /**
      * Restituisce un valore dal ramdb
      * @param {string} key
+     * @param {boolean} [ttl=false] - true per restituire anche il ttl
      * @returns {*}
      */
-    static get(key) {
+    static get(key, ttl = false) {
         const exist = this.has(key);
         if (!exist) return null;
         // ---
@@ -64,11 +65,35 @@ export class RamDB {
         // ---
         try {
             const decoded_value = msgpack.decode(record[0]);
-            return decoded_value;
+            return ttl ? [decoded_value, record[1]] : decoded_value;
         } catch (error) {
             console.warn("RAMDB: Error while decoding " + key + error);
             return false;
         }
+    }
+    /**
+     * Aggiorna un elemento sul db
+     * @param {string} key 
+     * @param {object} updated_value 
+     * @returns 
+     */
+    static update(key, updated_values) {
+        const record = this.get(key, true);
+        if (!record) return false;
+        // ---
+        const expire = record[1];
+        // -- prima provo a serializzare
+        let encoded_value = null;
+        try {
+            encoded_value = msgpack.encode(updated_values);
+        } catch (error) {
+            console.warn("RAMDB update: Error while encoding " + key + error);
+            return false;
+        }
+        // -- memorizzo il dato
+        this.db[key] = [encoded_value, expire];
+        // ---
+        return true;
     }
     /**
      * Elimina un record dal db

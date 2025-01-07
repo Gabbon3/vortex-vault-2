@@ -34,15 +34,21 @@ export class Mailer {
     }
     /**
      * Verifica la validità di un codice di verifica anti phishing
+     * @param {string} email 
      * @param {string} code 
-     * @returns {number} 1 codice e data validi, 2 codice valido ma scaduto, 3 codice non valido
+     * @returns {number} 1 codice e data validi, 2 codice valido ma scaduto, 3 codice non valido, 4 ricevente diverso da quello indicato
      */
-    static verify_message_authentication_code(code) {
+    static verify_message_authentication_code(email, code) {
         const code_parts = code.split('.');
         // -- decodifico la firma in binario
         const encoded_signature = Bytes.base62.decode(code_parts.pop());
         // -- reimposto il payload
         const payload = code_parts.join('.');
+        // -- ottengo il mittente
+        const email_id = email.split('@')[0].split('.')[0];
+        const receiver = code_parts.shift();
+        // -- controllo se il ricevente corrisponde
+        if (email_id !== receiver) return 4; // ricevente diverso da quello presente nel codice
         // -- ottengo la data per fare il confronto temporale
         const date = Number(BaseConverter.from_string(code_parts.pop(), 62)) * 1000;
         // -- calcolo nuovamente la signature

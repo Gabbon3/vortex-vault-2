@@ -5,6 +5,10 @@ import { Windows } from "../utils/windows.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     /**
+     * PAGINA VAULT
+     */
+    if (window.location.pathname !== '/vault') return;
+    /**
      * NEW PASSKEY
      */
     document.getElementById('btn-new-passkey').addEventListener("click", async () => {

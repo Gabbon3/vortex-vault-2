@@ -43,14 +43,21 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">key_vertical</span>
                     <i>Generator</i>
                 </a>` : ''}
+
                 ${path !== '/vault' ? `<a href="/vault"' title="Vault">
                     <span class="material-symbols-rounded">encrypted</span>
                     <i>Vault</i>
+                </a>` : ''}
+                
+                ${path === '/signin' ? `<a class="open" data-target-open="win-device-recovery" title="Device Recovery">
+                    <span class="material-symbols-rounded">mobile_friendly</span>
+                    <i>Device Recovery</i>
                 </a>` : ''}
                 ${path !== '/signin' ? `<a href="/signin"' title="Sign In">
                     <span class="material-symbols-rounded">login</span>
                     <i>Sign In</i>
                 </a>` : ''}
+
                 ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up">
                     <span class="material-symbols-rounded">person_add</span>
                     <i>Sign Up</i>

@@ -59,9 +59,10 @@ export class PasskeyService {
      * Effettua in maniera dinamica un'autenticazione tramite passkey indicando l'endpoint necessario
      * @param {string} endpoint qualsiasi endpoint del server
      * @param {string} method POST, GET...
+     * @param {Function} callback 
      * @returns {boolean}
      */
-    static async authenticate(endpoint, method = 'POST') {
+    static async authenticate(endpoint, method = 'POST', callback = null) {
         const chl_req_id = await API.fetch(`/auth/passkey/`, {
             method: "GET",
         });
@@ -97,7 +98,7 @@ export class PasskeyService {
             userHandle: credential.response.clientDataJSON.userHandle,
         };
         // -- invio all'endpoint scelto la risposta
-        const authorizated = await API.fetch(endpoint, {
+        const response = await API.fetch(endpoint, {
             method,
             body: {
                 request_id, // per identificare la richiesta
@@ -107,8 +108,8 @@ export class PasskeyService {
             },
         });
         // --
-        if (!authorizated) return false;
-        return true;
+        if (!response) return false;
+        return callback instanceof Function ? await callback(response) : true;
     }
     /**
      * Restituisce la lista delle passkeys dell'utente

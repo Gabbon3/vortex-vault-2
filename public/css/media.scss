@@ -32,6 +32,11 @@
     }
 
     #logs_container {
-        bottom: 60px;
+        bottom: unset;
+        left: unset;
+        top: 5px;
+        right: 5px;
+        flex-wrap: wrap-reverse;
+        justify-content: end;
     }
 }

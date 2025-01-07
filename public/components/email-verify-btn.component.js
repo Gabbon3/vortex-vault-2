@@ -11,7 +11,7 @@ class EmailVerifyBtn extends HTMLElement {
         this.button = null;
         this.target = null; // l'input in cui verrà inserito il codice
         this.email = null; // input dove recuperare l'email
-        this.timeout = 90 * 1000; // tempo di disabilitazione degli input
+        this.timeout = 60 * 1000; // tempo di disabilitazione degli input
     }
 
     connectedCallback() {
