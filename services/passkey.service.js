@@ -40,7 +40,7 @@ export class PasskeyService {
         // -- genero la challenge e le options
         const options = await fido2.assertionOptions();
         options.user = {
-            id: user.id,
+            id: Bytes.bigint.encode(BigInt(user.id)),
             name: user.email,
             displayName: user.email.split('@')[0],
         };

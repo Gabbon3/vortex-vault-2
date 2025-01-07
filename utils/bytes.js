@@ -214,7 +214,7 @@ export class Bytes {
          * @param {BigInt} n
          * @returns {Uint8Array}
          */
-        decode(n) {
+        encode(n) {
             const L = Math.ceil(n.toString(2).length / 8);
             // ---
             const B = new Uint8Array(L);
@@ -230,7 +230,7 @@ export class Bytes {
          * @param {Uint8Array} buffer 
          * @returns {BigInt}
          */
-        encode(byte) {
+        decode(byte) {
             let n = 0n;
             const L = byte.length;
             // ---
