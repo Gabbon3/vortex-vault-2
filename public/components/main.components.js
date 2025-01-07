@@ -1,5 +1,4 @@
 import './navbar.component.js';
-import './csp.component.js';
 import './log.component.js';
 import './vault-li.component.js';
 import './footer.component.js';

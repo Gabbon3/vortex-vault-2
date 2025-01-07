@@ -11,6 +11,7 @@ import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
 import './models/associations.js';
+import { csp_middleware } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 // import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
@@ -26,6 +27,7 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
+app.use(csp_middleware);
 
 /**
  * ROUTES
