@@ -1216,12 +1216,7 @@ device-list-item .info, passkey-list-item .info {
     display: none;
   }
   #logs_container {
-    bottom: unset;
-    left: unset;
-    top: 5px;
-    right: 5px;
-    flex-wrap: wrap-reverse;
-    justify-content: end;
+    bottom: 60px;
   }
 }
 
