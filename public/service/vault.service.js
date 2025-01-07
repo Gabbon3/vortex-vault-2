@@ -25,7 +25,7 @@ export class VaultService {
         const lsk = SessionStorage.get('lsk');
         const access_token_expire = await LocalStorage.get('session-expire');
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
-        if (lsk === null && access_token_expire && access_token_expire < new Date()) return false; 
+        if (lsk === null || (access_token_expire && access_token_expire < new Date())) return false; 
         this.lsk = lsk;
         this.master_key = await LocalStorage.get('master-key', lsk);
         this.salt = await LocalStorage.get('salt', lsk);
