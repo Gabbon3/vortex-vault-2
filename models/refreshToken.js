@@ -5,10 +5,10 @@ import { v7 as uuidv7 } from 'uuid';
 export const RefreshToken = sequelize.define(
     "RefreshToken",
     {
-        id: { 
+        id: {
             type: DataTypes.UUID,
-            defaultValue: () => uuidv7(), 
-            primaryKey: true, 
+            defaultValue: () => uuidv7(),
+            primaryKey: true,
         },
         user_id: { 
             type: DataTypes.UUID,

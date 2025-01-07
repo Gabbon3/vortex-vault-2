@@ -27,17 +27,16 @@ export class RefreshTokenService {
         // -- se non ci sono token associati quindi si tratta del primo accesso
         // -- abilito il token, se no bisogna approvarlo
         const revoke_this_token = count > 0;
-        const token_info = {
+        // ---
+        const token = await RefreshToken.create({
             user_id,
             user_agent_summary,
             user_agent_hash,
             ip_address: ip_address ?? '',
             is_revoked: revoke_this_token
-        }
+        });
         // ---
-        const token = await RefreshToken.create(token_info);
-        // ---
-        return token ? token_info : null;
+        return token ? token : null;
     }
     /**
      * Aggiorna qualsiasi campo di un token
