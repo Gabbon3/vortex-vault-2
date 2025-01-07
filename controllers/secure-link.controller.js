@@ -1,7 +1,7 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { RamDB } from "../config/ramdb.js";
-import { UID } from "../utils/uid.js";
 import { CError } from "../helpers/cError.js";
+import { v7 as uuidv7 } from 'uuid';
 
 export class SecureLinkController {
     constructor() { }
@@ -12,7 +12,7 @@ export class SecureLinkController {
     generate_secret = async_handler(async (req, res) => {
         const { id: provided_id, scope, ttl, data, passKey } = req.body;
         // ---
-        const id = provided_id ?? UID.generate(8);
+        const id = provided_id ?? uuidv7();
         // -- imposto sul ramdb
         const is_set = 
             RamDB.set(`${scope}sl${id}`, data, ttl)
@@ -26,7 +26,7 @@ export class SecureLinkController {
      * Prepara uno spazio sul ram db
      */
     generate_id = async_handler(async (req, res) => {
-        const id = UID.generate(8);
+        const id = uuidv7();
         // --
         res.status(201).json({ id });
     });

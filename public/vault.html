@@ -312,18 +312,20 @@
             Server
             <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
-        <p>
-            You can save only one backup at time on server
-        </p>
-        <div class="isle bg-3 flex gap-50">
-            <button class="btn primary fg-1" id="btn-create-backup">
-                <span class="material-symbols-rounded">add</span>
-                Generate
-            </button>
-            <button class="btn warning fg-1" id="btn-restore-backup-server">
-                <span class="material-symbols-rounded">settings_backup_restore</span>
-                Restore
-            </button>
+        <div class="isle bg-3">
+            <p>
+                You can save only one backup at time on server
+            </p>
+            <div class="flex gap-50">
+                <button class="btn primary fg-1" id="btn-create-backup">
+                    <span class="material-symbols-rounded">add</span>
+                    Generate
+                </button>
+                <button class="btn warning fg-1" id="btn-restore-backup-server">
+                    <span class="material-symbols-rounded">settings_backup_restore</span>
+                    Restore
+                </button>
+            </div>
         </div>
         <hr>
         <h3 class="icon">
@@ -496,7 +498,7 @@
         <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
             <p>
                 Enable sudo session to perform critical operations.
-                The session will only last 20 minutes for safety reasons. <br>
+                The session will only last 45 minutes for safety reasons. <br>
                 All operations that require this session are marked with this symbol
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </p>

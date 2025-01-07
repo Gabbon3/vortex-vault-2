@@ -1,5 +1,4 @@
 import { Log } from "../utils/log.js";
-import { DeviceService } from "../service/device.service.js";
 import { Windows } from "../utils/windows.js";
 import { Cripto } from "../secure/cripto.js";
 import { PasskeyService } from "../service/passkey.public.service.js";
@@ -17,7 +16,7 @@ class PasskeyListItem extends HTMLElement {
 
     async render() {
         const id = this.getAttribute('passkey-id');
-        this.id = BigInt(id);
+        this.id = id;
         const name = this.getAttribute('name');
         const updated_at = this.getAttribute('updated-at');
         const created_at = this.getAttribute('created-at');

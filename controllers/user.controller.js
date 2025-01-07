@@ -9,8 +9,8 @@ import { MFAService } from "../services/mfa.service.js";
 import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
-import { UID } from "../utils/uid.js";
 import { CKEService } from "../services/cke.service.js";
+import { v7 as uuidv7, validate as uuidValidate } from 'uuid';
 
 export class UserController {
     constructor() {
@@ -40,6 +40,7 @@ export class UserController {
     signin = async_handler(async (req, res) => {
         const { email, password, passKey } = req.body;
         const refresh_token_cookie = req.cookies.refresh_token;
+        // ---
         if (!email || !password) {
             throw new CError("ValidationError", "Email and password are required", 422);
         }
@@ -49,8 +50,11 @@ export class UserController {
         // -- refresh token 
         let old_refresh_token = null;
         if (refresh_token_cookie) {
-            // -- verifico se è valido
-            if (await this.refresh_token_service.verify(refresh_token_cookie, user_agent)) {
+            // -- verifico se il formato va bene, se non va bene assegno null
+            if (!uuidValidate(refresh_token_cookie)) {
+                old_refresh_token = null;
+            } else if (await this.refresh_token_service.verify(refresh_token_cookie, user_agent)) {
+                // -- verifico se è valido
                 old_refresh_token = refresh_token_cookie
             }
         }
@@ -79,7 +83,7 @@ export class UserController {
     signout = async_handler(async (req, res) => {
         const refresh_token = req.cookies.refresh_token;
         // -- elimino il refresh token
-        await this.refresh_token_service.delete(refresh_token, req.user.uid);
+        if (refresh_token) await this.refresh_token_service.delete(refresh_token, req.user.uid);
         // -- elimino i cookie
         Object.keys(req.cookies).forEach((cookie_name) => {
             res.clearCookie(cookie_name, { path: '/' });
@@ -167,7 +171,7 @@ export class UserController {
     quick_signin = async_handler(async (req, res) => {
         const { credentials } = req.body;
         // ---
-        const id = UID.generate();
+        const id = uuidv7();
         const is_set = 
             RamDB.set('fsi' + id, credentials, 150) // fsi = fast sign-in 
             && RamDB.set('passKey' + id, true, 150); // passKey = per saltare il controllo del refresh token

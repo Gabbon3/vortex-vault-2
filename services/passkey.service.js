@@ -7,7 +7,7 @@ import automated_emails from "../public/utils/automated.mails.js";
 import { RamDB } from "../config/ramdb.js";
 import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";
-import { UID } from "../utils/uid.js";
+import { v7 as uuidv7, parse as uuidParse } from 'uuid';
 
 export const fido2 = new Fido2Lib({
     timeout: 60000,
@@ -40,7 +40,7 @@ export class PasskeyService {
         // -- genero la challenge e le options
         const options = await fido2.assertionOptions();
         options.user = {
-            id: Bytes.bigint.encode(BigInt(user.id)),
+            id: uuidParse(user.id),
             name: user.email,
             displayName: user.email.split('@')[0],
         };
@@ -102,7 +102,7 @@ export class PasskeyService {
      * @returns {object} - Le opzioni di autenticazione da inviare al client.
      */
     async generate_auth_options() {
-        const request_id = UID.generate();
+        const request_id = uuidv7();
         // -- creo una challenge unica
         const options = await fido2.assertionOptions();
         const challenge = new Uint8Array(options.challenge);

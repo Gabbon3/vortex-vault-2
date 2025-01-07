@@ -1,15 +1,17 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import { v7 as uuidv7 } from 'uuid';
 
 export const RefreshToken = sequelize.define(
     "RefreshToken",
     {
-        id: { 
-            type: DataTypes.STRING(50), 
-            allowNull: false, 
-            primaryKey: true },
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: () => uuidv7(),
+            primaryKey: true,
+        },
         user_id: { 
-            type: DataTypes.BIGINT, 
+            type: DataTypes.UUID,
             allowNull: false 
         },
         device_name: {

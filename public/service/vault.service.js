@@ -7,13 +7,13 @@ import msgpack from "../utils/msgpack.min.js";
 import { API } from "../utils/api.js";
 import { LocalStorage } from "../utils/local.js";
 import { VaultLocal } from "./vault.local.js";
-import { BaseConverter } from "../utils/baseConverter.js";
 
 window.VaultLocal = VaultLocal;
 
 export class VaultService {
     static master_key = null;
     static salt = null;
+    static lsk = null; // Local Storage Key
     static vaults = [];
     static used_usernames = new Set();
     /**
@@ -22,11 +22,13 @@ export class VaultService {
      */
     static async config_secrets() {
         // -- ottengo la scadenza dell'access token
+        const lsk = SessionStorage.get('lsk');
         const access_token_expire = await LocalStorage.get('session-expire');
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
-        if (access_token_expire && access_token_expire < new Date()) return false; 
-        this.master_key = await SessionStorage.get('master-key');
-        this.salt = await SessionStorage.get('salt');
+        if (lsk === null && access_token_expire && access_token_expire < new Date()) return false; 
+        this.lsk = lsk;
+        this.master_key = await LocalStorage.get('master-key', lsk);
+        this.salt = await LocalStorage.get('salt', lsk);
         return this.master_key && this.salt ? true : false;
     }
     /**

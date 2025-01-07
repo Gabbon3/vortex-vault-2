@@ -72,6 +72,7 @@ export class UserService {
         const password_is_correct = await this.verify_password(password, user.password);
         if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
         // -- Refresh Token
+        console.log(refresh_token);
         if (!refresh_token) {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
             // -- avviso l'utente se un nuovo dispositivo accede

@@ -4,28 +4,34 @@ export class Bytes {
     static base64 = {
         /**
          * Converte una stringa base64 in un Uint8Array
-         * @param {string} base64 
+         * @param {string} base64
          * @returns {Uint8Array}
          */
         decode(base64, urlsafe = false) {
             if (urlsafe) {
                 // -- ripristino i caratteri non sicuri per Base64 standard
-                base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
+                base64 = base64.replace(/-/g, "+").replace(/_/g, "/");
                 // -- aggiungo padding se necessario
-                base64 = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+                base64 = base64.padEnd(
+                    base64.length + ((4 - (base64.length % 4)) % 4),
+                    "="
+                );
             }
             const binaryString = atob(base64);
-            return Uint8Array.from(binaryString, c => c.charCodeAt(0));
+            return Uint8Array.from(binaryString, (c) => c.charCodeAt(0));
         },
         /**
          * Converte un Uint8Array in una stringa base64
-         * @param {Uint8Array} buffer 
+         * @param {Uint8Array} buffer
          * @returns {string}
          */
         encode(buffer, urlsafe = false) {
             const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
             return urlsafe
-                ? base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+                ? base64
+                      .replace(/\+/g, "-")
+                      .replace(/\//g, "_")
+                      .replace(/=+$/, "")
                 : base64;
         },
     };
@@ -33,30 +39,30 @@ export class Bytes {
     static base62 = {
         /**
          * Encode in base62
-         * @param {Uint8Array} blob 
-         * @returns 
+         * @param {Uint8Array} blob
+         * @returns
          */
         encode(blob) {
             return BaseConverter.to_string(Bytes.bigint.encode(blob), 62);
         },
         /**
          * Decode in bytes
-         * @param {string} base62string 
+         * @param {string} base62string
          * @returns {uint8Array}
          */
         decode(base62string) {
             return Bytes.bigint.decode(BaseConverter.from_string(base62string));
         },
-    }
+    };
 
     static base32 = {
         /**
          * Converte una stringa in base32 in un array di byte
-         * @param {string} base32String 
-         * @returns 
+         * @param {string} base32String
+         * @returns
          */
         decode(base32String) {
-            const base32Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+            const base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
             const output = [];
             let buffer = 0;
             let bitsInBuffer = 0;
@@ -78,12 +84,12 @@ export class Bytes {
         },
         /**
          * Converte i byte in una stringa in base32
-         * @param {Uint8Array} uint8Array 
-         * @returns 
+         * @param {Uint8Array} uint8Array
+         * @returns
          */
         encode(uint8Array) {
-            const base32Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-            let output = '';
+            const base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+            let output = "";
             let buffer = 0;
             let bitsInBuffer = 0;
             // ---
@@ -91,7 +97,8 @@ export class Bytes {
                 buffer = (buffer << 8) | byte;
                 bitsInBuffer += 8;
                 while (bitsInBuffer >= 5) {
-                    output += base32Alphabet[(buffer >> (bitsInBuffer - 5)) & 31];
+                    output +=
+                        base32Alphabet[(buffer >> (bitsInBuffer - 5)) & 31];
                     bitsInBuffer -= 5;
                 }
             }
@@ -101,14 +108,14 @@ export class Bytes {
             }
             // ---
             return output;
-        }
+        },
     };
 
     static hex = {
         /**
          * Converte una stringa esadecimale in una stringa di testo
-         * @param {string} hex_string 
-         * @returns 
+         * @param {string} hex_string
+         * @returns
          */
         _hex(hex_string) {
             return hex_string
@@ -118,23 +125,23 @@ export class Bytes {
         },
         /**
          * Converte una stringa di testo in una stringa esadecimale
-         * @param {string} text 
+         * @param {string} text
          * @returns {string}
          */
         hex_(text) {
             return Array.from(text)
-                .map((char) => char.charCodeAt(0).toString(16).padStart(2, '0'))
+                .map((char) => char.charCodeAt(0).toString(16).padStart(2, "0"))
                 .join("");
         },
         /**
          * Converte una stringa esadecimale in un Uint8Array
-         * @param {string} hex 
+         * @param {string} hex
          * @returns {Uint8Array}
          */
         decode(hex) {
-            hex = hex.replace(/\s+/g, '').toLowerCase();
+            hex = hex.replace(/\s+/g, "").toLowerCase();
             if (hex.length % 2 !== 0) {
-                throw new Error('Hex string must have an even length');
+                throw new Error("Hex string must have an even length");
             }
             const length = hex.length / 2;
             const array = new Uint8Array(length);
@@ -145,20 +152,20 @@ export class Bytes {
         },
         /**
          * Converte un Uint8Array in una stringa esadecimale
-         * @param {string} array 
+         * @param {Uint8Array} blob
          * @returns {string}
          */
-        encode(array) {
-            return Array.from(array)
-                .map(byte => byte.toString(16).padStart(2, '0'))
-                .join('');
+        encode(blob) {
+            return Array.from(blob)
+                .map((byte) => byte.toString(16).padStart(2, "0"))
+                .join("");
         },
     };
 
     static txt = {
         /**
          * Converte una stringa di testo in un Uint8Array
-         * @param {string} txt 
+         * @param {string} txt
          * @returns {Uint8Array}
          */
         encode(txt) {
@@ -166,7 +173,7 @@ export class Bytes {
         },
         /**
          * Converte un Uint8Array in una stringa di testo
-         * @param {Uint8Array} buffer 
+         * @param {Uint8Array} buffer
          * @returns {string}
          */
         decode(buffer) {
@@ -174,7 +181,7 @@ export class Bytes {
         },
         /**
          * Converte una stringa di testo in base64
-         * @param {String} txt 
+         * @param {String} txt
          */
         base64_(txt) {
             const B = new TextEncoder().encode(txt);
@@ -190,11 +197,11 @@ export class Bytes {
         },
         /**
          * Converte del testo in un Uint16Array
-         * @param {String} txt 
-         * @returns 
+         * @param {String} txt
+         * @returns
          */
         Uint16_(txt) {
-            let B = typeof txt === 'string' ? this.bytes_(txt) : txt;
+            let B = typeof txt === "string" ? this.bytes_(txt) : txt;
             const length = B.length;
             // -- aggiungi padding se necessario
             const padded_length = length + (length % 2);
@@ -205,7 +212,7 @@ export class Bytes {
             }
             // ---
             return U16;
-        }
+        },
     };
 
     static bigint = {
@@ -227,7 +234,7 @@ export class Bytes {
         },
         /**
          * Converte un Uint8Array in un BigInt
-         * @param {Uint8Array} buffer 
+         * @param {Uint8Array} buffer
          * @returns {BigInt}
          */
         encode(byte) {
@@ -242,12 +249,11 @@ export class Bytes {
         },
     };
 
-
     /**
      * Unisce n Uint8Array in un unico Uint8Array
-     * @param {ArrayBuffer} buffers 
-     * @param {number} size 
-     * @returns 
+     * @param {ArrayBuffer} buffers
+     * @param {number} size
+     * @returns
      */
     static merge(buffers, size) {
         // -- ottengo la lunghezza totale
@@ -282,9 +288,9 @@ export class Bytes {
     }
     /**
      * Compara due Buffer verificando se sono uguali
-     * @param {Array} a 
-     * @param {Array} b 
-     * @returns 
+     * @param {Array} a
+     * @param {Array} b
+     * @returns
      */
     static compare(a, b) {
         if (a.length != b.length) return false;

@@ -1,6 +1,5 @@
 import { Op } from "sequelize";
 import { Vault } from "../models/vault.js";
-import { UID } from "../utils/uid.js";
 import { sequelize } from "../config/db.js";
 
 export class VaultService {
@@ -12,10 +11,7 @@ export class VaultService {
      * @returns {Vault}
      */
     async create(user_id, secrets) {
-        const vault_id = UID.generate(VaultService.id_random_length, true);
-        // ---
         const vault = await Vault.create({
-            id: vault_id,
             user_id,
             secrets
         });
@@ -103,12 +99,11 @@ export class VaultService {
             });
             // -- inserisco i nuovi vault
             for (const vault of vaults) {
-                const { id, secrets, createdAt, updatedAt } = vault;
+                const { secrets, createdAt, updatedAt } = vault;
                 // ---
                 const secrets_buffer = Buffer.from(secrets);
                 // ---
                 await Vault.create({
-                    id,
                     user_id,
                     secrets: secrets_buffer,
                     createdAt,
