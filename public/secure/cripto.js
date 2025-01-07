@@ -16,6 +16,8 @@ export class Cripto {
                 return Bytes.hex.encode(bytes);
             case 'base64':
                 return Bytes.base64.encode(bytes);
+            case 'base62':
+                return Bytes.base62.encode(bytes);
             case 'base64url':
                 return Bytes.base64.encode(bytes, true);
             case 'base32':

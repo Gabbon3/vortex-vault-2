@@ -1,3 +1,5 @@
+import { BaseConverter } from "./baseConverter.js";
+
 export class Bytes {
     static base64 = {
         /**
@@ -35,11 +37,21 @@ export class Bytes {
     };
 
     static base62 = {
+        /**
+         * Encode in base62
+         * @param {Uint8Array} blob 
+         * @returns 
+         */
         encode(blob) {
-            return BaseConverter.to_string(Bytes.bigint.decode(blob), 62);
+            return BaseConverter.to_string(Bytes.bigint.encode(blob), 62);
         },
+        /**
+         * Decode in bytes
+         * @param {string} base62string 
+         * @returns {uint8Array}
+         */
         decode(base62string) {
-            return Bytes.bigint.from(BaseConverter.from_string(base62string));
+            return Bytes.bigint.decode(BaseConverter.from_string(base62string));
         },
     };
 

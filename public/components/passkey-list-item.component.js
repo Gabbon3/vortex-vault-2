@@ -23,17 +23,19 @@ class PasskeyListItem extends HTMLElement {
         const created_at = this.getAttribute('created-at');
         // ---
         this.innerHTML = `
-            <span class="token-id">
-                <span class="material-symbols-rounded">tag</span>
-                <i>${await Cripto.hash(id, { algorithm: 'SHA-1', encoding: 'base64' })}</i>
-            </span>
-            <div class="flex gap-50 d-row">
-                <input type="text" class="input-text passkey-name" title="Passkey name" value="${name}">
-                <button class="btn danger passkey-delete" title="Delete this passkey">
-                    <span class="material-symbols-rounded">delete</span>
-                </button>
+            <div class="isle bg-3">
+                <span class="token-id">
+                    <span class="material-symbols-rounded">tag</span>
+                    <i>${await Cripto.hash(id, { algorithm: 'SHA-1', encoding: 'base62' })}</i>
+                </span>
+                <div class="flex gap-50 y-center d-row mt-2">
+                    <input type="text" class="input-text passkey-name" title="Passkey name" value="${name}">
+                    <button class="btn danger passkey-delete" title="Delete this passkey">
+                        <span class="material-symbols-rounded">delete</span>
+                    </button>
+                </div>
             </div>
-            <div class="flex gap-50 wrap isle bg-3">
+            <div class="flex gap-50 wrap">
                 <label class="isle bg-1 fg-1 icon m-0" title="Created Date">
                     <span class="material-symbols-rounded">calendar_add_on</span>
                     <span id="update-created-date">${date.format('%j %M %y at %H:%i', new Date(created_at))}</span>

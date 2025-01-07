@@ -5,3 +5,19 @@ export const csp_middleware = (req, res, next) => {
     );
     next();
 }
+
+export const security_headers = (req, res, next) => {
+    // Referrer-Policy:
+    // Controlla come il browser invia informazioni relative alla pagina di provenienza (referer)
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    // Permissions-Policy (ex-Feature-Policy):
+    // Limita l'accesso a funzionalità del browser come geolocalizzazione, microfono, fotocamera, ecc.
+    res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    // X-Content-Type-Options:
+    // Impedisce ai browser di provare a indovinare il tipo di contenuto e forzare il controllo del tipo MIME.
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    // X-Frame-Options:
+    // Previene il clickjacking impedendo che la tua pagina venga caricata in un iframe da altri domini.
+    res.setHeader('X-Frame-Options', 'DENY');
+    next();
+};

@@ -31,12 +31,22 @@ export class Bytes {
     };
 
     static base62 = {
+        /**
+         * Encode in base62
+         * @param {Uint8Array} blob 
+         * @returns 
+         */
         encode(blob) {
-            return BaseConverter.to_string(Bytes.bigint.decode(blob), 62);
+            return BaseConverter.to_string(Bytes.bigint.encode(blob), 62);
         },
+        /**
+         * Decode in bytes
+         * @param {string} base62string 
+         * @returns {uint8Array}
+         */
         decode(base62string) {
-            return Bytes.bigint.encode(BaseConverter.from_string(base62string, 62));
-        }
+            return Bytes.bigint.decode(BaseConverter.from_string(base62string));
+        },
     }
 
     static base32 = {
@@ -200,26 +210,11 @@ export class Bytes {
 
     static bigint = {
         /**
-         * Converte un Uint8Array in un BigInt
-         * @param {Uint8Array} buffer 
-         * @returns {BigInt}
-         */
-        decode(byte) {
-            let n = 0n;
-            const L = byte.length;
-            // ---
-            for (let i = 0; i < L; i++) {
-                n = (n << 8n) | BigInt(byte[i]);
-            }
-            // ---
-            return n;
-        },
-        /**
          * Converte un BigInt in un Uint8Array
-         * @param {BigInt} n 
+         * @param {BigInt} n
          * @returns {Uint8Array}
          */
-        encode(n) {
+        decode(n) {
             const L = Math.ceil(n.toString(2).length / 8);
             // ---
             const B = new Uint8Array(L);
@@ -229,8 +224,24 @@ export class Bytes {
             }
             // ---
             return B.reverse();
-        }
+        },
+        /**
+         * Converte un Uint8Array in un BigInt
+         * @param {Uint8Array} buffer 
+         * @returns {BigInt}
+         */
+        encode(byte) {
+            let n = 0n;
+            const L = byte.length;
+            // ---
+            for (let i = 0; i < L; i++) {
+                n = (n << 8n) | BigInt(byte[i]);
+            }
+            // ---
+            return n;
+        },
     };
+
 
     /**
      * Unisce n Uint8Array in un unico Uint8Array
