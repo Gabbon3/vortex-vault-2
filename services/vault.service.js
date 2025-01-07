@@ -99,12 +99,11 @@ export class VaultService {
             });
             // -- inserisco i nuovi vault
             for (const vault of vaults) {
-                const { id, secrets, createdAt, updatedAt } = vault;
+                const { secrets, createdAt, updatedAt } = vault;
                 // ---
                 const secrets_buffer = Buffer.from(secrets);
                 // ---
                 await Vault.create({
-                    id,
                     user_id,
                     secrets: secrets_buffer,
                     createdAt,
