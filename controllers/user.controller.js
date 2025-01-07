@@ -83,7 +83,7 @@ export class UserController {
     signout = async_handler(async (req, res) => {
         const refresh_token = req.cookies.refresh_token;
         // -- elimino il refresh token
-        await this.refresh_token_service.delete(refresh_token, req.user.uid);
+        if (refresh_token) await this.refresh_token_service.delete(refresh_token, req.user.uid);
         // -- elimino i cookie
         Object.keys(req.cookies).forEach((cookie_name) => {
             res.clearCookie(cookie_name, { path: '/' });

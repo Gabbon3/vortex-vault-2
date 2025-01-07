@@ -2,6 +2,7 @@ import { UAParser } from "ua-parser-js";
 import { RefreshToken } from "../models/refreshToken.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
+import { validate as uuidValidate } from 'uuid';
 
 export class RefreshTokenService {
     static random_c_length = 10;
@@ -122,6 +123,8 @@ export class RefreshTokenService {
      * @returns 
      */
     async delete(token_id, user_id) {
+        if (!uuidValidate(token_id)) return false;
+        // ---
         return await RefreshToken.destroy({
             where: {
                 id: token_id,

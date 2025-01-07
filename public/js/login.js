@@ -149,7 +149,7 @@ class RequestSignIn {
                 }
                 // ---
                 const session_started = await AuthService.start_session();
-                if (session_started !== true) return false;
+                if (session_started !== true && session_started !== 0) return false;
                 // ---
                 Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
                 setTimeout(() => {

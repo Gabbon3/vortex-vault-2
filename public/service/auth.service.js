@@ -26,14 +26,15 @@ export class AuthService {
         if (!res) return false;
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
-        const key = await Cripto.derive_key(password, salt);
+        const master_key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
-        const cke_key = Bytes.base64.decode(res.key);
+        const lsk = Bytes.base64.decode(res.key); // Local Storage Key
         await LocalStorage.set('email-utente', email);
-        await LocalStorage.set('password-utente', password, key);
-        await LocalStorage.set('master-key', key, cke_key);
-        await LocalStorage.set('salt', salt, cke_key);
-        SessionStorage.set('master-key', key);
+        await LocalStorage.set('password-utente', password, master_key);
+        await LocalStorage.set('master-key', master_key, lsk);
+        await LocalStorage.set('salt', salt, lsk);
+        SessionStorage.set('lsk', lsk);
+        SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
         // --- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
@@ -261,12 +262,12 @@ export class AuthService {
     }
     /**
      * Controlla solo l'url
-     * @returns {boolean}
+     * @returns {boolean|object}
      */
     static check_signin_request_url() {
         const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
-        if (!action || action !== 'rsi' || !key_base64 || !id) return false;
-        return true;
+        if (!action || !key_base64 || !id) return false;
+        return { action, id, key_base64 };
     }
     /**
      * Dal dispositivo autenticato si inviano le credenziali per accedere
@@ -274,7 +275,10 @@ export class AuthService {
      */
     static async check_signin_request() {
         // -- controllo la correttezza dei parametri
-        if (!this.check_signin_request_url()) return false;
+        const params = this.check_signin_request_url();
+        if (!params) return false;
+        if (params.action !== 'rsi') return false;
+        const { id, key_base64 } = params;
         // ---
         const key = Bytes.base64.decode(key_base64, true);
         // -- recupero la password
