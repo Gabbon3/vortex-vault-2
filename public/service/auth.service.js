@@ -169,14 +169,15 @@ export class AuthService {
     }
     /**
      * Imposta la chiave master dell'utente nel session storage
-     * @param {Uint8Array} key 
+     * @param {Uint8Array} lsk 
      */
-    static async config_session_vars(key) {
-        const master_key = await LocalStorage.get('master-key', key);
-        const salt = await LocalStorage.get('salt', key);
+    static async config_session_vars(lsk) {
+        const master_key = await LocalStorage.get('master-key', lsk);
+        const salt = await LocalStorage.get('salt', lsk);
         const email = await LocalStorage.get('email-utente');
         if (!master_key) return false;
         // ---
+        SessionStorage.set('lsk', lsk);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
         SessionStorage.set('email', email);
