@@ -29,7 +29,7 @@ class PasskeyBtn extends HTMLElement {
         document
             .getElementById(button_id)
             .addEventListener("click", async () => {
-                const res = await PasskeyService.authenticate(endpoint, method);
+                const res = await PasskeyService.authenticate({ endpoint, method });
                 if (res) {
                     if (!callback) return Log.summon(0, 'Operation performed successfully');
                     // ---

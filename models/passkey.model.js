@@ -1,12 +1,13 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import { uuidv7 } from "uuidv7";
 
 export const Passkey = sequelize.define(
     "Passkey",
     {
         id: {
-            type: DataTypes.BIGINT,
-            autoIncrement: true,
+            type: DataTypes.UUID,
+            defaultValue: () => uuidv7(),
             primaryKey: true
         },
         credential_id: {
@@ -33,7 +34,7 @@ export const Passkey = sequelize.define(
             comment: "Nome della passkey",
         },
         user_id: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.UUID,
             allowNull: false
         },
         attestation_format: {

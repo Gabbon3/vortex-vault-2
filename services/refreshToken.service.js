@@ -1,6 +1,5 @@
 import { UAParser } from "ua-parser-js";
 import { RefreshToken } from "../models/refreshToken.js";
-import { UID } from "../utils/uid.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
 
@@ -14,7 +13,6 @@ export class RefreshTokenService {
      * @returns {string}
      */
     async create(user_id, user_agent, ip_address, passKey) {
-        const token_id = UID.generate(RefreshTokenService.random_c_length, true);
         // -- User Agent
         const ua = UAParser(user_agent);
         const user_agent_summary = `${ua.browser.name ?? ""}-${ua.browser.major ?? ""}-${ua.os.name ?? ""}-${ua.os.version ?? ""}`;
@@ -30,7 +28,6 @@ export class RefreshTokenService {
         // -- abilito il token, se no bisogna approvarlo
         const revoke_this_token = count > 0;
         const token_info = {
-            id: token_id,
             user_id,
             user_agent_summary,
             user_agent_hash,

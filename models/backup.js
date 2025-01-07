@@ -1,16 +1,17 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import { uuidv7 } from "uuidv7";
 
 export const Backup = sequelize.define(
     "Backup",
     {
         id: { 
-            type: DataTypes.BIGINT, 
+            type: DataTypes.UUID,
+            defaultValue: () => uuidv7(),
             primaryKey: true,
-            autoIncrement: true 
         },
         user_id: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.UUID,
             allowNull: false,
             unique: true
         },

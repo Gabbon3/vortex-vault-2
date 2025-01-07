@@ -76,8 +76,8 @@ try {
     await sequelize.authenticate();
     console.log('☑️ DB');
     // -- da utilizzare solo quando ci si vuole allineare con il db
-    // await sequelize.sync({ force: true });
-    // console.log('☑️ Struct');
+    await sequelize.sync({ force: true });
+    console.log('☑️ Struct');
     // ---
     app.listen(PORT, () => {
         console.log(`☑️ Server`);

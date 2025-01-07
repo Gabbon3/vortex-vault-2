@@ -1,13 +1,14 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import { uuidv7 } from "uuidv7";
 
 export const User = sequelize.define(
     "User",
     {
         id: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.UUID,
+            defaultValue: () => uuidv7(),
             primaryKey: true,
-            autoIncrement: true,
         },
         email: { type: DataTypes.STRING, allowNull: false, unique: true },
         verified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },

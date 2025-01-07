@@ -74,6 +74,7 @@ export class UserService {
         // -- Refresh Token
         if (!refresh_token) {
             refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
+            console.log(refresh_token);
             // -- avviso l'utente se un nuovo dispositivo accede
             if (refresh_token.is_revoked) {
                 // -- ottengo il testo

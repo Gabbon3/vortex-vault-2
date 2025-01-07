@@ -1,16 +1,17 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import { uuidv7 } from "uuidv7";
 
 export const Vault = sequelize.define(
     'Vault',
     {
         id: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
+            type: DataTypes.UUID,
+            defaultValue: () => uuidv7(),
             primaryKey: true
         },
         user_id: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.UUID,
             allowNull: false
         },
         secrets: {

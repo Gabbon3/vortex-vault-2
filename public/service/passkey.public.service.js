@@ -57,12 +57,18 @@ export class PasskeyService {
     }
     /**
      * Effettua in maniera dinamica un'autenticazione tramite passkey indicando l'endpoint necessario
-     * @param {string} endpoint qualsiasi endpoint del server
-     * @param {string} method POST, GET...
+     * @param {object} options 
+     * @param {string} [options.endpoint] qualsiasi endpoint del server
+     * @param {string} [options.method] POST, GET...
+     * @param {object} [options.body], dati 
      * @param {Function} callback 
      * @returns {boolean}
      */
-    static async authenticate(endpoint, method = 'POST', callback = null) {
+    static async authenticate(options, callback = null) {
+        if (!options.endpoint) return false;
+        // -- verifico che il body non contenga le opzioni usate già dal service per far funzionare l'autenticazione
+        if (options.body && (options.body.request_id || options.body.auth_data)) throw new Error("Invalid options properties, request_id & auth_data can't be used in this context");
+        // ---
         const chl_req_id = await API.fetch(`/auth/passkey/`, {
             method: "GET",
         });
@@ -97,14 +103,21 @@ export class PasskeyService {
             },
             userHandle: credential.response.clientDataJSON.userHandle,
         };
+        // -- definisco dei valori predefiniti delle options
+        const opt = {
+            method: 'POST',
+            body: {},
+            ...options,
+        }
         // -- invio all'endpoint scelto la risposta
-        const response = await API.fetch(endpoint, {
-            method,
+        const response = await API.fetch(opt.endpoint, {
+            method: opt.method,
             body: {
                 request_id, // per identificare la richiesta
                 auth_data: Bytes.base64.encode(
                     msgpack.encode(auth_data)
                 ),
+                ...opt.body,
             },
         });
         // --

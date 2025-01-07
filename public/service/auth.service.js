@@ -142,9 +142,10 @@ export class AuthService {
      * @returns {boolean|object} restituisce un oggetto con degli auth data (la cke), false se non rigenerato
      */
     static async new_access_token() {
-        const key = await PasskeyService.authenticate(
-            '/auth/token/refresh',
-            'POST',
+        const key = await PasskeyService.authenticate({
+            endpoint: '/auth/token/refresh',
+            method: 'POST',
+        },
             (response) => {
                 return Bytes.base64.decode(response.key);
             }
