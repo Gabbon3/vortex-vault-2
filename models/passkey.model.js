@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
-import { uuidv7 } from "uuidv7";
+import { v7 as uuidv7 } from 'uuid';
 
 export const Passkey = sequelize.define(
     "Passkey",

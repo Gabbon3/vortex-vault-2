@@ -9,8 +9,8 @@ import { MFAService } from "../services/mfa.service.js";
 import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
-import { UID } from "../utils/uid.js";
 import { CKEService } from "../services/cke.service.js";
+import { v7 as uuidv7 } from 'uuid';
 
 export class UserController {
     constructor() {
@@ -167,7 +167,7 @@ export class UserController {
     quick_signin = async_handler(async (req, res) => {
         const { credentials } = req.body;
         // ---
-        const id = UID.generate();
+        const id = uuidv7();
         const is_set = 
             RamDB.set('fsi' + id, credentials, 150) // fsi = fast sign-in 
             && RamDB.set('passKey' + id, true, 150); // passKey = per saltare il controllo del refresh token

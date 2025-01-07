@@ -162,33 +162,6 @@ export class Bytes {
         },
     };
 
-    static uuid = {
-        /**
-         * decodifica una stringa esadecimale uuid in bytes
-         * @param {string} uuid hex
-         * @returns {Uint8Array}
-         */
-        decode(uuid) {
-            return Bytes.hex.decode(uuid.replaceAll("-", ""));
-        },
-        /**
-         * Converte un array in una stringa esadecimale uuid
-         * @param {Uint8Array} blob
-         * @returns {string} ********-****-****-****-************
-         */
-        encode(blob) {
-            const hex = Bytes.hex.encode(blob);
-            // ---
-            const regex =
-                /^([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{12})$/;
-            const match = hex.match(regex);
-            // ---
-            if (!match) return null;
-            // ---
-            return match.join('-');
-        },
-    };
-
     static txt = {
         /**
          * Converte una stringa di testo in un Uint8Array

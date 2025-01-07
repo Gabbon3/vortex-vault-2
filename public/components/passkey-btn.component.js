@@ -46,7 +46,7 @@ class PasskeyBtn extends HTMLElement {
              * AVVIO SUDO SESSION
              */
             Log.summon(0, 'Sudo session started');
-            const expire = new Date(Date.now() + 20 * 60 * 1000);
+            const expire = new Date(Date.now() + 45 * 60 * 1000);
             await LocalStorage.set("session-expire", expire);
             await LocalStorage.set("sudo-expire", expire);
             await VortexNavbar.sudo_indicator_init();
