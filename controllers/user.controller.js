@@ -4,7 +4,7 @@ import { Bytes } from "../utils/bytes.js";
 import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
-import { TokenUtils } from "../utils/tokenUtils.js";
+import { JWT } from "../utils/jwt.utils.js";
 import { MFAService } from "../services/mfa.service.js";
 import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
@@ -288,8 +288,8 @@ export class UserController {
         if (cookies.access_token) {
             res.cookie('access_token', cookies.access_token, {
                 httpOnly: true,
-                secure: TokenUtils.secure_option, // da mettere true in produzione
-                maxAge: TokenUtils.access_token_cookie_lifetime,
+                secure: JWT.secure_option, // da mettere true in produzione
+                maxAge: JWT.access_token_cookie_lifetime,
                 sameSite: 'Strict',
                 path: '/', // disponibile per tutte le route
             });
@@ -297,8 +297,8 @@ export class UserController {
         if (cookies.refresh_token) {
             res.cookie('refresh_token', cookies.refresh_token, {
                 httpOnly: true,
-                secure: TokenUtils.secure_option, // da mettere true in produzione
-                maxAge: TokenUtils.refresh_token_cookie_lifetime,
+                secure: JWT.secure_option, // da mettere true in produzione
+                maxAge: JWT.refresh_token_cookie_lifetime,
                 sameSite: 'Strict',
                 path: '/auth',
             });
@@ -306,8 +306,8 @@ export class UserController {
         if (cookies.cke) {
             res.cookie('cke', cookies.cke, {
                 httpOnly: true,
-                secure: TokenUtils.secure_option, // da mettere true in produzione
-                maxAge: TokenUtils.cke_cookie_lifetime,
+                secure: JWT.secure_option, // da mettere true in produzione
+                maxAge: JWT.cke_cookie_lifetime,
                 sameSite: 'Strict',
                 path: '/auth', // disponibile per tutte le route
             });

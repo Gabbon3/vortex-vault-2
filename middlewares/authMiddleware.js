@@ -1,7 +1,7 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { UserService } from "../services/user.service.js";
-import { TokenUtils } from "../utils/tokenUtils.js";
+import { JWT } from "../utils/jwt.utils.js";
 import { TOTP } from "../utils/totp.js";
 import { MFAService } from "../services/mfa.service.js";
 import { Roles } from "../utils/roles.js";
@@ -19,7 +19,7 @@ export const verify_access_token = (required_role = Roles.BASE) => (req, res, ne
         return res.status(401).json({ error: "Access denied" });
     }
     // -- verifico che l'access token sia valido
-    const payload = TokenUtils.verifica_access_token(access_token);
+    const payload = JWT.verifica_access_token(access_token);
     if (!payload) {
         return res.status(401).json({ error: "Access denied" });
     }

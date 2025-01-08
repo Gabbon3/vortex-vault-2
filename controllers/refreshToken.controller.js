@@ -4,7 +4,7 @@ import { CKEService } from "../services/cke.service.js";
 import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { Bytes } from "../utils/bytes.js";
 import { Roles } from "../utils/roles.js";
-import { TokenUtils } from "../utils/tokenUtils.js";
+import { JWT } from "../utils/jwt.utils.js";
 
 export class RefreshTokenController {
     constructor() {
@@ -26,7 +26,7 @@ export class RefreshTokenController {
         const refresh_token = await this.service.verify(token_id, user_agent);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
-        const access_token = await TokenUtils.genera_access_token({ uid: refresh_token.user_id, role: Roles.BASE });
+        const access_token = await JWT.genera_access_token({ uid: refresh_token.user_id, role: Roles.BASE });
         // -- ottengo l'ip adress del richiedente
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token
@@ -37,8 +37,8 @@ export class RefreshTokenController {
         // -- imposto il cookie
         res.cookie('access_token', access_token, {
             httpOnly: true,
-            secure: TokenUtils.secure_option, // da mettere true in produzione
-            maxAge: TokenUtils.access_token_cookie_lifetime,
+            secure: JWT.secure_option, // da mettere true in produzione
+            maxAge: JWT.access_token_cookie_lifetime,
             sameSite: 'Strict',
             path: '/', // disponibile per tutte le route
         });

@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { TokenUtils } from "../utils/tokenUtils.js";
+import { JWT } from "../utils/jwt.utils.js";
 import { RefreshTokenService } from "./refreshToken.service.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
@@ -92,7 +92,7 @@ export class UserService {
             }
         }
         // -- Access Token
-        const access_token = refresh_token.is_revoked ? null : TokenUtils.genera_access_token({ uid: user.id, role: Roles.BASE });
+        const access_token = refresh_token.is_revoked ? null : JWT.genera_access_token({ uid: user.id, role: Roles.BASE });
         // ---
         return { access_token, refresh_token: refresh_token.id, user };
     }
@@ -101,9 +101,9 @@ export class UserService {
      * @param {number} uid user id
      */
     async generate_sudo_access_token(uid) {
-        const sudo_access_token = TokenUtils.genera_access_token(
+        const sudo_access_token = JWT.genera_access_token(
             { uid, role: Roles.SUDO }, 
-            TokenUtils.sudo_token_lifetime
+            JWT.sudo_token_lifetime
         );
         return sudo_access_token;
     }

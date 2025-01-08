@@ -1,7 +1,7 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
-import { TokenUtils } from "../utils/tokenUtils.js";
+import { JWT } from "../utils/jwt.utils.js";
 import { User } from "../models/user.js";
 import { Bytes } from "../utils/bytes.js";
 import { CKEService } from "../services/cke.service.js";
@@ -21,8 +21,8 @@ export class CkeController {
         // ---
         res.cookie('cke', new_cke, {
             httpOnly: true,
-            secure: TokenUtils.secure_option, // da mettere true in produzione
-            maxAge: TokenUtils.cke_cookie_lifetime,
+            secure: JWT.secure_option, // da mettere true in produzione
+            maxAge: JWT.cke_cookie_lifetime,
             sameSite: 'Strict',
             path: '/auth', // disponibile per tutte le route
         });

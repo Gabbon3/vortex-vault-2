@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { AES256GCM } from "./aesgcm.js";
 
-export class TokenUtils {
+export class JWT {
     static ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, 'hex');
     static PASSKEY_TOKEN_SECRET = Buffer.from(process.env.PASSKEY_TOKEN_SECRET, 'hex');
@@ -11,9 +11,9 @@ export class TokenUtils {
      * Raccolta delle chiavi da usare nei tokens
      */
     static keys = {
-        default: TokenUtils.ACCESS_TOKEN_SECRET, // chiave per firmare i jwt base
-        passkey: TokenUtils.PASSKEY_TOKEN_SECRET, // chiave per firmare i jwt emessi da passkeys
-        encrypt: TokenUtils.TOKEN_KEY, // chiave per cifrare i jwt
+        default: JWT.ACCESS_TOKEN_SECRET, // chiave per firmare i jwt base
+        passkey: JWT.PASSKEY_TOKEN_SECRET, // chiave per firmare i jwt emessi da passkeys
+        encrypt: JWT.TOKEN_KEY, // chiave per cifrare i jwt
     }
     // -- proprietà dei jwt o cookie
     static secure_option = true;
@@ -61,7 +61,7 @@ export class TokenUtils {
      * Genera un generico token JWT
      * @param {object} payload oggetto che racchiude le informazioni del token, non inserire exp e iat che sono già gestiti
      * @param {number} lifetime numeri di secondi che indica la durata di validità di un jwt
-     * @param {string} key nome della chiave da usare tra quelle disponibili in 'TokenUtils.keys'
+     * @param {string} key nome della chiave da usare tra quelle disponibili in 'JWT.keys'
      * @returns {string} JWT token generico
      */
     static sign(payload, lifetime, key) {
