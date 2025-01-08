@@ -23,7 +23,7 @@ export class PasskeyService {
                 publicKey: options,
             });
         } catch (error) {
-            console.log('Aborted');
+            console.log('Aborted', error);
             return null;
         }
         // -- preparo i dati da inviare al server

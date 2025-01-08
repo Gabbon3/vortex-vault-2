@@ -18,18 +18,20 @@ export class CKEService {
             salt = user_salt instanceof Uint8Array ? user_salt : Bytes.hex.decode(user_salt)
         }
         const cke = Cripto.random_bytes(32);
-        const key = await this.key(cke, null, salt);
+        const lsk = await this.lsk(cke, null, salt);
         // ---
         return {
-            cke: Bytes.hex.encode(cke), key
+            cke: Bytes.hex.encode(cke), lsk
         };
     }
     /**
      * Restituisce la chiave da usare per cifrare le credenziali nel localstorage
+     * anche nota come Local Storage Key
      * @param {string|Uint8Array} cke 
      * @param {Uint8Array} user_salt 
+     * @returns {Uint8Array} Local Storage Key
      */
-    async key(cke_, uid, user_salt = null) {
+    async lsk(cke_, uid, user_salt = null) {
         let salt = user_salt;
         // ---
         if (user_salt === null) {

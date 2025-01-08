@@ -33,7 +33,6 @@ export class ECDSA {
         const buffer_data = Buffer.from(data);
         const buffer_signature = Buffer.from(signature);
         const public_key_pem = this.rawToPem(public_key);
-        console.log(public_key_pem);
         // -- verifico la firma con la chiave pubblica
         const verify = crypto.createVerify("SHA256");
         verify.update(buffer_data);

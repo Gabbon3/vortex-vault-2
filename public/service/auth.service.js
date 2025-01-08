@@ -28,7 +28,7 @@ export class AuthService {
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.derive_key(password, salt);
         // -- cifro le credenziali sul localstorage
-        const lsk = Bytes.base64.decode(res.key); // Local Storage Key
+        const lsk = Bytes.base64.decode(res.lsk); // Local Storage Key
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, master_key);
         await LocalStorage.set('master-key', master_key, lsk);
@@ -114,9 +114,11 @@ export class AuthService {
         const salt = await SessionStorage.get('salt');
         const key = await Cripto.derive_key(new_password, salt);
         VaultService.master_key = key;
-        // -- la salvo localmente
-        const cke_key = Bytes.base64.decode(res.key);
-        await LocalStorage.set('master-key', key, cke_key);
+        // -- derivo la chiave del local storage e la salvo
+        const lsk = Bytes.base64.decode(res.lsk); // local storage key
+        await SessionStorage.set('lsk', lsk);
+        // -- salvo la master key
+        await LocalStorage.set('master-key', key, lsk);
         await SessionStorage.set('master-key', key);
         // -- creo e genero un backup per l'utente
         await BackupService.create_locally();
@@ -213,7 +215,7 @@ export class AuthService {
             passKey: true,
         });
         // -- compongo l'url
-        const url = `https://vortexvault.fly.dev/signin?action=qsi&id=${id}&key=${key}`;
+        const url = `${window.location.protocol}//${window.location.host}/signin?action=qsi&id=${id}&key=${key}`;
         return url;
     }
     /**
@@ -241,7 +243,7 @@ export class AuthService {
         const id = await SecureLink.request_id();
         if (!id) return false;
         // ---
-        const url = `https://vortexvault.fly.dev/signin?action=rsi&id=${id}&key=${key}`; // rsi = request sign in
+        const url = `${window.location.protocol}//${window.location.host}/signin?action=rsi&id=${id}&key=${key}`; // rsi = request sign in
         QrCodeDisplay.generate({
             data: url,
         });
@@ -309,7 +311,7 @@ export class AuthService {
     }
     /**
      * Tenta di avviare automaticamente una sessione
-     * @returns {number} 0 già loggato, -1 nuovo access token non ottenuto, -2 nessuna chiave restituita
+     * @returns {number} true è stato loggato e la sessione è stata attivata, 0 già loggato, -1 nuovo access token non ottenuto, -2 nessuna chiave restituita, false sessione non attivata
      */
     static async start_session() {
         // -- verifico che ce bisogno di rigenerare l'access token

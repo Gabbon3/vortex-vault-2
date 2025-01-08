@@ -39,7 +39,7 @@ export class CkeController {
         // --- id dell'utente
         if (!cke_hex) throw new CError("NotFoundError", "CKE non trovata", 404);
         // ---
-        const key = await this.service.key(cke_hex, req.user.uid);
+        const key = await this.service.lsk(cke_hex, req.user.uid);
         // ---
         res.status(200).json({ key: Bytes.base64.encode(key) });
     });

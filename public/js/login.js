@@ -12,7 +12,7 @@ $(document).ready(async () => {
         Windows.loader(true);
         const session_started = await AuthService.start_session();
         Windows.loader(false);
-        return session_started !== true;
+        return session_started;
     }
     /**
      * Verifico se ci sono dei parametri per l'accesso rapido
@@ -20,7 +20,7 @@ $(document).ready(async () => {
     const quick_signin = await AuthService.quick_signin();
     if (quick_signin) {
         const session_started = await auth_success();
-        if (session_started) {
+        if (session_started === true || session_started === 0) {
             Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
             setTimeout(() => {
                 window.location.href = '/vault';
@@ -35,10 +35,10 @@ $(document).ready(async () => {
     document.getElementById('recovery-email').value = saved_email;
     document.getElementById('recovery-device-email-email').value = saved_email;
     document.getElementById('email').value = saved_email;
-    // ---
+    // -- REQUEST SIGN-IN
     if (saved_email && !quick_signin && AuthService.check_signin_request_url()) {
         const session_started = await auth_success();
-        if (session_started) {
+        if (session_started === true || session_started === 0) {
             // -- verifico se ci sono richieste di autenticazione
             const res = await AuthService.check_signin_request();
             if (res) {
@@ -48,6 +48,8 @@ $(document).ready(async () => {
             }
             // ---
             Log.summon(3, `Access saved as ${saved_email}`);
+        } else {
+            Log.summon(1, "Authentication failed");
         }
     }
     /**

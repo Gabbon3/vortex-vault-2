@@ -27,6 +27,7 @@ export class SecureLinkController {
      */
     generate_id = async_handler(async (req, res) => {
         const id = uuidv7();
+        console.log('SL - new id request: ' + id);
         // --
         res.status(201).json({ id });
     });

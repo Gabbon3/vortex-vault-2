@@ -43,7 +43,7 @@ export class RefreshTokenController {
             path: '/', // disponibile per tutte le route
         });
         // -- restituisco anche la passkey
-        const key = await this.cke_service.key(cke, req.user.uid);
+        const key = await this.cke_service.lsk(cke, req.user.uid);
         // ---
         res.status(201).json({ access_token, key: Bytes.base64.encode(key) });
     })
