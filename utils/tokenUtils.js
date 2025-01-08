@@ -1,12 +1,20 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import "dotenv/config";
 import { AES256GCM } from "./aesgcm.js";
-
-dotenv.config();
 
 export class TokenUtils {
     static ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-    static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, "hex");
+    static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, 'hex');
+    static PASSKEY_TOKEN_SECRET = Buffer.from(process.env.PASSKEY_TOKEN_SECRET, 'hex');
+    // ---
+    /**
+     * Raccolta delle chiavi da usare nei tokens
+     */
+    static keys = {
+        default: TokenUtils.ACCESS_TOKEN_SECRET, // chiave per firmare i jwt base
+        passkey: TokenUtils.PASSKEY_TOKEN_SECRET, // chiave per firmare i jwt emessi da passkeys
+        encrypt: TokenUtils.TOKEN_KEY, // chiave per cifrare i jwt
+    }
     // -- proprietà dei jwt o cookie
     static secure_option = true;
     // -- tempo di vita dei token in secondi
@@ -48,6 +56,41 @@ export class TokenUtils {
         }
         // ---
         return token;
+    }
+    /**
+     * Genera un generico token JWT
+     * @param {object} payload oggetto che racchiude le informazioni del token, non inserire exp e iat che sono già gestiti
+     * @param {number} lifetime numeri di secondi che indica la durata di validità di un jwt
+     * @param {string} key nome della chiave da usare tra quelle disponibili in 'TokenUtils.keys'
+     * @returns {string} JWT token generico
+     */
+    static sign(payload, lifetime, key) {
+        const now = Math.floor(Date.now() / 1000);
+        // -- genero il JWT
+        const token = jwt.sign({
+            ...payload,
+            iat: now,
+            exp: now + lifetime
+        }, this.keys[key]);
+        // -- restituisco il token
+        return token;
+    }
+    /**
+     * Verifica un token JWT restituendo il payload
+     * @param {string} token stringa del token JWT
+     * @param {string} key nome della chiave da utilizzare
+     * @returns 
+     */
+    static verify(token, key) {
+        try {
+            // -- provo a verificare il jwt
+            // - se invalido lancerà un errore quindi lo catturo
+            // - e restituisco null
+            return jwt.verify(token, this.keys[key]);
+        } catch (error) {
+            // -- il token non è valido
+            return null;
+        }
     }
 
     /**

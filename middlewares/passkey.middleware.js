@@ -5,9 +5,15 @@ import { Bytes } from "../utils/bytes.js";
 import msgpack from "../public/utils/msgpack.min.js";
 import { Passkey } from "../models/passkey.model.js";
 import { fido2 } from "../services/passkey.service.js";
+import { TokenUtils } from "../utils/tokenUtils.js";
 import "dotenv/config";
 
 export const verify_passkey = async_handler(async (req, res, next) => {
+    // -- controllo se il token JWT relativo alla passkey esiste
+    const jwt = req.cookies.passkey_token ?? null;
+    if (jwt) {
+        const is_valid = TokenUtils.verify(jwt, 'passkey');
+    }
     // ---
     // const rpId = process.env.RPID;
     const origin = process.env.ORIGIN;
