@@ -14,6 +14,7 @@ class PasskeyBtn extends HTMLElement {
         const endpoint = this.getAttribute("endpoint");
         const method = this.getAttribute("method") ?? "POST";
         const callback = this.getAttribute("callback") ?? false;
+        const passkey_need = this.getAttribute("force-auth") === 'true';
         // ---
         const icon = this.getAttribute("icon") ?? "passkey";
         const btn_class = this.getAttribute("b-class") ?? "primary";
@@ -29,7 +30,7 @@ class PasskeyBtn extends HTMLElement {
         document
             .getElementById(button_id)
             .addEventListener("click", async () => {
-                const res = await PasskeyService.authenticate({ endpoint, method });
+                const res = await PasskeyService.authenticate({ endpoint, method, passkey_need });
                 if (res) {
                     if (!callback) return Log.summon(0, 'Operation performed successfully');
                     // ---

@@ -2,10 +2,12 @@ import { Windows } from "./windows.js";
 import { CError } from "./error.js";
 
 export class API {
+    static recent = {};
     /**
      * Eseguo una richiesta fetch centralizzata con endpoint, opzioni e tipo di dato.
      * @param {string} endpoint - L'endpoint a cui fare la richiesta.
      * @param {Object} options - Le opzioni da utilizzare nella chiamata fetch.
+     * @param {boolean} [options.hide_log] - se true non mostra il log
      * @param {Object} type - Contiene i tipi di ritorno e contenuto: { return_type, content_type }. (json, form-data, bin)
      * @returns {Promise<any|null>} - Restituisco il risultato della chiamata o null in caso di errore.
      */
@@ -47,7 +49,8 @@ export class API {
                     error: (await response.json()).error
                 };
                 console.warn(`errore nella fetch:`, error);
-                CError.check(error); // -- lancio un errore se la risposta non è valida
+                API.recent = error;
+                if (options.hide_log !== true) CError.check(error); // -- lancio un errore se la risposta non è valida
                 return null;
             }
             // -- restituisco il dato in base al tipo di ritorno richiesto

@@ -145,18 +145,18 @@ export class AuthService {
      * @returns {boolean|object} restituisce un oggetto con degli auth data (la cke), false se non rigenerato
      */
     static async new_access_token() {
-        const key = await PasskeyService.authenticate({
+        const lsk = await PasskeyService.authenticate({
             endpoint: '/auth/token/refresh',
             method: 'POST',
         },
             (response) => {
-                return Bytes.base64.decode(response.key);
+                return Bytes.base64.decode(response.lsk);
             }
         );
-        if (!key) return false;
+        if (!lsk) return false;
         // -- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
-        return { key };
+        return { lsk };
     }
     /**
      * Recupera la cke dai cookie
@@ -327,11 +327,11 @@ export class AuthService {
         // - l'utente dovrebbe accedere nuovamente
         if (!auth_data) return -1;
         // -- se non ce la chiave mi fermo
-        if (!auth_data.key) return -2;
+        if (!auth_data.lsk) return -2;
         // ---
-        const { key } = auth_data;
+        const { lsk } = auth_data;
         // -- imposto la master key
-        const initialized = await this.config_session_vars(key);
+        const initialized = await this.config_session_vars(lsk);
         // ---
         return initialized;
     }

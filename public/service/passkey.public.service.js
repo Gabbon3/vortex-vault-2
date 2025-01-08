@@ -1,5 +1,7 @@
 import { Bytes } from "../../utils/bytes.js";
 import { API } from "../utils/api.js";
+import { LocalStorage } from "../utils/local.js";
+import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 
 export class PasskeyService {
@@ -56,19 +58,10 @@ export class PasskeyService {
         return true;
     }
     /**
-     * Effettua in maniera dinamica un'autenticazione tramite passkey indicando l'endpoint necessario
-     * @param {object} options 
-     * @param {string} [options.endpoint] qualsiasi endpoint del server
-     * @param {string} [options.method] POST, GET...
-     * @param {object} [options.body], dati 
-     * @param {Function} callback 
-     * @returns {boolean}
+     * Fa firmare una challenge generata dal server per validare la passkey restituendo gli auth data
+     * @returns {object} request id (per identificare la richiesta) e auth data (per autenticarsi)
      */
-    static async authenticate(options, callback = null) {
-        if (!options.endpoint) return false;
-        // -- verifico che il body non contenga le opzioni usate già dal service per far funzionare l'autenticazione
-        if (options.body && (options.body.request_id || options.body.auth_data)) throw new Error("Invalid options properties, request_id & auth_data can't be used in this context");
-        // ---
+    static async get_auth_data() {
         const chl_req_id = await API.fetch(`/auth/passkey/`, {
             method: "GET",
         });
@@ -92,8 +85,9 @@ export class PasskeyService {
             console.log('Passkey auth request Aborted');
             return null;
         } 
-        // -- invio la challenge firmata al client
+        // -- restituisco i dati grazie al quale il server può validare la passkey
         const auth_data = {
+            request_id,
             id: credential.id,
             rawId: new Uint8Array(credential.rawId),
             response: {
@@ -103,25 +97,71 @@ export class PasskeyService {
             },
             userHandle: credential.response.clientDataJSON.userHandle,
         };
+        return auth_data;
+    }
+    /**
+     * Effettua in maniera dinamica un'autenticazione tramite passkey indicando l'endpoint necessario
+     * @param {object} options 
+     * @param {string} [options.endpoint] qualsiasi endpoint del server
+     * @param {string} [options.method] POST, GET...
+     * @param {object} [options.body], dati 
+     * @param {boolean} [options.passkey_need] se true viene forzato l'utilizzo della passkey
+     * @param {Function} callback 
+     * @returns {boolean}
+     */
+    static async authenticate(options, callback = null) {
+        if (!options.endpoint) return false;
+        // -- verifico che il body non contenga le opzioni usate già dal service per far funzionare l'autenticazione
+        if (options.body && (options.body.request_id || options.body.auth_data)) throw new Error("Invalid options properties, request_id & auth_data can't be used in this context");
+        /**
+         * Verifico se l'utente si è già autenticato di recente con la passkey
+         */
+        let auth_data = null;
+        let request_id = null;
+        let body = options.body ?? {};
         // -- definisco dei valori predefiniti delle options
         const opt = {
             method: 'POST',
-            body: {},
             ...options,
+        };
+        // ---
+        const passkey_token = await LocalStorage.get('passkey-token-expire');
+        const passkey_token_is_valid = passkey_token instanceof Date && passkey_token > new Date();
+        /**
+         * Se non si è già autenticato chiedo al client di firmare una challenge
+         * oppure se è richiesta la passkey
+         */
+        if (!passkey_token_is_valid || options.passkey_need === true) {
+            // -- ottengo gli auth data e la request id
+            auth_data = await this.get_auth_data();
+            if (!auth_data) return auth_data;
+            // -- ottengo l'id della richiesta per farla identificare dal middleware
+            request_id = auth_data.request_id;
+            delete auth_data.request_id;
+            // --
+            body = {
+                ...body,
+                request_id,
+                auth_data: Bytes.base64.encode(msgpack.encode(auth_data)),
+            }
         }
         // -- invio all'endpoint scelto la risposta
         const response = await API.fetch(opt.endpoint, {
             method: opt.method,
-            body: {
-                request_id, // per identificare la richiesta
-                auth_data: Bytes.base64.encode(
-                    msgpack.encode(auth_data)
-                ),
-                ...opt.body,
-            },
+            body,
         });
-        // --
-        if (!response) return false;
+        // -- se ce stato un errore probabilmente è per la passkey
+        // - quindi elimino dal localstorage la traccia di passkey token cosi alla prossima richiesta l'utente usa la passkey
+        if (!response) {
+            if (passkey_token_is_valid && !options.passkey_need && API.recent.status == 422) {
+                LocalStorage.remove('passkey-token-expire');
+                Log.summon(1, 'Try again');
+            }
+            return false;
+        }
+        // -- se ce stata una risposta ed non è ancora stato abilitato il passkey token lo imposto
+        if (!passkey_token_is_valid || options.passkey_need === true) await LocalStorage.set('passkey-token-expire', new Date(Date.now() + (10 * 60 * 1000)));
+        // -- passo alla callback la risposta
         return callback instanceof Function ? await callback(response) : true;
     }
     /**

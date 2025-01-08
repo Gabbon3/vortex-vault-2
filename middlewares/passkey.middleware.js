@@ -9,15 +9,23 @@ import { JWT } from "../utils/jwt.utils.js";
 import "dotenv/config";
 
 export const verify_passkey = async_handler(async (req, res, next) => {
+    /**
+     * VERIFICA JWT PER BYPASS SUL CONTROLLO DELLA PASSKEY
+     */
     // -- controllo se il token JWT relativo alla passkey esiste
-    const jwt = req.cookies.passkey_token ?? null;
-    if (jwt) {
-        const is_valid = JWT.verify(jwt, 'passkey');
+    const cookie_jwt = req.cookies.passkey_token ?? null;
+    if (cookie_jwt) {
+        const payload = JWT.verify(cookie_jwt, 'passkey');
+        // -- se è valido bypasso il controllo sulla passkey
+        if (payload) {
+            req.user = { uid: payload.uid };
+            return next();
+        }
     }
-    // ---
-    // const rpId = process.env.RPID;
-    const origin = process.env.ORIGIN;
-    // ---
+    /**
+     * CONTROLLO SULLA PASSKEY
+     */
+    // -- ottengo dal body i dati necessari
     const { request_id, auth_data } = req.body;
     if (!request_id || !auth_data) throw new CError("", "Invalid request", 422);
     // -- decodifico gli auth data
@@ -44,7 +52,7 @@ export const verify_passkey = async_handler(async (req, res, next) => {
             },
             {
                 challenge,
-                origin,
+                origin: process.env.ORIGIN,
                 factor: "either",
                 publicKey: passkey.public_key,
                 prevCounter: passkey.sign_count,
@@ -58,6 +66,16 @@ export const verify_passkey = async_handler(async (req, res, next) => {
         console.warn(error);
         throw new CError("", "Authentication failed", 401);
     }
+    // -- se sono stati superati i controlli, genero un jwt
+    const jwt = JWT.sign({ uid: passkey.user_id }, JWT.passkey_token_lifetime, 'passkey');
+    // - imposto il cookie
+    res.cookie('passkey_token', jwt, {
+        httpOnly: true,
+        secure: true,
+        maxAge: JWT.passkey_token_lifetime * 1000,
+        sameSite: 'Strict',
+        path: '/',
+    });
     // ---
     RamDB.delete(`chl-${request_id}`);
     // ---

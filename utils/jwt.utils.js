@@ -18,6 +18,7 @@ export class JWT {
     // -- proprietà dei jwt o cookie
     static secure_option = true;
     // -- tempo di vita dei token in secondi
+    static passkey_token_lifetime = 10 * 60;
     static sudo_token_lifetime = 45 * 60;
     static access_token_lifetime = 60 * 60; // 30 ora
     static cke_lifetime = 60 * 60 * 24 * 31; // 31 giorni
