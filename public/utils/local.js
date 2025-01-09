@@ -25,12 +25,25 @@ export class LocalStorage {
      * @returns {Promise<string|Object>}
      */
     static async get(key, crypto_key = null) {
-        const data = localStorage.getItem(`${LocalStorage.prefix}-${key}`);
-        if (!data) return null;
-        // ---
-        const buffer = Bytes.base64.decode(data);
-        let value = crypto_key instanceof Uint8Array ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
-        return msgpack.decode(value);
+        try {
+            const data = localStorage.getItem(`${LocalStorage.prefix}-${key}`);
+            if (!data) return null;
+            // ---
+            const buffer = Bytes.base64.decode(data);
+            let value = crypto_key instanceof Uint8Array ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
+            return msgpack.decode(value);
+        } catch (error) {
+            console.warn('[!] LocalStorage - get', error);
+            return null;
+        }
+    }
+    /**
+     * Restituisce vero se un elemento esiste nel localstorage
+     * @param {string} key 
+     * @returns {boolean}
+     */
+    static has(key) {
+        return localStorage.getItem(`${LocalStorage.prefix}-${key}`) !== null;
     }
     /**
      * Rimuover dal localstorage un elemento

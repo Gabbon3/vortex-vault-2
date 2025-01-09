@@ -61,12 +61,15 @@ export const verify_passkey = async_handler(async (req, res, next) => {
         );
         // -- aumento faccio corrispondere il sign count sul db
         passkey.sign_count = assertionResult.authnrData.get("counter");
+        passkey.updated_at = new Date();
         await passkey.save();
     } catch (error) {
         console.warn(error);
         throw new CError("", "Authentication failed", 401);
     }
-    // -- se sono stati superati i controlli, genero un jwt
+    /**
+     * Se sono stati superati i controlli, genero un jwt
+     */
     const jwt = JWT.sign({ uid: passkey.user_id }, JWT.passkey_token_lifetime, 'passkey');
     // - imposto il cookie
     res.cookie('passkey_token', jwt, {

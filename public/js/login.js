@@ -75,7 +75,7 @@ $(document).ready(async () => {
      */
     document.getElementById('signin-passkey').addEventListener('click', async (e) => {
         const email = await LocalStorage.get('email-utente');
-        const master_key_exist = await LocalStorage.get('master-key') !== null;
+        const master_key_exist = LocalStorage.has('master-key');
         // ---
         const was_logged = email !== null && master_key_exist;
         // -- se non ci sono informazioni locali salvate non è possibile accedere con la passkey

@@ -35,7 +35,7 @@ vortex-navbar {
     align-items: center;
     padding: 5px;
     border-radius: 5px;
-    background-color: $bg-3;
+    background-color: $bg-4;
 }
 
 #sudo-indicator {
@@ -43,11 +43,11 @@ vortex-navbar {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    color: $text-color-2;
     transition: 0.2s;
     margin-left: auto;
     margin-right: 20px;
     cursor: default;
+    color: $text-color-2;
 
     &.base {
         color: $c1;
@@ -90,7 +90,7 @@ vortex-navbar {
         -webkit-backdrop-filter: blur(5px);
         backdrop-filter: blur(5px);
         animation: bounce 500ms linear both;
-        cursor: default;
+        cursor: pointer;
 
         .log-container {
             display: inline-flex;
@@ -186,7 +186,7 @@ vortex-navbar {
         flex-wrap: wrap;
         padding: 10px;
         border-radius: 15px;
-        background-color: $bg-15;
+        background-color: $bg-2;
     }
 
     .checkpoint {
@@ -231,13 +231,13 @@ vortex-navbar {
         cursor: pointer;
         padding: 10px;
         border-radius: 10px;
-        background-color: $bg-2;
+        background-color: $bg-3;
         transition: 0.15s;
         flex-grow: 1;
         
         &:hover {
-            background-color: $bg-3;
-            // box-shadow: 0 0 4px 0px $bg-3;
+            background-color: $bg-4;
+            // box-shadow: 0 0 4px 0px $bg-4;
         }
 
         .simbolo {
@@ -279,7 +279,7 @@ vortex-navbar {
 .custom-sections {
 
     custom-vault-section {
-        background-color: $bg-3;
+        background-color: $bg-4;
         padding: 0 7px 7px 7px;
         border-radius: 7px;
         margin-bottom: 0.5rem;
@@ -326,7 +326,7 @@ password-strength-bar {
     margin: 10px auto;
     width: 100%;
     overflow: hidden;
-    background-color: $bg-2;
+    background-color: $bg-3;
     padding: 5px;
     border-radius: 5px;
     font-size: $fs-m;
@@ -381,7 +381,7 @@ device-list-item, passkey-list-item {
     gap: 7px;
     padding: 7px;
     border-radius: 7px;
-    background-color: $bg-4;
+    background-color: $bg-5;
 
     .token-id {
         display: flex;

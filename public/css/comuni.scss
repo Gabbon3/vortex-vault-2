@@ -253,7 +253,7 @@ hr {
     }
 
     &.secondary {
-        background-color: $bg-4;
+        background-color: $bg-5;
         color: $text-color-15;
 
         &:hover {
@@ -284,12 +284,12 @@ hr {
         color: $text-color-2;
 
         &:hover {
-            box-shadow: 0 0 0 4px $bg-4;
+            box-shadow: 0 0 0 4px $bg-5;
             color: $text-color;
         }
 
         &:active {
-            box-shadow: 0 0 0 6px $bg-4;
+            box-shadow: 0 0 0 6px $bg-5;
         }
     }
 
@@ -324,7 +324,7 @@ hr {
     min-height: 100px;
     overflow-y: scroll;
     z-index: 10;
-    background-color: $bg-2;
+    background-color: $bg-3;
     transition: all 200ms cubic-bezier(1, 0, 1, 1);
     opacity: 0;
     // posizione iniziale top
@@ -372,23 +372,26 @@ hr {
     &.m {
         max-width: 500px;
     }
-
-    // auto
-    &.auto {
-        width: inherit;
-        // min-height: inherit;
-    }
 }
 
 .isle {
     padding: 10px;
     border-radius: 7px;
 
+    &.s {
+        max-width: 400px;
+    }
+
+    &.m {
+        max-width: 500px;
+    }
+
+    &.l {
+        max-width: 600px;
+    }
+
     &.bg-1 {
         background-color: $bg-1;
-    }
-    &.bg-15 {
-        background-color: $bg-15;
     }
     &.bg-2 {
         background-color: $bg-2;
@@ -398,6 +401,15 @@ hr {
     }
     &.bg-4 {
         background-color: $bg-4;
+    }
+    &.bg-5 {
+        background-color: $bg-5;
+    }
+    &.bg-6 {
+        background-color: $bg-6;
+    }
+    &.bg-7 {
+        background-color: $bg-7;
     }
 }
 
@@ -444,7 +456,7 @@ monospace {
     }
 
     &.bg-2 {
-        background-color: $bg-2;
+        background-color: $bg-3;
     }
 
     &.mono {

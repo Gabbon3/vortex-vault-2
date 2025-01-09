@@ -565,28 +565,40 @@ hr.s {
 .window.m {
   max-width: 500px;
 }
-.window.auto {
-  width: inherit;
-}
 
 .isle {
   padding: 10px;
   border-radius: 7px;
 }
+.isle.s {
+  max-width: 400px;
+}
+.isle.m {
+  max-width: 500px;
+}
+.isle.l {
+  max-width: 600px;
+}
 .isle.bg-1 {
   background-color: #171414;
 }
-.isle.bg-15 {
+.isle.bg-2 {
   background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
 }
-.isle.bg-2 {
+.isle.bg-3 {
   background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
 }
-.isle.bg-3 {
+.isle.bg-4 {
   background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
 }
-.isle.bg-4 {
+.isle.bg-5 {
   background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+}
+.isle.bg-6 {
+  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
+}
+.isle.bg-7 {
+  background-color: rgb(72.1023255814, 62.6976744186, 62.6976744186);
 }
 
 monospace {
@@ -735,11 +747,11 @@ vortex-navbar {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  color: #888;
   transition: 0.2s;
   margin-left: auto;
   margin-right: 20px;
   cursor: default;
+  color: #888;
 }
 #sudo-indicator.base {
   color: #878e54;
@@ -752,7 +764,7 @@ vortex-navbar {
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -780,7 +792,7 @@ vortex-navbar {
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   animation: bounce 500ms linear both;
-  cursor: default;
+  cursor: pointer;
   background-color: var(--bc-log);
   border: 1px solid var(--i-color);
 }

@@ -25,7 +25,7 @@
             Vault
         </h1>
         <hr>
-        <div class="isle bg-2 mb-2">
+        <div class="isle bg-3 mb-2">
             <label for="search-vault">
                 <span class="material-symbols-rounded">search</span>
                 Search
@@ -36,29 +36,29 @@
                     <span class="material-symbols-rounded">backspace</span>
                 </button>
             </div>
-        </div>
-        <div class="flex gap-50 wrap mb-2">
-            <!-- Sync & New Vault -->
-            <div class="flex gap-50">
-                <button class="btn primary" id="btn-sync-vault" title="Syncronize with Server">
-                    <span class="material-symbols-rounded">sync_alt</span>
-                </button>
-                <button class="btn primary open" data-target-open="win-create-vault">
-                    <span class="material-symbols-rounded">add</span>
-                    New Vault
-                </button>
-            </div>
-            <!-- Order Buttons -->
-            <div class="flex gap-50 last">
-                <button class="btn secondary order-vaults" order="az" active="false" title="Order by title">
-                    <span class="material-symbols-rounded">title</span>
-                </button>
-                <button class="btn secondary order-vaults" order="date" active="false" title="Order by date">
-                    <span class="material-symbols-rounded">calendar_today</span>
-                </button>
-                <button class="btn secondary vaults-view" active="false" title="Change list view">
-                    <span class="material-symbols-rounded">dashboard</span>
-                </button>
+            <div class="flex gap-50 wrap mt-2">
+                <!-- Sync & New Vault -->
+                <div class="flex gap-50">
+                    <button class="btn primary" id="btn-sync-vault" title="Syncronize with Server">
+                        <span class="material-symbols-rounded">sync_alt</span>
+                    </button>
+                    <button class="btn primary open" data-target-open="win-create-vault">
+                        <span class="material-symbols-rounded">add</span>
+                        New Vault
+                    </button>
+                </div>
+                <!-- Order Buttons -->
+                <div class="flex gap-50 last">
+                    <button class="btn secondary order-vaults" order="az" active="false" title="Order by title">
+                        <span class="material-symbols-rounded">title</span>
+                    </button>
+                    <button class="btn secondary order-vaults" order="date" active="false" title="Order by date">
+                        <span class="material-symbols-rounded">calendar_today</span>
+                    </button>
+                    <button class="btn secondary vaults-view" active="false" title="Change list view">
+                        <span class="material-symbols-rounded">dashboard</span>
+                    </button>
+                </div>
             </div>
         </div>
         <div id="vaults-list">
@@ -80,7 +80,7 @@
         </div>
         <!-- FORM -->
         <form id="form-create-vault">
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="titolo">
                     <span class="material-symbols-rounded">tag</span>
                     Title
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <!-- USERNAME -->
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="username">
                     <span class="material-symbols-rounded">person</span>
                     Username
@@ -103,7 +103,7 @@
                 <datalist id="used-username"></datalist>
             </div>
             <!-- PASSWORD -->
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="password">
                     <span class="material-symbols-rounded">key_vertical</span>
                     Password
@@ -119,7 +119,7 @@
                 <!-- ... -->
             </div>
             <!-- NOTE -->
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="note">
                     <span class="material-symbols-rounded">info</span>
                     Note
@@ -155,7 +155,7 @@
         <!-- FORM -->
         <form id="form-update-vault">
             <input type="text" class="none" id="update-vault-id" name="vault_id" value="*">
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="update-titolo">
                     <span class="material-symbols-rounded">tag</span>
                     Title
@@ -166,7 +166,7 @@
                 </div>
             </div>
             <!-- USERNAME -->
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="update-username">
                     <span class="material-symbols-rounded">person</span>
                     Username
@@ -177,7 +177,7 @@
                 </div>
             </div>
             <!-- PASSWORD -->
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="update-password">
                     <span class="material-symbols-rounded">key_vertical</span>
                     Password
@@ -193,14 +193,14 @@
                 <!-- ... -->
             </div>
             <!-- NOTE -->
-            <div class="isle bg-3 mb-2">
+            <div class="isle bg-4 mb-2">
                 <label for="update-note">
                     <span class="material-symbols-rounded">info</span>
                     Note
                 </label>
                 <textarea name="N" id="update-note" autocomplete="none" class="input-text" rows="3"></textarea>
             </div>
-            <div class="flex gap-50 wrap mt-2 isle bg-3">
+            <div class="flex gap-50 wrap mt-2 isle bg-4">
                 <label class="isle bg-1 fg-1 icon m-0" title="Vault Created Date">
                     <span class="material-symbols-rounded">calendar_add_on</span>
                     <span id="update-created-date">Null</span>
@@ -313,7 +313,7 @@
             Server
             <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
-        <div class="isle bg-3">
+        <div class="isle bg-4">
             <p>
                 You can save only one backup at time on server
             </p>
@@ -333,7 +333,7 @@
             <span class="material-symbols-rounded">hard_drive</span>
             Download
         </h3>
-        <form class="isle bg-3 mb-2" id="form-create-backup-locally">
+        <form class="isle bg-4 mb-2" id="form-create-backup-locally">
             <label for="backup-custom-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
@@ -357,7 +357,7 @@
             Restore locally
             <span class="material-symbols-rounded warning">vpn_key</span>
         </h3>
-        <form id="form-restore-backup-from-file" class="isle bg-3">
+        <form id="form-restore-backup-from-file" class="isle bg-4">
             <label for="backup-file">
                 <span class="material-symbols-rounded">draft</span>
                 Backup file
@@ -477,7 +477,7 @@
             MFA
             <span class="material-symbols-rounded warning" title="Email verification required">id_card</span>
         </h3>
-        <div id="cont-mfa" class="isle bg-3" style="display: none;">
+        <div id="cont-mfa" class="isle bg-4" style="display: none;">
             <p>
                 Here you can generate new MFA secret
             </p>
@@ -496,7 +496,7 @@
             <span class="material-symbols-rounded warning">vpn_key</span>
             Advanced Session
         </h3>
-        <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
+        <div id="cont-sudo-session" class="isle bg-4" style="display: none;">
             <p>
                 Enable <strong>advanced session</strong> to perform critical operations.
                 The session will only last 45 minutes for safety reasons. <br>
@@ -514,7 +514,7 @@
             Change Password
             <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
         </h3>
-        <form id="form-change-password" class="isle bg-3" style="display: none;">
+        <form id="form-change-password" class="isle bg-4" style="display: none;">
             <p>
                 <strong>Before changing your password</strong>
                 you should know that you will have to manually restore a backup, 
@@ -553,7 +553,7 @@
             Recovery Code
             <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
         </h3>
-        <div id="cont-rec-code" class="isle bg-3" style="display: none;">
+        <div id="cont-rec-code" class="isle bg-4" style="display: none;">
             <p>
                 Generate a sudo code to help you recover your password if you forget it and to activate MFA.
                 <br>
@@ -587,7 +587,7 @@
             <span class="material-symbols-rounded">id_card</span>
             Quick Sign-in
         </h3>
-        <div id="cont-fsi" class="isle bg-3" style="display: none;">
+        <div id="cont-fsi" class="isle bg-4" style="display: none;">
             <p>
                 Generates a single-use link shown via Qr code for quick Sign-in from another device.
             </p>
@@ -604,7 +604,7 @@
             <span class="material-symbols-rounded">mark_email_read</span>
             Check Message Authentication Code
         </h3>
-        <div id="cont-cmac" class="isle bg-3" style="display: none;">
+        <div id="cont-cmac" class="isle bg-4" style="display: none;">
             <p class="mb-3">
                 Here you can check the validity of the message authentication codes 
                 in the emails you receive from us, which is useful for verifying 

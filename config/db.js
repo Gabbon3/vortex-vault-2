@@ -12,14 +12,18 @@ export const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: 'postgres',
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false,
-                ca: fs.readFileSync(ssl_cert_path).toString(),
-            }
-        },
+        // dialectOptions: {
+        //     ssl: {
+        //         require: true,
+        //         rejectUnauthorized: false,
+        //         ca: fs.readFileSync(ssl_cert_path).toString(),
+        //     }
+        // },
         logging: false,
+        timezone: '+00:00', // Salva tutto in UTC
+        dialectOptions: {
+            useUTC: true, // Usa UTC lato DB
+        },
         pool: {
             max: 5,           // Numero massimo di connessioni attive
             min: 0,           // Numero minimo di connessioni
