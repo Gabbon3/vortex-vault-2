@@ -29,6 +29,9 @@ export class VaultService {
             where: {
                 id: vault_id,
                 user_id
+            },
+            attributes: {
+                exclude: ['user_id']
             }
         })
     }

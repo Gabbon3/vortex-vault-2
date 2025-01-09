@@ -365,7 +365,7 @@ h2.icon .material-symbols-rounded.warning,
 h3.icon .material-symbols-rounded.warning,
 h4.icon .material-symbols-rounded.warning,
 h5.icon .material-symbols-rounded.warning {
-  color: rgb(238, 173, 113);
+  color: #eead71;
 }
 h1.code,
 h2.code,
@@ -379,10 +379,10 @@ h5.code {
 }
 
 .color.warn {
-  color: rgb(238, 173, 113) !important;
+  color: #eead71 !important;
 }
 .color.danger {
-  color: rgb(238, 113, 132) !important;
+  color: #ee7184 !important;
 }
 
 p {
@@ -429,13 +429,13 @@ p.description {
 
 hr {
   margin: 1rem 0;
-  color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  color: #584d4d;
   border: 0;
-  border-top: 1px solid rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  border-top: 1px solid #584d4d;
 }
 hr.dashed {
   background-color: transparent;
-  border-bottom: 1px dashed rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  border-bottom: 1px dashed #584d4d;
 }
 hr.s {
   width: 90%;
@@ -446,8 +446,8 @@ hr.s {
   align-items: center;
   gap: 5px;
   justify-content: center;
-  padding: 7px 10px;
-  border-radius: 7px;
+  padding: 8px 10px;
+  border-radius: 8px;
   border: none;
   transition: 0.2s;
   cursor: pointer;
@@ -461,28 +461,29 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
+  color: #969e5d;
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
   color: #ddd;
 }
 .btn.secondary:hover {
+  background-color: #403838;
   color: #f5f5f5;
 }
 .btn.warning {
   background-color: rgba(238, 173, 113, 0.2);
-  color: rgb(238, 173, 113);
+  color: #eead71;
 }
 .btn.warning:hover {
   background-color: rgba(238, 173, 113, 0.3);
 }
 .btn.danger {
   background-color: rgba(236, 55, 82, 0.2);
-  color: rgb(238, 113, 132);
+  color: #ee7184;
 }
 .btn.danger:hover {
   background-color: rgba(236, 55, 82, 0.3);
@@ -492,11 +493,11 @@ hr.s {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  box-shadow: 0 0 0 4px #383030;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  box-shadow: 0 0 0 6px #383030;
 }
 .btn.s {
   font-size: 0.9em;
@@ -518,14 +519,14 @@ hr.s {
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
   padding: 10px;
-  border-radius: 7px;
+  border-radius: 8px;
   max-height: 98%;
   max-width: 950px;
   width: 95%;
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
 }
@@ -567,8 +568,8 @@ hr.s {
 }
 
 .isle {
-  padding: 10px;
-  border-radius: 7px;
+  padding: 8px;
+  border-radius: 8px;
 }
 .isle.s {
   max-width: 400px;
@@ -583,22 +584,31 @@ hr.s {
   background-color: #171414;
 }
 .isle.bg-2 {
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
 }
 .isle.bg-3 {
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
 }
 .isle.bg-4 {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 .isle.bg-5 {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
 }
 .isle.bg-6 {
-  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
+  background-color: #403838;
 }
 .isle.bg-7 {
-  background-color: rgb(72.1023255814, 62.6976744186, 62.6976744186);
+  background-color: #483f3f;
+}
+.isle.br-m {
+  border-radius: 8px;
+}
+.isle.br-l {
+  border-radius: 14px;
+}
+.isle.br-xl {
+  border-radius: 23px;
 }
 
 monospace, .monospace {
@@ -609,7 +619,7 @@ monospace, .monospace {
   display: block;
   margin: 0 auto;
   padding: 8px;
-  border-radius: 7px;
+  border-radius: 8px;
   transition: 0.2s;
   outline: none;
   background-color: #171414;
@@ -639,7 +649,7 @@ monospace, .monospace {
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -659,7 +669,7 @@ monospace, .monospace {
   display: block;
   width: 2.4em;
   height: 1.2em;
-  background-color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  background-color: #584d4d;
   border-radius: 0.9em;
   cursor: pointer;
   position: relative;
@@ -709,7 +719,6 @@ input[type=range]::-webkit-slider-thumb {
 
 .navbar {
   display: flex;
-  gap: 5px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -738,8 +747,8 @@ vortex-navbar {
   display: flex;
   align-items: center;
   padding: 5px;
-  border-radius: 5px;
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  border-radius: 8px;
+  background-color: #272222;
 }
 
 #sudo-indicator {
@@ -757,14 +766,14 @@ vortex-navbar {
   color: #878e54;
 }
 #sudo-indicator.sudo {
-  color: rgb(238, 173, 113);
+  color: #eead71;
 }
 
 #accedi,
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -865,15 +874,15 @@ vortex-navbar {
   margin: 0 auto;
   flex-wrap: wrap;
   flex-direction: column;
-  gap: 7.5px;
+  gap: 8px;
 }
 #vaults-list .group {
   display: flex;
-  gap: 7.5px;
+  gap: 8px;
   flex-wrap: wrap;
-  padding: 10px;
-  border-radius: 15px;
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  padding: 8px;
+  border-radius: 14px;
+  background-color: #1f1b1b;
 }
 #vaults-list .checkpoint {
   width: 100%;
@@ -881,11 +890,12 @@ vortex-navbar {
   font-family: "JetBrains Mono", monospace;
   text-align: center;
   padding-top: 10px;
+  cursor: default;
 }
 #vaults-list.searching {
   padding: 10px 10px 2.5px 10px;
-  border-radius: 15px;
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  border-radius: 14px;
+  background-color: #1f1b1b;
   gap: 0;
 }
 #vaults-list.searching .checkpoint {
@@ -911,13 +921,13 @@ vortex-navbar {
   align-items: center;
   cursor: pointer;
   padding: 10px;
-  border-radius: 10px;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  border-radius: 8px;
+  background-color: #272222;
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -927,7 +937,7 @@ vortex-navbar {
   align-items: center;
 }
 #vaults-list vault-li .simbolo.danger {
-  color: rgb(238, 113, 132);
+  color: #ee7184;
 }
 #vaults-list vault-li .info {
   width: 100%;
@@ -949,9 +959,9 @@ vortex-navbar {
 }
 
 .custom-sections custom-vault-section {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
   padding: 0 7px 7px 7px;
-  border-radius: 7px;
+  border-radius: 8px;
   margin-bottom: 0.5rem;
 }
 .custom-sections custom-vault-section .remove-custom-section {
@@ -986,7 +996,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;
@@ -1007,11 +1017,11 @@ password-strength-bar .bar {
 }
 password-strength-bar .bar._1 {
   background-color: rgba(238, 113, 132, 0.3);
-  color: rgb(238, 113, 132);
+  color: #ee7184;
 }
 password-strength-bar .bar._2 {
   background-color: rgba(238, 173, 113, 0.3);
-  color: rgb(238, 173, 113);
+  color: #eead71;
 }
 password-strength-bar .bar._3 {
   background-color: rgba(115, 142, 84, 0.3);
@@ -1031,10 +1041,10 @@ password-strength-bar .bar._4 {
 device-list-item, passkey-list-item {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 7px;
-  border-radius: 7px;
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  gap: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #302929;
 }
 device-list-item .token-id, passkey-list-item .token-id {
   display: flex;
@@ -1082,6 +1092,10 @@ device-list-item .info, passkey-list-item .info {
 #loader svg {
   width: calc((15vw + 15vh) / 2);
   animation: ease-out loader infinite 2s;
+}
+#loader .material-symbols-rounded {
+  font-size: calc((12vw + 12vh) / 2);
+  animation: linear spin infinite 0.5s;
 }
 
 #modal-backdrop {
@@ -1205,6 +1219,14 @@ device-list-item .info, passkey-list-item .info {
     transform: scale(1) rotate(360deg);
   }
 }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 /**
  * ----------------------------------------
  * animation scale-in-center
@@ -1244,7 +1266,8 @@ device-list-item .info, passkey-list-item .info {
     left: 0;
     width: 100%;
     border-radius: 0;
-    box-shadow: 0 0 5px 0 rgb(39.3674418605, 34.2325581395, 34.2325581395);
+    box-shadow: 0 0 5px 0 #272222;
+    background-color: #302929;
   }
   vortex-navbar .navbar {
     width: 100%;

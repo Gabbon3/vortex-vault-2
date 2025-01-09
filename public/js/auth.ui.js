@@ -3,7 +3,6 @@ import { AuthService } from "../service/auth.service.js";
 import { Log } from "../utils/log.js";
 import { Bytes } from "../utils/bytes.js";
 import { LocalStorage } from "../utils/local.js";
-import { VortexNavbar } from "../components/navbar.component.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../../utils/windows.js";

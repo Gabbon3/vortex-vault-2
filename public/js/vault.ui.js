@@ -11,7 +11,7 @@ import { DeviceUI } from "./device.ui.js";
 import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
 
-$(document).ready(async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     await VaultUI.init();
     /**
@@ -21,14 +21,13 @@ $(document).ready(async () => {
         if (!confirm(`Have you entered everything for ${elements.T}`)) return;
         // ---
         Windows.loader(true);
-        if (await VaultService.create(elements)) {
-            Log.summon(0, `${elements.T} saved`);
+        const vault_id = await VaultService.create(elements);
+        if (vault_id) {
+            Log.summon(0, `${elements.T} saved.`);
             Windows.close('win-create-vault');
             $(form).trigger("reset");
             document.getElementById('custom-sections-new-vault').innerHTML = '';
-            setTimeout(() => {
-                VaultUI.init_db_dom();
-            }, 1000);
+            await VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
         }

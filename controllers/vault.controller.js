@@ -10,7 +10,7 @@ export class VaultController {
         this.user_service = new UserService();
     }
     /**
-     * Crea un nuovo vault
+     * Crea un nuovo vault 
      * @param {Request} req 
      * @param {Response} res 
      */
@@ -31,7 +31,7 @@ export class VaultController {
                 vault_update: new Date().toISOString() 
             });
         // ---
-        res.status(201).json(vault);
+        res.status(201).json({ id: vault.id });
     });
     /**
      * Ottieni un vault dal suo id
