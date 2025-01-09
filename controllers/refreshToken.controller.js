@@ -31,7 +31,7 @@ export class RefreshTokenController {
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token
         await this.service.update_token_info(token_id, {
-            last_used_at: new Date(),
+            last_used_at: new Date().toISOString(),
             ip_address: ip_address ?? ''
         });
         // -- imposto il cookie

@@ -23,7 +23,13 @@ export class VaultController {
         // ---
         const vault = await this.service.create(req.user.uid, secrets_bytes);
         // -- aggiorno l'ultimo update del vault dell'utente
-        this.user_service.update_user_info({ id: req.user.uid }, { vault_update: new Date() });
+        this.user_service.update_user_info(
+            {
+                id: req.user.uid
+            }, 
+            {
+                vault_update: new Date().toISOString() 
+            });
         // ---
         res.status(201).json(vault);
     });
