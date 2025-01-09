@@ -49,6 +49,11 @@ export class PasskeyService {
             name: PasskeyService.rpName,
             id: PasskeyService.rpId,
         }
+        options.authenticatorSelection = {
+            authenticatorAttachment: "platform", // "cross-platform" per dispositivi esterni
+            requireResidentKey: false, // Cambia a true per resident key
+            userVerification: "preferred", // "required" per maggiore sicurezza
+        };
         options.pubKeyCredParams = [
             { type: "public-key", alg: -7 }, // ES256: ECDSA w/ SHA-256
             { type: "public-key", alg: -257 }, // RS256: RSASSA-PKCS1-v1_5 w/ SHA-256
@@ -66,6 +71,10 @@ export class PasskeyService {
     async complete_registration(credentials, email) {
         const entry = RamDB.get(`psk-chl-${email}`);
         if (!entry) throw new CError("", "Request expired", 400);
+        // -- valido i dati in ingresso
+        if (!credentials?.id || !credentials?.response?.attestationObject || !credentials?.response?.clientDataJSON) {
+            throw new CError("InvalidCredentials", "The provided credentials are incomplete.", 400);
+        }
         // ---
         const { challenge, user_id } = entry;
         // -- verifico la challenge
@@ -77,6 +86,10 @@ export class PasskeyService {
                 clientDataJSON: credentials.response.clientDataJSON.buffer,
             },
         }, { challenge: challenge, origin: PasskeyService.origin, factor: "either", });
+        // -- verifiche sulla challenge
+        if (!attestation.verified) {
+            throw new CError("AttestationFailed", "Credential attestation failed.", 400);
+        }
         // -- estraggo i dati necessari
         const credential_id = Bytes.base64.encode(attestation.authnrData.get('credId'), true);
         const public_key = attestation.authnrData.get('credentialPublicKeyPem'); // Chiave pubblica in formato PEM

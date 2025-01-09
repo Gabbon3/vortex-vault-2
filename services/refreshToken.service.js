@@ -40,15 +40,19 @@ export class RefreshTokenService {
         return token ? token : null;
     }
     /**
-     * Aggiorna qualsiasi campo di un token
-     * @param {string} token_id
+     * Aggiorna qualsiasi campo di un token 
+     * @param {string} uid user id 
+     * @param {string} token_id 
      * @param {Object} updated_info un oggetto con le informazioni da modificare
      * @returns
      */
-    async update_token_info(token_id, updated_info) {
+    async update_token_info(uid, token_id, updated_info) {
+        const where = { id: token_id };
+        if (uid) where.user_id = uid;
+        // ---
         return await RefreshToken.update(
             updated_info,
-            { where: { id: token_id } }
+            { where }
         );
     }
     /**
@@ -134,14 +138,16 @@ export class RefreshTokenService {
     }
     /**
      * Verifica la validità dei refresh token restituendo le informazioni associate se valido
+     * @param {string} uid user id
      * @param {string} token_id
      * @param {string} user_agent
-     * @param {string} ip_address
      * @returns {boolean | Object}
      */
-    async verify(token_id, user_agent, ip_address) {
-        const refresh_token = await RefreshToken.findByPk(token_id);
-        // -- se il token non esiste non è valido
+    async verify(uid, token_id, user_agent) {
+        const refresh_token = await RefreshToken.findOne({
+            where: { user_id: uid, id: token_id }
+        });
+        // -- se il token non esiste o non è associato a quell'utente non è valido
         if (!refresh_token) return false;
         // -- se il token è stato revocato non è valido
         if (refresh_token.is_revoked === true) return false;

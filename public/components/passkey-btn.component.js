@@ -14,6 +14,7 @@ class PasskeyBtn extends HTMLElement {
         const endpoint = this.getAttribute("endpoint");
         const method = this.getAttribute("method") ?? "POST";
         const callback = this.getAttribute("callback") ?? false;
+        const pre_callback = this.getAttribute("pre-callback") ?? false;
         const passkey_need = this.getAttribute("force-auth") === 'true';
         // ---
         const icon = this.getAttribute("icon") ?? "passkey";
@@ -30,21 +31,44 @@ class PasskeyBtn extends HTMLElement {
         document
             .getElementById(button_id)
             .addEventListener("click", async () => {
+                /**
+                 * Fase preliminare
+                 */
+                if (pre_callback && PasskeyBtn.pre_callback[pre_callback]) {
+                    const result = await PasskeyBtn.pre_callback[pre_callback]();
+                    // -- se il pre-callback fallisce, non proseguo
+                    if (!result) return;
+                }
+                /**
+                 * Fase effettiva
+                 */
                 const res = await PasskeyService.authenticate({ endpoint, method, passkey_need });
-                if (res) {
-                    if (!callback) return Log.summon(0, 'Operation performed successfully');
-                    // ---
-                    if (PasskeyBtn.callbacks[callback]) {
-                        await PasskeyBtn.callbacks[callback]();
-                    }
+                if (!res) return;
+                /**
+                 * Fase finale
+                 */
+                if (!callback) return Log.summon(0, 'Operation performed successfully');
+                // ---
+                if (PasskeyBtn.callbacks[callback]) {
+                    await PasskeyBtn.callbacks[callback]();
                 }
             });
+    }
+
+    static pre_callback = {
+        /**
+         * DELETE ACCOUNT
+         */
+        'deleteaccount': async () => {
+            if (!confirm('Are you sure you want to delete your account?')) return false;
+            return true;
+        },
     }
 
     static callbacks = {
         'sudosession': async () => {
             /**
-             * AVVIO SUDO SESSION
+             * AVVIO ADVANCED SESSION
              */
             Log.summon(0, 'Sudo session started');
             const expire = new Date(Date.now() + 45 * 60 * 1000);

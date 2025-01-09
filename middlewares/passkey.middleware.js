@@ -9,12 +9,14 @@ import { JWT } from "../utils/jwt.utils.js";
 import "dotenv/config";
 
 export const verify_passkey = async_handler(async (req, res, next) => {
+    // -- ottengo dal body i dati necessari
+    const { request_id, auth_data } = req.body;
     /**
      * VERIFICA JWT PER BYPASS SUL CONTROLLO DELLA PASSKEY
      */
     // -- controllo se il token JWT relativo alla passkey esiste
     const cookie_jwt = req.cookies.passkey_token ?? null;
-    if (cookie_jwt) {
+    if (cookie_jwt && !request_id) {
         const payload = JWT.verify(cookie_jwt, 'passkey');
         // -- se è valido bypasso il controllo sulla passkey
         if (payload) {
@@ -25,8 +27,6 @@ export const verify_passkey = async_handler(async (req, res, next) => {
     /**
      * CONTROLLO SULLA PASSKEY
      */
-    // -- ottengo dal body i dati necessari
-    const { request_id, auth_data } = req.body;
     if (!request_id || !auth_data) throw new CError("", "Invalid request", 422);
     // -- decodifico gli auth data
     const credential = msgpack.decode(Bytes.base64.decode(auth_data));

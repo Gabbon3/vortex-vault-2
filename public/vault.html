@@ -494,17 +494,17 @@
         <!-- SUDO SESSION -->
         <h3 class="icon slider" slider="cont-sudo-session">
             <span class="material-symbols-rounded warning">vpn_key</span>
-            Sudo Session
+            Advanced Session
         </h3>
         <div id="cont-sudo-session" class="isle bg-3" style="display: none;">
             <p>
-                Enable sudo session to perform critical operations.
+                Enable <strong>advanced session</strong> to perform critical operations.
                 The session will only last 45 minutes for safety reasons. <br>
                 All operations that require this session are marked with this symbol
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </p>
             <passkey-btn endpoint="/auth/sudotoken" callback="sudosession">
-                Authenticate
+                Activate here
             </passkey-btn>
         </div>
         <hr>
@@ -662,7 +662,12 @@
         <p>
             All data associated with your account will be permanently deleted, so it will no longer be accessible.
         </p>
-        <passkey-btn b-class="danger" endpoint="/auth/delete" callback="deleteaccount" force-auth="true">
+        <passkey-btn 
+            b-class="danger" 
+            endpoint="/auth/delete" 
+            pre-callback="deleteaccount" 
+            callback="deleteaccount" 
+            force-auth="true">
             Authenticate & delete your account
         </passkey-btn>
     </div>

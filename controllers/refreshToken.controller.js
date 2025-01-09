@@ -23,10 +23,10 @@ export class RefreshTokenController {
         // ---
         const user_agent = req.get('user-agent');
         // ---
-        const refresh_token = await this.service.verify(token_id, user_agent);
+        const refresh_token = await this.service.verify(req.user.uid, token_id, user_agent);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
-        const access_token = await JWT.genera_access_token({ uid: refresh_token.user_id, role: Roles.BASE });
+        const access_token = await JWT.genera_access_token({ uid: req.user.uid, role: Roles.BASE });
         // -- ottengo l'ip adress del richiedente
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token
@@ -78,7 +78,8 @@ export class RefreshTokenController {
         const current_token = req.cookies.refresh_token;
         if (!current_token) throw new Error('ValidationError', 'Any token avaiable', 404);
         // ---
-        const [affectedCount] = await this.service.update_token_info(current_token, {
+        const uid = req.user?.uid ?? null; 
+        const [affectedCount] = await this.service.update_token_info(uid, current_token, {
             is_revoked: false
         });
         // ---
@@ -100,7 +101,7 @@ export class RefreshTokenController {
      */
     rename = async_handler(async (req, res) => {
         const { token_id, device_name } = req.body;
-        await this.service.update_token_info(token_id, { device_name });
+        await this.service.update_token_info(req.user.uid, token_id, { device_name });
         res.status(200).json({ "renamed": true });
     });
     /**
