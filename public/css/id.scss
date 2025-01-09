@@ -177,10 +177,49 @@ vortex-navbar {
     display: flex;
     margin: 0 auto;
     flex-wrap: wrap;
+    flex-direction: column;
     gap: 7.5px;
 
+    .group {
+        display: flex;
+        gap: 7.5px;
+        flex-wrap: wrap;
+        padding: 10px;
+        border-radius: 15px;
+        background-color: $bg-15;
+    }
+
+    .checkpoint {
+        width: 100%;
+        font-size: calc($fs-l + 2px);
+        font-family: $monospace;
+        text-align: center;
+        padding-top: 10px;
+    }
+
+    &.searching {
+        gap: 0;
+
+        .checkpoint {
+            display: none;
+        }
+
+        .group {
+            background-color: transparent;
+            padding: 0;
+            gap: 0;
+            flex-direction: column;
+
+            vault-li {
+                margin-bottom: 7.5px;
+            }
+        }
+    }
+
     &.list {
-        flex-direction: column;
+        .group {
+            flex-direction: column;
+        }
     }
 
     vault-li {

@@ -284,11 +284,25 @@ export class VaultUI {
      */
     static html_vaults(vaults, order = 'az') {
         let html = ``;
+        const get_checkpoint = (order, vault) => {
+            return order === 'az' || order === 'za' ?
+                vault.secrets.T[0].toUpperCase() :
+                date.format('%M %y', new Date(vault.updatedAt))
+        }
         // -- ordino
         const order_function = this.order_functions[order];
         vaults.sort(order_function);
+        // ---
+        let checkpoint = get_checkpoint(order, vaults[0]);
+        html += `<span class="checkpoint">${checkpoint}</span><div class="group">`;
         for (const vault of vaults) {
             const strength_value = ptg.test(vault.secrets.P).average;
+            const current_checkpoint = get_checkpoint(order, vault);
+            // ---
+            if (current_checkpoint !== checkpoint) {
+                checkpoint = current_checkpoint;
+                html += `</div><span class="checkpoint">${checkpoint}</span><div class="group">`;
+            }
             // ---
             html += `<vault-li 
             title="${vault.secrets.T}"

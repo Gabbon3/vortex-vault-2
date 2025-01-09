@@ -852,9 +852,40 @@ vortex-navbar {
   display: flex;
   margin: 0 auto;
   flex-wrap: wrap;
+  flex-direction: column;
   gap: 7.5px;
 }
-#vaults-list.list {
+#vaults-list .group {
+  display: flex;
+  gap: 7.5px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+}
+#vaults-list .checkpoint {
+  width: 100%;
+  font-size: calc(1.2em + 2px);
+  font-family: "JetBrains Mono", monospace;
+  text-align: center;
+  padding-top: 10px;
+}
+#vaults-list.searching {
+  gap: 0;
+}
+#vaults-list.searching .checkpoint {
+  display: none;
+}
+#vaults-list.searching .group {
+  background-color: transparent;
+  padding: 0;
+  gap: 0;
+  flex-direction: column;
+}
+#vaults-list.searching .group vault-li {
+  margin-bottom: 7.5px;
+}
+#vaults-list.list .group {
   flex-direction: column;
 }
 #vaults-list vault-li {

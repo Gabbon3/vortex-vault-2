@@ -11,12 +11,17 @@ export class Search {
      */
     tabella(input, target, elemento_ricerca = 'tr') {
         const match = input.value.toLowerCase();
+        const table = document.getElementById(target);
+        // Aggiungo la classe 'searching' alla tabella
         // Se non esiste già, crea la cache e inizia a monitorare la tabella per eventuali modifiche
         if (!this.cache[target]) {
             this.elemento_ricerca = elemento_ricerca;
             this.crea_cache(target, elemento_ricerca);
             this.osserva_modifiche(target); // Inizia a osservare eventuali modifiche alla tabella
         }
+        match === '' ? 
+            table.classList.remove('searching') :
+            table.classList.add('searching');
         // -- ottengo le righe dalla cache
         const righe_cache = this.cache[target];
         for (let i = 0; i < righe_cache.length; i++) {
