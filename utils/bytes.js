@@ -51,7 +51,7 @@ export class Bytes {
          * @returns {uint8Array}
          */
         decode(base62string) {
-            return Bytes.bigint.decode(BaseConverter.from_string(base62string));
+            return Bytes.bigint.decode(BaseConverter.from_string(base62string, 62));
         },
     };
 
