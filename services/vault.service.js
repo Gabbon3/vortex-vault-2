@@ -111,8 +111,8 @@ export class VaultService {
                 await Vault.create({
                     user_id,
                     secrets: secrets_buffer,
-                    createdAt,
-                    updatedAt
+                    createdAt: new Date(createdAt).toISOString(),
+                    updatedAt: new Date(updatedAt).toISOString()
                 }, { 
                     transaction: t,
                     silent: true
