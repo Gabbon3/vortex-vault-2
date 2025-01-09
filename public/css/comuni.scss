@@ -1,11 +1,11 @@
 .title-icon,
-label {
+label, .label {
     display: flex;
     gap: 5px;
     align-items: center;
 }
 
-label {
+label, .label {
     .material-symbols-rounded {
         color: $c1;
     }
@@ -413,7 +413,7 @@ hr {
     }
 }
 
-monospace {
+monospace, .monospace {
     font-family: $monospace;
 }
 

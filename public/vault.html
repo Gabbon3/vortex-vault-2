@@ -25,16 +25,18 @@
             Vault
         </h1>
         <hr>
-        <div class="isle bg-3 mb-2">
-            <label for="search-vault">
-                <span class="material-symbols-rounded">search</span>
-                Search
-            </label>
-            <div class="flex gap-75">
-                <input type="text" class="input-text" id="search-vault" autocomplete="off" required>
-                <button class="btn t CA del-val" data-target-del="search-vault" type="button">
-                    <span class="material-symbols-rounded">backspace</span>
-                </button>
+        <div class="isle bg-2 mb-2">
+            <div class="isle bg-3">
+                <label for="search-vault">
+                    <span class="material-symbols-rounded">search</span>
+                    Search
+                </label>
+                <div class="flex gap-75">
+                    <input type="text" class="input-text mono" id="search-vault" autocomplete="off" placeholder="..." required>
+                    <button class="btn t CA del-val" data-target-del="search-vault" type="button">
+                        <span class="material-symbols-rounded">backspace</span>
+                    </button>
+                </div>
             </div>
             <div class="flex gap-50 wrap mt-2">
                 <!-- Sync & New Vault -->

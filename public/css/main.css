@@ -44,19 +44,19 @@ body {
 }
 
 .title-icon,
-label {
+label, .label {
   display: flex;
   gap: 5px;
   align-items: center;
 }
 
-label {
+label, .label {
   margin: 7px 0 7px 0;
 }
-label .material-symbols-rounded {
+label .material-symbols-rounded, .label .material-symbols-rounded {
   color: #878e54;
 }
-label input.input-text {
+label input.input-text, .label input.input-text {
   margin: 0;
   padding: 3px;
   background-color: transparent;
@@ -601,7 +601,7 @@ hr.s {
   background-color: rgb(72.1023255814, 62.6976744186, 62.6976744186);
 }
 
-monospace {
+monospace, .monospace {
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -883,6 +883,9 @@ vortex-navbar {
   padding-top: 10px;
 }
 #vaults-list.searching {
+  padding: 10px 10px 2.5px 10px;
+  border-radius: 15px;
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
   gap: 0;
 }
 #vaults-list.searching .checkpoint {

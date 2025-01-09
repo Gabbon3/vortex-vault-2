@@ -95,7 +95,12 @@ export class RefreshTokenService {
      * @returns
      */
     async get_all(user_id, current_token_id) {
-        const tokens = await RefreshToken.findAll({ where: { user_id } });
+        const tokens = await RefreshToken.findAll({
+            where: { user_id },
+            attributes: {
+                exclude: ['user_id', 'user_agent_hash']
+            }
+        });
         // -- converto in json e verifico per ogni token se l'id corrisponde a quello corrente
         const tokens_json = tokens.map(token => {
             const token_json = token.get();

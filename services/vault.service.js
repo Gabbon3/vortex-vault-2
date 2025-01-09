@@ -46,7 +46,12 @@ export class VaultService {
             }
         }
         // ---
-        return await Vault.findAll({ where });
+        return await Vault.findAll({
+            where,
+            attributes: {
+                exclude: ['user_id']
+            }
+        });
     }
     /**
      * Conta il numero di vaults totali

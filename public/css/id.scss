@@ -198,6 +198,9 @@ vortex-navbar {
     }
 
     &.searching {
+        padding: 10px 10px 2.5px 10px;
+        border-radius: 15px;
+        background-color: $bg-2;
         gap: 0;
 
         .checkpoint {
