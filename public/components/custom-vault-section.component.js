@@ -70,9 +70,7 @@ class CustomVaultSection extends HTMLElement {
             </label>
             <div class="flex gap-50">
                 <input name="${section_name}" value="${input_value}" type="text" class="input-text mono custom-input" id="${input_id}" autocomplete="off" required>
-                <button class="btn t CA ${paste ? 'paste' : 'copy'}-val" data-target-${paste ? 'pa' : 'cc'}="${input_id}" type="button" title="Paste">
-                    <span class="material-symbols-rounded">${paste ? 'content_paste' : 'content_copy'}</span>
-                </button>
+                <btn-${paste ? 'paste' : 'copy'} target="${input_id}"></btn-${paste ? 'paste' : 'copy'}>
             </div>
             ${is_password ? `<password-strength-bar class="m-0 mt-2" xs="true" value="${ptg.test(input_value).average}" id="cvsp-${CustomVaultSection.id_ctr}" input-id="${input_id}"></password-strength-bar>` : ''}
         `;
