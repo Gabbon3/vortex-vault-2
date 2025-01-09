@@ -53,7 +53,7 @@ export class UserController {
             // -- verifico se il formato va bene, se non va bene assegno null
             if (!uuidValidate(refresh_token_cookie)) {
                 old_refresh_token = null;
-            } else if (await this.refresh_token_service.verify(refresh_token_cookie, user_agent)) {
+            } else if (await this.refresh_token_service.verify(false, refresh_token_cookie, user_agent)) {
                 // -- verifico se è valido
                 old_refresh_token = refresh_token_cookie
             }

@@ -144,9 +144,10 @@ export class RefreshTokenService {
      * @returns {boolean | Object}
      */
     async verify(uid, token_id, user_agent) {
-        const refresh_token = await RefreshToken.findOne({
-            where: { user_id: uid, id: token_id }
-        });
+        const where = { id: token_id };
+        if (uid) where.user_id = uid;
+        // ---
+        const refresh_token = await RefreshToken.findOne({ where });
         // -- se il token non esiste o non è associato a quell'utente non è valido
         if (!refresh_token) return false;
         // -- se il token è stato revocato non è valido
@@ -155,9 +156,9 @@ export class RefreshTokenService {
         const scadenza =
             refresh_token.last_used_at.getTime() + this.max_tempo_inattivita;
         if (scadenza < Date.now()) return false;
-        // -- se l'user agent non corrisponde non è valido
-        const user_agent_hash = this.user_agent_hash(user_agent);
-        if (user_agent_hash != refresh_token.user_agent_hash) return false;
+        // -- se l'user agent non corrisponde non è valido, rimosso poichè superfluo
+        // const user_agent_hash = this.user_agent_hash(user_agent);
+        // if (user_agent_hash != refresh_token.user_agent_hash) return false;
         // ---
         return refresh_token;
     }
