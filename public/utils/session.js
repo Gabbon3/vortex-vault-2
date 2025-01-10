@@ -17,8 +17,13 @@ export class SessionStorage {
      * @returns {*}
      */
     static get(key) {
-        const value = sessionStorage.getItem(`${SessionStorage.prefix}-${key}`);
-        return value ? msgpack.decode(Bytes.base64.decode(value)) : null;
+        try {
+            const value = sessionStorage.getItem(`${SessionStorage.prefix}-${key}`);
+            return value ? msgpack.decode(Bytes.base64.decode(value)) : null;
+        } catch (error) {
+            console.warn('[!] SessionStorage - get', error);
+            return null;
+        }
     }
     /**
      * Elimina una risorsa sul session storage

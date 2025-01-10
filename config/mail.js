@@ -47,8 +47,6 @@ export class Mailer {
         // -- ottengo il mittente
         const email_id = email.split('@')[0].split('.')[0];
         const receiver = code_parts.shift();
-        // -- controllo se il ricevente corrisponde
-        if (email_id !== receiver) return 4; // ricevente diverso da quello presente nel codice
         // -- ottengo la data per fare il confronto temporale
         const date = Number(BaseConverter.from_string(code_parts.pop(), 62)) * 1000;
         // -- calcolo nuovamente la signature
@@ -56,7 +54,8 @@ export class Mailer {
         // -- verifico le condizioni
         const valid_signature = Bytes.compare(signature.subarray(0, 12), encoded_signature);
         const valid_date = Date.now() < new Date(date + (24 * 60 * 60 * 1000));
-        // ---
+        // -- controllo se il ricevente corrisponde
+        if (email_id !== receiver && valid_signature) return 4; // ricevente diverso da quello presente nel codice
         return valid_signature ? (valid_date ? 1 : 2) : 3;
     }
     /**

@@ -12,7 +12,7 @@ import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";
 
-$(document).ready(async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     await VaultUI.init();
     // add

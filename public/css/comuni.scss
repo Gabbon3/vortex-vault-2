@@ -1,11 +1,11 @@
 .title-icon,
-label {
+label, .label {
     display: flex;
     gap: 5px;
     align-items: center;
 }
 
-label {
+label, .label {
     .material-symbols-rounded {
         color: $c1;
     }
@@ -229,8 +229,8 @@ hr {
     align-items: center;
     gap: 5px;
     justify-content: center;
-    padding: 7px 10px;
-    border-radius: 7px;
+    padding: 8px 10px;
+    border-radius: $br-m;
     border: none;
     transition: 0.2s;
     cursor: pointer;
@@ -253,10 +253,11 @@ hr {
     }
 
     &.secondary {
-        background-color: $bg-4;
+        background-color: $bg-5;
         color: $text-color-15;
 
         &:hover {
+            background-color: $bg-6;
             color: $text-color;
         }
     }
@@ -284,12 +285,12 @@ hr {
         color: $text-color-2;
 
         &:hover {
-            box-shadow: 0 0 0 4px $bg-4;
+            box-shadow: 0 0 0 4px $bg-5;
             color: $text-color;
         }
 
         &:active {
-            box-shadow: 0 0 0 6px $bg-4;
+            box-shadow: 0 0 0 6px $bg-5;
         }
     }
 
@@ -317,14 +318,14 @@ hr {
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
     padding: 10px;
-    border-radius: 7px;
+    border-radius: $br-m;
     max-height: 98%;
     max-width: 950px;
     width: 95%;
     min-height: 100px;
     overflow-y: scroll;
     z-index: 10;
-    background-color: $bg-2;
+    background-color: $bg-3;
     transition: all 200ms cubic-bezier(1, 0, 1, 1);
     opacity: 0;
     // posizione iniziale top
@@ -372,23 +373,24 @@ hr {
     &.m {
         max-width: 500px;
     }
-
-    // auto
-    &.auto {
-        width: inherit;
-        // min-height: inherit;
-    }
 }
 
 .isle {
-    padding: 10px;
-    border-radius: 7px;
-
+    padding: $br-m;
+    border-radius: $br-m;
+    // LARGHEZZA
+    &.s {
+        max-width: 400px;
+    }
+    &.m {
+        max-width: 500px;
+    }
+    &.l {
+        max-width: 600px;
+    }
+    // BACKGROUND COLOR
     &.bg-1 {
         background-color: $bg-1;
-    }
-    &.bg-15 {
-        background-color: $bg-15;
     }
     &.bg-2 {
         background-color: $bg-2;
@@ -399,9 +401,28 @@ hr {
     &.bg-4 {
         background-color: $bg-4;
     }
+    &.bg-5 {
+        background-color: $bg-5;
+    }
+    &.bg-6 {
+        background-color: $bg-6;
+    }
+    &.bg-7 {
+        background-color: $bg-7;
+    }
+    // BORDER RADIUS
+    &.br-m {
+        border-radius: $br-m;
+    }
+    &.br-l {
+        border-radius: $br-l;
+    }
+    &.br-xl {
+        border-radius: $br-xl;
+    }
 }
 
-monospace {
+monospace, .monospace {
     font-family: $monospace;
 }
 
@@ -409,7 +430,7 @@ monospace {
     display: block;
     margin: 0 auto;
     padding: 8px;
-    border-radius: 7px;
+    border-radius: $br-m;
     transition: 0.2s;
     outline: none;
     background-color: $bg-1;
@@ -444,7 +465,7 @@ monospace {
     }
 
     &.bg-2 {
-        background-color: $bg-2;
+        background-color: $bg-3;
     }
 
     &.mono {

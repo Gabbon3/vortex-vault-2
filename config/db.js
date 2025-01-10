@@ -21,6 +21,7 @@ export const sequelize = new Sequelize(
         //     useUTC: true, // Usa UTC lato DB
         // },
         logging: false,
+        timezone: '+00:00', // Salva tutto in UTC
         pool: {
             max: 5,           // Numero massimo di connessioni attive
             min: 0,           // Numero minimo di connessioni

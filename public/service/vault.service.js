@@ -86,7 +86,7 @@ export class VaultService {
         });
         // ---
         if (!res) return false;
-        return res;
+        return res.id;
     }
     /**
      * Cerca un vault tramite id

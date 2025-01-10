@@ -29,6 +29,9 @@ export class VaultService {
             where: {
                 id: vault_id,
                 user_id
+            },
+            attributes: {
+                exclude: ['user_id']
             }
         })
     }
@@ -46,7 +49,12 @@ export class VaultService {
             }
         }
         // ---
-        return await Vault.findAll({ where });
+        return await Vault.findAll({
+            where,
+            attributes: {
+                exclude: ['user_id']
+            }
+        });
     }
     /**
      * Conta il numero di vaults totali
@@ -106,8 +114,8 @@ export class VaultService {
                 await Vault.create({
                     user_id,
                     secrets: secrets_buffer,
-                    createdAt,
-                    updatedAt
+                    createdAt: new Date(createdAt).toISOString(),
+                    updatedAt: new Date(updatedAt).toISOString()
                 }, { 
                     transaction: t,
                     silent: true

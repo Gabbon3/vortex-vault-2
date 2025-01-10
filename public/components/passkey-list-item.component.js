@@ -22,7 +22,7 @@ class PasskeyListItem extends HTMLElement {
         const created_at = this.getAttribute('created-at');
         // ---
         this.innerHTML = `
-            <div class="isle bg-3">
+            <div class="isle bg-5">
                 <span class="token-id">
                     <span class="material-symbols-rounded">tag</span>
                     <i>${await Cripto.hash(id, { algorithm: 'SHA-1', encoding: 'base62' })}</i>
