@@ -250,8 +250,17 @@ vortex-navbar {
             display: flex;
             align-items: center;
 
-            &.danger {
+            &.red {
                 color: $c-danger;
+            }
+            &.orange {
+                color: $c-warning;
+            }
+            &.lightblue {
+                color: $c-lightblue;
+            }
+            &.yellow {
+                color: $c-yellow;
             }
         }
 
@@ -280,12 +289,23 @@ vortex-navbar {
 }
 
 .custom-sections {
+    // element margin top
+    &.emt {
+        custom-vault-section {
+            margin-top: 0.5rem;
+        }
+    }
+    // element margin bottom
+    &.emb {
+        custom-vault-section {
+            margin-top: 0.5rem;
+        }
+    }
 
     custom-vault-section {
         background-color: $bg-4;
         padding: 0 7px 7px 7px;
         border-radius: $br-m;
-        margin-bottom: 0.5rem;
 
         .remove-custom-section {
             padding: 3px;

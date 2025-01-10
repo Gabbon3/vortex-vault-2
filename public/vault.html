@@ -37,20 +37,15 @@
                     </button>
                 </div>
             </div>
-            <div class="flex gap-50 wrap mt-2 isle bg-3">
-                <!-- Sync & New Vault -->
-                <div class="flex gap-50">
+            <div class="isle bg-3 mt-2 flex d-column gap-50">
+                <div class="flex gap-50 wrap">
+                    <!-- Sync -->
                     <button class="btn primary" id="btn-sync-vault" title="Syncronize with Server">
                         <span class="material-symbols-rounded">sync_alt</span>
+                        Syncronize
                     </button>
-                    <button class="btn primary open" data-target-open="win-create-vault">
-                        <span class="material-symbols-rounded">add</span>
-                        New Vault
-                    </button>
-                </div>
-                <!-- Order Buttons -->
-                <div class="flex gap-50 last">
-                    <button class="btn secondary order-vaults" order="az" active="false" title="Order by title">
+                    <!-- Order Buttons -->
+                    <button class="btn secondary order-vaults last" order="az" active="false" title="Order by title">
                         <span class="material-symbols-rounded">title</span>
                     </button>
                     <button class="btn secondary order-vaults" order="date" active="false" title="Order by date">
@@ -58,6 +53,21 @@
                     </button>
                     <button class="btn secondary vaults-view" active="false" title="Change list view">
                         <span class="material-symbols-rounded">dashboard</span>
+                    </button>
+                </div>
+                <!-- CREATE ITEM BUTTONS -->
+                <div class="flex gap-50 wrap">
+                    <button class="btn secondary open" id="btn-add-vault" data-target-open="win-create-vault">
+                        <span class="material-symbols-rounded">encrypted</span>
+                        Login
+                    </button>
+                    <button class="btn lightblue open" id="btn-add-note" data-target-open="win-create-vault">
+                        <span class="material-symbols-rounded">sticky_note_2</span>
+                        Note
+                    </button>
+                    <button class="btn yellow open" id="btn-add-card" data-target-open="win-create-vault">
+                        <span class="material-symbols-rounded">credit_card</span>
+                        Card
                     </button>
                 </div>
             </div>
@@ -73,7 +83,7 @@
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">encrypted_add</span>
-                New Vault
+                New Element
             </h2>
             <button class="btn t close l last" data-target-close="win-create-vault">
                 <span class="material-symbols-rounded">close</span>
@@ -81,51 +91,9 @@
         </div>
         <!-- FORM -->
         <form id="form-create-vault">
-            <div class="isle bg-4 mb-2">
-                <label for="titolo">
-                    <span class="material-symbols-rounded">tag</span>
-                    Title
-                </label>
-                <div class="flex gap-50">
-                    <input name="T" type="text" class="input-text mono" id="titolo" autocomplete="off" required>
-                    <btn-paste target="titolo"></btn-paste>
-                </div>
-            </div>
-            <!-- USERNAME -->
-            <div class="isle bg-4 mb-2">
-                <label for="username">
-                    <span class="material-symbols-rounded">person</span>
-                    Username
-                </label>
-                <div class="flex gap-50">
-                    <input name="U" type="text" class="input-text mono" list="used-username" id="username" autocomplete="off">
-                    <btn-paste target="username"></btn-paste>
-                </div>
-                <datalist id="used-username"></datalist>
-            </div>
-            <!-- PASSWORD -->
-            <div class="isle bg-4 mb-2">
-                <label for="password">
-                    <span class="material-symbols-rounded">key_vertical</span>
-                    Password
-                </label>
-                <div class="flex gap-50 mb-2">
-                    <input name="P" type="text" class="input-text mono" id="password" autocomplete="off" required>
-                    <btn-paste target="password"></btn-paste>
-                </div>
-                <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password"></password-strength-bar>
-            </div>
-            <!-- CUSTOM -->
-            <div class="custom-sections flex d-column" id="custom-sections-new-vault">
-                <!-- ... -->
-            </div>
-            <!-- NOTE -->
-            <div class="isle bg-4 mb-2">
-                <label for="note">
-                    <span class="material-symbols-rounded">info</span>
-                    Note
-                </label>
-                <textarea name="N" id="note" autocomplete="none" class="input-text" rows="3"></textarea>
+            <input type="number" id="secrets-type" name="ST" class="none">
+            <div id="dinamic-secrets">
+                <!-- codice html iniettato dinamicamente in base al tipo di risorsa da inserire -->
             </div>
             <hr>
             <div class="flex gap-50">
@@ -156,57 +124,18 @@
         <!-- FORM -->
         <form id="form-update-vault">
             <input type="text" class="none" id="update-vault-id" name="vault_id" value="*">
-            <div class="isle bg-4 mb-2">
-                <label for="update-titolo">
-                    <span class="material-symbols-rounded">tag</span>
-                    Title
-                </label>
-                <div class="flex gap-75">
-                    <input name="T" type="text" class="input-text mono" id="update-titolo" autocomplete="off" required>
-                    <btn-copy target="update-titolo"></btn-copy>
-                </div>
+            <input type="number" id="update-secrets-type" name="ST" class="none">
+            <!-- ELEMENTI DINAMICI -->
+            <div id="update-dinamic-secrets">
+                <!-- codice html iniettato dinamicamente in base al tipo di risorsa da inserire -->
             </div>
-            <!-- USERNAME -->
-            <div class="isle bg-4 mb-2">
-                <label for="update-username">
-                    <span class="material-symbols-rounded">person</span>
-                    Username
-                </label>
-                <div class="flex gap-75">
-                    <input name="U" type="text" class="input-text mono" id="update-username" autocomplete="off">
-                    <btn-copy target="update-username"></btn-copy>
-                </div>
-            </div>
-            <!-- PASSWORD -->
-            <div class="isle bg-4 mb-2">
-                <label for="update-password">
-                    <span class="material-symbols-rounded">key_vertical</span>
-                    Password
-                </label>
-                <div class="flex gap-75 mb-2">
-                    <input name="P" type="text" class="input-text mono" id="update-password" autocomplete="off" required>
-                    <btn-copy target="update-password"></btn-copy>
-                </div>
-                <password-strength-bar class="m-0" id="update-psw-strength-bar" xs="true" input-id="update-password"></password-strength-bar>
-            </div>
-            <!-- CUSTOM -->
-            <div class="custom-sections flex d-column" id="custom-sections-update-vault">
-                <!-- ... -->
-            </div>
-            <!-- NOTE -->
-            <div class="isle bg-4 mb-2">
-                <label for="update-note">
-                    <span class="material-symbols-rounded">info</span>
-                    Note
-                </label>
-                <textarea name="N" id="update-note" autocomplete="none" class="input-text" rows="3"></textarea>
-            </div>
+            <!-- DATES -->
             <div class="flex gap-50 wrap mt-2 isle bg-4">
-                <label class="isle bg-1 fg-1 icon m-0" title="Vault Created Date">
+                <label class="isle bg-1 fg-1 icon m-0" title="Created Date">
                     <span class="material-symbols-rounded">calendar_add_on</span>
                     <span id="update-created-date">Null</span>
                 </label>
-                <label class="isle bg-1 fg-1 icon m-0" title="Vault Last Update Date">
+                <label class="isle bg-1 fg-1 icon m-0" title="Updated Date">
                     <span class="material-symbols-rounded">edit_calendar</span>
                     <span id="update-last-modified-date">Null</span>
                 </label>

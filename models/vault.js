@@ -17,7 +17,13 @@ export const Vault = sequelize.define(
         secrets: {
             type: DataTypes.BLOB,
             allowNull: false
-        }
+        },
+        // type: {
+        //     type: DataTypes.NUMBER,
+        //     allowNull: false,
+        //     defaultValue: 0,
+        //     comment: "Indica il tipo di dato memorizzato"
+        // }
     },
     {
         tableName: 'vault',
