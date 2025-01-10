@@ -78,17 +78,23 @@ export class PasskeyService {
         // ---
         const { challenge, user_id } = entry;
         // -- verifico la challenge
-        const attestation = await fido2.attestationResult({
-            id: credentials.id,
-            rawId: credentials.rawId.buffer,
-            response: {
-                attestationObject: credentials.response.attestationObject.buffer,
-                clientDataJSON: credentials.response.clientDataJSON.buffer,
-            },
-        }, { challenge: challenge, origin: PasskeyService.origin, factor: "either", });
+        let attestation = null;
+        try {
+            attestation = await fido2.attestationResult({
+                id: credentials.id,
+                rawId: credentials.rawId.buffer,
+                response: {
+                    attestationObject: credentials.response.attestationObject.buffer,
+                    clientDataJSON: credentials.response.clientDataJSON.buffer,
+                },
+            }, { challenge: challenge, origin: PasskeyService.origin, factor: "either", });
+        } catch (error) {
+            // console.warn(error);
+            throw new CError("AttestationFailed", "Passkey verification failed.", 400);
+        }
         // -- verifiche sulla challenge
-        if (!attestation.verified) {
-            throw new CError("AttestationFailed", "Credential attestation failed.", 400);
+        if (attestation.audit.validExpectations !== true) {
+            throw new CError("AttestationFailed", "Passkey verification failed.", 400);
         }
         // -- estraggo i dati necessari
         const credential_id = Bytes.base64.encode(attestation.authnrData.get('credId'), true);
