@@ -10,10 +10,40 @@ import { SessionStorage } from "../utils/session.js";
 import { DeviceUI } from "./device.ui.js";
 import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
+import { HtmlSecretsRender } from "./html_secrets_render.js";
 
 $(document).ready(async () => {
     if (window.location.pathname !== '/vault') return;
     await VaultUI.init();
+    // add
+    const create_dinamic_secrets = document.getElementById('dinamic-secrets');
+    const update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
+    // update
+    const secrets_type_input = document.getElementById('secrets-type');
+    const update_secrets_type_input = document.getElementById('update-secrets-type');
+    // ST = SECRET TYPE
+    /**
+     * ADD VAULT (ST 0)
+     */
+    document.getElementById('btn-add-vault').addEventListener('click', () => {
+        create_dinamic_secrets.innerHTML = HtmlSecretsRender.vault();
+        secrets_type_input.value = 0;
+        VaultUI.html_used_usernames();
+    });
+    /**
+     * ADD NOTE (ST 1)
+     */
+    document.getElementById('btn-add-note').addEventListener('click', () => {
+        secrets_type_input.value = 1;
+        create_dinamic_secrets.innerHTML = HtmlSecretsRender.note();
+    });
+    /**
+     * ADD CARD (2)
+     */
+    document.getElementById('btn-add-card').addEventListener('click', () => {
+        secrets_type_input.value = 2;
+        create_dinamic_secrets.innerHTML = HtmlSecretsRender.credit_card();
+    });
     /**
      * CREATE VAULT
      */
@@ -21,14 +51,13 @@ $(document).ready(async () => {
         if (!confirm(`Have you entered everything for ${elements.T}`)) return;
         // ---
         Windows.loader(true);
-        if (await VaultService.create(elements)) {
-            Log.summon(0, `${elements.T} saved`);
+        const vault_id = await VaultService.create(elements);
+        if (vault_id) {
+            create_dinamic_secrets.innerHTML = '';
+            Log.summon(0, `${elements.T} saved.`);
             Windows.close('win-create-vault');
             $(form).trigger("reset");
-            document.getElementById('custom-sections-new-vault').innerHTML = '';
-            setTimeout(() => {
-                VaultUI.init_db_dom();
-            }, 1000);
+            await VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
         }
@@ -46,7 +75,7 @@ $(document).ready(async () => {
         const section = document.createElement('custom-vault-section');
         section.setAttribute('input-id', Date.now());
         section.setAttribute('paste', 'true');
-        document.querySelector('#custom-sections-new-vault').appendChild(section);
+        document.querySelector('#custom-sections-vault').appendChild(section);
     });
     /**
      * UPDATE VAULT CUSTOM SECTION
@@ -60,7 +89,7 @@ $(document).ready(async () => {
         const section = document.createElement('custom-vault-section');
         section.setAttribute('input-id', Date.now());
         section.setAttribute('paste', 'true');
-        document.querySelector('#custom-sections-update-vault').appendChild(section);
+        document.querySelector('#update-custom-sections-vault').appendChild(section);
     });
     /**
      * UPDATE VAULT
@@ -86,46 +115,29 @@ $(document).ready(async () => {
         Windows.loader(false);
     });
     /**
-     * ON CLICK VAULT-LI UPDATE
+     * ON CLICK VAULT-LI UPDATE (LOAD VIEW)
      */
-    const update_elements = {
-        win_title: document.querySelector('#vault-title-to-update'),
-        vault_id: document.querySelector('#update-vault-id'),
-        delete_btn: document.querySelector('#btn-delete-vault'),
-        title: document.querySelector('#update-titolo'),
-        username: document.querySelector('#update-username'),
-        password: document.querySelector('#update-password'),
-        note: document.querySelector('#update-note'),
-        created_date: document.querySelector('#update-created-date'),
-        last_modified_date: document.querySelector('#update-last-modified-date'),
-        psw_strength_bar: document.querySelector('#update-psw-strength-bar'),
-    }
     $('#vaults-list').on('click', 'vault-li', (e) => {
         const id = $(e.currentTarget).attr('id');
         Windows.open('win-update-vault');
         // --
         const vault = VaultService.get_vault(id);
-        const strength_value = ptg.test(vault.secrets.P).average;
-        // -- riempio i campi
-        update_elements.win_title.textContent = vault.secrets.T;
-        update_elements.vault_id.value = id;
-        update_elements.delete_btn.setAttribute('vault-id', id);
-        update_elements.title.value = vault.secrets.T;
-        update_elements.username.value = vault.secrets.U;
-        update_elements.password.value = vault.secrets.P;
-        update_elements.note.value = vault.secrets.N;
-        update_elements.created_date.textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
-        update_elements.last_modified_date.textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
-        update_elements.psw_strength_bar.setAttribute('value', strength_value);
-        // -- customs
-        const custom_container = document.querySelector('#custom-sections-update-vault');
+        // -- ottengo il Secret Type
+        const ST = vault.secrets.ST ?? 0;
+        // -- genero l'html
+        update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
+        // -- riempio le date
+        document.getElementById('update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
+        document.getElementById('update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
+        // -- riempio i campi custom
+        const custom_container = document.getElementById('custom-sections-vault');
         custom_container.innerHTML = '';
         let i = 0;
         for (const secret in vault.secrets) {
-            if (secret.length === 1) continue;
+            if (secret.length === 1 || secret.length === 2) continue;
             // ---
             custom_container.innerHTML += 
-            `<custom-vault-section input-id="${`${Date.now()}.${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}" paste="false"></custom-vault-section>`; 
+            `<custom-vault-section input-id="${`ucs-${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}" paste="false"></custom-vault-section>`; 
             i++;
         }
     });
@@ -139,7 +151,6 @@ $(document).ready(async () => {
         await VaultService.syncronize(true);
         Windows.loader(false);
         VaultUI.html_vaults(VaultService.vaults);
-        VaultUI.html_used_usernames(VaultService.used_usernames);
     });
     /**
      * DELETE VAULT
@@ -266,7 +277,6 @@ export class VaultUI {
         if (inizialized !== true) return;
         // ---
         this.html_vaults(VaultService.vaults);
-        this.html_used_usernames(VaultService.used_usernames);
     }
     /**
      * funzioni di ordinamento
@@ -292,11 +302,17 @@ export class VaultUI {
         // -- ordino
         const order_function = this.order_functions[order];
         vaults.sort(order_function);
+        // -- ottengo il secret type
         // ---
         let checkpoint = get_checkpoint(order, vaults[0]);
         html += `<span class="checkpoint">${checkpoint}</span><div class="group">`;
         for (const vault of vaults) {
-            const strength_value = ptg.test(vault.secrets.P).average;
+            const ST = vault.secrets.ST ?? 0;
+            // -- se il tipo è una password
+            if (ST === 0) {
+                vault.strength_value = ptg.test(vault.secrets.P).average;
+            }
+            // ---
             const current_checkpoint = get_checkpoint(order, vault);
             // ---
             if (current_checkpoint !== checkpoint) {
@@ -304,12 +320,7 @@ export class VaultUI {
                 html += `</div><span class="checkpoint">${checkpoint}</span><div class="group">`;
             }
             // ---
-            html += `<vault-li 
-            title="${vault.secrets.T}"
-            updated-at="${date.format("%j %M %y", new Date(vault.updatedAt))}"
-            secure="${strength_value > 60}"
-            id="${vault.id}"
-        ></vault-li>`;
+            html += HtmlSecretsRender.get_list_item(ST, vault);
         }
         document.querySelector("#vaults-list").innerHTML = html;
     }
@@ -317,7 +328,7 @@ export class VaultUI {
      * Carica gli username utilizzati dall'utente sul datalist
      * @param {Set} used_usernames 
      */
-    static html_used_usernames(used_usernames) {
+    static html_used_usernames(used_usernames = VaultService.used_usernames) {
         let options = '';
         for (const username of used_usernames) {
             options += `<option value="${username}"></option>`;

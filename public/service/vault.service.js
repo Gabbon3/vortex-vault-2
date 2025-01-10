@@ -72,7 +72,7 @@ export class VaultService {
     }
     /**
      * Crea un nuovo vault
-     * @param {Object} data - I dati da cifrare
+     * @param {Object} data - I dati da cifrare, entrate vietate ST (SECRET TYPE), T (TITLE) 
      */
     static async create(data) {
         // -- cifro il vault
@@ -209,7 +209,7 @@ export class VaultService {
      */
     static load_used_usernames(vaults = this.vaults) {
         for (const vault of vaults) {
-            if (vault.secrets.U.includes('@')) this.used_usernames.add(vault.secrets.U);
+            if (vault?.secrets?.U && vault.secrets.U.includes('@')) this.used_usernames.add(vault.secrets.U);
         }
     }
     /**
