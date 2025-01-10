@@ -59,7 +59,7 @@ export class HtmlSecretsRender {
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${this.id}"></password-strength-bar>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column" id="${!vals.T ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emb" id="${vals.T ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>
 <!-- NOTE -->
@@ -89,14 +89,14 @@ export class HtmlSecretsRender {
 </div>
 <!-- NOTE -->
 <div class="isle bg-4">
-    <label for="note">
+    <label for="note-${this.id}">
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
     <textarea name="N" id="note-${this.id}" value="${vals.N ?? ''}" autocomplete="none" class="input-text" rows="16"></textarea>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column mt-2" id="${!vals.T ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emt" id="${vals.T ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`
     }
@@ -161,7 +161,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column mt-2" id="${!vals.T ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emt" id="${vals.T ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`;
     }

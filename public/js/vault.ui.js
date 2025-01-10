@@ -126,11 +126,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ST = vault.secrets.ST ?? 0;
         // -- genero l'html
         update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
+        // -- imposto il titolo
+        document.getElementById('vault-title-to-update').textContent = vault.secrets.T;
         // -- riempio le date
         document.getElementById('update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
         document.getElementById('update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
         // -- riempio i campi custom
-        const custom_container = document.getElementById('custom-sections-vault');
+        const custom_container = document.getElementById('update-custom-sections-vault');
         custom_container.innerHTML = '';
         let i = 0;
         for (const secret in vault.secrets) {

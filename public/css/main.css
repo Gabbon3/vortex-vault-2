@@ -488,6 +488,20 @@ hr.s {
 .btn.danger:hover {
   background-color: rgba(236, 55, 82, 0.3);
 }
+.btn.lightblue {
+  background-color: rgba(125, 186, 255, 0.2);
+  color: #7dbaff;
+}
+.btn.lightblue:hover {
+  background-color: rgba(125, 186, 255, 0.3);
+}
+.btn.yellow {
+  background-color: rgba(238, 196, 113, 0.2);
+  color: #eec471;
+}
+.btn.yellow:hover {
+  background-color: rgba(238, 196, 113, 0.3);
+}
 .btn.t {
   background-color: transparent;
   color: #888;
@@ -936,8 +950,17 @@ vortex-navbar {
   display: flex;
   align-items: center;
 }
-#vaults-list vault-li .simbolo.danger {
+#vaults-list vault-li .simbolo.red {
   color: #ee7184;
+}
+#vaults-list vault-li .simbolo.orange {
+  color: #eead71;
+}
+#vaults-list vault-li .simbolo.lightblue {
+  color: #7dbaff;
+}
+#vaults-list vault-li .simbolo.yellow {
+  color: #eec471;
 }
 #vaults-list vault-li .info {
   width: 100%;
@@ -958,11 +981,16 @@ vortex-navbar {
   color: #888;
 }
 
+.custom-sections.emt custom-vault-section {
+  margin-top: 0.5rem;
+}
+.custom-sections.emb custom-vault-section {
+  margin-top: 0.5rem;
+}
 .custom-sections custom-vault-section {
   background-color: #302929;
   padding: 0 7px 7px 7px;
   border-radius: 8px;
-  margin-bottom: 0.5rem;
 }
 .custom-sections custom-vault-section .remove-custom-section {
   padding: 3px;

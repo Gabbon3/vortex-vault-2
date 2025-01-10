@@ -280,6 +280,24 @@ hr {
         }
     }
 
+    &.lightblue {
+        background-color: rgba(125, 186, 255, 0.2);
+        color: $c-lightblue;
+
+        &:hover {
+            background-color: rgba(125, 186, 255, 0.3);
+        }
+    }
+
+    &.yellow {
+        background-color: rgba(238, 196, 113, 0.2);
+        color: $c-yellow;
+
+        &:hover {
+            background-color: rgba(238, 196, 113, 0.3);
+        }
+    }
+
     &.t {
         background-color: transparent;
         color: $text-color-2;
