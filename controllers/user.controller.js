@@ -61,7 +61,7 @@ export class UserController {
         // -- Access Token
         const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
         const { cke, lsk } = await this.cke_service.generate(null, user.salt);
-        this.set_token_cookies(res, { access_token, refresh_token, cke });
+        this.set_token_cookies(res, { access_token, refresh_token, cke, uid: user.id });
         // ---
         if (!access_token) {
             return res.status(403).json({
@@ -288,7 +288,7 @@ export class UserController {
         if (cookies.access_token) {
             res.cookie('access_token', cookies.access_token, {
                 httpOnly: true,
-                secure: JWT.secure_option, // da mettere true in produzione
+                secure: true,
                 maxAge: JWT.access_token_cookie_lifetime,
                 sameSite: 'Strict',
                 path: '/', // disponibile per tutte le route
@@ -297,7 +297,7 @@ export class UserController {
         if (cookies.refresh_token) {
             res.cookie('refresh_token', cookies.refresh_token, {
                 httpOnly: true,
-                secure: JWT.secure_option, // da mettere true in produzione
+                secure: true,
                 maxAge: JWT.refresh_token_cookie_lifetime,
                 sameSite: 'Strict',
                 path: '/auth',
@@ -306,10 +306,19 @@ export class UserController {
         if (cookies.cke) {
             res.cookie('cke', cookies.cke, {
                 httpOnly: true,
-                secure: JWT.secure_option, // da mettere true in produzione
+                secure: true,
                 maxAge: JWT.cke_cookie_lifetime,
                 sameSite: 'Strict',
-                path: '/auth', // disponibile per tutte le route
+                path: '/auth',
+            });
+        }
+        if (cookies.uid) {
+            res.cookie('uid', cookies.uid, {
+                httpOnly: true,
+                secure: true,
+                maxAge: JWT.access_token_cookie_lifetime,
+                sameSite: 'Strict',
+                path: '/auth/passkey',
             });
         }
     }

@@ -118,9 +118,19 @@ export class PasskeyService {
     }
     /**
      * Genera le opzioni di autenticazione per l'utente.
+     * @param {string} uid - l'id dell'utente, per restituire le credenziali associate
      * @returns {object} - Le opzioni di autenticazione da inviare al client.
      */
-    async generate_auth_options() {
+    async generate_auth_options(uid) {
+        let credentials_id = null;
+        // -- se è stato passato lo user id recupero le passkey associate
+        if (uid) {
+            credentials_id = await Passkey.findAll({
+                where: { user_id: uid },
+                attributes: ['credential_id']
+            });
+            credentials_id = credentials_id.map((cred) => cred.credential_id);
+        }
         const request_id = uuidv7();
         // -- creo una challenge unica
         const options = await fido2.assertionOptions();
@@ -128,7 +138,7 @@ export class PasskeyService {
         // -- salvo nel RamDB
         RamDB.set(`chl-${request_id}`, challenge, 60);
         // -- invio la challenge e la request id
-        return { challenge, request_id };
+        return { challenge, request_id, credentials_id };
     }
     /**
      * Restituisce la lista di tutte le passkeys

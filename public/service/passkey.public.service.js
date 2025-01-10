@@ -67,22 +67,31 @@ export class PasskeyService {
         });
         if (!chl_req_id) return false;
         // ---
-        const { request_id, challenge: challenge_base64 } = chl_req_id;
+        const { request_id, challenge: challenge_base64, credentials_id } = chl_req_id;
         // -- decodifico la challenge
         const challenge = Bytes.base64.decode(challenge_base64);
+        // -- restituisco le credenziali disponibili
+        let allowCredentials = null;
+        if (credentials_id instanceof Array && credentials_id.length > 0) {
+            allowCredentials = credentials_id.map(cred_id => ({
+                type: 'public-key',
+                id: Bytes.base64.decode(cred_id, true)
+            }));
+        }
         // -- creo l'oggetto per la richiesta di autenticazione
-        const publicKeyCredentialRequestOptions = {
+        const publicKey = {
             challenge,
             userVerification: "preferred",
+            timeout: 60000,
         };
+        // ---
+        if (allowCredentials) publicKey.allowCredentials = allowCredentials;
         // -- seleziono la passkey e firmo
         let credential = null;
         try {
-            credential = await navigator.credentials.get({
-                publicKey: publicKeyCredentialRequestOptions,
-            });
+            credential = await navigator.credentials.get({ publicKey });
         } catch (error) {
-            console.log('Passkey auth request Aborted');
+            console.warn('Passkey auth request Aborted', error);
             return null;
         } 
         // -- restituisco i dati grazie al quale il server può validare la passkey

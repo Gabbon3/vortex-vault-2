@@ -66,7 +66,6 @@ $(document).ready(async () => {
         } else {
             document.getElementById('recovery-email').value = email;
             document.getElementById('recovery-device-email-email').value = email;
-            Log.summon(1, `Note that, you can unlock your device through another or through mfa`);
         }
         Windows.loader(false);
     });

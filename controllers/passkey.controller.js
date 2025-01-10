@@ -35,11 +35,14 @@ export class PasskeyController {
      * Genera delle opzioni di accesso (la challenge)
      */
     get_auth_options = async_handler(async (req, res) => {
-        const { challenge, request_id } = await this.service.generate_auth_options();
+        const { uid } = req.cookies;
+        // ---
+        const { challenge, request_id, credentials_id } = await this.service.generate_auth_options(uid ?? null);
         // ---
         res.status(201).json({
             request_id,
-            challenge: Bytes.base64.encode(challenge)
+            challenge: Bytes.base64.encode(challenge),
+            credentials_id,
         });
     });
     /**
