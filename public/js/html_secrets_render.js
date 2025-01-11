@@ -57,7 +57,7 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50">
         <input name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${this.id}" value="${vals.U ?? ''}" autocomplete="off">
-        <${btn} target="username"></${btn}>
+        <${btn} target="username-${this.id}"></${btn}>
     </div>
     ${!update ? '<datalist id="used-username"></datalist>' : ''}
 </div>
@@ -69,7 +69,7 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50 mb-2">
         <input name="P" type="text" class="input-text mono" id="password-${this.id}" value="${vals.P ?? ''}" autocomplete="off" required>
-        <${btn} target="password"></${btn}>
+        <${btn} target="password-${this.id}"></${btn}>
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${this.id}"></password-strength-bar>
 </div>
