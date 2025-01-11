@@ -9,7 +9,7 @@ class VaultLi extends HTMLElement {
         const updated_at = this.getAttribute("updated-at");
         const secure = this.getAttribute("secure") === "true";
         const st = this.getAttribute("st");
-        const icon = st === '0' ? secure ? 'lock' : 'warning' : st === '1' ? 'sticky_note_2' : 'credit_card';
+        const icon = st === '0' ? secure ? 'encrypted' : 'error' : st === '1' ? 'sticky_note_2' : 'credit_card';
         /**
          * vault: 0 verde/rosso
          * note: 1 azzurro
@@ -18,7 +18,7 @@ class VaultLi extends HTMLElement {
         let color = '';
         switch (st) {
             case '0':
-                color = secure ? '' : 'red';
+                color = secure ? 'orange' : 'red';
                 break;
             case '1':
                 color = 'lightblue';

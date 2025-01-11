@@ -1001,7 +1001,7 @@ vortex-navbar {
   cursor: default;
 }
 #vaults-list.searching {
-  padding: 10px 10px 2.5px 10px;
+  padding: 8px 8px 2.5px 8px;
   border-radius: 14px;
   background-color: #1f1b1b;
   gap: 0;
@@ -1048,7 +1048,7 @@ vortex-navbar {
   color: #ee7184;
 }
 #vaults-list vault-li .simbolo.orange {
-  color: #eead71;
+  color: #e59e7a;
 }
 #vaults-list vault-li .simbolo.lightblue {
   color: #7dbaff;

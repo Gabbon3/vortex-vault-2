@@ -203,7 +203,7 @@ vortex-navbar {
     }
 
     &.searching {
-        padding: 10px 10px 2.5px 10px;
+        padding: $br-m $br-m 2.5px $br-m;
         border-radius: $br-l;
         background-color: $bg-2;
         gap: 0;
@@ -259,7 +259,7 @@ vortex-navbar {
                 color: $c-danger;
             }
             &.orange {
-                color: $c-warning;
+                color: $c-orange;
             }
             &.lightblue {
                 color: $c-lightblue;
