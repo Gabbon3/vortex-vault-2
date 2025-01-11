@@ -24,7 +24,6 @@ export const User = sequelize.define(
             defaultValue: new Date(),
         },
         recovery: { type: DataTypes.BLOB, allowNull: true }, // hash de codice di recupero
-        mfa_secret: { type: DataTypes.BLOB, allowNull: true, defaultValue: null },
     },
     {
         tableName: "user",
