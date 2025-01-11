@@ -128,6 +128,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.open('win-update-vault');
         // --
         const vault = VaultService.get_vault(id);
+        // -- imposto il vault id nel pulsante elimina
+        document.getElementById('btn-delete-vault').setAttribute('vault-id', id);
         // -- ottengo il Secret Type
         const ST = vault.secrets.ST ?? 0;
         update_secrets_type_input.value = ST;
