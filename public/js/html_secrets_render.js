@@ -37,6 +37,8 @@ export class HtmlSecretsRender {
      */
     static vault(vals = {}) {
         this.id++;
+        const update = vals.T !== undefined;
+        const btn = `btn-${update ? 'copy' : 'paste'}`;
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${this.id}">
         <span class="material-symbols-rounded">tag</span>
@@ -44,7 +46,7 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50">
         <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required>
-        <btn-paste target="titolo-${this.id}"></btn-paste>
+        <${btn} target="titolo-${this.id}"></${btn}>
     </div>
 </div>
 <!-- USERNAME -->
@@ -54,10 +56,10 @@ export class HtmlSecretsRender {
         Username
     </label>
     <div class="flex gap-50">
-        <input name="U" type="text" class="input-text mono" ${!vals.T ? 'list="used-username"' : ''} id="username-${this.id}" value="${vals.U ?? ''}" autocomplete="off">
-        <btn-paste target="username"></btn-paste>
+        <input name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${this.id}" value="${vals.U ?? ''}" autocomplete="off">
+        <${btn} target="username"></${btn}>
     </div>
-    ${!vals.T ? '<datalist id="used-username"></datalist>' : ''}
+    ${!update ? '<datalist id="used-username"></datalist>' : ''}
 </div>
 <!-- PASSWORD -->
 <div class="isle bg-4 mb-2">
@@ -67,12 +69,12 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50 mb-2">
         <input name="P" type="text" class="input-text mono" id="password-${this.id}" value="${vals.P ?? ''}" autocomplete="off" required>
-        <btn-paste target="password"></btn-paste>
+        <${btn} target="password"></${btn}>
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${this.id}"></password-strength-bar>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column emb" id="${vals.T ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>
 <!-- NOTE -->
@@ -93,6 +95,7 @@ export class HtmlSecretsRender {
      */
     static note(vals = {}) {
         this.id++;
+        const update = vals.T !== undefined;
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${this.id}">
         <span class="material-symbols-rounded">tag</span>
@@ -109,7 +112,7 @@ export class HtmlSecretsRender {
     <textarea name="N" id="note-${this.id}" class="input-text" rows="16">${vals.N ?? ''}</textarea>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column emt" id="${vals.T ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emt" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`
     }
@@ -122,6 +125,7 @@ export class HtmlSecretsRender {
      */
     static credit_card(vals = {}) {
         this.id++;
+        const update = vals.T !== undefined;
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${this.id}">
         <span class="material-symbols-rounded">tag</span>
@@ -129,7 +133,7 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50">
         <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required placeholder="My Bank">
-        <btn-paste target="titolo-${this.id}"></btn-paste>
+        <${btn} target="titolo-${this.id}"></${btn}>
     </div>
 </div>
 <!-- NOME E COGNOME -->
@@ -140,7 +144,7 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50">
         <input name="NC" type="text" class="input-text mono" id="name-surname-${this.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">
-        <btn-paste target="name-surname-${this.id}"></btn-paste>
+        <${btn} target="name-surname-${this.id}"></${btn}>
     </div>
 </div>
 <!-- NUMERO CARTA -->
@@ -151,7 +155,7 @@ export class HtmlSecretsRender {
     </label>
     <div class="flex gap-50">
         <input name="CN" type="text" class="input-text mono" id="card-number-${this.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
-        <btn-paste target="card-number-${this.id}"></btn-paste>
+        <${btn} target="card-number-${this.id}"></${btn}>
     </div>
 </div>
 <!-- DATA SCADENZA & CVV -->
@@ -174,7 +178,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column emt" id="${vals.T ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emt" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`;
     }
