@@ -147,7 +147,7 @@ export class VaultService {
         });
         // ---
         if (!res) return false;
-        return res;
+        return true;
     }
     /**
      * Reimposta tutti i vault sul db

@@ -108,13 +108,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Windows.loader(true);
         // ---
-        if (await VaultService.update(vault_id, elements)) {
+        const updated = await VaultService.update(vault_id, elements);
+        if (updated) {
             Log.summon(0, `${elements.T} edited`);
             Windows.close('win-update-vault');
             $(form).trigger("reset");
-            setTimeout(() => {
-                VaultUI.init_db_dom();
-            }, 1000);
+            await VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
         }
