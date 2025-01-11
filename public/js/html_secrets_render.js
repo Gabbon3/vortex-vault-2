@@ -16,6 +16,19 @@ export class HtmlSecretsRender {
         if (secret_type === 0) return this.vault(vals);
         if (secret_type === 1) return this.note(vals);
         if (secret_type === 2) return this.credit_card(vals);
+        return false;
+    }
+    /**
+     * Restituisce il colore associato in base al tipo di segreto
+     * @param {number} secret_type 
+     * @returns {string|boolean}
+     */
+    static get_color(secret_type) {
+        secret_type = Number(secret_type);
+        if (secret_type === 0) return "orange";
+        if (secret_type === 1) return "lightblue";
+        if (secret_type === 2) return "yellow";
+        return false;
     }
     /**
      * HTML PER I VAULT
@@ -123,7 +136,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="name-surname-${this.id}">
         <span class="material-symbols-rounded">person</span>
-        Name and surname
+        Name
     </label>
     <div class="flex gap-50">
         <input name="NC" type="text" class="input-text mono" id="name-surname-${this.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">

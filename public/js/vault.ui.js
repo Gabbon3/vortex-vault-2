@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // update
     const secrets_type_input = document.getElementById('secrets-type');
     const update_secrets_type_input = document.getElementById('update-secrets-type');
+    // windows
+    const win_create_vault = document.getElementById('win-create-vault');
+    const win_update_vault = document.getElementById('win-update-vault');
     // ST = SECRET TYPE
     /**
      * ADD VAULT (ST 0)
@@ -29,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.vault();
         secrets_type_input.value = 0;
         VaultUI.html_used_usernames();
+        win_create_vault.setAttribute('class', 'window m pr show orange');
     });
     /**
      * ADD NOTE (ST 1)
@@ -36,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btn-add-note').addEventListener('click', () => {
         secrets_type_input.value = 1;
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.note();
+        win_create_vault.setAttribute('class', 'window m pr show lightblue');
     });
     /**
      * ADD CARD (2)
@@ -43,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btn-add-card').addEventListener('click', () => {
         secrets_type_input.value = 2;
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.credit_card();
+        win_create_vault.setAttribute('class', 'window m pr show yellow');
     });
     /**
      * CREATE VAULT
@@ -124,10 +130,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const vault = VaultService.get_vault(id);
         // -- ottengo il Secret Type
         const ST = vault.secrets.ST ?? 0;
+        update_secrets_type_input.value = ST;
+        // -- imposto il colore della finestra
+        const color = HtmlSecretsRender.get_color(ST);
+        document.getElementById('win-update-vault').setAttribute('class', 'window m show ' + color);
         // -- genero l'html
         update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
         // -- imposto il titolo
         document.getElementById('vault-title-to-update').textContent = vault.secrets.T;
+        // -- importo l'id del vault
+        document.getElementById('update-vault-id').value = vault.id;
         // -- riempio le date
         document.getElementById('update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
         document.getElementById('update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));

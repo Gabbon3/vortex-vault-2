@@ -35,6 +35,11 @@ vortex-navbar {
     padding: 5px;
     border-radius: $br-m;
     background-color: $bg-3;
+    box-shadow: 0 0 0 1px $bg-5;
+    position: fixed;
+    top: 7px;
+    left: 7px;
+    width: calc(100% - 14px);
 }
 
 #sudo-indicator {
@@ -298,7 +303,7 @@ vortex-navbar {
     // element margin bottom
     &.emb {
         custom-vault-section {
-            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
         }
     }
 
