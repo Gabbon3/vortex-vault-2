@@ -81,7 +81,7 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${this.id}" value="${vals.N ?? ''}" autocomplete="none" class="input-text" rows="3"></textarea>
+    <textarea name="N" id="note-${this.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
 </div>`;
     }
 
@@ -106,7 +106,7 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${this.id}" value="${vals.N ?? ''}" autocomplete="none" class="input-text" rows="16"></textarea>
+    <textarea name="N" id="note-${this.id}" class="input-text" rows="16">${vals.N ?? ''}</textarea>
 </div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emt" id="${vals.T ? 'update-' : ''}custom-sections-vault">
