@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const update_secrets_type_input = document.getElementById('update-secrets-type');
     // windows
     const win_create_vault = document.getElementById('win-create-vault');
-    const win_update_vault = document.getElementById('win-update-vault');
+    const title_create_vault = document.getElementById('create-vault-icon');
+    const icon_create_vault = document.getElementById('create-vault-title');
+    // const win_update_vault = document.getElementById('win-update-vault');
     // ST = SECRET TYPE
     /**
      * ADD VAULT (ST 0)
@@ -32,7 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.vault();
         secrets_type_input.value = 0;
         VaultUI.html_used_usernames();
+        // ---
         win_create_vault.setAttribute('class', 'window m pr show orange');
+        title_create_vault.textContent = "encrypted";
+        icon_create_vault.textContent = "New Login";
     });
     /**
      * ADD NOTE (ST 1)
@@ -40,7 +45,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btn-add-note').addEventListener('click', () => {
         secrets_type_input.value = 1;
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.note();
+        // ---
         win_create_vault.setAttribute('class', 'window m pr show lightblue');
+        title_create_vault.textContent = "sticky_note_2";
+        icon_create_vault.textContent = "New Note";
     });
     /**
      * ADD CARD (2)
@@ -48,7 +56,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btn-add-card').addEventListener('click', () => {
         secrets_type_input.value = 2;
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.credit_card();
+        // ---
         win_create_vault.setAttribute('class', 'window m pr show yellow');
+        title_create_vault.textContent = "credit_card";
+        icon_create_vault.textContent = "New Card";
     });
     /**
      * CREATE VAULT

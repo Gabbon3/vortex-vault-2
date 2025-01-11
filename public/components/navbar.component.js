@@ -27,38 +27,34 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">settings</span>
                     <i>Settings</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-devices" title="Devices">
+                ${path === '/vault' ? `<a class="open orange" data-target-open="win-devices" title="Devices">
                     <span class="material-symbols-rounded">token</span>
                     <i>Devices</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-backups" title="Backup">
+                ${path === '/vault' ? `<a class="open yellow" data-target-open="win-backups" title="Backup">
                     <span class="material-symbols-rounded">cloud</span>
                     <i>Backup</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-passkey" title="Passkey">
+                ${path === '/vault' ? `<a class="open red" data-target-open="win-passkey" title="Passkey">
                     <span class="material-symbols-rounded">passkey</span>
                     <i>Passkey</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open" data-target-open="win-psw-generator" title="Psw Generator">
-                    <span class="material-symbols-rounded">key_vertical</span>
-                    <i>Generator</i>
-                </a>` : ''}
 
-                ${path !== '/vault' ? `<a href="/vault"' title="Vault">
+                ${path !== '/vault' ? `<a href="/vault"' title="Vault" class="orange">
                     <span class="material-symbols-rounded">encrypted</span>
                     <i>Vault</i>
                 </a>` : ''}
                 
-                ${path === '/signin' ? `<a class="open" data-target-open="win-device-recovery" title="Device Recovery">
+                ${path === '/signin' ? `<a class="open yellow" data-target-open="win-device-recovery" title="Device Recovery">
                     <span class="material-symbols-rounded">mobile_friendly</span>
                     <i>Device Recovery</i>
                 </a>` : ''}
-                ${path !== '/signin' ? `<a href="/signin"' title="Sign In">
+                ${path !== '/signin' ? `<a href="/signin"' title="Sign In" class="lightblue">
                     <span class="material-symbols-rounded">login</span>
                     <i>Sign In</i>
                 </a>` : ''}
 
-                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up">
+                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up" class="lightblue">
                     <span class="material-symbols-rounded">person_add</span>
                     <i>Sign Up</i>
                 </a>` : ''}

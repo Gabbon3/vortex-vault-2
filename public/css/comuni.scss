@@ -282,29 +282,29 @@ hr {
     }
 
     &.lightblue {
-        background-color: rgba(125, 186, 255, 0.2);
+        background-color: rgba($c-lightblue, 0.2);
         color: $c-lightblue;
 
         &:hover {
-            background-color: rgba(125, 186, 255, 0.3);
+            background-color: rgba($c-lightblue, 0.3);
         }
     }
 
     &.yellow {
-        background-color: rgba(238, 196, 113, 0.2);
+        background-color: rgba($c-yellow, 0.2);
         color: $c-yellow;
 
         &:hover {
-            background-color: rgba(238, 196, 113, 0.3);
+            background-color: rgba($c-yellow, 0.3);
         }
     }
 
     &.orange {
-        background-color: rgba(172, 68, 26, 0.25);
+        background-color: rgba($c-orange, 0.2);
         color: $c-orange;
 
         &:hover {
-            background-color: rgba(172, 68, 26, 0.3);
+            background-color: rgba($c-orange, 0.3);
         }
     }
 
@@ -406,7 +406,7 @@ hr {
     COLORI PRINCIPALI DELLA FINESTRA
     */
     &.lightblue {
-        h2 .material-symbols-rounded { color: $c-lightblue !important; }
+        h2 .material-symbols-rounded, h3 .material-symbols-rounded { color: $c-lightblue !important; }
         form {
             label .material-symbols-rounded { color: $c-lightblue !important; }
             .input-text {
@@ -414,13 +414,13 @@ hr {
                 &:focus { box-shadow: 0 0 0 4px rgba($c-lightblue, 0.2); }
             }
         }
-        button[type=submit] {
+        .btn.primary {
             color: $c-lightblue !important;
             background-color: rgba($c-lightblue, 0.2);
         }
     }
     &.yellow {
-        h2 .material-symbols-rounded { color: $c-yellow !important; }
+        h2 .material-symbols-rounded, h3 .material-symbols-rounded { color: $c-yellow !important; }
         form {
             label .material-symbols-rounded { color: $c-yellow !important; }
             .input-text {
@@ -428,13 +428,13 @@ hr {
                 &:focus { box-shadow: 0 0 0 4px rgba($c-yellow, 0.2); }
             }
         }
-        button[type=submit] {
+        .btn.primary {
             color: $c-yellow !important;
             background-color: rgba($c-yellow, 0.2);
         }
     }
     &.orange {
-        h2 .material-symbols-rounded { color: $c-orange !important; }
+        h2 .material-symbols-rounded, h3 .material-symbols-rounded { color: $c-orange !important; }
         form {
             label .material-symbols-rounded { color: $c-orange !important; }
             .input-text {
@@ -442,7 +442,7 @@ hr {
                 &:focus { box-shadow: 0 0 0 4px rgba($c-orange, 0.2); }
             }
         }
-        button[type=submit] {
+        .btn.primary {
             color: $c-orange !important;
             background-color: rgba($c-orange, 0.2);
         }

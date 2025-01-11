@@ -70,6 +70,10 @@
                         <span class="material-symbols-rounded">credit_card</span>
                         Card
                     </button>
+                    <button class="btn primary open last" data-target-open="win-psw-generator" title="Password Generator">
+                        <span class="material-symbols-rounded">key_vertical</span>
+                        <span class="text">Generator</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -83,8 +87,8 @@
     <div class="window m pr" id="win-create-vault">
         <div class="flex y-center">
             <h2 class="icon">
-                <span class="material-symbols-rounded">encrypted_add</span>
-                New Element
+                <span class="material-symbols-rounded" id="create-vault-icon">encrypted_add</span>
+                <span id="create-vault-title"></span>
             </h2>
             <button class="btn t close l last" data-target-close="win-create-vault">
                 <span class="material-symbols-rounded">close</span>
