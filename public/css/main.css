@@ -1032,7 +1032,7 @@ vortex-navbar {
 }
 #vaults-list.searching {
   padding: 8px 8px 2.5px 8px;
-  border-radius: 14px;
+  border-radius: 23px;
   background-color: #1f1b1b;
   gap: 0;
 }
