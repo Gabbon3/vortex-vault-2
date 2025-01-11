@@ -16,8 +16,9 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- auth/passkey
+// -- START REGISTRATION
 router.post('/register-e', verify_email_code, controller.start_registration);
-router.post('/register-a', verify_access_token(), controller.start_registration);
+router.post('/register-a', verify_access_token(1), controller.start_registration);
 // -- COMPLETE REGISTRATION
 router.post('/register', controller.complete_registration);
 router.get('/', controller.get_auth_options);
