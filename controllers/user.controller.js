@@ -228,7 +228,7 @@ export class UserController {
         let lsk = null;
         // -- se la cke ce ottengo la key, se non ce la cke genero entrambe
         if (cookie_cke) {
-            lsk = await this.cke_service.lsk(cookie_cke);
+            lsk = await this.cke_service.lsk(cookie_cke, req.user.uid);
             cke = cookie_cke;
         } else {
             const new_ = await this.cke_service.generate(req.user.uid);
@@ -241,7 +241,7 @@ export class UserController {
         const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
         if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
         // ---
-        res.status(200).json({ message: "Password changed!", lsk });
+        res.status(200).json({ message: "Password changed!", lsk: Bytes.base64.encode(lsk) });
     });
     /**
      * Imposta le informazioni di recupero password
