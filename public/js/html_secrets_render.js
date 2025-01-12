@@ -126,6 +126,7 @@ export class HtmlSecretsRender {
     static credit_card(vals = {}) {
         this.id++;
         const update = vals.T !== undefined;
+        const btn = `btn-${update ? 'copy' : 'paste'}`;
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${this.id}">
         <span class="material-symbols-rounded">tag</span>
