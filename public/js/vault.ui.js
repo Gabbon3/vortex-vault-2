@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.public_key();
         // ---
         win_create_vault.setAttribute('class', 'window m pr show purple');
-        title_create_vault.textContent = "New Public keys";
+        title_create_vault.textContent = "New Asymmetric keys";
     });
     /**asymmetric_key
      * CREATE VAULT

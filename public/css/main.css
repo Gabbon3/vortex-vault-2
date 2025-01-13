@@ -596,6 +596,13 @@ hr.s {
 .btn.lightgray:hover {
   background-color: rgba(224, 224, 224, 0.3);
 }
+.btn.olivegreen {
+  background-color: rgba(185, 209, 156, 0.2);
+  color: #B9D19C;
+}
+.btn.olivegreen:hover {
+  background-color: rgba(185, 209, 156, 0.3);
+}
 .btn.t {
   background-color: transparent;
   color: #888;
@@ -877,6 +884,26 @@ hr.s {
 .window.lightgray .btn.primary:hover {
   background-color: rgba(224, 224, 224, 0.3);
 }
+.window.olivegreen h2 .material-symbols-rounded,
+.window.olivegreen h3 .material-symbols-rounded {
+  color: #B9D19C;
+}
+.window.olivegreen form label .material-symbols-rounded {
+  color: #B9D19C;
+}
+.window.olivegreen form .input-text:hover {
+  box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
+}
+.window.olivegreen form .input-text:focus {
+  box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
+}
+.window.olivegreen .btn.primary {
+  color: #B9D19C !important;
+  background-color: rgba(185, 209, 156, 0.2);
+}
+.window.olivegreen .btn.primary:hover {
+  background-color: rgba(185, 209, 156, 0.3);
+}
 
 .isle {
   padding: 8px;
@@ -1125,6 +1152,12 @@ input[type=range]::-webkit-slider-thumb {
 .navbar a.lightgray:hover {
   background-color: rgba(224, 224, 224, 0.1);
 }
+.navbar a.olivegreen span {
+  color: #B9D19C;
+}
+.navbar a.olivegreen:hover {
+  background-color: rgba(185, 209, 156, 0.1);
+}
 .navbar a i {
   font-style: normal;
 }
@@ -1366,6 +1399,9 @@ vortex-navbar .logo {
 }
 #vaults-list vault-li .simbolo.lightgray {
   color: #E0E0E0;
+}
+#vaults-list vault-li .simbolo.olivegreen {
+  color: #B9D19C;
 }
 #vaults-list vault-li .info {
   width: 100%;
