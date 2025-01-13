@@ -74,7 +74,6 @@ class PasskeyBtn extends HTMLElement {
             const expire = new Date(Date.now() + 45 * 60 * 1000);
             await LocalStorage.set("session-expire", expire);
             await LocalStorage.set("sudo-expire", expire);
-            await VortexNavbar.sudo_indicator_init();
         },
         /**
          * DELETE ACCOUNT

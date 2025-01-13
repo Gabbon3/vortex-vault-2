@@ -22,7 +22,7 @@ export class HtmlSecretsRender {
     /**
      * Restituisce il colore associato in base al tipo di segreto
      * @param {number} secret_type 
-     * @returns {string|boolean}
+     * @returns {string|null}
      */
     static get_color(secret_type) {
         secret_type = Number(secret_type);
@@ -30,7 +30,7 @@ export class HtmlSecretsRender {
         if (secret_type === 1) return "lightblue";
         if (secret_type === 2) return "yellow";
         if (secret_type === 3) return "purple";
-        return false;
+        return null;
     }
     /**
      * HTML PER I VAULT

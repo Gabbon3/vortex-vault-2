@@ -14,7 +14,9 @@ import { HtmlSecretsRender } from "./html_secrets_render.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
+    // ---
     await VaultUI.init();
+    VaultUI.html_list = document.getElementById("vaults-list");
     // add
     const create_dinamic_secrets = document.getElementById('dinamic-secrets');
     const update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
@@ -67,7 +69,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         win_create_vault.setAttribute('class', 'window m pr show purple');
         title_create_vault.textContent = "New Asymmetric keys";
     });
-    /**asymmetric_key
+    /**
+     * Abilita la vista degli elementi se uno solo per categoria o tutti
+     */
+    document.getElementById('btn-view-switch').addEventListener('click', (e) => {
+        VaultUI.view_indicator = VaultUI.view_indicator + 1 > 3 ? -1 : VaultUI.view_indicator + 1;
+        // -- colore pulsante per mostrare tramite la ui la vista corrente
+        const color = HtmlSecretsRender.get_color(VaultUI.view_indicator) ?? 'secondary';
+        e.currentTarget.setAttribute('class', `btn ${color}`);
+        VaultUI.html_vaults();
+    });
+    /**
      * CREATE VAULT
      */
     Form.onsubmit("form-create-vault", async (form, elements) => {
@@ -182,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(true);
         await VaultService.syncronize(true);
         Windows.loader(false);
-        VaultUI.html_vaults(VaultService.vaults);
+        VaultUI.html_vaults();
     });
     /**
      * DELETE VAULT
@@ -249,7 +261,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     active ? 'dateup' : 'datedown' : null;
         // ---
         if (!curr_order) return;
-        VaultUI.html_vaults(VaultService.vaults, curr_order);
+        VaultUI.current_order = curr_order;
+        VaultUI.html_vaults(curr_order);
     });
     /**
      * Vista dei vault
@@ -267,6 +280,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 export class VaultUI {
     static search = new Search();
+    static view_indicator = -1; // usata per mostrare tutte o alcune categorie di segreti
+    static current_order = 'az';
+    static html_list = null;
     /**
      * inizializza tutto il necessario per avviare il vault se possibile
      */
@@ -308,7 +324,7 @@ export class VaultUI {
         const inizialized = await VaultService.syncronize(full);
         if (inizialized !== true) return;
         // ---
-        this.html_vaults(VaultService.vaults);
+        this.html_vaults();
     }
     /**
      * funzioni di ordinamento
@@ -321,10 +337,11 @@ export class VaultUI {
     }
     /**
      * This function generates HTML markup for a list of vaults.
-     * @param {Array} vaults - An array of vault objects. Each vault object should have properties: T (title), updatedAt (date of last update).
      * @param {string} order - az, za, dateup, datedown, secureup, securedown
+     * @param {number} secret_type_view - indicatore per mostrare solo alcune o tutte le categorie dei vault
      */
-    static html_vaults(vaults, order = 'az') {
+    static html_vaults(order = this.current_order, secret_type_view = this.view_indicator) {
+        const vaults = VaultService.vaults;
         if (vaults.length === 0) return document.querySelector("#vaults-list").innerHTML = '';
         let html = ``;
         const get_checkpoint = (order, vault) => {
@@ -332,15 +349,24 @@ export class VaultUI {
                 vault.secrets.T[0].toUpperCase() :
                 date.format('%M %y', new Date(vault.updatedAt))
         }
+        // -- preparo i vaults da iterare
+        const filter_condition = (vault) => { return secret_type_view === -1 || secret_type_view === (vault.secrets.ST ?? 0)};
+        const vaults_list = vaults.filter((vault) => filter_condition(vault));
+        // -- se non ci sono vault da mostrare termino qui
+        if (vaults_list.length === 0) return this.html_list.innerHTML = '<span class="checkpoint">No vaults here.</span>';
+
         // -- ordino
         const order_function = this.order_functions[order];
-        vaults.sort(order_function);
-        // -- ottengo il secret type
-        // ---
-        let checkpoint = get_checkpoint(order, vaults[0]);
+        vaults_list.sort(order_function);
+        // -- gestisco la logica dei checkpoint (lettere o date)
+        let checkpoint = get_checkpoint(order, vaults_list[0]);
         html += `<span class="checkpoint">${checkpoint}</span><div class="group">`;
-        for (const vault of vaults) {
+        for (const vault of vaults_list) {
+            // -- ottengo il secret type
             const ST = vault.secrets.ST ?? 0;
+            // -- skippo il caricamento di questa vista
+            // mostro se view === -1 oppure se view === a ST
+            if (!(secret_type_view === -1 || secret_type_view === ST)) continue;
             // -- se il tipo è una password
             if (ST === 0) {
                 vault.strength_value = ptg.test(vault.secrets.P).average;
@@ -355,7 +381,7 @@ export class VaultUI {
             // ---
             html += HtmlSecretsRender.get_list_item(ST, vault);
         }
-        document.querySelector("#vaults-list").innerHTML = html;
+        this.html_list.innerHTML = html;
     }
     /**
      * Carica gli username utilizzati dall'utente sul datalist
