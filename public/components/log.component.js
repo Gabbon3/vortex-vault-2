@@ -7,7 +7,7 @@ class LogInfo extends HTMLElement {
         // -- imposto livello e messaggio in base agli attributi
         const lvl = this.getAttribute("lvl") || "success";
         const msg = this.getAttribute("msg") || "";
-        const icons = ["check", "error", "warning", "info" ];
+        const icons = ["check", "priority_high", "close", "info_i" ];
         // -- imposto la struttura HTML interna del log
         this.classList.add("log", `_${lvl}`);
         this.innerHTML = `<div class="log-container">
@@ -17,8 +17,8 @@ class LogInfo extends HTMLElement {
             <p>${msg}</p>
         </div>`;
         // -- rimuovo il log automaticamente dopo un certo periodo
-        setTimeout(() => this.classList.add("chiudi"), 7500);
-        setTimeout(() => this.remove(), 8000);
+        setTimeout(() => this.classList.add("chiudi"), 8000);
+        setTimeout(() => this.remove(), 8500);
         // -- rimuovo il log se cliccato
         this.addEventListener("click", () => {
             this.classList.add("chiudi")

@@ -4,19 +4,6 @@ export class VortexNavbar extends HTMLElement {
     constructor() {
         super();
     }
-
-    static sudo_indicator = null;
-
-    static async sudo_indicator_init() {
-        const sudo_expire = await LocalStorage.get('sudo-expire');
-        if (!sudo_expire || new Date() > sudo_expire) return;
-        // ---
-        const diff = sudo_expire.getTime() - Date.now();
-        VortexNavbar.sudo_indicator.setAttribute('class', 'sudo');
-        setTimeout(() => {
-            VortexNavbar.sudo_indicator.setAttribute('class', 'base');
-        }, diff);
-    }
     
     connectedCallback() {
         const path = window.location.pathname;
@@ -65,8 +52,6 @@ export class VortexNavbar extends HTMLElement {
                 </a>` : ''}
             </nav>
         `;
-        VortexNavbar.sudo_indicator = document.getElementById('sudo-indicator');
-        // VortexNavbar.sudo_indicator_init();
     }
 }
 // -- registro il componente nei custom elements

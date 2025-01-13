@@ -16,8 +16,12 @@
 
         @mixin navbar-color-styles($color-name, $color-value) {
             &.#{$color-name} {
-                span { color: $color-value; }
-                &:hover { background-color: rgba($color-value, 0.1); }
+                span {
+                    color: $color-value;
+                }
+                &:hover {
+                    background-color: rgba($color-value, 0.1);
+                }
             }
         }
         @each $color-name, $color-value in $colors {
@@ -36,7 +40,6 @@
             background-color: rgba($c1, 0.1);
         }
     }
-
 }
 
 vortex-navbar {
@@ -101,13 +104,13 @@ vortex-navbar {
         position: relative;
         padding: 6px 8px;
         padding-right: 20px;
-        padding-bottom: 13px;
-        border-radius: 10px;
+        padding-bottom: 10px;
+        border-radius: $br-xl;
         overflow: hidden;
         --bc-log: $bg-1;
         --i-color: $text-color;
-        -webkit-backdrop-filter: blur(5px);
-        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
         animation: bounce 500ms linear both;
         cursor: pointer;
 
@@ -128,28 +131,30 @@ vortex-navbar {
             color: $text-color;
         }
 
-        &._2 {
-            --bc-log: rgba(255, 83, 83, 0.3);
-            --i-color: rgb(255, 114, 114);
-        }
-
-        &._1 {
-            --bc-log: rgba(255, 133, 35, 0.3);
-            --i-color: rgba(255, 133, 35);
-        }
-
         &._0 {
-            --bc-log: rgba(115, 142, 84, 0.3);
-            --i-color: #738e54;
+            background-color: rgba($c-olive-green, 0.3);
+            // border: 1px solid $c1;
+            color: $c-olive-green;
+            &::after { background-color: $c-olive-green; }
         }
-
+        &._1 {
+            background-color: rgba($c-warning, 0.3);
+            // border: 1px solid $c-warning;
+            color: $c-orange;
+            &::after { background-color: $c-orange; }
+        }
+        &._2 {
+            background-color: rgba($c-danger, 0.3);
+            // border: 1px solid $c-red;
+            color: $c-red;
+            &::after { background-color: $c-red; }
+        }
         &._3 {
-            --bc-log: rgba(179, 223, 129, 0.1);
-            --i-color: #a0bd80;
+            background-color: rgba($c-mint, 0.3);
+            // border: 1px solid $c-mint;
+            color: $c-mint;
+            &::after { background-color: $c-mint; }
         }
-
-        background-color: var(--bc-log);
-        border: 1px solid var(--i-color);
 
         .i-container {
             height: 100%;
@@ -158,7 +163,6 @@ vortex-navbar {
 
             i,
             .material-symbols-rounded {
-                color: var(--i-color);
                 font-size: calc($fs-m + 8px);
                 padding: 8px;
                 border-radius: 8px;
@@ -177,13 +181,11 @@ vortex-navbar {
             left: 0;
             height: 5px;
             width: 0;
-            background-color: var(--bc-log);
         }
 
         &::after {
             width: 100%;
-            animation: log_bar 7s linear 0s 1;
-            background-color: var(--i-color);
+            animation: log_bar 8s linear 0s 1;
         }
 
         &::before {
@@ -257,7 +259,7 @@ vortex-navbar {
         background-color: $bg-3;
         transition: 0.15s;
         flex-grow: 1;
-        
+
         &:hover {
             background-color: $bg-4;
             // box-shadow: 0 0 4px 0px $bg-4;
@@ -339,19 +341,19 @@ colored-password {
         font-family: $monospace !important;
 
         &.az {
-            color: bisque
+            color: bisque;
         }
 
         &.AZ {
-            color: rgb(164, 164, 30)
+            color: rgb(164, 164, 30);
         }
 
         &._09 {
-            color: salmon
+            color: salmon;
         }
 
         &._s {
-            color: lightskyblue
+            color: lightskyblue;
         }
     }
 
@@ -389,32 +391,33 @@ password-strength-bar {
             background-color: rgba($c-danger, 0.3);
             color: $c-danger;
         }
-    
+
         &._2 {
             background-color: rgba($c-warning, 0.3);
             color: $c-warning;
         }
-    
+
         &._3 {
             background-color: rgba($c2, 0.3);
             color: $c2;
         }
-    
+
         &._4 {
             background-color: rgba($c1, 0.3);
             color: $c1;
         }
     }
-
 }
 
-#devices-list, #passkey-list {
+#devices-list,
+#passkey-list {
     display: flex;
     flex-direction: column;
     gap: 7px;
 }
 
-device-list-item, passkey-list-item {
+device-list-item,
+passkey-list-item {
     display: flex;
     flex-direction: column;
     gap: $br-m;
@@ -448,7 +451,8 @@ device-list-item, passkey-list-item {
     }
 }
 
-#qrcode-2fa-secret, #qrcode-fsi {
+#qrcode-2fa-secret,
+#qrcode-fsi {
     display: block;
     margin: 0 auto;
     height: 0;
