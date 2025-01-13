@@ -6,12 +6,7 @@ class Footer extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
         <!-- container dei log -->
-        <div id="logs_container">
-            <log-info lvl="0" msg="Test, its just a test" class="log _0"></log-info>
-            <log-info lvl="1" msg="Test, its just a test" class="log _1"></log-info>
-            <log-info lvl="2" msg="Test, its just a test" class="log _2"></log-info>
-            <log-info lvl="3" msg="Test, its just a test" class="log _3"></log-info>
-        </div>
+        <div id="logs_container"></div>
 
         <!-- modal backdrop -->
         <div id="modal-backdrop"></div>
