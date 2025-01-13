@@ -14,25 +14,14 @@
         transition: 0.1s;
         cursor: pointer;
 
-        &.red {
-            span { color: $c-red }
-            &:hover { background-color: rgba($c-red, 0.1); }
+        @mixin navbar-color-styles($color-name, $color-value) {
+            &.#{$color-name} {
+                span { color: $color-value; }
+                &:hover { background-color: rgba($color-value, 0.1); }
+            }
         }
-        &.orange {
-            span { color: $c-orange }
-            &:hover { background-color: rgba($c-orange, 0.1); }
-        }
-        &.yellow {
-            span { color: $c-yellow }
-            &:hover { background-color: rgba($c-yellow, 0.1); }
-        }
-        &.lightblue {
-            span { color: $c-lightblue }
-            &:hover { background-color: rgba($c-lightblue, 0.1); }
-        }
-        &.secondary {
-            span { color: $text-color-15; }
-            &:hover { background-color: $bg-6; }
+        @each $color-name, $color-value in $colors {
+            @include navbar-color-styles($color-name, $color-value);
         }
 
         i {
@@ -276,17 +265,13 @@ vortex-navbar {
             display: flex;
             align-items: center;
 
-            &.red {
-                color: $c-danger;
+            @mixin color-vault-styles($color-name, $color-value) {
+                &.#{$color-name} {
+                    color: $color-value;
+                }
             }
-            &.orange {
-                color: $c-orange;
-            }
-            &.lightblue {
-                color: $c-lightblue;
-            }
-            &.yellow {
-                color: $c-yellow;
+            @each $color-name, $color-value in $colors {
+                @include color-vault-styles($color-name, $color-value);
             }
         }
 

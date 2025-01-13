@@ -16,6 +16,7 @@ export class HtmlSecretsRender {
         if (secret_type === 0) return this.vault(vals);
         if (secret_type === 1) return this.note(vals);
         if (secret_type === 2) return this.credit_card(vals);
+        if (secret_type === 3) return this.public_key(vals);
         return false;
     }
     /**
@@ -28,6 +29,7 @@ export class HtmlSecretsRender {
         if (secret_type === 0) return "orange";
         if (secret_type === 1) return "lightblue";
         if (secret_type === 2) return "yellow";
+        if (secret_type === 3) return "purple";
         return false;
     }
     /**
@@ -73,6 +75,18 @@ export class HtmlSecretsRender {
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${this.id}"></password-strength-bar>
 </div>
+<!-- OTP/TOTP -->
+<div class="isle bg-4 mb-2">
+    <label for="totp-${this.id}">
+        <span class="material-symbols-rounded">phonelink_lock</span>
+        OTP/TOTP
+    </label>
+    <div class="flex gap-50">
+        <input name="O" type="text" class="input-text mono" id="totp-${this.id}" value="${vals.O ?? ''}" autocomplete="off">
+        <${btn} target="totp-${this.id}"></${btn}>
+    </div>
+    ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
+</div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
@@ -117,6 +131,71 @@ export class HtmlSecretsRender {
 </div>`
     }
 
+    /**
+     * HTML PER LE CHIAVI ASIMMETRICHE
+     * @param {object} vals 
+     * @return {string} HTML
+     */
+    static public_key(vals = {}) {
+        this.id++;
+        const update = vals.T !== undefined;
+        return `<div class="isle bg-4 mb-2">
+    <label for="titolo-${this.id}">
+        <span class="material-symbols-rounded">tag</span>
+        Title
+    </label>
+    <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+</div>
+<!-- TIPO DI CHIAVE == KT -->
+<div class="isle bg-4 mb-2">
+    <label for="key-type-${this.id}">
+        <span class="material-symbols-rounded">category</span>
+        Key type
+    </label>
+    <select name="KT" id="key-type-${this.id}" class="input-text" required>
+        <option value="RSA" ${vals.KT === 'RSA' ? 'selected' : ''}>RSA</option>
+        <option value="ECDSA" ${vals.KT === 'ECDSA' ? 'selected' : ''}>ECDSA</option>
+        <option value="ED25519" ${vals.KT === 'ED25519' ? 'selected' : ''}>ED25519</option>
+        <option value="ECDH" ${vals.KT === 'ECDH' ? 'selected' : ''}>ECDH</option>
+    </select>
+</div>
+<!-- CHIAVE PRIVATA = R -->
+<div class="isle bg-4 mb-2">
+    <label for="private-key-${this.id}">
+        <span class="material-symbols-rounded">key_vertical</span>
+        Private Key
+    </label>
+    <textarea name="R" type="text" class="input-text mono" id="private-key-${this.id}" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
+    <div class="flex gap-50 mt-2">
+        <btn-copy target="private-key-${this.id}"></btn-copy>
+        <btn-paste target="private-key-${this.id}"></btn-paste>
+    </div>
+</div>
+<!-- CHIAVE PUBBLICA = P -->
+<div class="isle bg-4 mb-2">
+    <label for="public-key-${this.id}">
+        <span class="material-symbols-rounded">public</span>
+        Public Key
+    </label>
+    <textarea name="P" type="text" class="input-text mono" id="public-key-${this.id}" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
+    <div class="flex gap-50 mt-2">
+        <btn-copy target="public-key-${this.id}"></btn-copy>
+        <btn-paste target="public-key-${this.id}"></btn-paste>
+    </div>
+</div>
+<!-- CUSTOM -->
+<div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
+    <!-- ... -->
+</div>
+<!-- NOTE -->
+<div class="isle bg-4 mb-2">
+    <label for="note-${this.id}">
+        <span class="material-symbols-rounded">info</span>
+        Note
+    </label>
+    <textarea name="N" id="note-${this.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
+</div>`;
+    }
 
     /**
      * HTML PER CARDE DI CREDITO

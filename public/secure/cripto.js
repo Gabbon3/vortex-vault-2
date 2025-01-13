@@ -142,6 +142,62 @@ export class Cripto {
         // -- restituisco la chiave derivata come Uint8Array
         return new Uint8Array(await crypto.subtle.exportKey('raw', key));
     }
+
+    /**
+     * Genera una coppia di chiavi asimmetriche in formato PEM in base al tipo di chiave e alla lunghezza.
+     * Supporta RSA, ECDSA ed ED25519.
+     * 
+     * @param {string} key_type - Il tipo di chiave da generare. Può essere 'RSA', 'ECDSA', 'ED25519'.
+     * @param {number} [key_length=2048] - La lunghezza della chiave, utilizzato solo per RSA (es. 2048, 4096). Ignorato per ECDSA e ED25519.
+     * @returns {Promise<Object>} - Oggetto contenente la chiave privata e la chiave pubblica in formato PEM.
+     * @throws {Error} - Se il tipo di chiave non è supportato o c'è un errore nella generazione.
+     */
+    static async generate_key_pair(key_type, key_length = 2048, as_pem = false) {
+        let algorithm;
+        switch (key_type) {
+            case 'RSA':
+                // Configurazione RSA
+                algorithm = {
+                    name: 'RSA-OAEP',
+                    modulusLength: key_length, // RSA 2048 o 4096
+                    publicExponent: new Uint8Array([0x01, 0x00, 0x01]), // 65537
+                    hash: { name: 'SHA-256' }
+                };
+                break;
+
+            case 'ECDSA':
+                // Configurazione ECDSA con curva P-256
+                algorithm = {
+                    name: 'ECDSA',
+                    namedCurve: 'P-256', // Può essere cambiato a P-384 o P-521
+                };
+                break;
+
+            default:
+                return -1;
+        }
+        try {
+            // definisco l'utilizzo della chiave
+            const usages = key_type === 'RSA' ? ['encrypt', 'decrypt'] : ['sign', 'verify'];
+            // Genera la coppia di chiavi
+            const key_pair = await crypto.subtle.generateKey(
+                algorithm,
+                true, // Le chiavi possono essere esportate
+                usages, // Le operazioni per RSA, ECDSA e ED25519
+            );
+            // Estrai la chiave pubblica e privata in formato ArrayBuffer
+            const public_key = await crypto.subtle.exportKey('spki', key_pair.publicKey);
+            const private_key = await crypto.subtle.exportKey('pkcs8', key_pair.privateKey);
+            // Converte le chiavi in formato PEM
+            return {
+                public: as_pem ? Bytes.pem.encode(public_key, 'PUBLIC KEY') : public_key,
+                private: as_pem ? Bytes.pem.encode(private_key, 'PRIVATE KEY') : private_key,
+            };
+        } catch (error) {
+            console.warn('Error generating key pair', error);
+            throw new Error('Error generating key pair');
+        }
+    }
 }
 
 window.Cripto = Cripto;

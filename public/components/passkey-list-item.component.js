@@ -24,7 +24,7 @@ class PasskeyListItem extends HTMLElement {
         this.innerHTML = `
             <div class="isle bg-5">
                 <span class="token-id">
-                    <span class="material-symbols-rounded">tag</span>
+                    <span class="material-symbols-rounded">fingerprint</span>
                     <i>${await Cripto.hash(id, { algorithm: 'SHA-1', encoding: 'base62' })}</i>
                 </span>
                 <div class="flex gap-50 y-center d-row mt-2">

@@ -59,7 +59,7 @@ export class Bytes {
         /**
          * Converte una stringa in base32 in un array di byte
          * @param {string} base32String
-         * @returns
+         * @returns {Uint8Array}
          */
         decode(base32String) {
             const base32Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -248,6 +248,18 @@ export class Bytes {
             return n;
         },
     };
+
+    static pem = {
+        /**
+         * Converte dei dati binari rappresentati una chiave pubblica o privata in formato pem
+         * @param {Uint8Array|ArrayBuffer} blob 
+         * @returns 
+         */
+        encode(blob, label) {
+            const base64 = Bytes.base64.encode(blob);
+            return `-----BEGIN ${label}-----\n${base64}\n-----END ${label}-----`;
+        }
+    }
 
     /**
      * Unisce n Uint8Array in un unico Uint8Array

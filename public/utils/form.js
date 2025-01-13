@@ -13,7 +13,7 @@ export class Form {
         const json = {};
         for (let i = 0; i < elements.length; i++) {
             const element = elements[i];
-            if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+            if (element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.tagName === "SELECT") {
                 // ---
                 const name = element.getAttribute('name');
                 if (!name) continue;
@@ -65,3 +65,5 @@ export class Form {
      * @param {Object} elements - un oggetto che contiene gli input del form indicati tramite i loro "name"
      */
 }
+
+window.Form = Form;

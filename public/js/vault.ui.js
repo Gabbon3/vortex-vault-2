@@ -23,8 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const update_secrets_type_input = document.getElementById('update-secrets-type');
     // windows
     const win_create_vault = document.getElementById('win-create-vault');
-    const title_create_vault = document.getElementById('create-vault-icon');
-    const icon_create_vault = document.getElementById('create-vault-title');
+    const title_create_vault = document.getElementById('create-vault-title');
     // const win_update_vault = document.getElementById('win-update-vault');
     // ST = SECRET TYPE
     /**
@@ -36,8 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         VaultUI.html_used_usernames();
         // ---
         win_create_vault.setAttribute('class', 'window m pr show orange');
-        title_create_vault.textContent = "encrypted";
-        icon_create_vault.textContent = "New Login";
+        title_create_vault.textContent = "New Login";
     });
     /**
      * ADD NOTE (ST 1)
@@ -47,8 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.note();
         // ---
         win_create_vault.setAttribute('class', 'window m pr show lightblue');
-        title_create_vault.textContent = "sticky_note_2";
-        icon_create_vault.textContent = "New Note";
+        title_create_vault.textContent = "New Note";
     });
     /**
      * ADD CARD (2)
@@ -58,10 +55,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         create_dinamic_secrets.innerHTML = HtmlSecretsRender.credit_card();
         // ---
         win_create_vault.setAttribute('class', 'window m pr show yellow');
-        title_create_vault.textContent = "credit_card";
-        icon_create_vault.textContent = "New Card";
+        title_create_vault.textContent = "New Card";
     });
     /**
+     * ADD ASYMMETRIC KEY (3)
+     */
+    document.getElementById('btn-add-asimmetric').addEventListener('click', () => {
+        secrets_type_input.value = 3;
+        create_dinamic_secrets.innerHTML = HtmlSecretsRender.public_key();
+        // ---
+        win_create_vault.setAttribute('class', 'window m pr show purple');
+        title_create_vault.textContent = "New Public keys";
+    });
+    /**asymmetric_key
      * CREATE VAULT
      */
     Form.onsubmit("form-create-vault", async (form, elements) => {
@@ -319,6 +325,7 @@ export class VaultUI {
      * @param {string} order - az, za, dateup, datedown, secureup, securedown
      */
     static html_vaults(vaults, order = 'az') {
+        if (vaults.length === 0) return document.querySelector("#vaults-list").innerHTML = '';
         let html = ``;
         const get_checkpoint = (order, vault) => {
             return order === 'az' || order === 'za' ?

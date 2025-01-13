@@ -17,11 +17,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32x32.png">
     <!-- Manifesto del sito web (per miglior supporto su Android e PWA) -->
     <link rel="manifest" href="./img/site.webmanifest">
-    <!-- Meta tag per la visualizzazione su Windows (opzionale) -->
-    <meta name="msapplication-TileImage" content="./img/mstile-150x150.png">
-    <meta name="msapplication-TileColor" content="#171414"> <!-- Colore di sfondo per la Tile di Windows -->
-    <!-- Safari Pinned Tab Icon -->
-    <link rel="mask-icon" href="./img/safari-pinned-tab.svg" color="#171414"> <!-- Colore per Safari Pinned Tab -->
     <!-- END ICO -->
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
@@ -70,7 +65,7 @@
                         <span class="material-symbols-rounded">calendar_today</span>
                     </button>
                     <button class="btn secondary vaults-view" active="false" title="Change list view">
-                        <span class="material-symbols-rounded">dashboard</span>
+                        <span class="material-symbols-rounded">dashboard_2</span>
                     </button>
                 </div>
                 <hr class="my-3">
@@ -87,6 +82,13 @@
                     <button class="btn yellow open" id="btn-add-card" data-target-open="win-create-vault" title="Create new Credit Card">
                         <span class="material-symbols-rounded">credit_card</span>
                         Card
+                    </button>
+                    <button class="btn purple open" id="btn-add-asimmetric" data-target-open="win-create-vault" title="Save new Asymmetric key pair">
+                        <div class="flex">
+                            <span class="material-symbols-rounded trans rotate _180">key_vertical</span>
+                            <span class="material-symbols-rounded" style="margin-left: -10px;">key_vertical</span>
+                        </div>
+                        Public keys
                     </button>
                     <button class="btn primary open last" data-target-open="win-psw-generator" title="Password Generator">
                         <span class="material-symbols-rounded">key_vertical</span>
@@ -105,7 +107,7 @@
     <div class="window m pr" id="win-create-vault">
         <div class="flex y-center">
             <h2 class="icon">
-                <span class="material-symbols-rounded" id="create-vault-icon">encrypted_add</span>
+                <span class="material-symbols-rounded">encrypted_add</span>
                 <span id="create-vault-title"></span>
             </h2>
             <button class="btn t close l last" data-target-close="win-create-vault">
@@ -183,7 +185,7 @@
     <!-- 
     PASSKEY
     -->
-    <div class="window m pl" id="win-passkey">
+    <div class="window red m pl" id="win-passkey">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">passkey</span>

@@ -35,7 +35,7 @@ class DeviceListItem extends HTMLElement {
         // -- imposto la struttura HTML interna del log
         this.innerHTML = `
             <span class="token-id">
-                <span class="material-symbols-rounded">tag</span>
+                <span class="material-symbols-rounded">fingerprint</span>
                 <i>${await Cripto.hash(token_id, { algorithm: 'SHA-1', encoding: 'base62' })}</i>
             </span>
             <div class="flex gap-50 d-row">

@@ -2,13 +2,32 @@ $c1: #878e54;
 $c2: #738e54;
 $c3: #35322A;
 // colori
-$c-red: #ee7184;
-$c-danger: $c-red;
+$c-danger: #ee7184;
+$c-red: #F7A7A0;
 $c-warning: #eead71;
 $-c-orange-red: #D63B29;
-$c-lightblue: #7dbaff;
+$c-blue: #7dbaff;
+$c-lightblue: #A8D8FF;
 $c-yellow: #eec471;
 $c-orange: #e59e7a;
+$c-peach: #FFD6A5;
+$c-purple: #D3B4FF;
+$c-pink: #FFB7C5;
+$c-mint: #AEE5D8;
+$c-lightgray: #E0E0E0;
+// ----
+$colors: (
+    red: $c-red,
+    yellow: $c-yellow,
+    orange: $c-orange,
+    peach: $c-peach,
+    purple: $c-purple,
+    pink: $c-pink,
+    mint: $c-mint,
+    blue: $c-blue,
+    lightblue: $c-lightblue,
+    lightgray: $c-lightgray,
+);
 // font
 $font-family: 'Rubik', sans-serif;
 $monospace: 'JetBrains Mono', monospace;

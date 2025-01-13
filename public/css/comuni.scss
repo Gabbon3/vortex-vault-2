@@ -1,14 +1,17 @@
 .title-icon,
-label, .label {
+label,
+.label {
     display: flex;
     gap: 5px;
     align-items: center;
 }
 
-label, .label {
+label,
+.label {
     .material-symbols-rounded {
         color: $c1;
     }
+
     margin: 7px 0 7px 0;
 
     input.input-text {
@@ -36,10 +39,12 @@ label, .label {
     }
 
     $i: 25;
+
     @while $i < 300 {
         &.gap-#{$i} {
             @include gap($i);
         }
+
         $i: $i + 25;
     }
 
@@ -98,22 +103,28 @@ $spacers: (
     .m-#{$key} {
         margin: $value !important;
     }
+
     .mt-#{$key} {
         margin-top: $value !important;
     }
+
     .mr-#{$key} {
         margin-right: $value !important;
     }
+
     .mb-#{$key} {
         margin-bottom: $value !important;
     }
+
     .ml-#{$key} {
         margin-left: $value !important;
     }
+
     .mx-#{$key} {
         margin-left: $value !important;
         margin-right: $value !important;
     }
+
     .my-#{$key} {
         margin-top: $value !important;
         margin-bottom: $value !important;
@@ -139,7 +150,7 @@ h5 {
             color: $c1;
 
             &.warning {
-                color: $c-warning;
+                color: $c-warning !important;
             }
         }
     }
@@ -156,6 +167,7 @@ h5 {
     &.warn {
         color: $c-warning !important;
     }
+
     &.danger {
         color: $c-danger !important;
     }
@@ -217,7 +229,7 @@ hr {
 
     &.dashed {
         background-color: transparent;
-        border-bottom: 1px dashed $border-color; 
+        border-bottom: 1px dashed $border-color;
     }
 
     &.s {
@@ -242,6 +254,10 @@ hr {
     &:disabled {
         opacity: 0.5;
         cursor: default;
+    }
+
+    &.gap-0 {
+        gap: 0;
     }
 
     &.primary {
@@ -281,31 +297,19 @@ hr {
         }
     }
 
-    &.lightblue {
-        background-color: rgba($c-lightblue, 0.2);
-        color: $c-lightblue;
+    @mixin button-color-styles($color-name, $color-value) {
+        &.#{$color-name} {
+            background-color: rgba($color-value, 0.2);
+            color: $color-value;
 
-        &:hover {
-            background-color: rgba($c-lightblue, 0.3);
+            &:hover {
+                background-color: rgba($color-value, 0.3);
+            }
         }
     }
 
-    &.yellow {
-        background-color: rgba($c-yellow, 0.2);
-        color: $c-yellow;
-
-        &:hover {
-            background-color: rgba($c-yellow, 0.3);
-        }
-    }
-
-    &.orange {
-        background-color: rgba($c-orange, 0.2);
-        color: $c-orange;
-
-        &:hover {
-            background-color: rgba($c-orange, 0.3);
-        }
+    @each $color-name, $color-value in $colors {
+        @include button-color-styles($color-name, $color-value);
     }
 
     &.t {
@@ -356,10 +360,12 @@ hr {
     background-color: $bg-3;
     transition: all 200ms cubic-bezier(1, 0, 1, 1);
     opacity: 0;
+
     // posizione iniziale top
     &.pt {
         top: -100%;
     }
+
     // posizione iniziale sinistra
     &.pl {
         top: 50%;
@@ -373,6 +379,7 @@ hr {
             transform: translate(50%, -50%) scale(1);
         }
     }
+
     // posizione iniziale destra
     &.pr {
         top: 50%;
@@ -405,99 +412,132 @@ hr {
     /*
     COLORI PRINCIPALI DELLA FINESTRA
     */
-    &.lightblue {
-        h2 .material-symbols-rounded, h3 .material-symbols-rounded { color: $c-lightblue !important; }
-        form {
-            label .material-symbols-rounded { color: $c-lightblue !important; }
-            .input-text {
-                &:hover { box-shadow: 0 0 0 1px rgba($c-lightblue, 0.2); }
-                &:focus { box-shadow: 0 0 0 4px rgba($c-lightblue, 0.2); }
+    @mixin color-styles($color-name, $color-value) {
+        &.#{$color-name} {
+
+            h2 .material-symbols-rounded,
+            h3 .material-symbols-rounded {
+                color: $color-value;
             }
-        }
-        .btn.primary {
-            color: $c-lightblue !important;
-            background-color: rgba($c-lightblue, 0.2);
+
+            form {
+                label .material-symbols-rounded {
+                    color: $color-value;
+                }
+
+                .input-text {
+                    &:hover {
+                        box-shadow: 0 0 0 1px rgba($color-value, 0.2);
+                    }
+
+                    &:focus {
+                        box-shadow: 0 0 0 4px rgba($color-value, 0.2);
+                    }
+                }
+            }
+
+            .btn.primary {
+                color: $color-value !important;
+                background-color: rgba($color-value, 0.2);
+
+                &:hover {
+                    background-color: rgba($color-value, 0.3);
+                }
+            }
         }
     }
-    &.yellow {
-        h2 .material-symbols-rounded, h3 .material-symbols-rounded { color: $c-yellow !important; }
-        form {
-            label .material-symbols-rounded { color: $c-yellow !important; }
-            .input-text {
-                &:hover { box-shadow: 0 0 0 1px rgba($c-yellow, 0.2); }
-                &:focus { box-shadow: 0 0 0 4px rgba($c-yellow, 0.2); }
-            }
-        }
-        .btn.primary {
-            color: $c-yellow !important;
-            background-color: rgba($c-yellow, 0.2);
-        }
-    }
-    &.orange {
-        h2 .material-symbols-rounded, h3 .material-symbols-rounded { color: $c-orange !important; }
-        form {
-            label .material-symbols-rounded { color: $c-orange !important; }
-            .input-text {
-                &:hover { box-shadow: 0 0 0 1px rgba($c-orange, 0.2); }
-                &:focus { box-shadow: 0 0 0 4px rgba($c-orange, 0.2); }
-            }
-        }
-        .btn.primary {
-            color: $c-orange !important;
-            background-color: rgba($c-orange, 0.2);
-        }
+
+    @each $color-name, $color-value in $colors {
+        @include color-styles($color-name, $color-value);
     }
 }
 
 .isle {
     padding: $br-m;
     border-radius: $br-m;
+
     // LARGHEZZA
     &.s {
         max-width: 400px;
     }
+
     &.m {
         max-width: 500px;
     }
+
     &.l {
         max-width: 600px;
     }
+
     // BACKGROUND COLOR
     &.bg-1 {
         background-color: $bg-1;
     }
+
     &.bg-2 {
         background-color: $bg-2;
     }
+
     &.bg-3 {
         background-color: $bg-3;
     }
+
     &.bg-4 {
         background-color: $bg-4;
     }
+
     &.bg-5 {
         background-color: $bg-5;
     }
+
     &.bg-6 {
         background-color: $bg-6;
     }
+
     &.bg-7 {
         background-color: $bg-7;
     }
+
     // BORDER RADIUS
     &.br-m {
         border-radius: $br-m;
     }
+
     &.br-l {
         border-radius: $br-l;
     }
+
     &.br-xl {
         border-radius: $br-xl;
     }
 }
 
-monospace, .monospace {
+// transform
+.trans {
+    &.rotate {
+        &._90 {
+            transform: rotate(90deg);
+        }
+
+        &._180 {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+monospace,
+.monospace {
     font-family: $monospace;
+}
+
+.mfa {
+    font-family: $monospace;
+    letter-spacing: 5px;
+    font-weight: normal;
+}
+
+textarea {
+    overflow: hidden;
 }
 
 .input-text {
@@ -516,6 +556,10 @@ monospace, .monospace {
 
     &.fs-l {
         font-size: $fs-l;
+    }
+    // no border
+    &.nb {
+        border-radius: 0;
     }
 
     &.uppercase {
@@ -560,6 +604,7 @@ monospace, .monospace {
     position: relative;
     // -- coefficente per gestire facilmente la dimensione
     $k: 0.6;
+
     label {
         display: block;
         width: ($k * 4em);
@@ -578,21 +623,21 @@ monospace, .monospace {
             width: ($k * 1.5em);
             height: ($k * 1.5em);
             background-color: $text-color;
-            border-radius: 50%; 
+            border-radius: 50%;
             transition: left 0.2s ease;
         }
 
     }
-    
+
     input {
         display: none;
     }
 
-    input:checked + label {
+    input:checked+label {
         background-color: rgba($c1, 0.5);
     }
 
-    input:checked + label::before {
+    input:checked+label::before {
         left: ($k * 2.25em); // 1.75em = 32px
     }
 }

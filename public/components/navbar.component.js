@@ -23,7 +23,7 @@ export class VortexNavbar extends HTMLElement {
         // ---
         this.innerHTML = `
             <nav class="navbar">
-                ${path === '/vault' ? `<a class="open" data-target-open="win-settings" title="Settings">
+                ${path === '/vault' ? `<a class="open blue" data-target-open="win-settings" title="Settings">
                     <span class="material-symbols-rounded">settings</span>
                     <i>Settings</i>
                 </a>` : ''}
@@ -49,22 +49,19 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">mobile_friendly</span>
                     <i>Device Recovery</i>
                 </a>` : ''}
-                ${path !== '/signin' ? `<a href="/signin"' title="Sign In" class="lightblue">
+                ${path !== '/signin' ? `<a href="/signin"' title="Sign In" class="mint">
                     <span class="material-symbols-rounded">login</span>
                     <i>Sign In</i>
                 </a>` : ''}
 
-                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up" class="lightblue">
+                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up" class="mint">
                     <span class="material-symbols-rounded">person_add</span>
                     <i>Sign Up</i>
                 </a>` : ''}
             </nav>
-            <span id="sudo-indicator" class="base" title="Session status">
-                <span class="material-symbols-rounded">vpn_key</span>
-            </span>
         `;
         VortexNavbar.sudo_indicator = document.getElementById('sudo-indicator');
-        VortexNavbar.sudo_indicator_init();
+        // VortexNavbar.sudo_indicator_init();
     }
 }
 // -- registro il componente nei custom elements
