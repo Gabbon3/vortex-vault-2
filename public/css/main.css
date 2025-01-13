@@ -1147,6 +1147,10 @@ vortex-navbar {
   left: 7px;
   width: calc(100% - 14px);
 }
+vortex-navbar .logo {
+  height: 30px;
+  padding: 0 10px;
+}
 
 #sudo-indicator {
   display: inline-block;

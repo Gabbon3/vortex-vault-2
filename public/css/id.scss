@@ -50,6 +50,11 @@ vortex-navbar {
     top: 7px;
     left: 7px;
     width: calc(100% - 14px);
+
+    .logo {
+        height: 30px;
+        padding: 0 10px;
+    }
 }
 
 #sudo-indicator {

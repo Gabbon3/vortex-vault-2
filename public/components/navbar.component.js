@@ -22,12 +22,13 @@ export class VortexNavbar extends HTMLElement {
         const path = window.location.pathname;
         // ---
         this.innerHTML = `
+            <img src="./img/vortex_vault_logo.png" class="logo">
             <nav class="navbar">
                 ${path === '/vault' ? `<a class="open blue" data-target-open="win-settings" title="Settings">
                     <span class="material-symbols-rounded">settings</span>
                     <i>Settings</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open orange" data-target-open="win-devices" title="Devices">
+                ${path === '/vault' ? `<a class="open purple" data-target-open="win-devices" title="Devices">
                     <span class="material-symbols-rounded">token</span>
                     <i>Devices</i>
                 </a>` : ''}
