@@ -40,6 +40,10 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">passkey</span>
                     <i>Passkey</i>
                 </a>` : ''}
+                ${path === '/vault' ? `<a class="open" data-target-open="win-psw-generator" title="Password Generator">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    <i>Generator</i>
+                </a>` : ''}
 
                 ${path !== '/vault' ? `<a href="/vault"' title="Vault" class="orange">
                     <span class="material-symbols-rounded">encrypted</span>
