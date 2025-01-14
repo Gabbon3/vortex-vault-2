@@ -155,6 +155,11 @@ h5 {
         }
     }
 
+    .logo {
+        width: $fs-xl;
+        margin: 5px;
+    }
+
     &.code {
         font-family: $monospace;
         justify-content: center;

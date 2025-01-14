@@ -185,6 +185,7 @@ vortex-navbar {
 
         &::after {
             width: 100%;
+            border-radius: 0 5px 0 0;
             animation: log_bar 8s linear 0s 1;
         }
 

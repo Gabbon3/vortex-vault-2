@@ -31,6 +31,7 @@ body {
 .pagina {
   display: block;
   margin: 0 auto;
+  margin-bottom: 25px;
   margin-top: 75px;
   max-width: 700px;
   width: 98%;
@@ -402,6 +403,14 @@ h4.icon .material-symbols-rounded.warning,
 h5.icon .material-symbols-rounded.warning {
   color: #eead71 !important;
 }
+h1 .logo,
+h2 .logo,
+h3 .logo,
+h4 .logo,
+h5 .logo {
+  width: 1.5em;
+  margin: 5px;
+}
 h1.code,
 h2.code,
 h3.code,
@@ -464,13 +473,13 @@ p.description {
 
 hr {
   margin: 1rem 0;
-  color: #584d4d;
+  color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
   border: 0;
-  border-top: 1px solid #584d4d;
+  border-top: 1px solid rgb(88.4697674419, 76.9302325581, 76.9302325581);
 }
 hr.dashed {
   background-color: transparent;
-  border-bottom: 1px dashed #584d4d;
+  border-bottom: 1px dashed rgb(88.4697674419, 76.9302325581, 76.9302325581);
 }
 hr.s {
   width: 90%;
@@ -499,17 +508,17 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: #969e5d;
+  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: #383030;
+  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
   color: #ddd;
 }
 .btn.secondary:hover {
-  background-color: #403838;
+  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
   color: #f5f5f5;
 }
 .btn.warning {
@@ -608,11 +617,11 @@ hr.s {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px #383030;
+  box-shadow: 0 0 0 4px rgb(55.7348837209, 48.4651162791, 48.4651162791);
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px #383030;
+  box-shadow: 0 0 0 6px rgb(55.7348837209, 48.4651162791, 48.4651162791);
 }
 .btn.s {
   font-size: 0.9em;
@@ -641,7 +650,7 @@ hr.s {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: #272222;
+  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
   /*
@@ -922,22 +931,22 @@ hr.s {
   background-color: #171414;
 }
 .isle.bg-2 {
-  background-color: #1f1b1b;
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
 }
 .isle.bg-3 {
-  background-color: #272222;
+  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
 }
 .isle.bg-4 {
-  background-color: #302929;
+  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
 }
 .isle.bg-5 {
-  background-color: #383030;
+  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
 }
 .isle.bg-6 {
-  background-color: #403838;
+  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
 }
 .isle.bg-7 {
-  background-color: #483f3f;
+  background-color: rgb(72.1023255814, 62.6976744186, 62.6976744186);
 }
 .isle.br-m {
   border-radius: 8px;
@@ -1004,7 +1013,7 @@ monospace,
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: #272222;
+  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -1024,7 +1033,7 @@ monospace,
   display: block;
   width: 2.4em;
   height: 1.2em;
-  background-color: #584d4d;
+  background-color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
   border-radius: 0.9em;
   cursor: pointer;
   position: relative;
@@ -1169,8 +1178,8 @@ vortex-navbar {
   align-items: center;
   padding: 5px;
   border-radius: 8px;
-  background-color: #272222;
-  box-shadow: 0 0 0 1px #383030;
+  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  box-shadow: 0 0 0 1px rgb(55.7348837209, 48.4651162791, 48.4651162791);
   position: fixed;
   top: 7px;
   left: 7px;
@@ -1203,7 +1212,7 @@ vortex-navbar .logo {
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: #1f1b1b;
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -1300,6 +1309,7 @@ vortex-navbar .logo {
 }
 #logs_container log-info::after {
   width: 100%;
+  border-radius: 0 5px 0 0;
   animation: log_bar 8s linear 0s 1;
 }
 #logs_container log-info::before {
@@ -1319,7 +1329,7 @@ vortex-navbar .logo {
   flex-wrap: wrap;
   padding: 8px;
   border-radius: 23px;
-  background-color: #1f1b1b;
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
 }
 #vaults-list .checkpoint {
   width: 100%;
@@ -1332,7 +1342,7 @@ vortex-navbar .logo {
 #vaults-list.searching {
   padding: 8px 8px 2.5px 8px;
   border-radius: 23px;
-  background-color: #1f1b1b;
+  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
   gap: 0;
 }
 #vaults-list.searching .checkpoint {
@@ -1359,12 +1369,12 @@ vortex-navbar .logo {
   cursor: pointer;
   padding: 10px;
   border-radius: 14px;
-  background-color: #272222;
+  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: #302929;
+  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -1432,7 +1442,7 @@ vortex-navbar .logo {
   margin-bottom: 0.5rem;
 }
 .custom-sections custom-vault-section {
-  background-color: #302929;
+  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
   padding: 0 7px 7px 7px;
   border-radius: 8px;
 }
@@ -1468,7 +1478,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: #272222;
+  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;
@@ -1518,7 +1528,7 @@ passkey-list-item {
   gap: 8px;
   padding: 8px;
   border-radius: 8px;
-  background-color: #302929;
+  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
 }
 device-list-item .token-id,
 passkey-list-item .token-id {

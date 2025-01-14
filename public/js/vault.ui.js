@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     // ---
     await VaultUI.init();
-    VaultUI.html_list = document.getElementById("vaults-list");
     // add
     const create_dinamic_secrets = document.getElementById('dinamic-secrets');
     const update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
@@ -72,11 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * Abilita la vista degli elementi se uno solo per categoria o tutti
      */
-    document.getElementById('btn-view-switch').addEventListener('click', (e) => {
+    VaultUI.btn_category.addEventListener('click', (e) => {
         VaultUI.view_indicator = VaultUI.view_indicator + 1 > 3 ? -1 : VaultUI.view_indicator + 1;
         // -- colore pulsante per mostrare tramite la ui la vista corrente
         const color = HtmlSecretsRender.get_color(VaultUI.view_indicator) ?? 'secondary';
-        e.currentTarget.setAttribute('class', `btn ${color}`);
+        VaultUI.btn_category.setAttribute('class', `btn ${color}`);
         VaultUI.html_vaults();
     });
     /**
@@ -283,10 +282,26 @@ export class VaultUI {
     static view_indicator = -1; // usata per mostrare tutte o alcune categorie di segreti
     static current_order = 'az';
     static html_list = null;
+    // pulsante categoria
+    static btn_category = null;
+    static vault_counter_element = null;
+    // ---
+    static html_initialized = false;
+    /**
+     * Inizializza gli elementi html utili al funzionamento
+     */
+    static init_html() {
+        if (this.html_initialized) return;
+        this.html_list = document.getElementById("vaults-list");
+        this.btn_category = document.getElementById('btn-view-switch');
+        this.vault_counter_element = this.btn_category.children[1];
+        this.html_initialized = true;
+    }
     /**
      * inizializza tutto il necessario per avviare il vault se possibile
      */
     static async init() {
+        this.init_html();
         // - controllo se è possibile usare il vault configurando i segreti
         const configured = await VaultService.config_secrets();
         let timeout = 0;
@@ -352,6 +367,8 @@ export class VaultUI {
         // -- preparo i vaults da iterare
         const filter_condition = (vault) => { return secret_type_view === -1 || secret_type_view === (vault.secrets.ST ?? 0)};
         const vaults_list = vaults.filter((vault) => filter_condition(vault));
+        // -- mostro il numero totale di elementi disponibili
+        this.vault_counter_element.textContent = vaults_list.length;
         // -- se non ci sono vault da mostrare termino qui
         if (vaults_list.length === 0) return this.html_list.innerHTML = '<span class="checkpoint">No vaults here.</span>';
 

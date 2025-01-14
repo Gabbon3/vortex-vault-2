@@ -8,8 +8,8 @@ export class VortexNavbar extends HTMLElement {
     connectedCallback() {
         const path = window.location.pathname;
         // ---
+        // <img src="./img/vortex_vault_logo.png" class="logo">
         this.innerHTML = `
-            <img src="./img/vortex_vault_logo.png" class="logo">
             <nav class="navbar">
                 ${path === '/vault' ? `<a class="open blue" data-target-open="win-settings" title="Settings">
                     <span class="material-symbols-rounded">settings</span>
