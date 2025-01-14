@@ -234,7 +234,7 @@ export class HtmlSecretsRender {
         Card number
     </label>
     <div class="flex gap-50">
-        <input name="CN" type="text" class="input-text mono" id="card-number-${this.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
+        <input name="CN" type="text" inputmode="numeric" maxlength="16" class="input-text mono" id="card-number-${this.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
         <${btn} target="card-number-${this.id}"></${btn}>
     </div>
 </div>
@@ -254,7 +254,7 @@ export class HtmlSecretsRender {
             <span class="material-symbols-rounded">pin</span>
             CVV
         </label>
-        <input name="CV" type="text" class="input-text mono" id="cvv-${this.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
+        <input name="CV" type="text" inputmode="numeric" class="input-text mono" id="cvv-${this.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
     </div>
 </div>
 <!-- CUSTOM -->
