@@ -370,7 +370,7 @@ export class VaultUI {
         // -- mostro il numero totale di elementi disponibili
         this.vault_counter_element.textContent = vaults_list.length;
         // -- se non ci sono vault da mostrare termino qui
-        if (vaults_list.length === 0) return this.html_list.innerHTML = '<span class="checkpoint">No vaults here.</span>';
+        if (vaults_list.length === 0) return this.html_list.innerHTML = '';
 
         // -- ordino
         const order_function = this.order_functions[order];
