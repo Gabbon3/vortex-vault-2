@@ -18,56 +18,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     await VaultUI.init();
     // add
     const create_dinamic_secrets = document.getElementById('dinamic-secrets');
-    const update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
     // update
     const secrets_type_input = document.getElementById('secrets-type');
     const update_secrets_type_input = document.getElementById('update-secrets-type');
+    const update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
     // windows
     const win_create_vault = document.getElementById('win-create-vault');
     const title_create_vault = document.getElementById('create-vault-title');
+    const icon_create_vault = document.getElementById('create-vault-icon');
     // const win_update_vault = document.getElementById('win-update-vault');
-    // ST = SECRET TYPE
-    /**
-     * ADD VAULT (ST 0)
-     */
-    document.getElementById('btn-add-vault').addEventListener('click', () => {
-        create_dinamic_secrets.innerHTML = HtmlSecretsRender.vault();
-        secrets_type_input.value = 0;
-        VaultUI.html_used_usernames();
-        // ---
-        win_create_vault.setAttribute('class', 'window m pr show orange');
-        title_create_vault.textContent = "New Login";
-    });
-    /**
-     * ADD NOTE (ST 1)
-     */
-    document.getElementById('btn-add-note').addEventListener('click', () => {
-        secrets_type_input.value = 1;
-        create_dinamic_secrets.innerHTML = HtmlSecretsRender.note();
-        // ---
-        win_create_vault.setAttribute('class', 'window m pr show lightblue');
-        title_create_vault.textContent = "New Note";
-    });
-    /**
-     * ADD CARD (2)
-     */
-    document.getElementById('btn-add-card').addEventListener('click', () => {
-        secrets_type_input.value = 2;
-        create_dinamic_secrets.innerHTML = HtmlSecretsRender.credit_card();
-        // ---
-        win_create_vault.setAttribute('class', 'window m pr show yellow');
-        title_create_vault.textContent = "New Card";
-    });
-    /**
-     * ADD ASYMMETRIC KEY (3)
-     */
-    document.getElementById('btn-add-asimmetric').addEventListener('click', () => {
-        secrets_type_input.value = 3;
-        create_dinamic_secrets.innerHTML = HtmlSecretsRender.public_key();
-        // ---
-        win_create_vault.setAttribute('class', 'window m pr show purple');
-        title_create_vault.textContent = "New Asymmetric keys";
-    });
+    const addButtonListeners = () => {
+        const config = [
+            { id: 'btn-add-vault', type: 0, render: HtmlSecretsRender.vault, color: 'orange', title: "New Login" },
+            { id: 'btn-add-note', type: 1, render: HtmlSecretsRender.note, color: 'lightblue', title: "New Note" },
+            { id: 'btn-add-card', type: 2, render: HtmlSecretsRender.credit_card, color: 'yellow', title: "New Card" },
+            { id: 'btn-add-asimmetric', type: 3, render: HtmlSecretsRender.public_key, color: 'purple', title: "New Asymmetric keys" },
+        ];
+        // -- aggiungo i listeners
+        config.forEach(({ id, type, render, color, title }) => {
+            document.getElementById(id).addEventListener('click', () => {
+                secrets_type_input.value = type;
+                create_dinamic_secrets.innerHTML = render();
+                win_create_vault.setAttribute('class', 'window m pr show ' + color);
+                title_create_vault.textContent = title;
+                icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
+            });
+        });
+    };
+    addButtonListeners();
     /**
      * Abilita la vista degli elementi se uno solo per categoria o tutti
      */

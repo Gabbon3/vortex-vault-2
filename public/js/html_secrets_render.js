@@ -3,6 +3,22 @@ import { date } from "../utils/dateUtils.js";
 export class HtmlSecretsRender {
     static id = 0;
     /**
+     * In base al tipo di segreto, viene restituita la corrispettiva icona (html completo)
+     * @param {number} secret_type 
+     * @returns {string}
+     */
+    static get_html_icon(secret_type) {
+        secret_type = Number(secret_type);
+        // ---
+        let icon = null;
+        if (secret_type === 0) icon = 'encrypted';
+        else if (secret_type === 1) icon = 'sticky_note_2';
+        else if (secret_type === 2) icon = 'credit_card';
+        if (icon) return `<span class="material-symbols-rounded">${icon}</span>`;
+        // ---
+        if (secret_type === 3) return `<div class="flex"><span class="material-symbols-rounded trans rotate _180">key_vertical</span><span class="material-symbols-rounded" style="margin-left: -15px;">key_vertical</span></div>`;
+    }
+    /**
      * Restituisce l'html appropriato in base al tipo di dati richiesto
      * vault: 0
      * note: 1
@@ -38,52 +54,52 @@ export class HtmlSecretsRender {
      * @return {string} HTML
      */
     static vault(vals = {}) {
-        this.id++;
+        HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         const btn = `btn-${update ? 'copy' : 'paste'}`;
         return `<div class="isle bg-4 mb-2">
-    <label for="titolo-${this.id}">
+    <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Title
     </label>
     <div class="flex gap-50">
-        <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required>
-        <${btn} target="titolo-${this.id}"></${btn}>
+        <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+        <${btn} target="titolo-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- USERNAME -->
 <div class="isle bg-4 mb-2">
-    <label for="username-${this.id}">
+    <label for="username-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
         Username
     </label>
     <div class="flex gap-50">
-        <input name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${this.id}" value="${vals.U ?? ''}" autocomplete="off">
-        <${btn} target="username-${this.id}"></${btn}>
+        <input name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${HtmlSecretsRender.id}" value="${vals.U ?? ''}" autocomplete="off">
+        <${btn} target="username-${HtmlSecretsRender.id}"></${btn}>
     </div>
     ${!update ? '<datalist id="used-username"></datalist>' : ''}
 </div>
 <!-- PASSWORD -->
 <div class="isle bg-4 mb-2">
-    <label for="password-${this.id}">
+    <label for="password-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">key_vertical</span>
         Password
     </label>
     <div class="flex gap-50 mb-2">
-        <input name="P" type="text" class="input-text mono" id="password-${this.id}" value="${vals.P ?? ''}" autocomplete="off" required>
-        <${btn} target="password-${this.id}"></${btn}>
+        <input name="P" type="text" class="input-text mono" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
+        <${btn} target="password-${HtmlSecretsRender.id}"></${btn}>
     </div>
-    <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${this.id}"></password-strength-bar>
+    <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
 </div>
 <!-- OTP/TOTP -->
 <div class="isle bg-4 mb-2">
-    <label for="totp-${this.id}">
+    <label for="totp-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">phonelink_lock</span>
         OTP/TOTP
     </label>
     <div class="flex gap-50">
-        <input name="O" type="text" class="input-text mono" id="totp-${this.id}" value="${vals.O ?? ''}" autocomplete="off">
-        <${btn} target="totp-${this.id}"></${btn}>
+        <input name="O" type="text" class="input-text mono" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
+        <${btn} target="totp-${HtmlSecretsRender.id}"></${btn}>
     </div>
     ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
 </div>
@@ -93,11 +109,11 @@ export class HtmlSecretsRender {
 </div>
 <!-- NOTE -->
 <div class="isle bg-4 mb-2">
-    <label for="note-${this.id}">
+    <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${this.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
+    <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
 </div>`;
     }
 
@@ -108,22 +124,22 @@ export class HtmlSecretsRender {
      * @return {string} HTML
      */
     static note(vals = {}) {
-        this.id++;
+        HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         return `<div class="isle bg-4 mb-2">
-    <label for="titolo-${this.id}">
+    <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Title
     </label>
-    <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+    <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
 <!-- NOTE -->
 <div class="isle bg-4">
-    <label for="note-${this.id}">
+    <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${this.id}" class="input-text" rows="16">${vals.N ?? ''}</textarea>
+    <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="16">${vals.N ?? ''}</textarea>
 </div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emt" id="${update ? 'update-' : ''}custom-sections-vault">
@@ -137,22 +153,22 @@ export class HtmlSecretsRender {
      * @return {string} HTML
      */
     static public_key(vals = {}) {
-        this.id++;
+        HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         return `<div class="isle bg-4 mb-2">
-    <label for="titolo-${this.id}">
+    <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Title
     </label>
-    <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+    <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
 <!-- TIPO DI CHIAVE == KT -->
 <div class="isle bg-4 mb-2">
-    <label for="key-type-${this.id}">
+    <label for="key-type-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">category</span>
         Key type
     </label>
-    <select name="KT" id="key-type-${this.id}" class="input-text" required>
+    <select name="KT" id="key-type-${HtmlSecretsRender.id}" class="input-text" required>
         <option value="RSA" ${vals.KT === 'RSA' ? 'selected' : ''}>RSA</option>
         <option value="ECDSA" ${vals.KT === 'ECDSA' ? 'selected' : ''}>ECDSA</option>
         <option value="ED25519" ${vals.KT === 'ED25519' ? 'selected' : ''}>ED25519</option>
@@ -161,26 +177,26 @@ export class HtmlSecretsRender {
 </div>
 <!-- CHIAVE PRIVATA = R -->
 <div class="isle bg-4 mb-2">
-    <label for="private-key-${this.id}">
-        <span class="material-symbols-rounded">key_vertical</span>
+    <label for="private-key-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">key</span>
         Private Key
     </label>
-    <textarea name="R" type="text" class="input-text mono" id="private-key-${this.id}" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
+    <textarea name="R" type="text" class="input-text mono" id="private-key-${HtmlSecretsRender.id}" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
     <div class="flex gap-50 mt-2">
-        <btn-copy target="private-key-${this.id}"></btn-copy>
-        <btn-paste target="private-key-${this.id}"></btn-paste>
+        <btn-copy target="private-key-${HtmlSecretsRender.id}"></btn-copy>
+        <btn-paste target="private-key-${HtmlSecretsRender.id}"></btn-paste>
     </div>
 </div>
 <!-- CHIAVE PUBBLICA = P -->
 <div class="isle bg-4 mb-2">
-    <label for="public-key-${this.id}">
+    <label for="public-key-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">public</span>
         Public Key
     </label>
-    <textarea name="P" type="text" class="input-text mono" id="public-key-${this.id}" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
+    <textarea name="P" type="text" class="input-text mono" id="public-key-${HtmlSecretsRender.id}" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
     <div class="flex gap-50 mt-2">
-        <btn-copy target="public-key-${this.id}"></btn-copy>
-        <btn-paste target="public-key-${this.id}"></btn-paste>
+        <btn-copy target="public-key-${HtmlSecretsRender.id}"></btn-copy>
+        <btn-paste target="public-key-${HtmlSecretsRender.id}"></btn-paste>
     </div>
 </div>
 <!-- CUSTOM -->
@@ -189,11 +205,11 @@ export class HtmlSecretsRender {
 </div>
 <!-- NOTE -->
 <div class="isle bg-4 mb-2">
-    <label for="note-${this.id}">
+    <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${this.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
+    <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
 </div>`;
     }
 
@@ -203,58 +219,58 @@ export class HtmlSecretsRender {
      * @return {string} HTML
      */
     static credit_card(vals = {}) {
-        this.id++;
+        HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         const btn = `btn-${update ? 'copy' : 'paste'}`;
         return `<div class="isle bg-4 mb-2">
-    <label for="titolo-${this.id}">
+    <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Title
     </label>
     <div class="flex gap-50">
-        <input name="T" type="text" class="input-text mono" id="titolo-${this.id}" value="${vals.T ?? ''}" autocomplete="off" required placeholder="My Bank">
-        <${btn} target="titolo-${this.id}"></${btn}>
+        <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required placeholder="My Bank">
+        <${btn} target="titolo-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- NOME E COGNOME -->
 <div class="isle bg-4 mb-2">
-    <label for="name-surname-${this.id}">
+    <label for="name-surname-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
         Name
     </label>
     <div class="flex gap-50">
-        <input name="NC" type="text" class="input-text mono" id="name-surname-${this.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">
-        <${btn} target="name-surname-${this.id}"></${btn}>
+        <input name="NC" type="text" class="input-text mono" id="name-surname-${HtmlSecretsRender.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">
+        <${btn} target="name-surname-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- NUMERO CARTA -->
 <div class="isle bg-4 mb-2">
-    <label for="card-number-${this.id}">
+    <label for="card-number-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">credit_card</span>
         Card number
     </label>
     <div class="flex gap-50">
-        <input name="CN" type="text" inputmode="numeric" maxlength="16" class="input-text mono" id="card-number-${this.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
-        <${btn} target="card-number-${this.id}"></${btn}>
+        <input name="CN" type="text" inputmode="numeric" maxlength="16" class="input-text mono" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
+        <${btn} target="card-number-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- DATA SCADENZA & CVV -->
 <div class="flex d-row gap-50 isle bg-4">
     <!-- DATA SCADENZA -->
     <div class="fg-1">
-        <label for="expire-date-${this.id}">
+        <label for="expire-date-${HtmlSecretsRender.id}">
             <span class="material-symbols-rounded">calendar_today</span>
             Expiry date
         </label>
-        <input name="ED" type="text" class="input-text mono" id="expire-date-${this.id}" value="${vals.ED ?? ''}" autocomplete="off" maxlength="8" placeholder="00/00" required>
+        <input name="ED" type="text" class="input-text mono" id="expire-date-${HtmlSecretsRender.id}" value="${vals.ED ?? ''}" autocomplete="off" maxlength="8" placeholder="00/00" required>
     </div>
     <!-- CVV -->
     <div class="fg-1" style="max-width:111px">
-        <label for="cvv-${this.id}">
+        <label for="cvv-${HtmlSecretsRender.id}">
             <span class="material-symbols-rounded">pin</span>
             CVV
         </label>
-        <input name="CV" type="text" inputmode="numeric" class="input-text mono" id="cvv-${this.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
+        <input name="CV" type="text" inputmode="numeric" class="input-text mono" id="cvv-${HtmlSecretsRender.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
     </div>
 </div>
 <!-- CUSTOM -->
