@@ -19,13 +19,13 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">token</span>
                     <i>Devices</i>
                 </a>` : ''}
+                ${path === '/vault' ? `<a class="open red" data-target-open="win-passkey" title="Passkey">
+                    <span class="material-symbols-rounded">passkey</span>
+                    <i>Passkey</i>
                 ${path === '/vault' ? `<a class="open yellow" data-target-open="win-backups" title="Backup">
                     <span class="material-symbols-rounded">cloud</span>
                     <i>Backup</i>
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open red" data-target-open="win-passkey" title="Passkey">
-                    <span class="material-symbols-rounded">passkey</span>
-                    <i>Passkey</i>
                 </a>` : ''}
                 ${path === '/vault' ? `<a class="open olivegreen" data-target-open="win-psw-generator" title="Password Generator">
                     <span class="material-symbols-rounded">key_vertical</span>
