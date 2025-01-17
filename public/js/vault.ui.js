@@ -260,6 +260,8 @@ export class VaultUI {
     static view_indicator = -1; // usata per mostrare tutte o alcune categorie di segreti
     static current_order = 'az';
     static html_list = null;
+    // cache per salvare i dati scritti nella finestra CREATE
+    // static create_cache = { login: null, note: null, card: null, keys: null };
     // pulsante categoria
     static btn_category = null;
     static vault_counter_element = null;
