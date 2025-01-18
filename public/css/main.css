@@ -473,13 +473,13 @@ p.description {
 
 hr {
   margin: 1rem 0;
-  color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  color: #584d4d;
   border: 0;
-  border-top: 1px solid rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  border-top: 1px solid #584d4d;
 }
 hr.dashed {
   background-color: transparent;
-  border-bottom: 1px dashed rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  border-bottom: 1px dashed #584d4d;
 }
 hr.s {
   width: 90%;
@@ -508,17 +508,17 @@ hr.s {
 }
 .btn.primary {
   background-color: rgba(135, 142, 84, 0.15);
-  color: rgb(150.232300885, 158.0221238938, 93.4778761062);
+  color: #969e5d;
 }
 .btn.primary:hover {
   background-color: rgba(135, 142, 84, 0.2);
 }
 .btn.secondary {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
   color: #ddd;
 }
 .btn.secondary:hover {
-  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
+  background-color: #403838;
   color: #f5f5f5;
 }
 .btn.warning {
@@ -617,11 +617,11 @@ hr.s {
   color: #888;
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  box-shadow: 0 0 0 4px #383030;
   color: #f5f5f5;
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  box-shadow: 0 0 0 6px #383030;
 }
 .btn.s {
   font-size: 0.9em;
@@ -650,7 +650,7 @@ hr.s {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
   /*
@@ -713,6 +713,9 @@ hr.s {
 .window.red .btn.primary:hover {
   background-color: rgba(247, 167, 160, 0.3);
 }
+.window.red .input-switch input:checked + label {
+  background-color: rgba(247, 167, 160, 0.5);
+}
 .window.yellow h2 .material-symbols-rounded,
 .window.yellow h3 .material-symbols-rounded {
   color: #eec471;
@@ -732,6 +735,9 @@ hr.s {
 }
 .window.yellow .btn.primary:hover {
   background-color: rgba(238, 196, 113, 0.3);
+}
+.window.yellow .input-switch input:checked + label {
+  background-color: rgba(238, 196, 113, 0.5);
 }
 .window.orange h2 .material-symbols-rounded,
 .window.orange h3 .material-symbols-rounded {
@@ -753,6 +759,9 @@ hr.s {
 .window.orange .btn.primary:hover {
   background-color: rgba(229, 158, 122, 0.3);
 }
+.window.orange .input-switch input:checked + label {
+  background-color: rgba(229, 158, 122, 0.5);
+}
 .window.peach h2 .material-symbols-rounded,
 .window.peach h3 .material-symbols-rounded {
   color: #FFD6A5;
@@ -772,6 +781,9 @@ hr.s {
 }
 .window.peach .btn.primary:hover {
   background-color: rgba(255, 214, 165, 0.3);
+}
+.window.peach .input-switch input:checked + label {
+  background-color: rgba(255, 214, 165, 0.5);
 }
 .window.purple h2 .material-symbols-rounded,
 .window.purple h3 .material-symbols-rounded {
@@ -793,6 +805,9 @@ hr.s {
 .window.purple .btn.primary:hover {
   background-color: rgba(211, 180, 255, 0.3);
 }
+.window.purple .input-switch input:checked + label {
+  background-color: rgba(211, 180, 255, 0.5);
+}
 .window.pink h2 .material-symbols-rounded,
 .window.pink h3 .material-symbols-rounded {
   color: #FFB7C5;
@@ -812,6 +827,9 @@ hr.s {
 }
 .window.pink .btn.primary:hover {
   background-color: rgba(255, 183, 197, 0.3);
+}
+.window.pink .input-switch input:checked + label {
+  background-color: rgba(255, 183, 197, 0.5);
 }
 .window.mint h2 .material-symbols-rounded,
 .window.mint h3 .material-symbols-rounded {
@@ -833,6 +851,9 @@ hr.s {
 .window.mint .btn.primary:hover {
   background-color: rgba(174, 229, 216, 0.3);
 }
+.window.mint .input-switch input:checked + label {
+  background-color: rgba(174, 229, 216, 0.5);
+}
 .window.blue h2 .material-symbols-rounded,
 .window.blue h3 .material-symbols-rounded {
   color: #7dbaff;
@@ -852,6 +873,9 @@ hr.s {
 }
 .window.blue .btn.primary:hover {
   background-color: rgba(125, 186, 255, 0.3);
+}
+.window.blue .input-switch input:checked + label {
+  background-color: rgba(125, 186, 255, 0.5);
 }
 .window.lightblue h2 .material-symbols-rounded,
 .window.lightblue h3 .material-symbols-rounded {
@@ -873,6 +897,9 @@ hr.s {
 .window.lightblue .btn.primary:hover {
   background-color: rgba(168, 216, 255, 0.3);
 }
+.window.lightblue .input-switch input:checked + label {
+  background-color: rgba(168, 216, 255, 0.5);
+}
 .window.lightgray h2 .material-symbols-rounded,
 .window.lightgray h3 .material-symbols-rounded {
   color: #E0E0E0;
@@ -892,6 +919,9 @@ hr.s {
 }
 .window.lightgray .btn.primary:hover {
   background-color: rgba(224, 224, 224, 0.3);
+}
+.window.lightgray .input-switch input:checked + label {
+  background-color: rgba(224, 224, 224, 0.5);
 }
 .window.olivegreen h2 .material-symbols-rounded,
 .window.olivegreen h3 .material-symbols-rounded {
@@ -913,6 +943,9 @@ hr.s {
 .window.olivegreen .btn.primary:hover {
   background-color: rgba(185, 209, 156, 0.3);
 }
+.window.olivegreen .input-switch input:checked + label {
+  background-color: rgba(185, 209, 156, 0.5);
+}
 
 .isle {
   padding: 8px;
@@ -931,22 +964,22 @@ hr.s {
   background-color: #171414;
 }
 .isle.bg-2 {
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
 }
 .isle.bg-3 {
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
 }
 .isle.bg-4 {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 .isle.bg-5 {
-  background-color: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #383030;
 }
 .isle.bg-6 {
-  background-color: rgb(63.9186046512, 55.5813953488, 55.5813953488);
+  background-color: #403838;
 }
 .isle.bg-7 {
-  background-color: rgb(72.1023255814, 62.6976744186, 62.6976744186);
+  background-color: #483f3f;
 }
 .isle.br-m {
   border-radius: 8px;
@@ -1013,7 +1046,7 @@ monospace,
   font-family: "JetBrains Mono", monospace;
 }
 .input-text.bg-2 {
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
 }
 .input-text.mono {
   font-family: "JetBrains Mono", monospace;
@@ -1033,7 +1066,7 @@ monospace,
   display: block;
   width: 2.4em;
   height: 1.2em;
-  background-color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  background-color: #584d4d;
   border-radius: 0.9em;
   cursor: pointer;
   position: relative;
@@ -1178,8 +1211,8 @@ vortex-navbar {
   align-items: center;
   padding: 5px;
   border-radius: 8px;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
-  box-shadow: 0 0 0 1px rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  background-color: #272222;
+  box-shadow: 0 0 0 1px #383030;
   position: fixed;
   top: 7px;
   left: 7px;
@@ -1212,7 +1245,7 @@ vortex-navbar .logo {
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -1329,7 +1362,7 @@ vortex-navbar .logo {
   flex-wrap: wrap;
   padding: 8px;
   border-radius: 23px;
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
 }
 #vaults-list .checkpoint {
   width: 100%;
@@ -1342,7 +1375,7 @@ vortex-navbar .logo {
 #vaults-list.searching {
   padding: 8px 8px 2.5px 8px;
   border-radius: 23px;
-  background-color: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  background-color: #1f1b1b;
   gap: 0;
 }
 #vaults-list.searching .checkpoint {
@@ -1369,12 +1402,12 @@ vortex-navbar .logo {
   cursor: pointer;
   padding: 10px;
   border-radius: 14px;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 #vaults-list vault-li .simbolo {
   color: #878e54;
@@ -1442,7 +1475,7 @@ vortex-navbar .logo {
   margin-bottom: 0.5rem;
 }
 .custom-sections custom-vault-section {
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
   padding: 0 7px 7px 7px;
   border-radius: 8px;
 }
@@ -1478,7 +1511,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  background-color: #272222;
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;
@@ -1528,7 +1561,7 @@ passkey-list-item {
   gap: 8px;
   padding: 8px;
   border-radius: 8px;
-  background-color: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  background-color: #302929;
 }
 device-list-item .token-id,
 passkey-list-item .token-id {

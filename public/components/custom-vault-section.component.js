@@ -69,7 +69,7 @@ class CustomVaultSection extends HTMLElement {
                 </button>
             </label>
             <div class="flex gap-50">
-                <input name="${section_name}" value="${input_value}" type="text" class="input-text mono custom-input" id="${input_id}" autocomplete="off" required>
+                <input name="${section_name}" value="${input_value}" type="${is_password ? 'password' : 'text'}" class="input-text mono custom-input ${is_password ? 'protected' : ''}" id="${input_id}" autocomplete="off" required>
                 <btn-${paste ? 'paste' : 'copy'} target="${input_id}"></btn-${paste ? 'paste' : 'copy'}>
             </div>
             ${is_password ? `<password-strength-bar class="m-0 mt-2" xs="true" value="${ptg.test(input_value).average}" id="cvsp-${CustomVaultSection.id_ctr}" input-id="${input_id}"></password-strength-bar>` : ''}
@@ -86,7 +86,11 @@ class CustomVaultSection extends HTMLElement {
         this.name.addEventListener('keyup', () => {
             this.input.name = this.name.value;
             const svg = CustomVaultSection.get_icon(this.name.value);
+            const is_password = ['password', 'key', 'key_vertical'].includes(svg);
             if (svg !== this.svg) this.icon.textContent = svg;
+            // ---
+            if (is_password) this.input.classList.add('protected');
+            else this.input.classList.remove('protected');
         });
     }
     /**

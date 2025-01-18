@@ -86,7 +86,7 @@ export class HtmlSecretsRender {
         Password
     </label>
     <div class="flex gap-50 mb-2">
-        <input name="P" type="text" class="input-text mono" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
+        <input name="P" type="password" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
         <${btn} target="password-${HtmlSecretsRender.id}"></${btn}>
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
@@ -98,7 +98,7 @@ export class HtmlSecretsRender {
         OTP/TOTP
     </label>
     <div class="flex gap-50">
-        <input name="O" type="text" class="input-text mono" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
+        <input name="O" type="password" class="input-text mono protected" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
         <${btn} target="totp-${HtmlSecretsRender.id}"></${btn}>
     </div>
     ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
@@ -142,7 +142,7 @@ export class HtmlSecretsRender {
     <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="16">${vals.N ?? ''}</textarea>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column emt" id="${update ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emt mb-2" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`
     }
@@ -250,12 +250,12 @@ export class HtmlSecretsRender {
         Card number
     </label>
     <div class="flex gap-50">
-        <input name="CN" type="text" inputmode="numeric" maxlength="16" class="input-text mono" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
+        <input name="CN" type="password" inputmode="numeric" maxlength="16" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
         <${btn} target="card-number-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- DATA SCADENZA & CVV -->
-<div class="flex d-row gap-50 isle bg-4">
+<div class="flex d-row gap-50 isle bg-4 mb-2">
     <!-- DATA SCADENZA -->
     <div class="fg-1">
         <label for="expire-date-${HtmlSecretsRender.id}">

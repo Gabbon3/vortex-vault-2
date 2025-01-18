@@ -52,14 +52,15 @@
                     <span class="material-symbols-rounded">key_vertical</span>
                     Password
                 </label>
-                <input type="password" class="input-text" id="password" name="password" required>
+                <input type="password" class="input-text protected" id="password" name="password" required>
                 <!-- --- -->
                 <label for="password2">
                     <span class="material-symbols-rounded">key_vertical</span>
                     Repeat password
                 </label>
-                <input type="password" class="input-text mb-2" id="password2" name="password2" required>
-                <p class="description">
+                <input type="password" class="input-text protected mb-2" id="password2" name="password2" required>
+                <btn-hide-show-protect-input target="registrati" title="Show or Hide password"></btn-hide-show-protect-input>
+                <p class="description mt-2">
                     <strong>Warning</strong>: the password you choose is crucial for access to Vortex Vault. 
                     If you lose it and have not set up recovery methods, neither we nor you will ever 
                     be able to access your account again. Make sure you choose a secure 
