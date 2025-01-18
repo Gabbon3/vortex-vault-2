@@ -5,7 +5,7 @@ import { sequelize } from './config/db.js';
 import user_routes from './routes/user.routes.js';
 import token_routes from './routes/token.routes.js';
 import vault_routes from './routes/vault.routes.js';
-import cke_routes from './routes/cke.routes.js';
+import cke_routes from './routes/lsk.routes.js';
 import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';

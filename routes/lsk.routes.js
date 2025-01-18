@@ -1,12 +1,12 @@
 import express from "express";
-import { CkeController } from "../controllers/cke.controller.js";
+import { LSKController } from "../controllers/lsk.controller.js";
 import { verify_access_token } from "../middlewares/authMiddleware.js";
 import rateLimit from "express-rate-limit";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
 // -- router
 const router = express.Router();
 // -- controller
-const controller = new CkeController();
+const controller = new LSKController();
 // -- middlewares
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({

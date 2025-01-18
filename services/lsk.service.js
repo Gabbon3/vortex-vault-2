@@ -2,7 +2,7 @@ import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from "../models/user.js";
 import { Bytes } from "../utils/bytes.js";
 
-export class CKEService {
+export class LSKService {
     /**
      * Genera un nuovo cke
      * @param {string|Uint8Array} user_salt 

@@ -2,13 +2,12 @@ import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { JWT } from "../utils/jwt.utils.js";
-import { User } from "../models/user.js";
 import { Bytes } from "../utils/bytes.js";
-import { CKEService } from "../services/cke.service.js";
+import { LSKService } from "../services/lsk.service.js";
 
-export class CkeController {
+export class LSKController {
     constructor() {
-        this.service = new CKEService();
+        this.service = new LSKService();
     }
     /**
      * Genera una nuova chiave cke restituendo anche quella vecchia
@@ -21,10 +20,10 @@ export class CkeController {
         // ---
         res.cookie('cke', new_cke, {
             httpOnly: true,
-            secure: JWT.secure_option, // da mettere true in produzione
+            secure: JWT.secure_option,
             maxAge: JWT.cke_cookie_lifetime,
             sameSite: 'Strict',
-            path: '/auth', // disponibile per tutte le route
+            path: '/auth',
         });
         // ---
         res.status(201).json({ old_cke, new_cke });

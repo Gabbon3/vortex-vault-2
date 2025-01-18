@@ -9,14 +9,14 @@ import { MFAService } from "../services/mfa.service.js";
 import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
-import { CKEService } from "../services/cke.service.js";
+import { LSKService } from "../services/lsk.service.js";
 import { v7 as uuidv7, validate as uuidValidate } from 'uuid';
 
 export class UserController {
     constructor() {
         this.service = new UserService();
         this.refresh_token_service = new RefreshTokenService();
-        this.cke_service = new CKEService();
+        this.cke_service = new LSKService();
     }
     /**
      * Registra utente

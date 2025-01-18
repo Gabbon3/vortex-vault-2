@@ -1,6 +1,6 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { CKEService } from "../services/cke.service.js";
+import { LSKService } from "../services/lsk.service.js";
 import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { Bytes } from "../utils/bytes.js";
 import { Roles } from "../utils/roles.js";
@@ -9,7 +9,7 @@ import { JWT } from "../utils/jwt.utils.js";
 export class RefreshTokenController {
     constructor() {
         this.service = new RefreshTokenService();
-        this.cke_service = new CKEService();
+        this.cke_service = new LSKService();
     }
     /**
      * Genera un nuovo access token se il refresh token è valido
