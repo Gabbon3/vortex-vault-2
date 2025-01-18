@@ -4,7 +4,7 @@ export class FileUtils {
      * @param {*} file_ 
      * @returns {ArrayBuffer}
      */
-    static async read(file_) {
+    static async read(file_, asBuffer = true) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             // ---
@@ -17,7 +17,7 @@ export class FileUtils {
                 reject(event.target.error);
             };
             // ---
-            reader.readAsArrayBuffer(file_);
+            asBuffer ? reader.readAsArrayBuffer(file_) : reader.readAsText(file_);
         });
     }
     /**

@@ -4,12 +4,14 @@ import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import { API } from "../utils/api.js";
 import { AES256GCM } from "../secure/aesgcm.js";
+import { ECDH } from "../secure/ecdh.js";
 import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { PasskeyService } from "./passkey.public.service.js";
 import { Log } from "../utils/log.js";
+import msgpack from "../utils/msgpack.min.js";
 
 export class AuthService {
     /**
@@ -336,19 +338,19 @@ export class AuthService {
         return initialized;
     }
     /**
-     * Genera e cifra la master password dell'utente con un codice di recupero
+     * Genera una opzione di recupero
      * @param {string} master_password 
+     * @returns {Uint8Array} la chiave privata
      */
-    static async generate_recovery_code(master_password) {
-        const code = Cripto.random_alphanumeric_code(20);
-        const salt = Cripto.random_bytes(16);
-        const master_password_bytes = new TextEncoder().encode(master_password);
+    static async set_up_recovery_method(master_password) {
+        const { public_key, private_key, exported_keys } = await ECDH.generate_keys();
         // ---
-        const key = await Cripto.derive_key(code, salt);
-        const encrypted_password = await AES256GCM.encrypt(master_password_bytes, key);
-        const result_bytes = Bytes.merge([salt, encrypted_password], 8);
+        const simmetric = await ECDH.derive_shared_secret(private_key, public_key);
+        const encrypted_password = await AES256GCM.encrypt(new TextEncoder().encode(master_password), simmetric);
         // ---
-        const res = await API.fetch('/auth/recovery', {
+        const result_bytes = msgpack.encode([encrypted_password, exported_keys.public_key]);
+        // ---
+        const res = await API.fetch('/auth/new-recovery', {
             method: 'POST',
             body: result_bytes,
         }, {
@@ -356,26 +358,30 @@ export class AuthService {
         });
         // ---
         if (!res) return false;
-        return code;
+        return exported_keys.private_key;
     }
     /**
      * Restituisce la password dell'utente se il codice è corretto
-     * @param {string} sudo_code 
+     * @param {string} email
+     * @param {Uint8Array} private_key 
      * @returns {string} Returns
      */
-    static async master_password_recovery(email, sudo_code) {
+    static async master_password_recovery(email, private_key, request_id, code) {
         const res = await API.fetch(`/auth/recovery/${email}`, {
-            method: 'GET',
+            method: 'POST',
+            body: { request_id, code }
         });
         if (!res) return false;
         // ---
         const recovery = new Uint8Array(res.recovery.data);
-        const salt = recovery.subarray(0, 16);
-        const encrypted_password = recovery.subarray(16);
+        const [encrypted_password, public_key] = msgpack.decode(recovery);
         // ---
-        const key = await Cripto.derive_key(sudo_code, salt);
+        const imported_private_key = await ECDH.import_private_key(private_key);
+        const imported_public_key = await ECDH.import_public_key(public_key);
+        // ---
+        const simmetric = await ECDH.derive_shared_secret(imported_private_key, imported_public_key);
         try {
-            const master_password_bytes = await AES256GCM.decrypt(encrypted_password, key);
+            const master_password_bytes = await AES256GCM.decrypt(encrypted_password, simmetric);
             const master_password = new TextDecoder().decode(master_password_bytes);
             // ---
             return master_password;

@@ -2,22 +2,30 @@ import { date } from "../../utils/dateUtils.js";
 import { Mailer } from "../../config/mail.js";
 
 const automated_emails = {
-    css: `<style>body{background-color:#171414;color:#fff}h1,h2,h3,h4,h5{color:#878e54}</style>`,
     /**
      * genera il testo e l'html che inserisce il codice anti phishing
      * @param {string} email 
      */
     antiphishing_code: (email) => {
         const code = Mailer.message_authentication_code(email);
-        const html = `${automated_emails.css}
-  <p>Message Authentication Code: <strong>${code}</strong></p>
-  <p>Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.</p>`
+        const html = `<p>Message Authentication Code: <strong>${code}</strong></p>
+<p>Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.</p>`
         const text = `
-  Message Authentication Code: ${code}
-  Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.`;
+Message Authentication Code: ${code}
+Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.`;
         // ---
         return { text, html };
     },
+    /**
+     * testo per il codice otp
+     * @param {object} options 
+     * @returns 
+     */
+    otpCode: ({email, code}) => {
+      const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+      return `${code}\n${aptext}`;
+    },
+
     /**
      * 
      * @param {object} options 
@@ -31,37 +39,37 @@ const automated_emails = {
         const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
         // ---
         const text = `
-  Hello ${email.split("@")[0]},
-  We noticed that a new device attempted to sign-in to your account. Below are the details:
-  
-   - Device: ${os}
-   - IP: ${ip_address}
-   - Time: ${date.format("%d/%m/%Y at %H:%i")}
-  
-  If it wasn't you, you can still rest assured since that device is locked, but you need to change your password immediately as your vault could be at risk.
-  
-  Thank you for your attention
-  
-  The Vortex Vault team
-  ${aptext}`;
+Hello ${email.split("@")[0]},
+We noticed that a new device attempted to sign-in to your account. Below are the details:
+
+ - Device: ${os}
+ - IP: ${ip_address}
+ - Time: ${date.format("%d/%m/%Y at %H:%i")}
+
+If it wasn't you, you can still rest assured since that device is locked, but you need to change your password immediately as your vault could be at risk.
+
+Thank you for your attention
+
+The Vortex Vault team
+${aptext}`;
 
         const html = `
-  <html>
-    <body>
-      <h4>Hello ${email.split("@")[0]},</h4>
-      <p>We noticed that a new device attempted to sign-in to your account. Below are the details:</p>
-      <ul>
-        <li><strong>Device:</strong> ${os}</li>
-        <li><strong>IP:</strong> ${ip_address}</li>
-        <li><strong>Time:</strong> ${date.format("%d/%m/%Y at %H:%i")}</li>
-      </ul>
-      <p>
-        If it wasn't you, you can still rest assured since that device is blocked, but you need to change your password immediately as your vault could be at risk.
-      </p>
-      <p>Thank you for your attention<br><br>The Vortex Vault team</p>
-      ${aphtml}
-    </body>
-  </html>
+<html>
+  <body>
+    <h4>Hello ${email.split("@")[0]},</h4>
+    <p>We noticed that a new device attempted to sign-in to your account. Below are the details:</p>
+    <ul>
+      <li><strong>Device:</strong> ${os}</li>
+      <li><strong>IP:</strong> ${ip_address}</li>
+      <li><strong>Time:</strong> ${date.format("%d/%m/%Y at %H:%i")}</li>
+    </ul>
+    <p>
+      If it wasn't you, you can still rest assured since that device is blocked, but you need to change your password immediately as your vault could be at risk.
+    </p>
+    <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+    ${aphtml}
+  </body>
+</html>
       `;
 
         return { text, html };
@@ -76,27 +84,71 @@ const automated_emails = {
       const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
 
       const text = `
-  Hello ${email.split('@')[0]},
-  We noticed that a new passkey has been associated with your account, for more information visit the app.
+Hello ${email.split('@')[0]},
+We noticed that a new passkey has been associated with your account, for more information visit the app.
 
-  Thank you for your attention
-  
-  The Vortex Vault team
-  ${aptext}`;
+Thank you for your attention
+
+The Vortex Vault team
+${aptext}`;
 
         const html = `
-  <html>
-    <body>
-      <h4>Hello ${email.split('@')[0]},</h4>
-      <p>We noticed that a new passkey has been associated with your account, for more information visit the app.</p>
-      <p>Thank you for your attention<br><br>The Vortex Vault team</p>
-      ${aphtml}
-    </body>
-  </html>
+<html>
+  <body>
+    <h4>Hello ${email.split('@')[0]},</h4>
+    <p>We noticed that a new passkey has been associated with your account, for more information visit the app.</p>
+    <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+    ${aphtml}
+  </body>
+</html>
       `;
 
         return { text, html };
     },
+
+    /**
+     * Avviso per tentativi OTP errati
+     * @param {object} options
+     * @returns
+     */
+    otpFailedAttempt: ({ email, ip_address, attempts_left }) => {
+      // -- anti phishing text
+      const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+
+      const text = `
+Hello ${email.split("@")[0]},
+We noticed several failed attempts to enter the OTP code for your account. Here are the details:
+
+ - IP: ${ip_address}
+ - Time: ${date.format("%d/%m/%Y at %H:%i")}
+ - Attempts left: ${attempts_left}
+
+If you didn't attempt to access your account, please be aware that further attempts will be blocked after 3 failed entries.
+
+Thank you for your attention
+
+The Vortex Vault team
+${aptext}`;
+
+      const html = `
+<html>
+  <body>
+    <h4>Hello ${email.split("@")[0]},</h4>
+    <p>We noticed several failed attempts to enter the OTP code for your account. Here are the details:</p>
+    <ul>
+      <li><strong>IP:</strong> ${ip_address}</li>
+      <li><strong>Time:</strong> ${date.format("%d/%m/%Y at %H:%i")}</li>
+      <li><strong>Attempts left:</strong> ${attempts_left}</li>
+    </ul>
+    <p>If you didn't attempt to access your account, please be aware that further attempts will be blocked after 3 failed entries. If you suspect any suspicious activity, it's recommended to change your password immediately.</p>
+    <p>For security purposes, please always verify that the communication comes from a trusted source before entering your code.</p>
+    <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+    ${aphtml}
+  </body>
+</html>`;
+
+      return { text, html };
+  }
 };
 
 export default automated_emails;

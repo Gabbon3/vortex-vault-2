@@ -54,13 +54,11 @@ $(document).ready(() => {
         // ---
         Windows.loader(true);
         // ---
-        const code = await AuthService.generate_recovery_code(password);
+        const private_key = await AuthService.set_up_recovery_method(password);
         // ---
-        if (code) {
-            Log.summon(0, "Recovery code generated successfully");
-            navigator.clipboard.writeText(code);
-            Log.summon(3, "Recovery code has been copied on your clipboard");
-            FileUtils.download('Recovery Code', 'txt', code);
+        if (private_key) {
+            Log.summon(0, "Recovery key generated successfully");
+            FileUtils.download('Recovery Key', 'pem', Bytes.base64.encode(private_key));
             $(form).trigger('reset');
         }
         Windows.loader(false);

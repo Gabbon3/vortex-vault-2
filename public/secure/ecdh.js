@@ -18,13 +18,18 @@ export class ECDH {
             ["deriveKey", "deriveBits"]
         );
 
-        // Esporta la chiave pubblica in formato SPKI
+        // Esporta le chiavi
         const exported_public_key = await window.crypto.subtle.exportKey("spki", key_pair.publicKey);
+        const exported_private_key = await window.crypto.subtle.exportKey("pkcs8", key_pair.privateKey);
 
-        // Restituisci la chiave pubblica come Uint8Array e la chiave privata come CryptoKey
+        // restituisco le chiavi
         return {
-            public_key: new Uint8Array(exported_public_key),
+            public_key: key_pair.publicKey,
             private_key: key_pair.privateKey,
+            exported_keys: {
+                public_key: new Uint8Array(exported_public_key),
+                private_key: new Uint8Array(exported_private_key),
+            }
         };
     }
 
@@ -65,7 +70,6 @@ export class ECDH {
             private_key, // La chiave privata
             256 // La lunghezza della chiave condivisa in bit (può essere 256, 384, 521)
         );
-
         // Restituisce la chiave condivisa come Uint8Array
         return new Uint8Array(shared_secret);
     }
@@ -96,7 +100,7 @@ export class ECDH {
                 namedCurve: "P-256", // La curva deve corrispondere a quella utilizzata per la generazione
             },
             true, // La chiave è esportabile
-            [] // Operazioni consentite (nessuna)
+            ["deriveKey", "deriveBits"] // Operazioni consentite (nessuna)
         );
     }
 }

@@ -23,7 +23,7 @@ export const User = sequelize.define(
             allowNull: false,
             defaultValue: new Date(),
         },
-        recovery: { type: DataTypes.BLOB, allowNull: true }, // hash de codice di recupero
+        recovery: { type: DataTypes.BLOB, allowNull: true, comment: "Dati cifrati insieme alla chiave pubblica ecdh" },
     },
     {
         tableName: "user",

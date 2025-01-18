@@ -7,6 +7,8 @@ import { MFAService } from "../services/mfa.service.js";
 import { Roles } from "../utils/roles.js";
 import { RamDB } from "../config/ramdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
+import { Mailer } from "../config/mail.js";
+import automated_emails from "../public/utils/automated.mails.js";
 /**
  * Middleware per la verifica del jwt e refresh 
  * dell'access token se scaduto
@@ -62,7 +64,7 @@ export const verify_email_code = async_handler(async (req, res, next) => {
         throw new CError("TimeoutError", "Request expired", 404);
     }
     // -- recupero i dati
-    const [salted_hash, tryes] = record;
+    const [salted_hash, tryes, email] = record;
     // -- verifico il numero di tentativi
     if (tryes >= 3) {
         RamDB.delete(request_id);
@@ -75,6 +77,14 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     // -- verifica il codice
     const valid = Cripto.verify_salting(code, salted_hash);
     if (!valid) {
+        const ip_address = req.headers['x-forwarded-for'] || req.ip;
+        // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
+        const { text, html } = automated_emails.otpFailedAttempt({ 
+            email,
+            attempts_left: tryes + 1,
+            ip_address,
+        });
+        Mailer.send(email, "OTP Failed Attemp", text, html);
         // -- aumento il numero di tentativi
         RamDB.update(request_id, [salted_hash, tryes + 1]);
         // --

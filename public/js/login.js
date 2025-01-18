@@ -3,6 +3,8 @@ import { AuthService } from "../service/auth.service.js";
 import { Form } from "../utils/form.js";
 import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
+import { FileUtils } from "../utils/file.utils.js";
+import { Bytes } from "../utils/bytes.js";
 
 $(document).ready(async () => {
     /**
@@ -95,12 +97,21 @@ $(document).ready(async () => {
      * PASSWORD DIMENTICATA
      */
     Form.onsubmit('form-password-recovery', async (form, elements) => {
-        const { email, code } = elements;
+        const { email, file, request_id, code } = elements;
         Windows.loader(true);
-        const password = await AuthService.master_password_recovery(email, code);
+        // ---
+        let private_key = null;
+        try {
+            private_key = Bytes.base64.decode(await FileUtils.read(file, false));
+        } catch (error) {
+            Log.summon(2, 'Error while reading your file');
+            console.warn(error);
+        }
+        // ---
+        const password = await AuthService.master_password_recovery(email, private_key, request_id, code);
         // ---
         if (password) {
-            Log.summon(0, 'Your password has been decrypted, we\'ve copied it into your clipboard.');
+            Log.summon(0, 'Your master password has been decrypted.');
             navigator.clipboard.writeText(password);
             document.getElementById('password').value = password;
             $(form).trigger('reset');

@@ -27,8 +27,8 @@ router.post('/email-verification-test', verify_email_code, controller.test_email
 // -- ACCOUNT VERIFY
 router.post('/verify-account', verify_email_code, controller.verify_account);
 // -- PASSWORD RECOVERY
-router.get('/recovery/:email', controller.get_recovery);
-router.post('/recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
+router.post('/recovery/:email', verify_email_code, controller.get_recovery);
+router.post('/new-recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // -- MFA (DEPRECATED)
 router.post('/mfa', verify_email_code, controller.enable_mfa);
 router.post('/mfa_test', verify_access_token(), verify_mfa_code, controller.test_2fa);

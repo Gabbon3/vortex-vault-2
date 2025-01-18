@@ -11,6 +11,7 @@ import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
 import { LSKService } from "../services/lsk.service.js";
 import { v7 as uuidv7, validate as uuidValidate } from 'uuid';
+import automated_emails from "../public/utils/automated.mails.js";
 
 export class UserController {
     constructor() {
@@ -150,15 +151,17 @@ export class UserController {
         // memorizzo il codice hashato con salt con hmac
         const db_data = [
             salted_hash,
-            0 // tentativi
+            0, // tentativi
+            email,
         ];
         const is_set = RamDB.set(request_id, db_data, 60);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
+        const body = automated_emails.otpCode({email, code});
         const is_send = await Mailer.send(
             email,
             'Vortex Verification Code',
-            code
+            body
         );
         if (!is_send) throw new Error("Not able to send the email");
         res.status(201).json({ request_id });
