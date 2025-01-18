@@ -142,6 +142,17 @@ export class Cripto {
         // -- restituisco la chiave derivata come Uint8Array
         return new Uint8Array(await crypto.subtle.exportKey('raw', key));
     }
+    /**
+     * Deriva una chiave crittografica da una password usando ARGON2.
+     * @param {string | Uint8Array} password - La password da usare per derivare la chiave.
+     * @param {Uint8Array} salt - Il sale utilizzato nel processo di derivazione.
+     */
+    static argon2(password, salt) {
+        // -- converto la password in un Uint8Array
+        const password_buffer = password instanceof Uint8Array ? password : new TextEncoder().encode(password);
+        // ---
+        return window.Argon2(password_buffer, salt);
+    }
 
     /**
      * Genera una coppia di chiavi asimmetriche in formato PEM in base al tipo di chiave e alla lunghezza.

@@ -28,7 +28,7 @@ export class AuthService {
         if (!res) return false;
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
-        const master_key = await Cripto.derive_key(password, salt);
+        const master_key = await Cripto.argon2(password, salt);
         // -- cifro le credenziali sul localstorage
         const lsk = Bytes.base64.decode(res.lsk); // Local Storage Key
         await LocalStorage.set('email-utente', email);
@@ -114,7 +114,7 @@ export class AuthService {
         if (!res) return false;
         // -- imposto la master key
         const salt = await SessionStorage.get('salt');
-        const key = await Cripto.derive_key(new_password, salt);
+        const key = await Cripto.argon2(new_password, salt);
         VaultService.master_key = key;
         // -- derivo la chiave del local storage e la salvo
         const lsk = Bytes.base64.decode(res.lsk); // local storage key
@@ -198,7 +198,7 @@ export class AuthService {
         const master_key = await SessionStorage.get('master-key');
         const salt = await SessionStorage.get('salt');
         // ---
-        const key = await Cripto.derive_key(password, salt);
+        const key = await Cripto.argon2(password, salt);
         return Bytes.compare(key, master_key);
     }
     /**

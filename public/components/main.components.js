@@ -1,3 +1,6 @@
+// WASM
+import '../secure/rust.init.js';
+// ---
 import './navbar.component.js';
 import './log.component.js';
 import './vault-li.component.js';
