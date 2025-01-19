@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 win_create_vault.setAttribute('class', 'window m pr show maincolor ' + color);
                 title_create_vault.textContent = title;
                 icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
-                VaultUI.html_used_usernames();
+                if (type === 0) VaultUI.html_used_usernames();
             });
         });
     };
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         update_secrets_type_input.value = ST;
         // -- imposto il colore della finestra
         const color = HtmlSecretsRender.get_color(ST);
-        document.getElementById('win-update-vault').setAttribute('class', 'window m show ' + color);
+        document.getElementById('win-update-vault').setAttribute('class', 'window m show maincolor ' + color);
         // -- genero l'html
         update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
         // -- imposto il titolo

@@ -451,6 +451,16 @@ hr {
                         box-shadow: 0 0 0 4px rgba($color-value, 0.2);
                     }
                 }
+
+                .container-input-text {
+                    &:has(textarea:hover) {
+                        box-shadow: 0 0 0 1px rgba($color-value, 0.2);
+                    }
+                
+                    &:has(textarea:focus) {
+                        box-shadow: 0 0 0 4px rgba($color-value, 0.2);
+                    }
+                }
             }
 
             .btn.primary {
@@ -584,10 +594,10 @@ monospace,
     font-weight: normal;
 }
 
-.input-text {
+.input-text, .container-input-text {
     display: block;
     margin: 0 auto;
-    padding: 8px;
+    padding: $br-m;
     border-radius: $br-m;
     transition: 0.2s;
     outline: none;
@@ -633,11 +643,39 @@ monospace,
     &.mono {
         font-family: $monospace;
     }
+}
 
-    &:hover {
+.container-input-text {
+    padding: 0;
+    overflow: hidden;
+
+    textarea {
+        display: block;
+        border: none;
+        outline: none;
+        border-radius: 0;
+        background-color: transparent;
+        color: $text-color;
+        font-size: $fs-m;
+        width: 100%;
+        margin: 0;
+        padding: $br-m;
+        resize: none;
+    }
+
+    &:has(textarea:hover) {
         box-shadow: 0 0 0 1px rgba($c1, 0.2);
     }
 
+    &:has(textarea:focus) {
+        box-shadow: 0 0 0 4px rgba($c1, 0.2);
+    }
+}
+
+.input-text {
+    &:hover {
+        box-shadow: 0 0 0 1px rgba($c1, 0.2);
+    }
     &:focus {
         box-shadow: 0 0 0 4px rgba($c1, 0.2);
     }

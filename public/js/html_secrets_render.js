@@ -113,7 +113,9 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
+    <div class="container-input-text">
+        <textarea name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
+    </div>
 </div>`;
     }
 
@@ -139,7 +141,9 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="16">${vals.N ?? ''}</textarea>
+    <div class="container-input-text">
+        <textarea name="N" id="note-${HtmlSecretsRender.id}" rows="16">${vals.N ?? ''}</textarea>
+    </div>
 </div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emt mb-2" id="${update ? 'update-' : ''}custom-sections-vault">
@@ -181,7 +185,9 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">key</span>
         Private Key
     </label>
-    <textarea name="R" type="text" class="input-text mono" id="private-key-${HtmlSecretsRender.id}" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
+    <div class="container-input-text mono">
+        <textarea name="R" type="text" id="private-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
+    </div>
     <div class="flex gap-50 mt-2">
         <btn-copy target="private-key-${HtmlSecretsRender.id}"></btn-copy>
         <btn-paste target="private-key-${HtmlSecretsRender.id}"></btn-paste>
@@ -193,7 +199,9 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">public</span>
         Public Key
     </label>
-    <textarea name="P" type="text" class="input-text mono" id="public-key-${HtmlSecretsRender.id}" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
+    <div class="container-input-text">
+        <textarea name="P" type="text" id="public-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
+    </div>
     <div class="flex gap-50 mt-2">
         <btn-copy target="public-key-${HtmlSecretsRender.id}"></btn-copy>
         <btn-paste target="public-key-${HtmlSecretsRender.id}"></btn-paste>
@@ -209,7 +217,9 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">info</span>
         Note
     </label>
-    <textarea name="N" id="note-${HtmlSecretsRender.id}" class="input-text" rows="3">${vals.N ?? ''}</textarea>
+    <div class="container-input-text">
+        <textarea name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
+    </div>
 </div>`;
     }
 

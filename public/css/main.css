@@ -716,6 +716,12 @@ hr.s {
 .maincolor.red form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
 }
+.maincolor.red form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(247, 167, 160, 0.2);
+}
+.maincolor.red form .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
+}
 .maincolor.red .btn.primary {
   color: #F7A7A0 !important;
   background-color: rgba(247, 167, 160, 0.2);
@@ -740,6 +746,12 @@ hr.s {
   box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
 }
 .maincolor.yellow form .input-text:focus {
+  box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
+}
+.maincolor.yellow form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
+}
+.maincolor.yellow form .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
 }
 .maincolor.yellow .btn.primary {
@@ -768,6 +780,12 @@ hr.s {
 .maincolor.orange form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
 }
+.maincolor.orange form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(229, 158, 122, 0.2);
+}
+.maincolor.orange form .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
+}
 .maincolor.orange .btn.primary {
   color: #e59e7a !important;
   background-color: rgba(229, 158, 122, 0.2);
@@ -792,6 +810,12 @@ hr.s {
   box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
 }
 .maincolor.peach form .input-text:focus {
+  box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
+}
+.maincolor.peach form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
+}
+.maincolor.peach form .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
 }
 .maincolor.peach .btn.primary {
@@ -820,6 +844,12 @@ hr.s {
 .maincolor.purple form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
 }
+.maincolor.purple form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(211, 180, 255, 0.2);
+}
+.maincolor.purple form .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
+}
 .maincolor.purple .btn.primary {
   color: #D3B4FF !important;
   background-color: rgba(211, 180, 255, 0.2);
@@ -844,6 +874,12 @@ hr.s {
   box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
 }
 .maincolor.pink form .input-text:focus {
+  box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
+}
+.maincolor.pink form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
+}
+.maincolor.pink form .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
 }
 .maincolor.pink .btn.primary {
@@ -872,6 +908,12 @@ hr.s {
 .maincolor.mint form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
 }
+.maincolor.mint form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(174, 229, 216, 0.2);
+}
+.maincolor.mint form .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
+}
 .maincolor.mint .btn.primary {
   color: #AEE5D8 !important;
   background-color: rgba(174, 229, 216, 0.2);
@@ -896,6 +938,12 @@ hr.s {
   box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
 }
 .maincolor.blue form .input-text:focus {
+  box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
+}
+.maincolor.blue form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
+}
+.maincolor.blue form .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
 }
 .maincolor.blue .btn.primary {
@@ -924,6 +972,12 @@ hr.s {
 .maincolor.lightblue form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
 }
+.maincolor.lightblue form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(168, 216, 255, 0.2);
+}
+.maincolor.lightblue form .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
+}
 .maincolor.lightblue .btn.primary {
   color: #A8D8FF !important;
   background-color: rgba(168, 216, 255, 0.2);
@@ -950,6 +1004,12 @@ hr.s {
 .maincolor.lightgray form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
 }
+.maincolor.lightgray form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.2);
+}
+.maincolor.lightgray form .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
+}
 .maincolor.lightgray .btn.primary {
   color: #E0E0E0 !important;
   background-color: rgba(224, 224, 224, 0.2);
@@ -974,6 +1034,12 @@ hr.s {
   box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
 }
 .maincolor.olivegreen form .input-text:focus {
+  box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
+}
+.maincolor.olivegreen form .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
+}
+.maincolor.olivegreen form .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
 }
 .maincolor.olivegreen .btn.primary {
@@ -1086,7 +1152,7 @@ monospace,
   font-weight: normal;
 }
 
-.input-text {
+.input-text, .container-input-text {
   display: block;
   margin: 0 auto;
   padding: 8px;
@@ -1100,34 +1166,59 @@ monospace,
   font-size: 1em;
   resize: none;
 }
-.input-text.fs-l {
+.input-text.fs-l, .container-input-text.fs-l {
   font-size: 1.2em;
 }
-.input-text.nb {
+.input-text.nb, .container-input-text.nb {
   border-radius: 0;
 }
-.input-text.uppercase {
+.input-text.uppercase, .container-input-text.uppercase {
   text-transform: uppercase;
 }
-.input-text:read-only {
+.input-text:read-only, .container-input-text:read-only {
   cursor: default;
 }
-.input-text[disabled] {
+.input-text[disabled], .container-input-text[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
   color: #888;
 }
-.input-text.mfa {
+.input-text.mfa, .container-input-text.mfa {
   letter-spacing: 0.5em;
   text-align: center;
   font-family: "JetBrains Mono", monospace;
 }
-.input-text.bg-2 {
+.input-text.bg-2, .container-input-text.bg-2 {
   background-color: #272222;
 }
-.input-text.mono {
+.input-text.mono, .container-input-text.mono {
   font-family: "JetBrains Mono", monospace;
 }
+
+.container-input-text {
+  padding: 0;
+  overflow: hidden;
+}
+.container-input-text textarea {
+  display: block;
+  border: none;
+  outline: none;
+  border-radius: 0;
+  background-color: transparent;
+  color: #f5f5f5;
+  font-size: 1em;
+  width: 100%;
+  margin: 0;
+  padding: 8px;
+  resize: none;
+}
+.container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px rgba(135, 142, 84, 0.2);
+}
+.container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px rgba(135, 142, 84, 0.2);
+}
+
 .input-text:hover {
   box-shadow: 0 0 0 1px rgba(135, 142, 84, 0.2);
 }
