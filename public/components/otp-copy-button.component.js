@@ -24,12 +24,13 @@ class BtnOtpCopy extends HTMLElement {
         this.span = this.querySelector('span');
         this.strong = this.querySelector('strong');
         // --
-        this.addEventListener('click', () => {
+        this.addEventListener('click', async () => {
             if (!this.secret) return;
-            TOTP.code(this.secret).then((code) => {
-                navigator.clipboard.writeText(code);
-                this.check_animation();
-            });
+            const code = await TOTP.code(this.secret);
+            navigator.clipboard.writeText(code);
+        });
+        this.addEventListener('click', () => {
+            this.check_animation();
         });
         // -- Avvia l'aggiornamento periodico ogni 30 secondi
         this.startOtpUpdate();
