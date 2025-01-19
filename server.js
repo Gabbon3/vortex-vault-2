@@ -18,7 +18,6 @@ import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 import https from 'https';
 import fs from 'fs';
 import { date } from './utils/dateUtils.js';
-import { UUID } from './utils/uuid.js';
 /**
  * MIDDLEWARES
  * qui ci sono i middleware che verranno utilizzati in tutte le routes
@@ -64,15 +63,14 @@ const PORT = process.env.PORT || 3000;
 //     console.log('☑️ DB');
 //     https.createServer(options, app).listen(PORT, () => {
 //         console.log(`☑️ Server`);
-//     })   
+//         console.log(`☑️ ${date.format('%H:%i:%s')}`);
+//     });
 // } catch (error) {
 //     console.error('❌ Errore durante l\'avvio del server => ', error);
 // }
 /**
  * _____
  */
-
-console.log(UUID.uuid_v7());
 
 try {
     await sequelize.authenticate();

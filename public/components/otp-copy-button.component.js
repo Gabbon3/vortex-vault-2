@@ -9,6 +9,7 @@ class BtnOtpCopy extends HTMLElement {
         this.strong = null;
         this.interval = null;
         this.secret = false;
+        this.code = null;
     }
 
     connectedCallback() {
@@ -24,12 +25,9 @@ class BtnOtpCopy extends HTMLElement {
         this.span = this.querySelector('span');
         this.strong = this.querySelector('strong');
         // --
-        this.addEventListener('click', async () => {
-            if (!this.secret) return;
-            const code = await TOTP.code(this.secret);
-            navigator.clipboard.writeText(code);
-        });
         this.addEventListener('click', () => {
+            if (!this.secret) return;
+            navigator.clipboard.writeText(this.code);
             this.check_animation();
         });
         // -- Avvia l'aggiornamento periodico ogni 30 secondi
@@ -75,9 +73,9 @@ class BtnOtpCopy extends HTMLElement {
      * Aggiorna il codice OTP visibile sul pulsante
      */
     async updateOtpCode() {
-        const code = await TOTP.code(this.secret);
+        this.code = await TOTP.code(this.secret);
         // Format the OTP code to show with spaces
-        const formattedCode = code.replace(/(\d{3})(?=\d)/g, "$1 ");
+        const formattedCode = this.code.replace(/(\d{3})(?=\d)/g, "$1 ");
         this.strong.textContent = formattedCode;
     }
 
