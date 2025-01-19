@@ -24,19 +24,15 @@ class BtnOtpCopy extends HTMLElement {
         this.span = this.querySelector('span');
         this.strong = this.querySelector('strong');
         // --
-        this.addEventListener('click', this.copy.bind(this));
+        this.addEventListener('click', () => {
+            if (!this.secret) return;
+            TOTP.code(this.secret).then((code) => {
+                navigator.clipboard.writeText(code);
+                this.check_animation();
+            });
+        });
         // -- Avvia l'aggiornamento periodico ogni 30 secondi
         this.startOtpUpdate();
-    }
-    /**
-     * Copia il testo di un elemento nella clipboard dell'utente
-     */
-    async copy() {
-        if (!this.secret) return;
-        const code = await TOTP.code(this.secret);
-        Log.summon(3, code);
-        navigator.clipboard.writeText(code);
-        this.check_animation();
     }
 
     check_animation() {
