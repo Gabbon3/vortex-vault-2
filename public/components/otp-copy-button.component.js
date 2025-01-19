@@ -34,6 +34,7 @@ class BtnOtpCopy extends HTMLElement {
     async copy() {
         if (!this.secret) return;
         const code = await TOTP.code(this.secret);
+        Log.summon(3, code);
         navigator.clipboard.writeText(code);
         this.check_animation();
     }

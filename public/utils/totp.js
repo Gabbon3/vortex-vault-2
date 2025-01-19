@@ -6,7 +6,7 @@ export class TOTP {
      * @param {Uint8Array} secret 
      * @param {number} [interval=30] 
      * @param {number} [shift=0] indice per calcolare segreti di altri momenti nel tempo
-     * @returns 
+     * @returns {string}
      */
     static async code(secret, interval = 30, shift = 0) {
         // -- ottengo il timestamp corrente diviso l'intervallo
