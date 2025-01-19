@@ -59,12 +59,8 @@
             <!-- --- -->
             <hr>
             <!-- --- -->
-            <div class="flex gap-50 d-column">
-                <button type="button" id="signin-passkey" class="btn primary">
-                    <span class="material-symbols-rounded">passkey</span>
-                    Sign-in with Passkey
-                </button>
-                <button type="button" class="btn warning" id="btn-request-sign-in">
+            <div class="flex gap-50 d-column mt-2">
+                <button type="button" class="btn peach" id="btn-request-sign-in">
                     <span class="material-symbols-rounded">id_card</span>
                     Sign-in with another device
                 </button>
@@ -122,7 +118,7 @@
     <!--
         DEVICE RECOVERY
     -->
-    <div class="window m yellow" id="win-device-recovery">
+    <div class="window m maincolor yellow" id="win-device-recovery">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">mobile_friendly</span>
@@ -150,22 +146,26 @@
             <span class="material-symbols-rounded">mail</span>
             Recover with Email
         </h3>
-        <div class="isle bg-4" id="cont-email-recovery" style="display: none;">
+        <div id="cont-email-recovery" style="display: none;">
             <form id="form-device-recovery-email">
                 <!-- EMAIL -->
-                <label for="recovery-device-email-email">
-                    <span class="material-symbols-rounded">person</span>
-                    Email
-                </label>
-                <input type="email" class="input-text mb-2" id="recovery-device-email-email" name="email" autocomplete="off" required>
-                <!-- code -->
-                <email-verify-btn email-id="recovery-device-email-email" target-id="recovery-device-email-code"></email-verify-btn>
-                <mfa-input input-id="recovery-device-email-code"></mfa-input>
-                <!-- --- -->
-                <button type="submit" class="btn primary mt-2">
-                    <span class="material-symbols-rounded">settings_backup_restore</span>
-                    Recover
-                </button>
+                <div class="isle bg-4 mb-2">
+                    <label for="recovery-device-email-email">
+                        <span class="material-symbols-rounded">person</span>
+                        Email
+                    </label>
+                    <input type="email" class="input-text mb-2" id="recovery-device-email-email" name="email" autocomplete="off" required>
+                    <email-verify-btn email-id="recovery-device-email-email" target-id="recovery-device-email-code"></email-verify-btn>
+                </div>
+                <div class="isle bg-4 mb-2">
+                    <!-- code -->
+                    <mfa-input input-id="recovery-device-email-code"></mfa-input>
+                    <!-- --- -->
+                    <button type="submit" class="btn primary mt-2">
+                        <span class="material-symbols-rounded">settings_backup_restore</span>
+                        Recover
+                    </button>
+                </div>
             </form>
         </div>
     </div>

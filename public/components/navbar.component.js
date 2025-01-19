@@ -46,6 +46,10 @@ export class VortexNavbar extends HTMLElement {
                     <i>Sign In</i>
                 </a>` : ''}
 
+                ${path === '/signin' ? `<a title="Sign-in with Passkey" id="signin-passkey" class="red">
+                    <span class="material-symbols-rounded">passkey</span>
+                    <i>Sign-in with Passkey</i>
+                </a>` : ''}
                 ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up" class="mint">
                     <span class="material-symbols-rounded">person_add</span>
                     <i>Sign Up</i>

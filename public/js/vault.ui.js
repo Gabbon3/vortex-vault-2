@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById(id).addEventListener('click', () => {
                 secrets_type_input.value = type;
                 create_dinamic_secrets.innerHTML = render();
-                win_create_vault.setAttribute('class', 'window m pr show ' + color);
+                win_create_vault.setAttribute('class', 'window m pr show maincolor ' + color);
                 title_create_vault.textContent = title;
                 icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
                 VaultUI.html_used_usernames();

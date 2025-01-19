@@ -193,7 +193,7 @@
     <!-- 
     PASSKEY
     -->
-    <div class="window red m pl" id="win-passkey">
+    <div class="window maincolor red m pl" id="win-passkey">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">passkey</span>
@@ -231,7 +231,7 @@
     <!-- 
     DEVICE
     -->
-    <div class="window m pl purple" id="win-devices">
+    <div class="window m pl maincolor purple" id="win-devices">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">token</span>
@@ -245,7 +245,7 @@
         <hr>
         <p>
             In this section you can control the access of devices connected to your account. <br>
-            The <b>highlighted</b> device represents the current one.
+            The <colored>highlighted</colored> device represents the current one.
         </p>
         <div class="flex gap-50 mb-2">
             <button class="btn primary" id="btn-sync-devices" title="Syncronize">
@@ -260,7 +260,7 @@
     <!--
     BACKUP
     -->
-    <div class="window m pl" id="win-backups">
+    <div class="window m pl maincolor yellow" id="win-backups">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">cloud</span>
@@ -271,12 +271,13 @@
             </button>
         </div>
         <hr>
-        <h3 class="icon">
-            <span class="material-symbols-rounded">database</span>
-            Server
-            <span class="material-symbols-rounded warning">vpn_key</span>
-        </h3>
         <div class="isle bg-4">
+            <h3 class="icon">
+                <span class="material-symbols-rounded">database</span>
+                Server
+                <span class="material-symbols-rounded warning">vpn_key</span>
+            </h3>
+            <hr>
             <p>
                 You can save only one backup at time on server
             </p>
@@ -292,21 +293,23 @@
             </div>
         </div>
         <hr>
-        <h3 class="icon">
-            <span class="material-symbols-rounded">hard_drive</span>
-            Download
-        </h3>
         <form class="isle bg-4 mb-2" id="form-create-backup-locally">
+            <h3 class="icon">
+                <span class="material-symbols-rounded">hard_drive</span>
+                Download
+            </h3>
+            <hr>
             <label for="backup-custom-password">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2" autocomplete="off">
+            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2 protected" autocomplete="off">
             <label for="backup-custom-password-2">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Repeat custom password
             </label>
-            <input type="password" name="key_r" id="backup-custom-password-2" class="input-text mb-2" autocomplete="off">
+            <input type="password" name="key_r" id="backup-custom-password-2" class="input-text mb-2 protected" autocomplete="off">
+            <btn-hide-show-protect-input target="form-create-backup-locally"></btn-hide-show-protect-input>
             <p class="description">
                 Leave blank if you want to use the default master key.
             </p>
@@ -315,12 +318,13 @@
                 Generate & Download
             </button>
         </form>
-        <h3 class="icon">
-            <span class="material-symbols-rounded">draft</span>
-            Restore locally
-            <span class="material-symbols-rounded warning">vpn_key</span>
-        </h3>
         <form id="form-restore-backup-from-file" class="isle bg-4">
+            <h3 class="icon">
+                <span class="material-symbols-rounded">devices</span>
+                Restore locally
+                <span class="material-symbols-rounded warning">vpn_key</span>
+            </h3>
+            <hr>
             <label for="backup-file">
                 <span class="material-symbols-rounded">draft</span>
                 Backup file
@@ -334,7 +338,8 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2" autocomplete="off">
+            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2 protected" autocomplete="off">
+            <btn-hide-show-protect-input target="form-restore-backup-from-file"></btn-hide-show-protect-input>
             <p class="description">
                 Leave blank if you had not used a custom password for backup.
             </p>
@@ -423,7 +428,7 @@
     <!--
     SETTINGS
     -->
-    <div class="window m pl" id="win-settings">
+    <div class="window m pl maincolor blue" id="win-settings">
         <div class="flex y-center">
             <h2 class="icon">
                 <span class="material-symbols-rounded">settings</span>

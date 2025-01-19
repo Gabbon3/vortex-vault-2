@@ -214,6 +214,10 @@ p {
     }
 }
 
+colored {
+    color: $c1;
+}
+
 .fs-l {
     font-size: $fs-l;
 }
@@ -413,9 +417,11 @@ hr {
     &.m {
         max-width: 500px;
     }
+}
 
+.maincolor {
     /*
-    COLORI PRINCIPALI DELLA FINESTRA
+    COLORI PRINCIPALI
     */
     @mixin color-styles($color-name, $color-value) {
         &.#{$color-name} {
@@ -423,6 +429,12 @@ hr {
             h2 .material-symbols-rounded,
             h3 .material-symbols-rounded {
                 color: $color-value;
+            }
+
+            p {
+                colored {
+                    color: $color-value;
+                }
             }
 
             form {

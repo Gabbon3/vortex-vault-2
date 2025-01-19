@@ -36,7 +36,7 @@ class DeviceListItem extends HTMLElement {
         this.innerHTML = `
             <span class="token-id">
                 <span class="material-symbols-rounded">fingerprint</span>
-                <i>${await Cripto.hash(token_id, { algorithm: 'SHA-1', encoding: 'base62' })}</i>
+                <i>${(await Cripto.hash(token_id, { encoding: 'base62' })).match(/.{1,16}/g)[0]}</i>
             </span>
             <div class="flex gap-50 d-row">
                 <input type="text" class="input-text device-name" title="Device name" value="${device_name}">

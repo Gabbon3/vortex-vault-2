@@ -459,6 +459,10 @@ p.description {
   font-size: 0.9em;
 }
 
+colored {
+  color: #878e54;
+}
+
 .fs-l {
   font-size: 1.2em;
 }
@@ -653,9 +657,6 @@ hr.s {
   background-color: #272222;
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
-  /*
-  COLORI PRINCIPALI DELLA FINESTRA
-  */
 }
 .window.pt {
   top: -100%;
@@ -693,257 +694,296 @@ hr.s {
 .window.m {
   max-width: 500px;
 }
-.window.red h2 .material-symbols-rounded,
-.window.red h3 .material-symbols-rounded {
+
+.maincolor {
+  /*
+  COLORI PRINCIPALI
+  */
+}
+.maincolor.red h2 .material-symbols-rounded,
+.maincolor.red h3 .material-symbols-rounded {
   color: #F7A7A0;
 }
-.window.red form label .material-symbols-rounded {
+.maincolor.red p colored {
   color: #F7A7A0;
 }
-.window.red form .input-text:hover {
+.maincolor.red form label .material-symbols-rounded {
+  color: #F7A7A0;
+}
+.maincolor.red form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(247, 167, 160, 0.2);
 }
-.window.red form .input-text:focus {
+.maincolor.red form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
 }
-.window.red .btn.primary {
+.maincolor.red .btn.primary {
   color: #F7A7A0 !important;
   background-color: rgba(247, 167, 160, 0.2);
 }
-.window.red .btn.primary:hover {
+.maincolor.red .btn.primary:hover {
   background-color: rgba(247, 167, 160, 0.3);
 }
-.window.red .input-switch input:checked + label {
+.maincolor.red .input-switch input:checked + label {
   background-color: rgba(247, 167, 160, 0.5);
 }
-.window.yellow h2 .material-symbols-rounded,
-.window.yellow h3 .material-symbols-rounded {
+.maincolor.yellow h2 .material-symbols-rounded,
+.maincolor.yellow h3 .material-symbols-rounded {
   color: #eec471;
 }
-.window.yellow form label .material-symbols-rounded {
+.maincolor.yellow p colored {
   color: #eec471;
 }
-.window.yellow form .input-text:hover {
+.maincolor.yellow form label .material-symbols-rounded {
+  color: #eec471;
+}
+.maincolor.yellow form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
 }
-.window.yellow form .input-text:focus {
+.maincolor.yellow form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
 }
-.window.yellow .btn.primary {
+.maincolor.yellow .btn.primary {
   color: #eec471 !important;
   background-color: rgba(238, 196, 113, 0.2);
 }
-.window.yellow .btn.primary:hover {
+.maincolor.yellow .btn.primary:hover {
   background-color: rgba(238, 196, 113, 0.3);
 }
-.window.yellow .input-switch input:checked + label {
+.maincolor.yellow .input-switch input:checked + label {
   background-color: rgba(238, 196, 113, 0.5);
 }
-.window.orange h2 .material-symbols-rounded,
-.window.orange h3 .material-symbols-rounded {
+.maincolor.orange h2 .material-symbols-rounded,
+.maincolor.orange h3 .material-symbols-rounded {
   color: #e59e7a;
 }
-.window.orange form label .material-symbols-rounded {
+.maincolor.orange p colored {
   color: #e59e7a;
 }
-.window.orange form .input-text:hover {
+.maincolor.orange form label .material-symbols-rounded {
+  color: #e59e7a;
+}
+.maincolor.orange form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(229, 158, 122, 0.2);
 }
-.window.orange form .input-text:focus {
+.maincolor.orange form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
 }
-.window.orange .btn.primary {
+.maincolor.orange .btn.primary {
   color: #e59e7a !important;
   background-color: rgba(229, 158, 122, 0.2);
 }
-.window.orange .btn.primary:hover {
+.maincolor.orange .btn.primary:hover {
   background-color: rgba(229, 158, 122, 0.3);
 }
-.window.orange .input-switch input:checked + label {
+.maincolor.orange .input-switch input:checked + label {
   background-color: rgba(229, 158, 122, 0.5);
 }
-.window.peach h2 .material-symbols-rounded,
-.window.peach h3 .material-symbols-rounded {
+.maincolor.peach h2 .material-symbols-rounded,
+.maincolor.peach h3 .material-symbols-rounded {
   color: #FFD6A5;
 }
-.window.peach form label .material-symbols-rounded {
+.maincolor.peach p colored {
   color: #FFD6A5;
 }
-.window.peach form .input-text:hover {
+.maincolor.peach form label .material-symbols-rounded {
+  color: #FFD6A5;
+}
+.maincolor.peach form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
 }
-.window.peach form .input-text:focus {
+.maincolor.peach form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
 }
-.window.peach .btn.primary {
+.maincolor.peach .btn.primary {
   color: #FFD6A5 !important;
   background-color: rgba(255, 214, 165, 0.2);
 }
-.window.peach .btn.primary:hover {
+.maincolor.peach .btn.primary:hover {
   background-color: rgba(255, 214, 165, 0.3);
 }
-.window.peach .input-switch input:checked + label {
+.maincolor.peach .input-switch input:checked + label {
   background-color: rgba(255, 214, 165, 0.5);
 }
-.window.purple h2 .material-symbols-rounded,
-.window.purple h3 .material-symbols-rounded {
+.maincolor.purple h2 .material-symbols-rounded,
+.maincolor.purple h3 .material-symbols-rounded {
   color: #D3B4FF;
 }
-.window.purple form label .material-symbols-rounded {
+.maincolor.purple p colored {
   color: #D3B4FF;
 }
-.window.purple form .input-text:hover {
+.maincolor.purple form label .material-symbols-rounded {
+  color: #D3B4FF;
+}
+.maincolor.purple form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(211, 180, 255, 0.2);
 }
-.window.purple form .input-text:focus {
+.maincolor.purple form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
 }
-.window.purple .btn.primary {
+.maincolor.purple .btn.primary {
   color: #D3B4FF !important;
   background-color: rgba(211, 180, 255, 0.2);
 }
-.window.purple .btn.primary:hover {
+.maincolor.purple .btn.primary:hover {
   background-color: rgba(211, 180, 255, 0.3);
 }
-.window.purple .input-switch input:checked + label {
+.maincolor.purple .input-switch input:checked + label {
   background-color: rgba(211, 180, 255, 0.5);
 }
-.window.pink h2 .material-symbols-rounded,
-.window.pink h3 .material-symbols-rounded {
+.maincolor.pink h2 .material-symbols-rounded,
+.maincolor.pink h3 .material-symbols-rounded {
   color: #FFB7C5;
 }
-.window.pink form label .material-symbols-rounded {
+.maincolor.pink p colored {
   color: #FFB7C5;
 }
-.window.pink form .input-text:hover {
+.maincolor.pink form label .material-symbols-rounded {
+  color: #FFB7C5;
+}
+.maincolor.pink form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
 }
-.window.pink form .input-text:focus {
+.maincolor.pink form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
 }
-.window.pink .btn.primary {
+.maincolor.pink .btn.primary {
   color: #FFB7C5 !important;
   background-color: rgba(255, 183, 197, 0.2);
 }
-.window.pink .btn.primary:hover {
+.maincolor.pink .btn.primary:hover {
   background-color: rgba(255, 183, 197, 0.3);
 }
-.window.pink .input-switch input:checked + label {
+.maincolor.pink .input-switch input:checked + label {
   background-color: rgba(255, 183, 197, 0.5);
 }
-.window.mint h2 .material-symbols-rounded,
-.window.mint h3 .material-symbols-rounded {
+.maincolor.mint h2 .material-symbols-rounded,
+.maincolor.mint h3 .material-symbols-rounded {
   color: #AEE5D8;
 }
-.window.mint form label .material-symbols-rounded {
+.maincolor.mint p colored {
   color: #AEE5D8;
 }
-.window.mint form .input-text:hover {
+.maincolor.mint form label .material-symbols-rounded {
+  color: #AEE5D8;
+}
+.maincolor.mint form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(174, 229, 216, 0.2);
 }
-.window.mint form .input-text:focus {
+.maincolor.mint form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
 }
-.window.mint .btn.primary {
+.maincolor.mint .btn.primary {
   color: #AEE5D8 !important;
   background-color: rgba(174, 229, 216, 0.2);
 }
-.window.mint .btn.primary:hover {
+.maincolor.mint .btn.primary:hover {
   background-color: rgba(174, 229, 216, 0.3);
 }
-.window.mint .input-switch input:checked + label {
+.maincolor.mint .input-switch input:checked + label {
   background-color: rgba(174, 229, 216, 0.5);
 }
-.window.blue h2 .material-symbols-rounded,
-.window.blue h3 .material-symbols-rounded {
+.maincolor.blue h2 .material-symbols-rounded,
+.maincolor.blue h3 .material-symbols-rounded {
   color: #7dbaff;
 }
-.window.blue form label .material-symbols-rounded {
+.maincolor.blue p colored {
   color: #7dbaff;
 }
-.window.blue form .input-text:hover {
+.maincolor.blue form label .material-symbols-rounded {
+  color: #7dbaff;
+}
+.maincolor.blue form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
 }
-.window.blue form .input-text:focus {
+.maincolor.blue form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
 }
-.window.blue .btn.primary {
+.maincolor.blue .btn.primary {
   color: #7dbaff !important;
   background-color: rgba(125, 186, 255, 0.2);
 }
-.window.blue .btn.primary:hover {
+.maincolor.blue .btn.primary:hover {
   background-color: rgba(125, 186, 255, 0.3);
 }
-.window.blue .input-switch input:checked + label {
+.maincolor.blue .input-switch input:checked + label {
   background-color: rgba(125, 186, 255, 0.5);
 }
-.window.lightblue h2 .material-symbols-rounded,
-.window.lightblue h3 .material-symbols-rounded {
+.maincolor.lightblue h2 .material-symbols-rounded,
+.maincolor.lightblue h3 .material-symbols-rounded {
   color: #A8D8FF;
 }
-.window.lightblue form label .material-symbols-rounded {
+.maincolor.lightblue p colored {
   color: #A8D8FF;
 }
-.window.lightblue form .input-text:hover {
+.maincolor.lightblue form label .material-symbols-rounded {
+  color: #A8D8FF;
+}
+.maincolor.lightblue form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(168, 216, 255, 0.2);
 }
-.window.lightblue form .input-text:focus {
+.maincolor.lightblue form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
 }
-.window.lightblue .btn.primary {
+.maincolor.lightblue .btn.primary {
   color: #A8D8FF !important;
   background-color: rgba(168, 216, 255, 0.2);
 }
-.window.lightblue .btn.primary:hover {
+.maincolor.lightblue .btn.primary:hover {
   background-color: rgba(168, 216, 255, 0.3);
 }
-.window.lightblue .input-switch input:checked + label {
+.maincolor.lightblue .input-switch input:checked + label {
   background-color: rgba(168, 216, 255, 0.5);
 }
-.window.lightgray h2 .material-symbols-rounded,
-.window.lightgray h3 .material-symbols-rounded {
+.maincolor.lightgray h2 .material-symbols-rounded,
+.maincolor.lightgray h3 .material-symbols-rounded {
   color: #E0E0E0;
 }
-.window.lightgray form label .material-symbols-rounded {
+.maincolor.lightgray p colored {
   color: #E0E0E0;
 }
-.window.lightgray form .input-text:hover {
+.maincolor.lightgray form label .material-symbols-rounded {
+  color: #E0E0E0;
+}
+.maincolor.lightgray form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.2);
 }
-.window.lightgray form .input-text:focus {
+.maincolor.lightgray form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
 }
-.window.lightgray .btn.primary {
+.maincolor.lightgray .btn.primary {
   color: #E0E0E0 !important;
   background-color: rgba(224, 224, 224, 0.2);
 }
-.window.lightgray .btn.primary:hover {
+.maincolor.lightgray .btn.primary:hover {
   background-color: rgba(224, 224, 224, 0.3);
 }
-.window.lightgray .input-switch input:checked + label {
+.maincolor.lightgray .input-switch input:checked + label {
   background-color: rgba(224, 224, 224, 0.5);
 }
-.window.olivegreen h2 .material-symbols-rounded,
-.window.olivegreen h3 .material-symbols-rounded {
+.maincolor.olivegreen h2 .material-symbols-rounded,
+.maincolor.olivegreen h3 .material-symbols-rounded {
   color: #B9D19C;
 }
-.window.olivegreen form label .material-symbols-rounded {
+.maincolor.olivegreen p colored {
   color: #B9D19C;
 }
-.window.olivegreen form .input-text:hover {
+.maincolor.olivegreen form label .material-symbols-rounded {
+  color: #B9D19C;
+}
+.maincolor.olivegreen form .input-text:hover {
   box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
 }
-.window.olivegreen form .input-text:focus {
+.maincolor.olivegreen form .input-text:focus {
   box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
 }
-.window.olivegreen .btn.primary {
+.maincolor.olivegreen .btn.primary {
   color: #B9D19C !important;
   background-color: rgba(185, 209, 156, 0.2);
 }
-.window.olivegreen .btn.primary:hover {
+.maincolor.olivegreen .btn.primary:hover {
   background-color: rgba(185, 209, 156, 0.3);
 }
-.window.olivegreen .input-switch input:checked + label {
+.maincolor.olivegreen .input-switch input:checked + label {
   background-color: rgba(185, 209, 156, 0.5);
 }
 
@@ -1615,7 +1655,7 @@ passkey-list-item .token-id i {
 }
 device-list-item.current .token-id,
 passkey-list-item.current .token-id {
-  color: #878e54;
+  color: #D3B4FF;
 }
 device-list-item .info,
 passkey-list-item .info {

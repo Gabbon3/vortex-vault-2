@@ -25,7 +25,7 @@ class PasskeyListItem extends HTMLElement {
             <div class="isle bg-5">
                 <span class="token-id">
                     <span class="material-symbols-rounded">fingerprint</span>
-                    <i>${await Cripto.hash(id, { algorithm: 'SHA-1', encoding: 'base62' })}</i>
+                    <i>${(await Cripto.hash(id, { encoding: 'base62' })).match(/.{1,16}/g)[0]}</i>
                 </span>
                 <div class="flex gap-50 y-center d-row mt-2">
                     <input type="text" class="input-text passkey-name" title="Passkey name" value="${name}">

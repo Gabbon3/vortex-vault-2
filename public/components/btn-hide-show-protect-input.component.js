@@ -10,6 +10,7 @@ class BtnHideShowProtectInput extends HTMLElement {
     connectedCallback() {
         BtnHideShowProtectInput.id++;
         this.className = 'input-switch flex gap-100 y-center';
+        this.title = this.title || "Show or Hide protected fields";
         // -- variables
         const target = this.getAttribute('target');
         const checked = this.getAttribute('checked') === 'true';

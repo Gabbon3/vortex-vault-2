@@ -86,7 +86,7 @@
         <!-- 
             VERIFY ACCOUNT & SET UP PASSKEY
         -->
-        <div class="window m" id="win-email-verify">
+        <div class="window m maincolor peach" id="win-email-verify">
             <div class="flex y-center">
                 <h3 class="icon">
                     <span class="material-symbols-rounded">passkey</span>
@@ -103,16 +103,20 @@
             </p>
             <form id="setup-passkey">
                 <!-- --- -->
-                <label for="verify-email-email">
-                    <span class="material-symbols-rounded">person</span>
-                    Email
-                </label>
-                <input type="email" class="input-text mb-2" id="verify-email-email" name="email" autocomplete="off" required>
+                <div class="isle bg-4 mb-2">
+                    <label for="verify-email-email">
+                        <span class="material-symbols-rounded">person</span>
+                        Email
+                    </label>
+                    <input type="email" class="input-text mb-2" id="verify-email-email" name="email" autocomplete="off" required>
+                    <email-verify-btn email-id="verify-email-email" target-id="verify-email-code"></email-verify-btn>
+                </div>
                 <!-- code -->
-                <email-verify-btn email-id="verify-email-email" target-id="verify-email-code"></email-verify-btn>
-                <mfa-input input-id="verify-email-code"></mfa-input>
+                <div class="isle bg-4 mb-2">
+                    <mfa-input input-id="verify-email-code"></mfa-input>
+                </div>
                 <!-- SUBMIT -->
-                <button type="submit" class="btn primary mt-2">
+                <button type="submit" class="btn primary mt-2 w-100">
                     <span class="material-symbols-rounded">check</span>
                     Verify & Create new Passkey
                 </button>

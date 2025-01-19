@@ -36,7 +36,7 @@ export class QrCodeDisplay {
         Windows.close();
         // -- calcolo le dimensioni di default in base alla finestra
         const [w, h] = [window.innerWidth, window.innerHeight];
-        const l = Math.min((w + h) * 0.25, 400);
+        const l = Math.min((w + h) * 0.25, 250);
         // ---
         qrcode.toCanvas(this.canvas, options.data, {
             width: options.l ?? l,
