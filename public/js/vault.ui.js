@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 win_create_vault.setAttribute('class', 'window m pr show ' + color);
                 title_create_vault.textContent = title;
                 icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
+                VaultUI.html_used_usernames();
             });
         });
     };
