@@ -76,7 +76,7 @@
                 <!-- CREATE ITEM BUTTONS -->
                 <div class="flex gap-50 wrap">
                     <button class="btn orange open fg-1" id="btn-add-vault" data-target-open="win-create-vault" title="Create new Login">
-                        <span class="material-symbols-rounded">encrypted</span>
+                        <span class="material-symbols-rounded">key_vertical</span>
                         Login
                     </button>
                     <button class="btn lightblue open fg-1" id="btn-add-note" data-target-open="win-create-vault" title="Create new Note">
@@ -114,9 +114,12 @@
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
-        <p class="description m-0 mb-2">
-            Be careful, if you exit this screen you will lose the data written up to now.
-        </p>
+        <div class="alert warning mb-2">
+            <span class="icon material-symbols-rounded">priority_high</span>
+            <p>
+                Be careful, if you exit this screen you will lose the data written up to now.
+            </p>
+        </div>
         <!-- FORM -->
         <form id="form-create-vault">
             <input type="number" id="secrets-type" name="ST" class="none">
@@ -298,12 +301,12 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2"  placeholder="* * *" autocomplete="off">
+            <input type="password" name="key" id="backup-custom-password" class="input-text mb-2" autocomplete="off">
             <label for="backup-custom-password-2">
                 <span class="material-symbols-rounded">key_vertical</span>
                 Repeat custom password
             </label>
-            <input type="password" name="key_r" id="backup-custom-password-2" class="input-text mb-2"  placeholder="* * *" autocomplete="off">
+            <input type="password" name="key_r" id="backup-custom-password-2" class="input-text mb-2" autocomplete="off">
             <p class="description">
                 Leave blank if you want to use the default master key.
             </p>
@@ -331,7 +334,7 @@
                 <span class="material-symbols-rounded">key_vertical</span>
                 Custom password
             </label>
-            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2" placeholder="* * *" autocomplete="off">
+            <input type="password" name="key" id="backup-custom-password-restore" class="input-text mb-2" autocomplete="off">
             <p class="description">
                 Leave blank if you had not used a custom password for backup.
             </p>

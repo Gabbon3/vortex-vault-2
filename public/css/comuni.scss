@@ -506,7 +506,6 @@ hr {
     &.bg-7 {
         background-color: $bg-7;
     }
-
     // BORDER RADIUS
     &.br-m {
         border-radius: $br-m;
@@ -518,6 +517,34 @@ hr {
 
     &.br-xl {
         border-radius: $br-xl;
+    }
+}
+
+.alert {
+    padding: $br-m;
+    border-radius: $br-m;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-direction: row;
+    // ---
+    .icon { font-size: $fs-xxl; margin-left: 2px; }
+    p { margin: 0; }
+    // ---
+    &.danger {
+        background-color: rgba($c-red, 0.1);
+        color: $c-red !important;
+        p { color: $c-red }
+    }
+    &.warning {
+        background-color: rgba($c-warning, 0.1);
+        color: $c-warning !important;
+        p { color: $c-warning }
+    }
+    &.success {
+        background-color: rgba($c-olive-green, 0.1);
+        color: $c-olive-green !important;
+        p { color: $c-olive-green }
     }
 }
 

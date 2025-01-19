@@ -19,7 +19,7 @@ class VaultLi extends HTMLElement {
         let color = '';
         switch (st) {
             case '0':
-                icon = secure ? 'encrypted' : 'error';
+                icon = secure ? 'key_vertical' : 'warning';
                 color = secure ? 'orange' : 'red';
                 break;
             case '1':

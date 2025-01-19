@@ -99,21 +99,21 @@
                     <span class="material-symbols-rounded">password</span>
                     Recovery Key
                 </label>
-                <input type="file" class="input-text" name="file" id="recovery-file" accept=".pem" required>
-                <p class="description mb-3">
-                    A .pem file is required
+                <input type="file" class="input-text" name="file" id="recovery-file" accept=".pem,.txt,.key" required>
+                <p class="description mb-0">
+                    .pem file is required
                 </p>
             </div>
             <!-- --- -->
             <div class="isle bg-4">
                 <email-verify-btn email-id="recovery-email" target-id="recovery-password-code"></email-verify-btn>
                 <mfa-input input-id="recovery-password-code"></mfa-input>
-                <p class="description">
+                <p class="description mb-0">
                     Identity verification is required to recover your password
                 </p>
                 </div>
             <!-- --- -->
-            <button type="submit" class="btn primary mt-2">
+            <button type="submit" class="btn primary mt-2 w-100">
                 <span class="material-symbols-rounded">lock_reset</span>
                 Recover master password now
             </button>

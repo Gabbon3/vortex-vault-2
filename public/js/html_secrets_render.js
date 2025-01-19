@@ -11,7 +11,7 @@ export class HtmlSecretsRender {
         secret_type = Number(secret_type);
         // ---
         let icon = null;
-        if (secret_type === 0) icon = 'encrypted';
+        if (secret_type === 0) icon = 'key_vertical';
         else if (secret_type === 1) icon = 'sticky_note_2';
         else if (secret_type === 2) icon = 'credit_card';
         if (icon) return `<span class="material-symbols-rounded">${icon}</span>`;
