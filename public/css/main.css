@@ -1382,6 +1382,7 @@ vortex-navbar {
 vortex-navbar .logo {
   height: 30px;
   padding: 0 10px;
+  margin-left: auto;
 }
 
 #sudo-indicator {
@@ -1968,7 +1969,7 @@ mfa-input {
   vortex-navbar .navbar a i {
     display: none;
   }
-  vortex-navbar #sudo-indicator {
+  vortex-navbar .logo {
     display: none;
   }
   .btn .text {

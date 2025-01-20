@@ -55,6 +55,7 @@ export class VortexNavbar extends HTMLElement {
                     <i>Sign Up</i>
                 </a>` : ''}
             </nav>
+            <img src="./img/vortex_vault_logo.png" class="logo">
         `;
     }
 }
