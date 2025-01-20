@@ -53,6 +53,7 @@ vortex-navbar {
     top: 7px;
     left: 7px;
     width: calc(100% - 14px);
+    z-index: 5;
 
     .logo {
         height: 30px;
