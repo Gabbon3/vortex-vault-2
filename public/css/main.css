@@ -700,26 +700,25 @@ hr.s {
   COLORI PRINCIPALI
   */
 }
-.maincolor.red h2 .material-symbols-rounded,
-.maincolor.red h3 .material-symbols-rounded {
+.maincolor.red h1 .material-symbols-rounded, .maincolor.red h2 .material-symbols-rounded, .maincolor.red h3 .material-symbols-rounded, .maincolor.red h4 .material-symbols-rounded {
   color: #F7A7A0;
 }
 .maincolor.red p colored {
   color: #F7A7A0;
 }
-.maincolor.red form label .material-symbols-rounded {
+.maincolor.red label .material-symbols-rounded {
   color: #F7A7A0;
 }
-.maincolor.red form .input-text:hover {
+.maincolor.red .input-text:hover {
   box-shadow: 0 0 0 1px rgba(247, 167, 160, 0.2);
 }
-.maincolor.red form .input-text:focus {
+.maincolor.red .input-text:focus {
   box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
 }
-.maincolor.red form .container-input-text:has(textarea:hover) {
+.maincolor.red .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(247, 167, 160, 0.2);
 }
-.maincolor.red form .container-input-text:has(textarea:focus) {
+.maincolor.red .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
 }
 .maincolor.red .btn.primary {
@@ -732,26 +731,25 @@ hr.s {
 .maincolor.red .input-switch input:checked + label {
   background-color: rgba(247, 167, 160, 0.5);
 }
-.maincolor.yellow h2 .material-symbols-rounded,
-.maincolor.yellow h3 .material-symbols-rounded {
+.maincolor.yellow h1 .material-symbols-rounded, .maincolor.yellow h2 .material-symbols-rounded, .maincolor.yellow h3 .material-symbols-rounded, .maincolor.yellow h4 .material-symbols-rounded {
   color: #eec471;
 }
 .maincolor.yellow p colored {
   color: #eec471;
 }
-.maincolor.yellow form label .material-symbols-rounded {
+.maincolor.yellow label .material-symbols-rounded {
   color: #eec471;
 }
-.maincolor.yellow form .input-text:hover {
+.maincolor.yellow .input-text:hover {
   box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
 }
-.maincolor.yellow form .input-text:focus {
+.maincolor.yellow .input-text:focus {
   box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
 }
-.maincolor.yellow form .container-input-text:has(textarea:hover) {
+.maincolor.yellow .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
 }
-.maincolor.yellow form .container-input-text:has(textarea:focus) {
+.maincolor.yellow .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
 }
 .maincolor.yellow .btn.primary {
@@ -764,26 +762,25 @@ hr.s {
 .maincolor.yellow .input-switch input:checked + label {
   background-color: rgba(238, 196, 113, 0.5);
 }
-.maincolor.orange h2 .material-symbols-rounded,
-.maincolor.orange h3 .material-symbols-rounded {
+.maincolor.orange h1 .material-symbols-rounded, .maincolor.orange h2 .material-symbols-rounded, .maincolor.orange h3 .material-symbols-rounded, .maincolor.orange h4 .material-symbols-rounded {
   color: #e59e7a;
 }
 .maincolor.orange p colored {
   color: #e59e7a;
 }
-.maincolor.orange form label .material-symbols-rounded {
+.maincolor.orange label .material-symbols-rounded {
   color: #e59e7a;
 }
-.maincolor.orange form .input-text:hover {
+.maincolor.orange .input-text:hover {
   box-shadow: 0 0 0 1px rgba(229, 158, 122, 0.2);
 }
-.maincolor.orange form .input-text:focus {
+.maincolor.orange .input-text:focus {
   box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
 }
-.maincolor.orange form .container-input-text:has(textarea:hover) {
+.maincolor.orange .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(229, 158, 122, 0.2);
 }
-.maincolor.orange form .container-input-text:has(textarea:focus) {
+.maincolor.orange .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
 }
 .maincolor.orange .btn.primary {
@@ -796,26 +793,25 @@ hr.s {
 .maincolor.orange .input-switch input:checked + label {
   background-color: rgba(229, 158, 122, 0.5);
 }
-.maincolor.peach h2 .material-symbols-rounded,
-.maincolor.peach h3 .material-symbols-rounded {
+.maincolor.peach h1 .material-symbols-rounded, .maincolor.peach h2 .material-symbols-rounded, .maincolor.peach h3 .material-symbols-rounded, .maincolor.peach h4 .material-symbols-rounded {
   color: #FFD6A5;
 }
 .maincolor.peach p colored {
   color: #FFD6A5;
 }
-.maincolor.peach form label .material-symbols-rounded {
+.maincolor.peach label .material-symbols-rounded {
   color: #FFD6A5;
 }
-.maincolor.peach form .input-text:hover {
+.maincolor.peach .input-text:hover {
   box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
 }
-.maincolor.peach form .input-text:focus {
+.maincolor.peach .input-text:focus {
   box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
 }
-.maincolor.peach form .container-input-text:has(textarea:hover) {
+.maincolor.peach .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
 }
-.maincolor.peach form .container-input-text:has(textarea:focus) {
+.maincolor.peach .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
 }
 .maincolor.peach .btn.primary {
@@ -828,26 +824,25 @@ hr.s {
 .maincolor.peach .input-switch input:checked + label {
   background-color: rgba(255, 214, 165, 0.5);
 }
-.maincolor.purple h2 .material-symbols-rounded,
-.maincolor.purple h3 .material-symbols-rounded {
+.maincolor.purple h1 .material-symbols-rounded, .maincolor.purple h2 .material-symbols-rounded, .maincolor.purple h3 .material-symbols-rounded, .maincolor.purple h4 .material-symbols-rounded {
   color: #D3B4FF;
 }
 .maincolor.purple p colored {
   color: #D3B4FF;
 }
-.maincolor.purple form label .material-symbols-rounded {
+.maincolor.purple label .material-symbols-rounded {
   color: #D3B4FF;
 }
-.maincolor.purple form .input-text:hover {
+.maincolor.purple .input-text:hover {
   box-shadow: 0 0 0 1px rgba(211, 180, 255, 0.2);
 }
-.maincolor.purple form .input-text:focus {
+.maincolor.purple .input-text:focus {
   box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
 }
-.maincolor.purple form .container-input-text:has(textarea:hover) {
+.maincolor.purple .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(211, 180, 255, 0.2);
 }
-.maincolor.purple form .container-input-text:has(textarea:focus) {
+.maincolor.purple .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
 }
 .maincolor.purple .btn.primary {
@@ -860,26 +855,25 @@ hr.s {
 .maincolor.purple .input-switch input:checked + label {
   background-color: rgba(211, 180, 255, 0.5);
 }
-.maincolor.pink h2 .material-symbols-rounded,
-.maincolor.pink h3 .material-symbols-rounded {
+.maincolor.pink h1 .material-symbols-rounded, .maincolor.pink h2 .material-symbols-rounded, .maincolor.pink h3 .material-symbols-rounded, .maincolor.pink h4 .material-symbols-rounded {
   color: #FFB7C5;
 }
 .maincolor.pink p colored {
   color: #FFB7C5;
 }
-.maincolor.pink form label .material-symbols-rounded {
+.maincolor.pink label .material-symbols-rounded {
   color: #FFB7C5;
 }
-.maincolor.pink form .input-text:hover {
+.maincolor.pink .input-text:hover {
   box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
 }
-.maincolor.pink form .input-text:focus {
+.maincolor.pink .input-text:focus {
   box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
 }
-.maincolor.pink form .container-input-text:has(textarea:hover) {
+.maincolor.pink .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
 }
-.maincolor.pink form .container-input-text:has(textarea:focus) {
+.maincolor.pink .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
 }
 .maincolor.pink .btn.primary {
@@ -892,26 +886,25 @@ hr.s {
 .maincolor.pink .input-switch input:checked + label {
   background-color: rgba(255, 183, 197, 0.5);
 }
-.maincolor.mint h2 .material-symbols-rounded,
-.maincolor.mint h3 .material-symbols-rounded {
+.maincolor.mint h1 .material-symbols-rounded, .maincolor.mint h2 .material-symbols-rounded, .maincolor.mint h3 .material-symbols-rounded, .maincolor.mint h4 .material-symbols-rounded {
   color: #AEE5D8;
 }
 .maincolor.mint p colored {
   color: #AEE5D8;
 }
-.maincolor.mint form label .material-symbols-rounded {
+.maincolor.mint label .material-symbols-rounded {
   color: #AEE5D8;
 }
-.maincolor.mint form .input-text:hover {
+.maincolor.mint .input-text:hover {
   box-shadow: 0 0 0 1px rgba(174, 229, 216, 0.2);
 }
-.maincolor.mint form .input-text:focus {
+.maincolor.mint .input-text:focus {
   box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
 }
-.maincolor.mint form .container-input-text:has(textarea:hover) {
+.maincolor.mint .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(174, 229, 216, 0.2);
 }
-.maincolor.mint form .container-input-text:has(textarea:focus) {
+.maincolor.mint .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
 }
 .maincolor.mint .btn.primary {
@@ -924,26 +917,25 @@ hr.s {
 .maincolor.mint .input-switch input:checked + label {
   background-color: rgba(174, 229, 216, 0.5);
 }
-.maincolor.blue h2 .material-symbols-rounded,
-.maincolor.blue h3 .material-symbols-rounded {
+.maincolor.blue h1 .material-symbols-rounded, .maincolor.blue h2 .material-symbols-rounded, .maincolor.blue h3 .material-symbols-rounded, .maincolor.blue h4 .material-symbols-rounded {
   color: #7dbaff;
 }
 .maincolor.blue p colored {
   color: #7dbaff;
 }
-.maincolor.blue form label .material-symbols-rounded {
+.maincolor.blue label .material-symbols-rounded {
   color: #7dbaff;
 }
-.maincolor.blue form .input-text:hover {
+.maincolor.blue .input-text:hover {
   box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
 }
-.maincolor.blue form .input-text:focus {
+.maincolor.blue .input-text:focus {
   box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
 }
-.maincolor.blue form .container-input-text:has(textarea:hover) {
+.maincolor.blue .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
 }
-.maincolor.blue form .container-input-text:has(textarea:focus) {
+.maincolor.blue .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
 }
 .maincolor.blue .btn.primary {
@@ -956,26 +948,25 @@ hr.s {
 .maincolor.blue .input-switch input:checked + label {
   background-color: rgba(125, 186, 255, 0.5);
 }
-.maincolor.lightblue h2 .material-symbols-rounded,
-.maincolor.lightblue h3 .material-symbols-rounded {
+.maincolor.lightblue h1 .material-symbols-rounded, .maincolor.lightblue h2 .material-symbols-rounded, .maincolor.lightblue h3 .material-symbols-rounded, .maincolor.lightblue h4 .material-symbols-rounded {
   color: #A8D8FF;
 }
 .maincolor.lightblue p colored {
   color: #A8D8FF;
 }
-.maincolor.lightblue form label .material-symbols-rounded {
+.maincolor.lightblue label .material-symbols-rounded {
   color: #A8D8FF;
 }
-.maincolor.lightblue form .input-text:hover {
+.maincolor.lightblue .input-text:hover {
   box-shadow: 0 0 0 1px rgba(168, 216, 255, 0.2);
 }
-.maincolor.lightblue form .input-text:focus {
+.maincolor.lightblue .input-text:focus {
   box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
 }
-.maincolor.lightblue form .container-input-text:has(textarea:hover) {
+.maincolor.lightblue .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(168, 216, 255, 0.2);
 }
-.maincolor.lightblue form .container-input-text:has(textarea:focus) {
+.maincolor.lightblue .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
 }
 .maincolor.lightblue .btn.primary {
@@ -988,26 +979,25 @@ hr.s {
 .maincolor.lightblue .input-switch input:checked + label {
   background-color: rgba(168, 216, 255, 0.5);
 }
-.maincolor.lightgray h2 .material-symbols-rounded,
-.maincolor.lightgray h3 .material-symbols-rounded {
+.maincolor.lightgray h1 .material-symbols-rounded, .maincolor.lightgray h2 .material-symbols-rounded, .maincolor.lightgray h3 .material-symbols-rounded, .maincolor.lightgray h4 .material-symbols-rounded {
   color: #E0E0E0;
 }
 .maincolor.lightgray p colored {
   color: #E0E0E0;
 }
-.maincolor.lightgray form label .material-symbols-rounded {
+.maincolor.lightgray label .material-symbols-rounded {
   color: #E0E0E0;
 }
-.maincolor.lightgray form .input-text:hover {
+.maincolor.lightgray .input-text:hover {
   box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.2);
 }
-.maincolor.lightgray form .input-text:focus {
+.maincolor.lightgray .input-text:focus {
   box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
 }
-.maincolor.lightgray form .container-input-text:has(textarea:hover) {
+.maincolor.lightgray .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.2);
 }
-.maincolor.lightgray form .container-input-text:has(textarea:focus) {
+.maincolor.lightgray .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
 }
 .maincolor.lightgray .btn.primary {
@@ -1020,26 +1010,25 @@ hr.s {
 .maincolor.lightgray .input-switch input:checked + label {
   background-color: rgba(224, 224, 224, 0.5);
 }
-.maincolor.olivegreen h2 .material-symbols-rounded,
-.maincolor.olivegreen h3 .material-symbols-rounded {
+.maincolor.olivegreen h1 .material-symbols-rounded, .maincolor.olivegreen h2 .material-symbols-rounded, .maincolor.olivegreen h3 .material-symbols-rounded, .maincolor.olivegreen h4 .material-symbols-rounded {
   color: #B9D19C;
 }
 .maincolor.olivegreen p colored {
   color: #B9D19C;
 }
-.maincolor.olivegreen form label .material-symbols-rounded {
+.maincolor.olivegreen label .material-symbols-rounded {
   color: #B9D19C;
 }
-.maincolor.olivegreen form .input-text:hover {
+.maincolor.olivegreen .input-text:hover {
   box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
 }
-.maincolor.olivegreen form .input-text:focus {
+.maincolor.olivegreen .input-text:focus {
   box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
 }
-.maincolor.olivegreen form .container-input-text:has(textarea:hover) {
+.maincolor.olivegreen .container-input-text:has(textarea:hover) {
   box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
 }
-.maincolor.olivegreen form .container-input-text:has(textarea:focus) {
+.maincolor.olivegreen .container-input-text:has(textarea:focus) {
   box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
 }
 .maincolor.olivegreen .btn.primary {
@@ -1807,6 +1796,10 @@ passkey-list-item .info {
 #modal-backdrop.show {
   opacity: 1;
   visibility: visible;
+}
+
+mfa-input {
+  display: block;
 }
 
 @keyframes bounce {

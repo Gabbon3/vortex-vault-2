@@ -66,10 +66,10 @@ class PasskeyBtn extends HTMLElement {
     }
 
     static callbacks = {
+        /**
+         * AVVIO ADVANCED SESSION
+         */
         'sudosession': async () => {
-            /**
-             * AVVIO ADVANCED SESSION
-             */
             Log.summon(0, 'Advanced session started');
             const expire = new Date(Date.now() + 45 * 60 * 1000);
             await LocalStorage.set("session-expire", expire);

@@ -426,9 +426,10 @@ hr {
     @mixin color-styles($color-name, $color-value) {
         &.#{$color-name} {
 
-            h2 .material-symbols-rounded,
-            h3 .material-symbols-rounded {
-                color: $color-value;
+            h1, h2, h3, h4 {
+                .material-symbols-rounded {
+                    color: $color-value;
+                }
             }
 
             p {
@@ -437,29 +438,27 @@ hr {
                 }
             }
 
-            form {
-                label .material-symbols-rounded {
-                    color: $color-value;
+            label .material-symbols-rounded {
+                color: $color-value;
+            }
+            
+            .input-text {
+                &:hover {
+                    box-shadow: 0 0 0 1px rgba($color-value, 0.2);
                 }
 
-                .input-text {
-                    &:hover {
-                        box-shadow: 0 0 0 1px rgba($color-value, 0.2);
-                    }
-
-                    &:focus {
-                        box-shadow: 0 0 0 4px rgba($color-value, 0.2);
-                    }
+                &:focus {
+                    box-shadow: 0 0 0 4px rgba($color-value, 0.2);
                 }
+            }
 
-                .container-input-text {
-                    &:has(textarea:hover) {
-                        box-shadow: 0 0 0 1px rgba($color-value, 0.2);
-                    }
-                
-                    &:has(textarea:focus) {
-                        box-shadow: 0 0 0 4px rgba($color-value, 0.2);
-                    }
+            .container-input-text {
+                &:has(textarea:hover) {
+                    box-shadow: 0 0 0 1px rgba($color-value, 0.2);
+                }
+            
+                &:has(textarea:focus) {
+                    box-shadow: 0 0 0 4px rgba($color-value, 0.2);
                 }
             }
 

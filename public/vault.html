@@ -473,9 +473,31 @@
                         All operations that require this session are marked with this symbol
                         <span class="material-symbols-rounded warning">vpn_key</span>
                     </p>
-                    <passkey-btn endpoint="/auth/sudotoken" callback="sudosession">
-                        Activate here
-                    </passkey-btn>
+                    <div class="isle bg-3 flex d-row">
+                        <h4 class="icon m-0">
+                            <span class="material-symbols-rounded">passkey</span>
+                            With Passkey
+                        </h4>
+                        <passkey-btn class="last" icon="security" endpoint="/auth/sudotoken" callback="sudosession">
+                            Activate
+                        </passkey-btn>
+                    </div>
+                    <hr>
+                    <form class="isle bg-3" id="form-advanced-session-with-email">
+                        <h4 class="icon">
+                            <span class="material-symbols-rounded">mail</span>
+                            With Email
+                        </h4>
+                        <hr>
+                        <mfa-input class="mb-2" input-id="advanced-session-code"></mfa-input>    
+                        <email-verify-btn target-id="advanced-session-code"></email-verify-btn>
+                        <hr>
+                        <!-- --- -->
+                        <button type="submit" class="btn primary">
+                            <span class="material-symbols-rounded">security</span>
+                            Activate
+                        </button>
+                    </form>
                 </div>
             </div>
             <!-- CHANGE PASSWORD -->

@@ -30,10 +30,11 @@ router.post('/verify-account', verify_email_code, controller.verify_account);
 router.post('/recovery/:email', verify_email_code, controller.get_recovery);
 router.post('/new-recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // -- MFA (DEPRECATED)
-router.post('/mfa', verify_email_code, controller.enable_mfa);
-router.post('/mfa_test', verify_access_token(), verify_mfa_code, controller.test_2fa);
+// router.post('/mfa', verify_email_code, controller.enable_mfa);
+// router.post('/mfa_test', verify_access_token(), verify_mfa_code, controller.test_2fa);
 // -- GET SUDO TOKEN
 router.post('/sudotoken', verify_passkey, controller.start_sudo_session);
+router.post('/sudotoken-email', verify_access_token(), verify_email_code, controller.start_sudo_session);
 // -- SIGN-OUT
 router.post('/signout', verify_access_token(), controller.signout);
 // -- DELETE

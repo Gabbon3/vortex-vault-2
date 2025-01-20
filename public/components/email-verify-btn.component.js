@@ -16,7 +16,7 @@ class EmailVerifyBtn extends HTMLElement {
 
     connectedCallback() {
         // -- variabili
-        const icon = this.getAttribute('icon') ?? 'mail';
+        const icon = this.getAttribute('icon') ?? 'send';
         const target_id = this.getAttribute('target-id');
         const email_id = this.getAttribute('email-id') ?? null;
         const text_content = this.getAttribute('text-content') ?? 'Send code';

@@ -101,6 +101,21 @@ export class AuthService {
         return true;
     }
     /**
+     * Abilita una sessione avanzata tramite mail
+     * @param {string} email 
+     * @param {string} code 
+     * @returns {boolean}
+     */
+    static async enable_advanced_session(email, request_id, code) {
+        const res = await API.fetch('/auth/sudotoken-email', {
+            method: 'POST',
+            body: { email, request_id, code }
+        });
+        // ---
+        if (!res) return false;
+        return true;
+    }
+    /**
      * Cambio password
      * @param {string} old_password 
      * @param {string} new_password 

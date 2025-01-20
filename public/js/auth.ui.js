@@ -64,6 +64,22 @@ $(document).ready(() => {
         Windows.loader(false);
     });
     /**
+     * SESSIONE AVANZATA VIA MAIL
+     */
+    Form.onsubmit('form-advanced-session-with-email', async (form, elements) => {
+        const { request_id, code } = elements;
+        if (!code || code.length!== 6) return Log.summon(1, "Invalid code");
+        // ---
+        Windows.loader(true);
+        const email = await LocalStorage.get('email-utente');
+        const activated = await AuthService.enable_advanced_session(email, request_id, code);
+        if (activated) {
+            Log.summon(0, 'Advanced session started');
+            $(form).trigger('reset');
+        }
+        Windows.loader(false);
+    });
+    /**
      * QUICK SIGN-IN
      */
     Form.onsubmit('form-fsi', async (form, elements) => {
