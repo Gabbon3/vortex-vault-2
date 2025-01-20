@@ -8,11 +8,8 @@ const automated_emails = {
      */
     antiphishing_code: (email) => {
         const code = Mailer.message_authentication_code(email);
-        const html = `<p>Message Authentication Code: <strong>${code}</strong></p>
-<p>Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.</p>`
-        const text = `
-Message Authentication Code: ${code}
-Copy and paste this code into the app to verify the authenticity of this communication if you feel the need. The code is valid for 24 hours.`;
+        const html = `<p>Message Authentication Code: <strong>${code}</strong></p>`
+        const text = `Message Authentication Code: ${code}`;
         // ---
         return { text, html };
     },
@@ -23,7 +20,7 @@ Copy and paste this code into the app to verify the authenticity of this communi
      */
     otpCode: ({email, code}) => {
       const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
-      return `${code}\n${aptext}`;
+      return `${code.match(/.{1,3}/g).join(' ')}\n${aptext}`;
     },
 
     /**
@@ -44,11 +41,9 @@ We noticed that a new device attempted to sign-in to your account. Below are the
 
  - Device: ${os}
  - IP: ${ip_address}
- - Time: ${date.format("%d/%m/%Y at %H:%i")}
+ - Time: ${date.format("%d %M %Y at %H:%i")}
 
 If it wasn't you, you can still rest assured since that device is locked, but you need to change your password immediately as your vault could be at risk.
-
-Thank you for your attention
 
 The Vortex Vault team
 ${aptext}`;
@@ -61,12 +56,12 @@ ${aptext}`;
     <ul>
       <li><strong>Device:</strong> ${os}</li>
       <li><strong>IP:</strong> ${ip_address}</li>
-      <li><strong>Time:</strong> ${date.format("%d/%m/%Y at %H:%i")}</li>
+      <li><strong>Time:</strong> ${date.format("%d %M %Y at %H:%i")}</li>
     </ul>
     <p>
       If it wasn't you, you can still rest assured since that device is blocked, but you need to change your password immediately as your vault could be at risk.
     </p>
-    <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+    <p>The Vortex Vault team</p>
     ${aphtml}
   </body>
 </html>
@@ -87,8 +82,6 @@ ${aptext}`;
 Hello ${email.split('@')[0]},
 We noticed that a new passkey has been associated with your account, for more information visit the app.
 
-Thank you for your attention
-
 The Vortex Vault team
 ${aptext}`;
 
@@ -97,7 +90,7 @@ ${aptext}`;
   <body>
     <h4>Hello ${email.split('@')[0]},</h4>
     <p>We noticed that a new passkey has been associated with your account, for more information visit the app.</p>
-    <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+    <p>The Vortex Vault team</p>
     ${aphtml}
   </body>
 </html>
@@ -111,21 +104,18 @@ ${aptext}`;
      * @param {object} options
      * @returns
      */
-    otpFailedAttempt: ({ email, ip_address, attempts_left }) => {
+    otpFailedAttempt: ({ email, ip_address }) => {
       // -- anti phishing text
       const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
-
+      // ---
       const text = `
 Hello ${email.split("@")[0]},
 We noticed several failed attempts to enter the OTP code for your account. Here are the details:
 
  - IP: ${ip_address}
- - Time: ${date.format("%d/%m/%Y at %H:%i")}
- - Attempts left: ${attempts_left}
+ - Time: ${date.format("%d %M %Y at %H:%i")}
 
-If you didn't attempt to access your account, please be aware that further attempts will be blocked after 3 failed entries.
-
-Thank you for your attention
+If you have not attempted to access your account, be aware that further attempts will be refused.
 
 The Vortex Vault team
 ${aptext}`;
@@ -137,12 +127,10 @@ ${aptext}`;
     <p>We noticed several failed attempts to enter the OTP code for your account. Here are the details:</p>
     <ul>
       <li><strong>IP:</strong> ${ip_address}</li>
-      <li><strong>Time:</strong> ${date.format("%d/%m/%Y at %H:%i")}</li>
-      <li><strong>Attempts left:</strong> ${attempts_left}</li>
+      <li><strong>Time:</strong> ${date.format("%d %M %Y at %H:%i")}</li>
     </ul>
-    <p>If you didn't attempt to access your account, please be aware that further attempts will be blocked after 3 failed entries. If you suspect any suspicious activity, it's recommended to change your password immediately.</p>
-    <p>For security purposes, please always verify that the communication comes from a trusted source before entering your code.</p>
-    <p>Thank you for your attention<br><br>The Vortex Vault team</p>
+    <p>If you have not attempted to access your account, be aware that further attempts will be refused.</p>
+    <p>The Vortex Vault team</p>
     ${aphtml}
   </body>
 </html>`;

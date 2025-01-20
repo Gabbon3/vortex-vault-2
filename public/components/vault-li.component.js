@@ -1,3 +1,5 @@
+import { HtmlSecretsRender } from "../js/html_secrets_render.js";
+
 class VaultLi extends HTMLElement {
     constructor() {
         super();
@@ -17,22 +19,20 @@ class VaultLi extends HTMLElement {
          */
         let icon = '';
         let color = '';
+        color = HtmlSecretsRender.get_color(st);
         switch (st) {
             case '0':
                 icon = secure ? 'key_vertical' : 'warning';
-                color = secure ? 'orange' : 'red';
+                color = secure ? color : 'red';
                 break;
             case '1':
                 icon = 'sticky_note_2';
-                color = 'lightblue';
                 break;
             case '2':
                 icon = 'credit_card';
-                color = 'yellow';
                 break;
             case '3':
                 icon = 'key_vertical';
-                color = 'purple';
                 break;
         }
         if (st === '3') {

@@ -67,6 +67,13 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     const [salted_hash, tryes, email] = record;
     // -- verifico il numero di tentativi
     if (tryes >= 3) {
+        const ip_address = req.headers['x-forwarded-for'] || req.ip;
+        // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
+        const { text, html } = automated_emails.otpFailedAttempt({ 
+            email,
+            ip_address,
+        });
+        Mailer.send(email, "OTP Failed Attemp", text, html);
         RamDB.delete(request_id);
         throw new CError("", "Maximum attempts achieved", 429);
     }
@@ -77,14 +84,6 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     // -- verifica il codice
     const valid = Cripto.verify_salting(code, salted_hash);
     if (!valid) {
-        const ip_address = req.headers['x-forwarded-for'] || req.ip;
-        // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
-        const { text, html } = automated_emails.otpFailedAttempt({ 
-            email,
-            attempts_left: tryes + 1,
-            ip_address,
-        });
-        Mailer.send(email, "OTP Failed Attemp", text, html);
         // -- aumento il numero di tentativi
         RamDB.update(request_id, [salted_hash, tryes + 1]);
         // --

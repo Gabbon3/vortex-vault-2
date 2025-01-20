@@ -342,19 +342,19 @@ colored-password {
         font-family: $monospace !important;
 
         &.az {
-            color: bisque;
+            color: $c-peach;
         }
 
         &.AZ {
-            color: rgb(164, 164, 30);
+            color: $c-olive-green;
         }
 
         &._09 {
-            color: salmon;
+            color: $c-red;
         }
 
         &._s {
-            color: lightskyblue;
+            color: $c-lightblue;
         }
     }
 

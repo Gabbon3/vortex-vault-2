@@ -70,7 +70,7 @@ class PasskeyBtn extends HTMLElement {
             /**
              * AVVIO ADVANCED SESSION
              */
-            Log.summon(0, 'Sudo session started');
+            Log.summon(0, 'Advanced session started');
             const expire = new Date(Date.now() + 45 * 60 * 1000);
             await LocalStorage.set("session-expire", expire);
             await LocalStorage.set("sudo-expire", expire);

@@ -59,7 +59,7 @@ label,
 }
 label .material-symbols-rounded,
 .label .material-symbols-rounded {
-  color: #878e54;
+  color: #a8af74;
 }
 label input.input-text,
 .label input.input-text {
@@ -394,7 +394,7 @@ h2.icon .material-symbols-rounded,
 h3.icon .material-symbols-rounded,
 h4.icon .material-symbols-rounded,
 h5.icon .material-symbols-rounded {
-  color: #878e54;
+  color: #a8af74;
 }
 h1.icon .material-symbols-rounded.warning,
 h2.icon .material-symbols-rounded.warning,
@@ -419,7 +419,7 @@ h5.code {
   font-family: "JetBrains Mono", monospace;
   justify-content: center;
   letter-spacing: 10px;
-  color: #878e54;
+  color: #a8af74;
 }
 
 .color.warn {
@@ -445,7 +445,7 @@ p a:hover {
   border-bottom: 1px solid #738e54;
 }
 p b {
-  color: #878e54;
+  color: #a8af74;
   font-weight: normal;
 }
 p.center {
@@ -460,7 +460,7 @@ p.description {
 }
 
 colored {
-  color: #878e54;
+  color: #a8af74;
 }
 
 .fs-l {
@@ -476,7 +476,7 @@ colored {
 }
 
 hr {
-  margin: 1rem 0;
+  margin: 0.8rem 0;
   color: #584d4d;
   border: 0;
   border-top: 1px solid #584d4d;
@@ -511,11 +511,11 @@ hr.s {
   gap: 0;
 }
 .btn.primary {
-  background-color: rgba(135, 142, 84, 0.15);
-  color: #969e5d;
+  background-color: rgba(168, 175, 116, 0.15);
+  color: #b2b884;
 }
 .btn.primary:hover {
-  background-color: rgba(135, 142, 84, 0.2);
+  background-color: rgba(168, 175, 116, 0.2);
 }
 .btn.secondary {
   background-color: #383030;
@@ -647,7 +647,7 @@ hr.s {
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 14px;
   max-height: 98%;
   max-width: 950px;
   width: 95%;
@@ -1152,6 +1152,10 @@ monospace,
   font-weight: normal;
 }
 
+input[type=password] {
+  font-family: "JetBrains Mono", monospace !important;
+}
+
 .input-text, .container-input-text {
   display: block;
   margin: 0 auto;
@@ -1213,17 +1217,17 @@ monospace,
   resize: none;
 }
 .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(135, 142, 84, 0.2);
+  box-shadow: 0 0 0 1px rgba(168, 175, 116, 0.2);
 }
 .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(135, 142, 84, 0.2);
+  box-shadow: 0 0 0 4px rgba(168, 175, 116, 0.2);
 }
 
 .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(135, 142, 84, 0.2);
+  box-shadow: 0 0 0 1px rgba(168, 175, 116, 0.2);
 }
 .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(135, 142, 84, 0.2);
+  box-shadow: 0 0 0 4px rgba(168, 175, 116, 0.2);
 }
 
 .input-switch {
@@ -1255,7 +1259,7 @@ monospace,
   display: none;
 }
 .input-switch input:checked + label {
-  background-color: rgba(135, 142, 84, 0.5);
+  background-color: rgba(168, 175, 116, 0.5);
 }
 .input-switch input:checked + label::before {
   left: 1.35em;
@@ -1269,14 +1273,14 @@ input[type=range] {
   border-radius: 0.2rem;
   display: block;
   margin: 15px auto;
-  background-color: #878e54;
+  background-color: #a8af74;
 }
 input[type=range]::-webkit-slider-thumb {
   appearance: none;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: #878e54;
-  border: 0.2rem solid #878e54;
+  background-color: #a8af74;
+  border: 0.2rem solid #a8af74;
   background-color: #f5f5f5;
   border-radius: 1.25rem;
   cursor: pointer;
@@ -1368,10 +1372,10 @@ input[type=range]::-webkit-slider-thumb {
   font-style: normal;
 }
 .navbar a span {
-  color: #878e54;
+  color: #a8af74;
 }
 .navbar a:hover {
-  background-color: rgba(135, 142, 84, 0.1);
+  background-color: rgba(168, 175, 116, 0.1);
 }
 
 vortex-navbar {
@@ -1403,7 +1407,7 @@ vortex-navbar .logo {
   color: #888;
 }
 #sudo-indicator.base {
-  color: #878e54;
+  color: #a8af74;
 }
 #sudo-indicator.sudo {
   color: #eead71;
@@ -1578,7 +1582,7 @@ vortex-navbar .logo {
   background-color: #302929;
 }
 #vaults-list vault-li .simbolo {
-  color: #878e54;
+  color: #a8af74;
   font-size: 1.5em;
   padding: 5px;
   display: flex;
@@ -1659,16 +1663,16 @@ colored-password i {
   font-family: "JetBrains Mono", monospace !important;
 }
 colored-password i.az {
-  color: bisque;
+  color: #FFD6A5;
 }
 colored-password i.AZ {
-  color: rgb(164, 164, 30);
+  color: #B9D19C;
 }
 colored-password i._09 {
-  color: salmon;
+  color: #F7A7A0;
 }
 colored-password i._s {
-  color: lightskyblue;
+  color: #A8D8FF;
 }
 colored-password.l {
   font-size: 1.2em;
@@ -1711,8 +1715,8 @@ password-strength-bar .bar._3 {
   color: #738e54;
 }
 password-strength-bar .bar._4 {
-  background-color: rgba(135, 142, 84, 0.3);
-  color: #878e54;
+  background-color: rgba(168, 175, 116, 0.3);
+  color: #a8af74;
 }
 
 #devices-list,
