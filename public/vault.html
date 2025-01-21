@@ -460,164 +460,174 @@
         </div>
         <hr> -->
         <!-- SUDO SESSION -->
-        <h3 class="icon slider" slider="cont-sudo-session">
-            <span class="material-symbols-rounded warning">vpn_key</span>
-            Advanced Session
-        </h3>
-        <div class="isle bg-4 maincolor lightblue" id="cont-sudo-session" style="display: none;">
-            <p>
-                Enable <strong>advanced session</strong> to perform critical operations.
-                The session will only last 45 minutes for safety reasons. <br>
-                All operations that require this session are marked with this symbol
+        <div class="maincolor lightblue">
+            <h3 class="icon slider" slider="cont-sudo-session">
                 <span class="material-symbols-rounded warning">vpn_key</span>
-            </p>
-            <div class="isle bg-3 flex d-row">
-                <h4 class="icon m-0">
-                    <span class="material-symbols-rounded">passkey</span>
-                    With Passkey
-                </h4>
-                <passkey-btn class="last" icon="security" endpoint="/auth/sudotoken" callback="sudosession">
-                    Activate
-                </passkey-btn>
+                Advanced Session
+            </h3>
+            <div class="isle bg-4" id="cont-sudo-session" style="display: none;">
+                <p>
+                    Enable <strong>advanced session</strong> to perform critical operations.
+                    The session will only last 45 minutes for safety reasons. <br>
+                    All operations that require this session are marked with this symbol
+                    <span class="material-symbols-rounded warning">vpn_key</span>
+                </p>
+                <div class="isle bg-3 flex d-row br-l">
+                    <h4 class="icon m-0">
+                        <span class="material-symbols-rounded">passkey</span>
+                        With Passkey
+                    </h4>
+                    <passkey-btn class="last" icon="security" endpoint="/auth/sudotoken" callback="sudosession">
+                        Activate
+                    </passkey-btn>
+                </div>
+                <hr>
+                <form class="isle bg-3 br-l" id="form-advanced-session-with-email">
+                    <h4 class="icon">
+                        <span class="material-symbols-rounded">mail</span>
+                        With Email
+                    </h4>
+                    <hr>
+                    <mfa-input class="mb-2" input-id="advanced-session-code"></mfa-input>    
+                    <email-verify-btn target-id="advanced-session-code"></email-verify-btn>
+                    <hr>
+                    <!-- --- -->
+                    <button type="submit" class="btn primary">
+                        <span class="material-symbols-rounded">security</span>
+                        Activate
+                    </button>
+                </form>
             </div>
-            <hr>
-            <form class="isle bg-3" id="form-advanced-session-with-email">
-                <h4 class="icon">
-                    <span class="material-symbols-rounded">mail</span>
-                    With Email
-                </h4>
-                <hr>
-                <mfa-input class="mb-2" input-id="advanced-session-code"></mfa-input>    
-                <email-verify-btn target-id="advanced-session-code"></email-verify-btn>
-                <hr>
-                <!-- --- -->
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">security</span>
-                    Activate
-                </button>
-            </form>
         </div>
         <!-- CHANGE PASSWORD -->
         <hr>
-        <h3 class="icon slider" slider="form-change-password">
-            <span class="material-symbols-rounded">key</span>
-            Change Password
-            <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
-        </h3>
-        <form class="isle bg-4 maincolor red" id="form-change-password" style="display: none;">
-            <p>
-                <strong>Before changing your password</strong>
-                you should know that you will have to manually restore a backup, 
-                which will be generated locally after the change, 
-                you will have to go to the backup section and restore the 
-                backup from the file you just downloaded.
-            </p>
-            <label for="old-password">
-                <span class="material-symbols-rounded">key_vertical</span>
-                Old Password
-            </label>
-            <input name="old_password" type="password" class="input-text mono" id="old-password" autocomplete="off" required>
-            <hr>
-            <label for="new-password">
-                <span class="material-symbols-rounded">key_vertical</span>
-                New Password
-            </label>
-            <input name="new_password" type="password" class="input-text mono" id="new-password" autocomplete="off" required>
-            <label for="new-password-2">
-                <span class="material-symbols-rounded">key_vertical</span>
-                Repeat new Password
-            </label>
-            <input name="new_password_2" type="password" class="input-text mono" id="new-password-2" autocomplete="off" required>
-            <!-- --- -->
-            <div class="flex-gap-50 mt-2">
-                <button type="submit" class="btn primary">
-                    <span class="material-symbols-rounded">sync</span>
-                    Change Password
-                </button>
-            </div>
-        </form>
-        <!-- RECOVERY CODE -->
-        <hr>
-        <h3 class="icon slider" slider="cont-rec-code">
-            <span class="material-symbols-rounded">lock_reset</span>
-            Recovery Key
-            <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
-        </h3>
-        <div class="isle bg-4 maincolor purple" id="cont-rec-code" style="display: none;">
-            <p>
-                Generate a recovery key to help you recover your master password if you forget it.
-            </p>
-            <form id="form-new-recovery-code">
-                <label for="password-recovery">
-                    <span class="material-symbols-rounded">key_vertical</span>
-                    Password
-                </label>
-                <div class="flex gap-50">
-                    <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
-                    <btn-paste target="password-recovery"></btn-paste>
-                </div>
-                <p class="description">
-                    You need to enter your password to perform this operation.
+        <div class="maincolor red">
+            <h3 class="icon slider" slider="form-change-password">
+                <span class="material-symbols-rounded">key</span>
+                Change Password
+                <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
+            </h3>
+            <form class="isle bg-4" id="form-change-password" style="display: none;">
+                <p>
+                    <strong>Before changing your password</strong>
+                    you should know that you will have to manually restore a backup, 
+                    which will be generated locally after the change, 
+                    you will have to go to the backup section and restore the 
+                    backup from the file you just downloaded.
                 </p>
+                <label for="old-password">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Old Password
+                </label>
+                <input name="old_password" type="password" class="input-text mono" id="old-password" autocomplete="off" required>
+                <hr>
+                <label for="new-password">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    New Password
+                </label>
+                <input name="new_password" type="password" class="input-text mono" id="new-password" autocomplete="off" required>
+                <label for="new-password-2">
+                    <span class="material-symbols-rounded">key_vertical</span>
+                    Repeat new Password
+                </label>
+                <input name="new_password_2" type="password" class="input-text mono" id="new-password-2" autocomplete="off" required>
                 <!-- --- -->
                 <div class="flex-gap-50 mt-2">
                     <button type="submit" class="btn primary">
-                        <span class="material-symbols-rounded">security</span>
-                        Generate Recovery Key File
+                        <span class="material-symbols-rounded">sync</span>
+                        Change Password
                     </button>
                 </div>
             </form>
+        </div>
+        <!-- RECOVERY CODE -->
+        <hr>
+        <div class="maincolor purple">
+            <h3 class="icon slider" slider="cont-rec-code">
+                <span class="material-symbols-rounded">lock_reset</span>
+                Recovery Key
+                <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
+            </h3>
+            <div class="isle bg-4" id="cont-rec-code" style="display: none;">
+                <p>
+                    Generate a recovery key to help you recover your master password if you forget it.
+                </p>
+                <form id="form-new-recovery-code">
+                    <label for="password-recovery">
+                        <span class="material-symbols-rounded">key_vertical</span>
+                        Password
+                    </label>
+                    <div class="flex gap-50">
+                        <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
+                        <btn-paste target="password-recovery"></btn-paste>
+                    </div>
+                    <p class="description">
+                        You need to enter your password to perform this operation.
+                    </p>
+                    <!-- --- -->
+                    <div class="flex-gap-50 mt-2">
+                        <button type="submit" class="btn primary">
+                            <span class="material-symbols-rounded">security</span>
+                            Generate Recovery Key File
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
         <!-- QUICK SIGN-IN -->
         <hr>
-        <h3 class="icon slider" slider="cont-qsi">
-            <span class="material-symbols-rounded">id_card</span>
-            Quick Sign-in
-        </h3>
-        <div class="isle bg-4 maincolor yellow" id="cont-qsi" style="display: none;">
-            <p>
-                Generates a single-use link shown via Qr code for quick Sign-in from another device.
-            </p>
-            <form id="form-fsi">
-                <button type="submit" class="btn primary mt-2">
-                    <span class="material-symbols-rounded">qr_code</span>
-                    Create link
-                </button>
-            </form>
+        <div class="maincolor yellow">
+            <h3 class="icon slider" slider="cont-qsi">
+                <span class="material-symbols-rounded">id_card</span>
+                Quick Sign-in
+            </h3>
+            <div class="isle bg-4" id="cont-qsi" style="display: none;">
+                <p>
+                    Generates a single-use link shown via Qr code for quick Sign-in from another device.
+                </p>
+                <form id="form-fsi">
+                    <button type="submit" class="btn primary mt-2">
+                        <span class="material-symbols-rounded">qr_code</span>
+                        Create link
+                    </button>
+                </form>
+            </div>
         </div>
         <!-- CHECK MESSAGE AUTHENTICATION CODE -->
         <hr>
-        <h3 class="icon slider" slider="cont-cmac">
-            <span class="material-symbols-rounded">mark_email_read</span>
-            Check Message Authentication Code
-        </h3>
-        <div class="isle bg-4 maincolor olivegreen" id="cont-cmac" style="display: none;">
-            <p class="mb-3">
-                Here you can check the validity of the message authentication codes 
-                in the emails you receive from us, which is useful for verifying 
-                whether the emails actually come from us or are instead phishing 
-                attempts.
-            </p>
-            <form id="form-cmac">
-                <label for="cmac-code">
-                    <span class="material-symbols-rounded">password</span>
-                    Message Authentication Code
-                </label>
-                <div class="flex gap-75">
-                    <input name="code" type="text" class="input-text mono" id="cmac-code" autocomplete="off" placeholder="**.**.******" required>
-                    <btn-paste target="cmac-code"></btn-paste>
-                </div>
-                <div class="flex gap-50">
-                    <button type="submit" class="btn primary mt-2">
-                        <span class="material-symbols-rounded">check</span>
-                        Check
-                    </button>
-                    <button type="reset" class="btn secondary CA mt-2">
-                        <span class="material-symbols-rounded">close</span>
-                        Reset
-                    </button>
-                </div>
-            </form>
+        <div class="maincolor olivegreen">
+            <h3 class="icon slider" slider="cont-cmac">
+                <span class="material-symbols-rounded">mark_email_read</span>
+                Check Message Authentication Code
+            </h3>
+            <div class="isle bg-4 maincolor olivegreen" id="cont-cmac" style="display: none;">
+                <p class="mb-3">
+                    Here you can check the validity of the message authentication codes 
+                    in the emails you receive from us, which is useful for verifying 
+                    whether the emails actually come from us or are instead phishing 
+                    attempts.
+                </p>
+                <form id="form-cmac">
+                    <label for="cmac-code">
+                        <span class="material-symbols-rounded">password</span>
+                        Message Authentication Code
+                    </label>
+                    <div class="flex gap-75">
+                        <input name="code" type="text" class="input-text mono" id="cmac-code" autocomplete="off" placeholder="**.**.******" required>
+                        <btn-paste target="cmac-code"></btn-paste>
+                    </div>
+                    <div class="flex gap-50">
+                        <button type="submit" class="btn primary mt-2">
+                            <span class="material-symbols-rounded">check</span>
+                            Check
+                        </button>
+                        <button type="reset" class="btn secondary CA mt-2">
+                            <span class="material-symbols-rounded">close</span>
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
         <hr>
         <!-- ---- -->
