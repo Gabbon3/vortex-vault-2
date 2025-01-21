@@ -16,11 +16,11 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- le routes con i controller associati
 // /auth/token
-router.post('/refresh', verify_passkey, controller.generate_access_token);
+router.post('/refresh', verify_passkey(), controller.generate_access_token);
 router.post('/rename', verify_access_token(), controller.rename);
 router.post('/revoke', verify_access_token(1), controller.revoke);
 // -- device recovery
-router.post('/unlock', verify_passkey, controller.unlock);
+router.post('/unlock', verify_passkey(), controller.unlock);
 router.post('/unlockwithemail', verify_email_code, controller.unlock);
 router.post('/revoke-all', verify_access_token(1), controller.revoke_all);
 router.get('/', verify_access_token(), controller.get_all);

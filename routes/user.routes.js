@@ -33,12 +33,12 @@ router.post('/new-recovery', verify_access_token(1), express.raw({ type: 'applic
 // router.post('/mfa', verify_email_code, controller.enable_mfa);
 // router.post('/mfa_test', verify_access_token(), verify_mfa_code, controller.test_2fa);
 // -- GET SUDO TOKEN
-router.post('/sudotoken', verify_passkey, controller.start_sudo_session);
+router.post('/sudotoken', verify_passkey(), controller.start_sudo_session);
 router.post('/sudotoken-email', verify_access_token(), verify_email_code, controller.start_sudo_session);
 // -- SIGN-OUT
 router.post('/signout', verify_access_token(), controller.signout);
 // -- DELETE
-router.post('/delete', verify_passkey, controller.delete);
+router.post('/delete', verify_passkey(true), controller.delete);
 // -- MESSAGE AUTHENTICATION CODE VERIFICATION
 router.post('/vmac', controller.verify_message_authentication_code);
 

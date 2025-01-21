@@ -17,6 +17,6 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- auth/cke
 router.post('/', verify_access_token(), controller.generate);
-router.get('/', verify_passkey, controller.get);
+router.get('/', verify_passkey(), controller.get);
 
 export default router;

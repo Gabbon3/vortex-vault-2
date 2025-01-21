@@ -28,7 +28,7 @@ router.get('/list', verify_access_token(), controller.list);
 router.post('/rename/:id', verify_access_token(), controller.rename);
 // -- DELETE
 router.delete('/:id', verify_access_token(1), controller.delete);
-router.post('/test', verify_passkey, (req, res) => {
+router.post('/test', verify_passkey(true), (req, res) => {
     res.status(200).json({ message: "Hi user " + req.user.uid });
 });
 
