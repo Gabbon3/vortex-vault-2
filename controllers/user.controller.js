@@ -102,6 +102,11 @@ export class UserController {
         Object.keys(req.cookies).forEach((cookie_name) => {
             res.clearCookie(cookie_name, { path: '/' });
         });
+        // -- invio una mail
+        const { text, html } = automated_emails.deleteAccount({ 
+            email,
+        });
+        Mailer.send(email, 'Account Deletion Confirmation', text, html);
         // ---
         res.status(200).json({ message: "All data deleted successfully" });
     })
@@ -243,6 +248,11 @@ export class UserController {
         // ---
         const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
         if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
+        // -- invio una mail
+        const { text, html } = automated_emails.changePassword({ 
+            email,
+        });
+        Mailer.send(email, 'Password Change Confirmation', text, html);
         // ---
         res.status(200).json({ message: "Password changed!", lsk: Bytes.base64.encode(lsk) });
     });

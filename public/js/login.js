@@ -79,16 +79,17 @@ $(document).ready(async () => {
         const master_key_exist = LocalStorage.has('master-key');
         // ---
         const was_logged = email !== null && master_key_exist;
+        const name = email.split('@')[0];
         // -- se non ci sono informazioni locali salvate non è possibile accedere con la passkey
         if (!was_logged) return Log.summon(3, 'There are no data required to sign you in with the passkey, please sign-in with password.');
         // -- accedo
         const session_started = await AuthService.start_session();
         if (session_started !== true) {
-            if (session_started === 0) Log.summon(3, `You are already signed in as ${email}`);
+            if (session_started === 0) Log.summon(3, `You are already signed in as ${name}`);
             return;
         }
         // ---
-        Log.summon(0, `Welcome back ${email}`);
+        Log.summon(0, `Welcome back ${name}`);
         setTimeout(() => {
             window.location.href = '/vault';
         }, 3000);
