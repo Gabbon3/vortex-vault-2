@@ -21,6 +21,13 @@ import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log(
+`__         __  __         __
+\\ \\       / /  \\ \\       / /
+ \\ \\     / /    \\ \\     / /
+  \\ \\   / /      \\ \\   / /
+   \\ \\_/ /        \\ \\_/ /
+    \\___/ ortex    \\___/ ault`);
     QrCodeDisplay.init();
     /**
      * FINESTRE
