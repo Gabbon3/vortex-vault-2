@@ -196,7 +196,7 @@ export class PasskeyService {
     }
     /**
      * Elimina una passkey
-     * @param {BigInt} id 
+     * @param {string} id 
      */
     static async delete(id) {
         const res = await API.fetch(`/auth/passkey/${id}`, {

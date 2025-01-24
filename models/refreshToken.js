@@ -19,6 +19,11 @@ export const RefreshToken = sequelize.define(
             allowNull: false,
             defaultValue: "New device *",
         },
+        public_key: {
+            type: DataTypes.BLOB,
+            allowNull: true,
+            comment: "Chiave pubblica necessaria a derivare la chiave S locale",
+        },
         user_agent_hash: {
             type: DataTypes.STRING(32),
             allowNull: false,

@@ -3,6 +3,8 @@ import { RefreshToken } from "../models/refreshToken.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
 import { validate as uuidValidate } from 'uuid';
+import { Bytes } from "../utils/bytes.js";
+import { CError } from "../helpers/cError.js";
 
 export class RefreshTokenService {
     static random_c_length = 10;
@@ -109,6 +111,22 @@ export class RefreshTokenService {
         });
         // ---
         return tokens_json;
+    }
+    /**
+     * Restituisce la public key associata ad un refresh token
+     * @param {string} uid 
+     * @param {string} token_id 
+     * @returns {string} chiave pubblica in base 64
+     */
+    async get_public_key(uid, token_id) {
+        const { public_key } = await RefreshToken.findOne({
+            where: { user_id: uid, id: token_id },
+            attributes: ['public_key']
+        });
+        // ---
+        if (!public_key) throw new CError("", "Public Key not found", 404);
+        // ---
+        return public_key;
     }
     /**
      * Elimina tutti i token associati ad un utente e ad un dispositivo

@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
  \\ \\     / /    \\ \\     / /
   \\ \\   / /      \\ \\   / /
    \\ \\_/ /        \\ \\_/ /
-    \\___/ ortex    \\___/ ault`);
+    \\___/ ORTEX    \\___/ AUTL`);
     QrCodeDisplay.init();
     /**
      * FINESTRE

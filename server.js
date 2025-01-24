@@ -10,6 +10,7 @@ import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
+import lse_routes from './routes/lse.routes.js';
 import './models/associations.js';
 import { csp_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
@@ -34,6 +35,7 @@ app.use(security_headers);
  */
 app.use('/auth', user_routes);
 app.use('/auth/cke', cke_routes);
+app.use('/auth/lse', lse_routes);
 app.use('/auth/token', token_routes);
 app.use('/auth/passkey', passkey_routes);
 app.use('/vaults', vault_routes);
