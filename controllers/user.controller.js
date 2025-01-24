@@ -202,7 +202,8 @@ export class UserController {
      * Verifica un email
      */
     verify_account = async_handler(async (req, res) => {
-        const { email } = req.body;
+        const { email } = req.user;
+        if (!email) throw new CError("", "Email not found", 404);
         // ---
         const [affected] = await this.service.update_user_info({ email }, { verified: true });
         if (affected > 1) throw new Error("Updated multiple emails");
@@ -275,7 +276,7 @@ export class UserController {
      * @param {Response} res 
      */
     get_recovery = async_handler(async (req, res) => {
-        const { email } = req.params;
+        const { email } = req.user;
         // ---
         const user = await this.service.find_by_email(email);
         if (!user) throw new CError("ValidationError", "Email provided does not exist", 404);

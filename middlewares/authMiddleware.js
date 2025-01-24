@@ -89,6 +89,8 @@ export const verify_email_code = async_handler(async (req, res, next) => {
         // --
         throw new CError("AuthError", "Invalid code", 403);
     }
+    // memorizzo l'utente che ha fatto la richiesta
+    req.user = { email };
     // -- elimino la richiesta dal db
     // RamDB.delete(request_id); // Decommenta se vuoi eliminare la richiesta
     // -- se il codice è valido, passo al prossimo middleware

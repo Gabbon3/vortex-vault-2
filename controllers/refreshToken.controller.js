@@ -5,6 +5,8 @@ import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { Bytes } from "../utils/bytes.js";
 import { Roles } from "../utils/roles.js";
 import { JWT } from "../utils/jwt.utils.js";
+import { User } from "../models/user.js";
+import { RefreshToken } from "../models/refreshToken.js";
 
 export class RefreshTokenController {
     constructor() {
@@ -78,13 +80,22 @@ export class RefreshTokenController {
         const current_token = req.cookies.refresh_token;
         if (!current_token) throw new Error('ValidationError', 'Any token avaiable', 404);
         // ---
-        const uid = req.user?.uid ?? null; 
+        let uid = req.user?.uid ?? null;
+        if (!uid) {
+            const { email } = req.user;
+            const user = await User.findOne({
+                where: { email },
+                attributes: ['id'],
+            });
+            uid = user.id;
+        }
         const [affectedCount] = await this.service.update_token_info(uid, current_token, {
             is_revoked: false
         });
         // ---
+        if (affectedCount === 0) throw new CError("", "The email entered is not associated with this device", 403);
         let message = 'Device unlocked';
-        if (affectedCount === 0) message = 'The device was already unlocked';
+        // if (affectedCount === 0) message = 'The device was already unlocked';
         res.status(200).json({ message });
     });
     /**

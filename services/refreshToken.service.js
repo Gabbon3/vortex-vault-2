@@ -47,8 +47,8 @@ export class RefreshTokenService {
      * @returns
      */
     async update_token_info(uid, token_id, updated_info) {
-        const where = { id: token_id };
-        if (uid) where.user_id = uid;
+        const where = { id: token_id, user_id: uid };
+        // if (uid) where.user_id = uid;
         // ---
         return await RefreshToken.update(
             updated_info,

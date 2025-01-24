@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { UserController } from "../controllers/user.controller.js";
-import { verify_access_token, verify_email_code, verify_mfa_code } from "../middlewares/authMiddleware.js";
+import { verify_access_token, verify_email_code } from "../middlewares/authMiddleware.js";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
 // -- router
 const router = express.Router();
@@ -27,7 +27,7 @@ router.post('/email-verification-test', verify_email_code, controller.test_email
 // -- ACCOUNT VERIFY
 router.post('/verify-account', verify_email_code, controller.verify_account);
 // -- PASSWORD RECOVERY
-router.post('/recovery/:email', verify_email_code, controller.get_recovery);
+router.post('/recovery', verify_email_code, controller.get_recovery);
 router.post('/new-recovery', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // -- MFA (DEPRECATED)
 // router.post('/mfa', verify_email_code, controller.enable_mfa);
