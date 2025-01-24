@@ -230,8 +230,10 @@ export class UserController {
      * @param {Response} res 
      */
     change_password = async_handler(async (req, res) => {
-        const { old_password, new_password } = req.body;
+        const { old_password, new_password, email } = req.body;
         const cookie_cke = req.cookies.cke;
+        // ---
+        if (!old_password || !new_password || !email) throw new CError("", "Missing data needed to make password change", 429);
         // ---
         let cke = null;
         let lsk = null;

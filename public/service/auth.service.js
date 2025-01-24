@@ -122,9 +122,14 @@ export class AuthService {
      * @returns {boolean}
      */
     static async change_password(old_password, new_password) {
+        const email = await LocalStorage.get('email-utente');
+        if (!email) {
+            Log.summon(2, 'Any email founded');
+            return false;
+        }
         const res = await API.fetch('/auth/password', {
             method: 'POST',
-            body: { old_password, new_password },
+            body: { old_password, new_password, email },
         });
         if (!res) return false;
         // -- imposto la master key
