@@ -387,7 +387,7 @@ export class AuthService {
      * @returns {string} Returns
      */
     static async master_password_recovery(email, private_key, request_id, code) {
-        const res = await API.fetch(`/auth/recovery/${email}`, {
+        const res = await API.fetch(`/auth/recovery`, {
             method: 'POST',
             body: { request_id, code }
         });
