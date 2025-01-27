@@ -32,9 +32,11 @@ export class AuthService {
      * Esegue l'accesso
      * @param {string} email 
      * @param {string} password 
+     * @param {null} [passKey=null] 
+     * @param {boolean} [activate_lse=false] true per abilitare il protocollo lse
      * @returns {boolean}
      */
-    static async signin(email, password, passKey = null, is_login = false) {
+    static async signin(email, password, passKey = null, activate_lse = false) {
         const res = await API.fetch('/auth/signin', {
             method: 'POST',
             body: { email, password, passKey },
@@ -44,7 +46,7 @@ export class AuthService {
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
         // -- abilito se necessario il protocollo lse
-        if (is_login) {
+        if (activate_lse) {
             const lse_activated = await this.activate_lse();
             if (!lse_activated) return false;
         }
@@ -273,7 +275,7 @@ export class AuthService {
         if (!email || !password) return false;
         window.history.replaceState(null, '', window.location.origin + window.location.pathname);
         // -- eseguo l'accesso passando la passkey
-        return await AuthService.signin(email, password, id);
+        return await AuthService.signin(email, password, id, true);
     }
     /**
      * Genera un qr code da usare su un altro dispositivo per far condividere le credenziali
@@ -302,7 +304,7 @@ export class AuthService {
         const [email, password] = await SecureLink.get('rsi', id, key);
         if (!email || !password) return false;
         // -- eseguo l'accesso passando la passkey
-        return await AuthService.signin(email, password, id);
+        return await AuthService.signin(email, password, id, true);
     }
     /**
      * Controlla solo l'url
