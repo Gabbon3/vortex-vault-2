@@ -20,7 +20,6 @@ export class RefreshTokenController {
      */
     generate_access_token = async_handler(async (req, res) => {
         const token_id = req.cookies.refresh_token;
-        const cke = req.cookies.cke;
         if (!token_id) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
         const user_agent = req.get('user-agent');
@@ -44,10 +43,8 @@ export class RefreshTokenController {
             sameSite: 'Strict',
             path: '/', // disponibile per tutte le route
         });
-        // -- restituisco anche la passkey
-        const lsk = await this.cke_service.lsk(cke, req.user.uid);
         // ---
-        res.status(201).json({ access_token, lsk: Bytes.base64.encode(lsk) });
+        res.status(201).json({ access_token, public_key: Bytes.base64.encode(refresh_token.public_key) });
     })
     /**
      * Restituisce tutti i token associati ad un utente

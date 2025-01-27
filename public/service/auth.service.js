@@ -12,6 +12,7 @@ import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { PasskeyService } from "./passkey.public.service.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
+import { LSE } from "./lse.public.service.js";
 
 export class AuthService {
     /**
@@ -29,8 +30,9 @@ export class AuthService {
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
+        // -- Recupero la LSK tramite protocollo LSE
+        const lsk = await LSE.S();
         // -- cifro le credenziali sul localstorage
-        const lsk = Bytes.base64.decode(res.lsk); // Local Storage Key
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, master_key);
         await LocalStorage.set('master-key', master_key, lsk);
@@ -119,9 +121,11 @@ export class AuthService {
      * Cambio password
      * @param {string} old_password 
      * @param {string} new_password 
-     * @returns {boolean}
+     * @returns {boolean} false se: non ce la lsk, non ce l'email, non è andato a buon fine il cambio password
      */
     static async change_password(old_password, new_password) {
+        const lsk = SessionStorage.get('lsk'); // local storage key
+        if (!lsk) return false;
         const email = await LocalStorage.get('email-utente');
         if (!email) {
             Log.summon(2, 'Any email founded');
@@ -136,9 +140,6 @@ export class AuthService {
         const salt = await SessionStorage.get('salt');
         const key = await Cripto.argon2(new_password, salt);
         VaultService.master_key = key;
-        // -- derivo la chiave del local storage e la salvo
-        const lsk = Bytes.base64.decode(res.lsk); // local storage key
-        await SessionStorage.set('lsk', lsk);
         // -- salvo la master key
         await LocalStorage.set('master-key', key, lsk);
         await SessionStorage.set('master-key', key);
@@ -167,18 +168,18 @@ export class AuthService {
      * @returns {boolean|object} restituisce un oggetto con degli auth data (la cke), false se non rigenerato
      */
     static async new_access_token() {
-        const lsk = await PasskeyService.authenticate({
+        const public_key = await PasskeyService.authenticate({
             endpoint: '/auth/token/refresh',
             method: 'POST',
         },
             (response) => {
-                return Bytes.base64.decode(response.lsk);
+                return Bytes.base64.decode(response.public_key);
             }
         );
-        if (!lsk) return false;
+        if (!public_key) return false;
         // -- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
-        return { lsk };
+        return { public_key };
     }
     /**
      * Recupera la cke dai cookie
@@ -349,9 +350,10 @@ export class AuthService {
         // - l'utente dovrebbe accedere nuovamente
         if (!auth_data) return -1;
         // -- se non ce la chiave mi fermo
-        if (!auth_data.lsk) return -2;
+        if (!auth_data.public_key) return -2;
         // ---
-        const { lsk } = auth_data;
+        const { public_key } = auth_data;
+        const lsk = await LSE.S(public_key);
         // -- imposto la master key
         const initialized = await this.config_session_vars(lsk);
         // ---

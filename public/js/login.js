@@ -5,6 +5,7 @@ import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { Bytes } from "../utils/bytes.js";
+import { LSE } from "../service/lse.public.service.js";
 
 $(document).ready(async () => {
     /**
@@ -61,6 +62,13 @@ $(document).ready(async () => {
         const { email, password } = elements;
         // ---
         Windows.loader(true);
+        // -- setto una nuova chiave simmetrica locale
+        const lse_activated = await LSE.set();
+        if (!lse_activated) {
+            Windows.loader(false);
+            return Log.summon(2, "Unable to set up new Local Storage Ecnryption Key, try again.");
+        }
+        // -- accedo
         if (await AuthService.signin(email, password)) {
             $(form).trigger('reset');
             // Log.summon(0, `Authenticated as ${email}`);

@@ -1,16 +1,22 @@
 import { ECDH } from "../secure/ecdh.js";
 import { Bytes } from "../utils/bytes.js";
 import { LocalStorage } from "../utils/local.js";
-import msgpack from "../utils/msgpack.min.js";
 import { PasskeyService } from "./passkey.public.service.js";
 
 // local storage encryption
 export class LSE {
+    // tempo di vita del protocollo (31 giorni) in ms
+    static protocol_lifetime = 31 * 24 * 60 * 60 * 1000;
     /**
-     * Genera una coppia di chiavi ECDH per memorizzare dati sul db
+     * Genera una coppia di chiavi ECDH per permettere la crittografia locale
+     * ogni coppia puo essere usata per un mese, poi puo cambiata (questo per evitare sovraccarichi)
      * @returns {boolean}
      */
     static async set() {
+        // -- verifico se è già presente
+        const protocol_expire_date = new Date(await LocalStorage.get('lse-private-key-expire-date'));
+        // -- se la data di scadenza è valida non ce bisogno di settare una nuova coppia di chiavi
+        if (!isNaN(protocol_expire_date) && protocol_expire_date > new Date()) return true;
         // genero due coppie di chiavi
         const ks1 = await ECDH.generate_keys();
         const ks2 = await ECDH.generate_keys();
@@ -24,18 +30,20 @@ export class LSE {
         if (!res) return false;
         // ---
         await LocalStorage.set('lse-private-key', private_key);
+        await LocalStorage.set('lse-private-key-expire-date', Date.now() + LSE.protocol_lifetime);
         // ---
         return true;
     }
     /**
      * Restituisce la chiave simmetrica sfruttando ECDH
+     * @param {Uint8Array} public_key chiave pubblica per derivare la chiave locale
      * @returns {Uint8Array}
      */
-    static async get_s() {
+    static async S(provided_public_key = null) {
         const raw_private_key = await LocalStorage.get('lse-private-key');
         if (!raw_private_key) return undefined;
-        // richiedo al server la chiave pubblica
-        const raw_public_key = await PasskeyService.authenticate({
+        // richiedo al server la chiave pubblica se non è gia stata fornita
+        const raw_public_key = provided_public_key instanceof Uint8Array ? provided_public_key : await PasskeyService.authenticate({
             endpoint: 'auth/lse/get',
         }, (response) => {
             const { public_key } = response;
