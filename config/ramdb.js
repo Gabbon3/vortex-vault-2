@@ -2,7 +2,7 @@ import msgpack from "msgpack-lite";
 
 export class RamDB {
     static db = {};
-    static max_ttl = 60 * 60; // 1 ora
+    static max_ttl = 60 * 60 * 24; // 24 ore
     static cleanup_interval = 60 * 10 * 1000; // 10 minuti
     static cleanup = false;
     /**
@@ -10,12 +10,12 @@ export class RamDB {
      * ha una scadenza di default di 1 ora che non puo essere superata
      * @param {string} key
      * @param {*} value
-     * @param {number} ttl - seconds - 0 > ttl => 3600
+     * @param {number} ttl - seconds - 0 > ttl => 145440
      * @returns {boolean}
      */
-    static set(key, value, ttl = this.max_ttl) {
+    static set(key, value, ttl = 3600) {
         // -- verifico se il ttl è stato disposto correttamente
-        if (ttl < 0 || ttl >= this.max_ttl) return false;
+        if (ttl < 0 || ttl > this.max_ttl) return false;
         let encoded_value = null;
         // -- prima provo a convertire
         try {

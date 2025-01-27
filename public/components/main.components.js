@@ -19,6 +19,7 @@ import './otp-copy-button.component.js';
 import './btn-hide-show-protect-input.component.js';
 import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
+import { LSE } from '../service/lse.public.service.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log(

@@ -7,7 +7,6 @@ import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../../utils/windows.js";
 import { API } from "../utils/api.js";
-import { LSE } from '../service/lse.public.service.js';
 
 $(document).ready(() => {
     /**
