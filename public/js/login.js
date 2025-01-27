@@ -21,7 +21,7 @@ $(document).ready(async () => {
      * Verifico se ci sono dei parametri per l'accesso rapido
      */
     const quick_signin = await AuthService.quick_signin();
-    if (quick_signin) {
+    if (quick_signin === true) {
         const session_started = await auth_success();
         if (session_started === true || session_started === 0) {
             Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);

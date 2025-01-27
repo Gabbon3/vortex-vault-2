@@ -23,7 +23,7 @@ export class AuthService {
         // -- setto una nuova chiave simmetrica locale
         const lse_activated = await LSE.set();
         if (!lse_activated) {
-            Log.summon(2, "Unable to set up new Local Storage Ecnryption Key, try again.");
+            Log.summon(2, "Unable to set up new Local Storage Encryption Key, try again.");
             return false;
         }
         return true;
@@ -46,7 +46,7 @@ export class AuthService {
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
         // -- abilito se necessario il protocollo lse
-        if (activate_lse) {
+        if (activate_lse === true) {
             const lse_activated = await this.activate_lse();
             if (!lse_activated) return false;
         }
@@ -273,6 +273,7 @@ export class AuthService {
         // -- ottengo dal server le credenziali
         const [email, password] = await SecureLink.get('qsi', id, key_base64);
         if (!email || !password) return false;
+        // -- pulisco l'url
         window.history.replaceState(null, '', window.location.origin + window.location.pathname);
         // -- eseguo l'accesso passando la passkey
         return await AuthService.signin(email, password, id, true);
@@ -374,7 +375,7 @@ export class AuthService {
         // ---
         const { public_key } = auth_data;
         const lsk = await LSE.S(public_key);
-        // -- imposto la master key
+        // -- imposto le variabili di sessione
         const initialized = await this.config_session_vars(lsk);
         // ---
         return initialized;

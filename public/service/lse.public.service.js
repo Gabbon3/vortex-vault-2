@@ -45,12 +45,17 @@ export class LSE {
         const raw_private_key = await LocalStorage.get('lse-private-key');
         if (!raw_private_key) return undefined;
         // richiedo al server la chiave pubblica se non è gia stata fornita
-        const raw_public_key = provided_public_key instanceof Uint8Array ? provided_public_key : await PasskeyService.authenticate({
-            endpoint: 'auth/lse/get',
-        }, (response) => {
-            const { public_key } = response;
-            return Bytes.base64.decode(public_key);
-        });
+        const raw_public_key = 
+            provided_public_key instanceof Uint8Array ? 
+                // true
+                provided_public_key : 
+                // false
+                await PasskeyService.authenticate({
+                    endpoint: 'auth/lse/get',
+                }, (response) => {
+                    const { public_key } = response;
+                    return Bytes.base64.decode(public_key);
+                });
         if (!raw_public_key) return false;
         // -- importo le chiavi come Crypto Key
         const private_key = await ECDH.import_private_key(raw_private_key, LSE.curve);
