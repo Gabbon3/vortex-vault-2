@@ -4,15 +4,15 @@
 export class ECDH {
     /**
      * Genera una coppia di chiavi pubblica e privata ECDH.
-     * 
-     * @returns {Promise<{public_key: Uint8Array, private_key: CryptoKey}>} La chiave pubblica in formato Uint8Array e la chiave privata in formato CryptoKey.
+     * @param {string} [curve='P-256'] di default quella piu comune ma puo anche essere 'P-384' o 'P-521'
+     * @returns {Promise<{public_key: [CryptoKey, Uint8Array], private_key: [CryptoKey, Uint8Array]}>} La chiave pubblica in formato Uint8Array e la chiave privata in formato CryptoKey.
      */
-    static async generate_keys() {
+    static async generate_keys(curve = 'P-256') {
         // Genera la coppia di chiavi ECDH usando la curva P-256
         const key_pair = await window.crypto.subtle.generateKey(
             {
                 name: "ECDH",
-                namedCurve: "P-256", // Puoi usare P-384 o P-521, ma P-256 è il più comune
+                namedCurve: curve, // Puoi usare P-384 o P-521, ma P-256 è il più comune
             },
             true, // La chiave è esportabile
             ["deriveKey", "deriveBits"]
@@ -24,12 +24,8 @@ export class ECDH {
 
         // restituisco le chiavi
         return {
-            public_key: key_pair.publicKey,
-            private_key: key_pair.privateKey,
-            exported_keys: {
-                public_key: new Uint8Array(exported_public_key),
-                private_key: new Uint8Array(exported_private_key),
-            }
+            public_key: [key_pair.publicKey, new Uint8Array(exported_public_key)],
+            private_key: [key_pair.privateKey, new Uint8Array(exported_private_key)],
         };
     }
 
@@ -37,16 +33,17 @@ export class ECDH {
      * Importa una chiave pubblica ECDH da un array di byte in formato SPKI.
      * 
      * @param {Uint8Array} public_key - La chiave pubblica in formato Uint8Array.
+     * @param {string} [curve='P-256'] 
      * @returns {Promise<CryptoKey>} La chiave pubblica importata come CryptoKey.
      */
-    static async import_public_key(public_key) {
+    static async import_public_key(public_key, curve = 'P-256') {
         // Importa la chiave pubblica ricevuta in formato SPKI
-        return window.crypto.subtle.importKey(
+        return await window.crypto.subtle.importKey(
             "spki", // Formato della chiave
             public_key, // La chiave pubblica in formato Uint8Array
             {
                 name: "ECDH",
-                namedCurve: "P-256", // La curva deve essere la stessa
+                namedCurve: curve, // La curva deve essere la stessa
             },
             true, // La chiave è esportabile
             [] // Le operazioni consentite (vuoto perché la chiave è solo per derivare)
@@ -89,15 +86,16 @@ export class ECDH {
      * Converte una chiave privata in formato Uint8Array in un CryptoKey per uso con ECDH.
      * 
      * @param {Uint8Array} private_key_bytes - La chiave privata in formato Uint8Array.
+     * @param {string} [curve='P-256'] 
      * @returns {Promise<CryptoKey>} La chiave privata importata come CryptoKey.
      */
-    static async import_private_key(private_key_bytes) {
+    static async import_private_key(private_key_bytes, curve = 'P-256') {
         return window.crypto.subtle.importKey(
             "pkcs8", // Tipo di chiave
             private_key_bytes, // Chiave privata come Uint8Array
             {
                 name: "ECDH",
-                namedCurve: "P-256", // La curva deve corrispondere a quella utilizzata per la generazione
+                namedCurve: curve, // La curva deve corrispondere a quella utilizzata per la generazione
             },
             true, // La chiave è esportabile
             ["deriveKey", "deriveBits"] // Operazioni consentite (nessuna)

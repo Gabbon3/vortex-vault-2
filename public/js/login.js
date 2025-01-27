@@ -5,6 +5,7 @@ import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { Bytes } from "../utils/bytes.js";
+import { LSE } from "../service/lse.public.service.js";
 
 $(document).ready(async () => {
     /**
@@ -61,7 +62,8 @@ $(document).ready(async () => {
         const { email, password } = elements;
         // ---
         Windows.loader(true);
-        if (await AuthService.signin(email, password)) {
+        // -- accedo
+        if (await AuthService.signin(email, password, null, true)) {
             $(form).trigger('reset');
             // Log.summon(0, `Authenticated as ${email}`);
             window.location.href = '/vault';

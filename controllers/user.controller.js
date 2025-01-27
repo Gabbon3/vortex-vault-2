@@ -61,8 +61,7 @@ export class UserController {
         }
         // -- Access Token
         const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
-        const { cke, lsk } = await this.cke_service.generate(null, user.salt);
-        this.set_token_cookies(res, { access_token, refresh_token, cke, uid: user.id });
+        this.set_token_cookies(res, { access_token, refresh_token, uid: user.id });
         // ---
         if (!access_token) {
             return res.status(403).json({
@@ -74,7 +73,6 @@ export class UserController {
         res.status(201).json({
             access_token,
             refresh_token,
-            lsk: Bytes.base64.encode(lsk), // Local Storage Key
             salt: user.salt
         });
     });
@@ -231,23 +229,8 @@ export class UserController {
      */
     change_password = async_handler(async (req, res) => {
         const { old_password, new_password, email } = req.body;
-        const cookie_cke = req.cookies.cke;
         // ---
         if (!old_password || !new_password || !email) throw new CError("", "Missing data needed to make password change", 429);
-        // ---
-        let cke = null;
-        let lsk = null;
-        // -- se la cke ce ottengo la key, se non ce la cke genero entrambe
-        if (cookie_cke) {
-            lsk = await this.cke_service.lsk(cookie_cke, req.user.uid);
-            cke = cookie_cke;
-        } else {
-            const new_ = await this.cke_service.generate(req.user.uid);
-            lsk = new_.lsk;
-            cke = new_.cke;
-            // imposto il cookie se mancante
-            this.set_token_cookies(res, { cke });
-        }
         // ---
         const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
         if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
@@ -257,7 +240,7 @@ export class UserController {
         });
         Mailer.send(email, 'Password Change Confirmation', text, html);
         // ---
-        res.status(200).json({ message: "Password changed!", lsk: Bytes.base64.encode(lsk) });
+        res.status(200).json({ message: "Password changed!" });
     });
     /**
      * Imposta le informazioni di recupero password
@@ -315,15 +298,6 @@ export class UserController {
                 httpOnly: true,
                 secure: true,
                 maxAge: JWT.refresh_token_cookie_lifetime,
-                sameSite: 'Strict',
-                path: '/auth',
-            });
-        }
-        if (cookies.cke) {
-            res.cookie('cke', cookies.cke, {
-                httpOnly: true,
-                secure: true,
-                maxAge: JWT.cke_cookie_lifetime,
                 sameSite: 'Strict',
                 path: '/auth',
             });
