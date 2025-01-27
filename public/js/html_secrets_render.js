@@ -284,7 +284,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- CUSTOM -->
-<div class="custom-sections flex d-column emt" id="${update ? 'update-' : ''}custom-sections-vault">
+<div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`;
     }
