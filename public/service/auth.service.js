@@ -16,12 +16,25 @@ import { LSE } from "./lse.public.service.js";
 
 export class AuthService {
     /**
+     * Attiva il protocollo LSE
+     * @returns {boolean}
+     */
+    static async activate_lse() {
+        // -- setto una nuova chiave simmetrica locale
+        const lse_activated = await LSE.set();
+        if (!lse_activated) {
+            Log.summon(2, "Unable to set up new Local Storage Ecnryption Key, try again.");
+            return false;
+        }
+        return true;
+    }
+    /**
      * Esegue l'accesso
      * @param {string} email 
      * @param {string} password 
      * @returns {boolean}
      */
-    static async signin(email, password, passKey = null) {
+    static async signin(email, password, passKey = null, is_login = false) {
         const res = await API.fetch('/auth/signin', {
             method: 'POST',
             body: { email, password, passKey },
@@ -30,6 +43,11 @@ export class AuthService {
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
+        // -- abilito se necessario il protocollo lse
+        if (is_login) {
+            const lse_activated = await this.activate_lse();
+            if (!lse_activated) return false;
+        }
         // -- Recupero la LSK tramite protocollo LSE
         const lsk = await LSE.S();
         // -- cifro le credenziali sul localstorage
@@ -360,17 +378,21 @@ export class AuthService {
         return initialized;
     }
     /**
-     * Genera una opzione di recupero
+     * Genera una opzione di recupero 
      * @param {string} master_password 
-     * @returns {Uint8Array} la chiave privata
+     * @returns {Uint8Array} la chiave privata in formato grezzo
      */
     static async set_up_recovery_method(master_password) {
-        const { public_key, private_key, exported_keys } = await ECDH.generate_keys();
+        // genero due coppie di chiavi
+        const ks1 = await ECDH.generate_keys(LSE.curve);
+        const ks2 = await ECDH.generate_keys(LSE.curve);
+        const private_keys = ks1.private_key;
+        const public_keys = ks2.public_key;
         // ---
-        const simmetric = await ECDH.derive_shared_secret(private_key, public_key);
+        const simmetric = await ECDH.derive_shared_secret(private_keys[0], public_keys[0]);
         const encrypted_password = await AES256GCM.encrypt(new TextEncoder().encode(master_password), simmetric);
         // ---
-        const result_bytes = msgpack.encode([encrypted_password, exported_keys.public_key]);
+        const result_bytes = msgpack.encode([encrypted_password, public_keys[1]]);
         // ---
         const res = await API.fetch('/auth/new-recovery', {
             method: 'POST',
@@ -380,7 +402,7 @@ export class AuthService {
         });
         // ---
         if (!res) return false;
-        return exported_keys.private_key;
+        return private_keys[1];
     }
     /**
      * Restituisce la password dell'utente se il codice è corretto
@@ -398,8 +420,8 @@ export class AuthService {
         const recovery = new Uint8Array(res.recovery.data);
         const [encrypted_password, public_key] = msgpack.decode(recovery);
         // ---
-        const imported_private_key = await ECDH.import_private_key(private_key);
-        const imported_public_key = await ECDH.import_public_key(public_key);
+        const imported_private_key = await ECDH.import_private_key(private_key, LSE.curve);
+        const imported_public_key = await ECDH.import_public_key(public_key, LSE.curve);
         // ---
         const simmetric = await ECDH.derive_shared_secret(imported_private_key, imported_public_key);
         try {

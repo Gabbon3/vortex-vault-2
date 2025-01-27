@@ -7,6 +7,7 @@ import { PasskeyService } from "./passkey.public.service.js";
 export class LSE {
     // tempo di vita del protocollo (31 giorni) in ms
     static protocol_lifetime = 31 * 24 * 60 * 60 * 1000;
+    static curve = "P-384";
     /**
      * Genera una coppia di chiavi ECDH per permettere la crittografia locale
      * ogni coppia puo essere usata per un mese, poi puo cambiata (questo per evitare sovraccarichi)
@@ -18,18 +19,19 @@ export class LSE {
         // -- se la data di scadenza è valida non ce bisogno di settare una nuova coppia di chiavi
         if (!isNaN(protocol_expire_date) && protocol_expire_date > new Date()) return true;
         // genero due coppie di chiavi
-        const ks1 = await ECDH.generate_keys();
-        const ks2 = await ECDH.generate_keys();
-        const private_key = ks1.exported_keys.private_key;
-        const public_key = ks2.exported_keys.public_key;
+        const ks1 = await ECDH.generate_keys(LSE.curve);
+        const ks2 = await ECDH.generate_keys(LSE.curve);
+        // ---
+        const raw_private_key = ks1.private_key[1];
+        const raw_public_key = ks2.public_key[1];
         // -- salvo
         const res = await PasskeyService.authenticate({
             endpoint: 'auth/lse/set',
-            body: { public_key: Bytes.base64.encode(public_key) },
+            body: { public_key: Bytes.base64.encode(raw_public_key) },
         });
         if (!res) return false;
         // ---
-        await LocalStorage.set('lse-private-key', private_key);
+        await LocalStorage.set('lse-private-key', raw_private_key);
         await LocalStorage.set('lse-private-key-expire-date', Date.now() + LSE.protocol_lifetime);
         // ---
         return true;
@@ -51,8 +53,8 @@ export class LSE {
         });
         if (!raw_public_key) return false;
         // -- importo le chiavi come Crypto Key
-        const private_key = await ECDH.import_private_key(raw_private_key);
-        const public_key = await ECDH.import_public_key(raw_public_key);
+        const private_key = await ECDH.import_private_key(raw_private_key, LSE.curve);
+        const public_key = await ECDH.import_public_key(raw_public_key, LSE.curve);
         // -- calcolo la chiave S
         const secret = await ECDH.derive_shared_secret(private_key, public_key);
         return secret;

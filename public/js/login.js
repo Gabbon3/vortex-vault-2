@@ -62,14 +62,8 @@ $(document).ready(async () => {
         const { email, password } = elements;
         // ---
         Windows.loader(true);
-        // -- setto una nuova chiave simmetrica locale
-        const lse_activated = await LSE.set();
-        if (!lse_activated) {
-            Windows.loader(false);
-            return Log.summon(2, "Unable to set up new Local Storage Ecnryption Key, try again.");
-        }
         // -- accedo
-        if (await AuthService.signin(email, password)) {
+        if (await AuthService.signin(email, password, null, true)) {
             $(form).trigger('reset');
             // Log.summon(0, `Authenticated as ${email}`);
             window.location.href = '/vault';
