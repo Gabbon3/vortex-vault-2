@@ -16,6 +16,19 @@ import { JWT } from "../utils/jwt.utils.js";
  */
 export const verify_passkey = (required = false) => {
     return async_handler(async (req, res, next) => {
+        /**
+         * Verifico se ce un bypass token
+         */
+        const { bypass_token } = req.body;
+        if (bypass_token) {
+            const payload = RamDB.get(`byp-${bypass_token}`);
+            console.log(payload);
+            if (payload) {
+                req.user = { uid: payload.uid };
+                return next();
+            }
+        }
+
         const { request_id, auth_data } = req.body;
 
         /**

@@ -60,7 +60,7 @@ export class UserController {
             }
         }
         // -- Access Token
-        const { access_token, refresh_token, user } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
+        const { access_token, refresh_token, user, bypass_token } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
         this.set_token_cookies(res, { access_token, refresh_token, uid: user.id });
         // ---
         if (!access_token) {
@@ -73,7 +73,8 @@ export class UserController {
         res.status(201).json({
             access_token,
             refresh_token,
-            salt: user.salt
+            salt: user.salt,
+            bypass_token,
         });
     });
     /**

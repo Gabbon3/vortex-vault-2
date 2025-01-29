@@ -17,11 +17,12 @@ import { LSE } from "./lse.public.service.js";
 export class AuthService {
     /**
      * Attiva il protocollo LSE
+     * @param {string} [bypass_token=null] 
      * @returns {boolean}
      */
-    static async activate_lse() {
+    static async activate_lse(bypass_token = null) {
         // -- setto una nuova chiave simmetrica locale
-        const lse_activated = await LSE.set();
+        const lse_activated = await LSE.set(bypass_token);
         if (!lse_activated) {
             Log.summon(2, "Unable to set up new Local Storage Encryption Key, try again.");
             return false;
@@ -47,11 +48,11 @@ export class AuthService {
         const master_key = await Cripto.argon2(password, salt);
         // -- abilito se necessario il protocollo lse
         if (activate_lse === true) {
-            const lse_activated = await this.activate_lse();
+            const lse_activated = await this.activate_lse(res.bypass_token);
             if (!lse_activated) return false;
         }
         // -- Recupero la LSK tramite protocollo LSE
-        const lsk = await LSE.S();
+        const lsk = await LSE.S(null, res.bypass_token);
         // -- cifro le credenziali sul localstorage
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, master_key);
