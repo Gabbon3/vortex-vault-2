@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import 'dotenv/config';
+import { Config } from './server_config.js';
 import { sequelize } from './config/db.js';
 import user_routes from './routes/user.routes.js';
 import token_routes from './routes/token.routes.js';
@@ -51,7 +51,7 @@ app.use('/', static_routes);
  */
 app.use(error_handler_middleware);
 
-const PORT = process.env.PORT || 3000;
+const PORT = Config.DB_PORT || 3000;
 
 /**
  * HTTPS

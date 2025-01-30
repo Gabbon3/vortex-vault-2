@@ -1,16 +1,16 @@
 import { Sequelize } from 'sequelize';
-import 'dotenv/config';
 import path from 'path';
 import fs from 'fs';
+import { Config } from '../server_config.js';
 
 const ssl_cert_path = path.resolve('./config/ssl.crt');
 
 export const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
+    Config.DB_NAME,
+    Config.DB_USER,
+    Config.DB_PASSWORD,
     {
-        host: process.env.DB_HOST,
+        host: Config.DB_HOST,
         dialect: 'postgres',
         dialectOptions: {
             ssl: {
