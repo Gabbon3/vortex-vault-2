@@ -7,6 +7,7 @@ import { User } from '../models/user.js';
 import { Roles } from '../utils/roles.js';
 import { Mailer } from '../config/mail.js';
 import automated_emails from '../public/utils/automated.mails.js';
+import { RamDB } from '../config/ramdb.js';
 
 export class UserService {
     constructor() {
@@ -93,8 +94,10 @@ export class UserService {
         }
         // -- Access Token
         const access_token = refresh_token.is_revoked ? null : JWT.genera_access_token({ uid: user.id, role: Roles.BASE });
-        // ---
-        return { access_token, refresh_token: refresh_token.id, user };
+        // -- genero un bypass token
+        const bypass_token = Cripto.bypass_token();
+        RamDB.set(`byp-${bypass_token}`, { uid: user.id }, 30);
+        return { access_token, refresh_token: refresh_token.id, user, bypass_token };
     }
     /**
      * Generate an advanced access token

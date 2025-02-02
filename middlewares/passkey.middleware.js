@@ -6,6 +6,7 @@ import msgpack from "../public/utils/msgpack.min.js";
 import { Passkey } from "../models/passkey.model.js";
 import { fido2 } from "../services/passkey.service.js";
 import { JWT } from "../utils/jwt.utils.js";
+import { Config } from "../server_config.js";
 
 /**
  * Funzione che verifica la passkey, con la possibilità di rendere la verifica obbligatoria.
@@ -16,6 +17,18 @@ import { JWT } from "../utils/jwt.utils.js";
  */
 export const verify_passkey = (required = false) => {
     return async_handler(async (req, res, next) => {
+        /**
+         * Verifico se ce un bypass token
+         */
+        const { bypass_token } = req.body;
+        if (bypass_token) {
+            const payload = RamDB.get(`byp-${bypass_token}`);
+            if (payload) {
+                req.user = { uid: payload.uid };
+                return next();
+            }
+        }
+
         const { request_id, auth_data } = req.body;
 
         /**
@@ -62,7 +75,7 @@ export const verify_passkey = (required = false) => {
                 },
                 {
                     challenge,
-                    origin: process.env.ORIGIN,
+                    origin: Config.ORIGIN,
                     factor: "either",
                     publicKey: passkey.public_key,
                     prevCounter: passkey.sign_count,

@@ -13,6 +13,14 @@ export class Cripto {
         return encoding ? bytes.toString(encoding) : new Uint8Array(bytes);
     }
     /**
+     * Genera un bypass token, sul ram db è identificato come byp-{il token}
+     * @param {number} random_size 
+     * @returns {string} in esadecimale
+     */
+    static bypass_token(random_size = 8) {
+        return Date.now().toString(16) + this.random_bytes(random_size, 'hex');
+    }
+    /**
      * Generate a high-entropy random number.
      * A secure replacement for Math.random().
      * @returns {number} A number in the range [0, 1).

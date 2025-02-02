@@ -2,16 +2,16 @@ import { CError } from "../helpers/cError.js";
 import { Passkey } from "../models/passkey.model.js";
 import { User } from "../models/user.js";
 import { Mailer } from "../config/mail.js";
-import "dotenv/config";
 import automated_emails from "../public/utils/automated.mails.js";
 import { RamDB } from "../config/ramdb.js";
 import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";
 import { v7 as uuidv7, parse as uuidParse } from 'uuid';
+import { Config } from "../server_config.js";
 
 export const fido2 = new Fido2Lib({
     timeout: 60000,
-    rpId: process.env.RPID,
+    rpId: Config.RPID,
     rpName: "Vortex Vault",
     challengeSize: 32,
     attestation: 'direct'
@@ -19,8 +19,8 @@ export const fido2 = new Fido2Lib({
 
 export class PasskeyService {
     static rpName = "Vortex Vault";
-    static rpId = process.env.RPID;
-    static origin = process.env.ORIGIN;
+    static rpId = Config.RPID;
+    static origin = Config.ORIGIN;
     // ---
     constructor() {}
     /**

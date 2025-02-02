@@ -1,11 +1,10 @@
 import { Bytes } from '../utils/bytes.js';
 import { AES256GCM } from '../utils/aesgcm.js';
 import { Cripto } from '../utils/cryptoUtils.js';
-import "dotenv/config";
+import { Config } from '../server_config.js';
 
 export class MFAService {
     // -- importo le chiavi per generare le chiavi dei segreti multifattore
-    static keys = Buffer.from(process.env.MFA_KEYS, 'hex');
     /**
      * Restituisce la chiave env associata ad un utente
      * @param {number} uid 
@@ -19,7 +18,7 @@ export class MFAService {
         // -- calcolo le posizioni per ottenere la chiave
         const start = index * 32;
         const end = start + 32;
-        const env_key = this.keys.subarray(start, end);
+        const env_key = Config.MFA_KEYS.subarray(start, end);
         // -- calcolo la chiave
         const key = Cripto.hmac(salt, env_key);
         return key;

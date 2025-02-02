@@ -1,19 +1,18 @@
 import nodemailer from 'nodemailer';
 import { Cripto } from '../utils/cryptoUtils.js';
-import 'dotenv/config';
 import { Bytes } from '../utils/bytes.js';
 import { BaseConverter } from '../utils/baseConverter.js';
+import { Config } from '../server_config.js';
 
 export class Mailer {
-    static fish_key = Buffer.from(process.env.FISH_SECRET, "hex");
     /**
      * Configurazione per il trasporto
      */
     static transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
+            user: Config.EMAIL_USER,
+            pass: Config.EMAIL_PASSWORD,
         }
     });
     /**
@@ -27,7 +26,7 @@ export class Mailer {
         timestamp = BaseConverter.to_string(timestamp, 62);
         // ---
         const payload = `${email}.${timestamp}`;
-        const signature = Cripto.hmac(payload, this.fish_key);
+        const signature = Cripto.hmac(payload, Config.FISH_KEY);
         // ---
         const encoded_signature = Bytes.base62.encode(signature.subarray(0, 12), true);
         return `${payload}.${encoded_signature}`;
@@ -50,7 +49,7 @@ export class Mailer {
         // -- ottengo la data per fare il confronto temporale
         const date = Number(BaseConverter.from_string(code_parts.pop(), 62)) * 1000;
         // -- calcolo nuovamente la signature
-        const signature = Cripto.hmac(payload, this.fish_key);
+        const signature = Cripto.hmac(payload, Config.FISH_KEY);
         // -- verifico le condizioni
         const valid_signature = Bytes.compare(signature.subarray(0, 12), encoded_signature);
         const valid_date = Date.now() < new Date(date + (24 * 60 * 60 * 1000));
@@ -74,7 +73,7 @@ export class Mailer {
     static async send(to, subject, text, html) {
         try {
             const mail_options = {
-                from: process.env.EMAIL_USER,
+                from: Config.EMAIL_USER,
                 to,
                 subject,
                 text,

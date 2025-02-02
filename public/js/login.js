@@ -24,10 +24,10 @@ $(document).ready(async () => {
     if (quick_signin === true) {
         const session_started = await auth_success();
         if (session_started === true || session_started === 0) {
-            Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
-            setTimeout(() => {
-                window.location.href = '/vault';
-            }, 3000);
+            Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`, () => { window.location.href = '/vault'; });
+            // setTimeout(() => {
+            //     window.location.href = '/vault';
+            // }, 3000);
         }
     }
     /**

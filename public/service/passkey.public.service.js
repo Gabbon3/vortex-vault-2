@@ -128,6 +128,7 @@ export class PasskeyService {
         let auth_data = null;
         let request_id = null;
         let body = options.body ?? {};
+        const bypass_token = options.body?.bypass_token ? true : false;
         // -- definisco dei valori predefiniti delle options
         const opt = {
             method: 'POST',
@@ -137,10 +138,11 @@ export class PasskeyService {
         const passkey_token = await LocalStorage.get('passkey-token-expire');
         const passkey_token_is_valid = passkey_token instanceof Date && passkey_token > new Date();
         /**
+         * se è presente un bypass token skippo questa parte
          * Se non si è già autenticato chiedo al client di firmare una challenge
          * oppure se è richiesta la passkey
          */
-        if (!passkey_token_is_valid || options.passkey_need === true) {
+        if (bypass_token === false && (!passkey_token_is_valid || options.passkey_need === true)) {
             // -- ottengo gli auth data e la request id
             auth_data = await this.get_auth_data();
             if (!auth_data) return auth_data;

@@ -1,19 +1,16 @@
 import jwt from "jsonwebtoken";
-import "dotenv/config";
 import { AES256GCM } from "./aesgcm.js";
+import { Config } from "../server_config.js";
 
 export class JWT {
-    static ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-    static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, 'hex');
-    static PASSKEY_TOKEN_SECRET = Buffer.from(process.env.PASSKEY_TOKEN_SECRET, 'hex');
     // ---
     /**
      * Raccolta delle chiavi da usare nei tokens
      */
     static keys = {
-        default: JWT.ACCESS_TOKEN_SECRET, // chiave per firmare i jwt base
-        passkey: JWT.PASSKEY_TOKEN_SECRET, // chiave per firmare i jwt emessi da passkeys
-        encrypt: JWT.TOKEN_KEY, // chiave per cifrare i jwt
+        default: Config.ACCESS_TOKEN_SECRET, // chiave per firmare i jwt base
+        passkey: Config.PASSKEY_TOKEN_SECRET, // chiave per firmare i jwt emessi da passkeys
+        encrypt: Config.TOKEN_KEY, // chiave per cifrare i jwt
     }
     // -- proprietà dei jwt o cookie
     static secure_option = true;
@@ -45,13 +42,13 @@ export class JWT {
                 iat: now,
                 exp: now + lifetime,
             },
-            this.ACCESS_TOKEN_SECRET
+            this.keys.default
         );
         // -- cifro il token se richiesto
         if (this.encrypt) {
             const encrypted_token = AES256GCM.encrypt(
                 Buffer.from(token),
-                this.TOKEN_KEY
+                this.keys.encrypt
             );
             return encrypted_token.toString("base64");
         }
@@ -103,12 +100,12 @@ export class JWT {
         if (this.encrypt) {
             const token = AES256GCM.decrypt(
                 Buffer.from(access_token, "base64"),
-                this.TOKEN_KEY
+                this.keys.encrypt
             ).toString();
-            return this.verifica_token(token, this.ACCESS_TOKEN_SECRET);
+            return this.verifica_token(token, this.keys.default);
         }
         // ---
-        return this.verifica_token(access_token, this.ACCESS_TOKEN_SECRET);
+        return this.verifica_token(access_token, this.keys.default);
     }
 
     /**
