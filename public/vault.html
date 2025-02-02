@@ -30,7 +30,7 @@
     <script type="module" src="./js/auth.ui.js"></script>
     <script type="module" src="./js/passkey.ui.js"></script>
 </head>
-<body>
+<body class="theme-earth">
     <vortex-navbar></vortex-navbar>
     <main class="pagina">
         <h1 class="icon">
@@ -350,7 +350,7 @@
         </form>
     </div>
     <!-- PSW GENERATOR -->
-    <div class="window m pr" id="win-psw-generator">
+    <div class="window m pr maincolor green" id="win-psw-generator">
         <div class="flex y-center">
             <h2 class="icon mb-0">
                 <span class="material-symbols-rounded">key_vertical</span>
@@ -627,6 +627,31 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <hr>
+        <!-- TEMA APP -->
+        <div class="maincolor blue">
+            <h3 class="icon slider" slider="cont-theme">
+                <span class="material-symbols-rounded">palette</span>
+                Theme
+            </h3>
+            <div class="isle bg-4" id="cont-theme" style="display: none;">
+                <p class="mb-3">
+                    Change the color scheme.
+                </p>
+                <select id="theme-selector" class="input-text monospace">
+                    <option disabled>Dark Theme</option>
+                    <option value="earth" selected>🌍 Earth</option>
+                    <option value="monokai">🌙 Monokai</option>
+                    <option value="dracula">🧛‍♂️ Dracula</option>
+                    <option value="cyberpunk">🚀 Cyber Punk</option>
+                    <option value="sunset">🌅 Sunset</option>
+                    <option value="blossom">🌸 Blossom</option>
+                    <option value="ocean">🌊 Ocean</option>
+                    <option disabled>Light Theme</option>
+                    <option value="cloud">☁️ Cloud</option>
+                </select>
             </div>
         </div>
         <hr>

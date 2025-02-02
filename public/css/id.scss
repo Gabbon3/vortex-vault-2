@@ -8,24 +8,24 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        color: $text-color;
+        color: var(--text-color);
         text-decoration: none;
         border-radius: $br-s;
         transition: 0.1s;
         cursor: pointer;
 
-        @mixin navbar-color-styles($color-name, $color-value) {
+        @mixin navbar-color-styles($color-name) {
             &.#{$color-name} {
                 span {
-                    color: $color-value;
+                    color: var(--#{$color-name});
                 }
                 &:hover {
-                    background-color: rgba($color-value, 0.1);
+                    background-color: color-mix(in srgb, var(--#{$color-name}), transparent 90%);
                 }
             }
         }
-        @each $color-name, $color-value in $colors {
-            @include navbar-color-styles($color-name, $color-value);
+        @each $color-name in $color-names {
+            @include navbar-color-styles($color-name);
         }
 
         i {
@@ -33,11 +33,11 @@
         }
 
         span {
-            color: $c1;
+            color: var(--c1);
         }
 
         &:hover {
-            background-color: rgba($c1, 0.1);
+            background-color: rgba(var(--c1), 0.1);
         }
     }
 }
@@ -47,8 +47,8 @@ vortex-navbar {
     align-items: center;
     padding: 5px;
     border-radius: $br-m;
-    background-color: $bg-3;
-    box-shadow: 0 0 0 1px $bg-5;
+    background-color: var(--bg-3);
+    box-shadow: 0 0 0 1px var(--bg-5);
     position: fixed;
     top: 7px;
     left: 7px;
@@ -71,14 +71,14 @@ vortex-navbar {
     margin-left: auto;
     margin-right: 20px;
     cursor: default;
-    color: $text-color-2;
+    color: var(--text-color-2);
 
     &.base {
-        color: $c1;
+        color: var(--c1);
     }
 
     &.sudo {
-        color: $c-warning;
+        color: var(--warning);
     }
 }
 
@@ -86,7 +86,7 @@ vortex-navbar {
 #registrati {
     display: block;
     margin: 20px auto;
-    background-color: $bg-2;
+    background-color: var(--bg-2);
     padding: 10px;
     border-radius: 10px;
     max-width: 500px;
@@ -109,8 +109,8 @@ vortex-navbar {
         padding-bottom: 10px;
         border-radius: $br-xl;
         overflow: hidden;
-        --bc-log: $bg-1;
-        --i-color: $text-color;
+        --bc-log: var(--bg-1);
+        --i-color: var(--text-color);
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         animation: bounce 500ms linear both;
@@ -130,32 +130,40 @@ vortex-navbar {
 
         p {
             margin: 0;
-            color: $text-color;
+            color: var(--text-color);
         }
 
         &._0 {
-            background-color: rgba($c-olive-green, 0.3);
-            // border: 1px solid $c1;
-            color: $c-olive-green;
-            &::after { background-color: $c-olive-green; }
+            background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
+            // border: 1px solid var(--c1);
+            color: var(--olivegreen);
+            &::after {
+                background-color: var(--olivegreen);
+            }
         }
         &._1 {
-            background-color: rgba($c-warning, 0.3);
-            // border: 1px solid $c-warning;
-            color: $c-orange;
-            &::after { background-color: $c-orange; }
+            background-color: rgba(var(--warning), 0.3);
+            // border: 1px solid var(--warning);
+            color: var(--orange);
+            &::after {
+                background-color: var(--orange);
+            }
         }
         &._2 {
-            background-color: rgba($c-danger, 0.3);
-            // border: 1px solid $c-red;
-            color: $c-red;
-            &::after { background-color: $c-red; }
+            background-color: color-mix(in srgb, var(--danger), transparent 70%);
+            // border: 1px solid var(--red);
+            color: var(--red);
+            &::after {
+                background-color: var(--red);
+            }
         }
         &._3 {
-            background-color: rgba($c-mint, 0.3);
-            // border: 1px solid $c-mint;
-            color: $c-mint;
-            &::after { background-color: $c-mint; }
+            background-color: color-mix(in srgb, var(--mint), transparent 70%);
+            // border: 1px solid var(--mint);
+            color: var(--mint);
+            &::after {
+                background-color: var(--mint);
+            }
         }
 
         .i-container {
@@ -210,7 +218,7 @@ vortex-navbar {
         flex-wrap: wrap;
         padding: $br-m;
         border-radius: $br-xl;
-        background-color: $bg-2;
+        background-color: var(--bg-2);
     }
 
     .checkpoint {
@@ -225,7 +233,7 @@ vortex-navbar {
     &.searching {
         padding: $br-m $br-m 2.5px $br-m;
         border-radius: $br-xl;
-        background-color: $bg-2;
+        background-color: var(--bg-2);
         gap: 0;
 
         .checkpoint {
@@ -259,29 +267,30 @@ vortex-navbar {
         cursor: pointer;
         padding: 10px;
         border-radius: $br-l;
-        background-color: $bg-3;
+        background-color: var(--bg-3);
         transition: 0.15s;
         flex-grow: 1;
 
         &:hover {
-            background-color: $bg-4;
-            // box-shadow: 0 0 4px 0px $bg-4;
+            background-color: var(--bg-4);
+            // box-shadow: 0 0 4px 0px var(--bg-4);
         }
 
         .simbolo {
-            color: $c1;
+            color: var(--c1);
             font-size: $fs-xl;
             padding: 5px;
             display: flex;
             align-items: center;
 
-            @mixin color-vault-styles($color-name, $color-value) {
+            // Mixin per color-vault
+            @mixin color-vault-styles($color-name) {
                 &.#{$color-name} {
-                    color: $color-value;
+                    color: var(--#{$color-name});
                 }
             }
-            @each $color-name, $color-value in $colors {
-                @include color-vault-styles($color-name, $color-value);
+            @each $color-name in $color-names {
+                @include color-vault-styles($color-name);
             }
         }
 
@@ -303,7 +312,7 @@ vortex-navbar {
             i {
                 font-style: normal;
                 font-size: $fs-m;
-                color: $text-color-2;
+                color: var(--text-color-2);
             }
         }
     }
@@ -324,7 +333,7 @@ vortex-navbar {
     }
 
     custom-vault-section {
-        background-color: $bg-4;
+        background-color: var(--bg-4);
         padding: 0 7px 7px 7px;
         border-radius: $br-m;
 
@@ -332,7 +341,7 @@ vortex-navbar {
             padding: 3px;
 
             .material-symbols-rounded {
-                color: $text-color-2;
+                color: var(--text-color-2);
             }
         }
     }
@@ -344,19 +353,19 @@ colored-password {
         font-family: $monospace !important;
 
         &.az {
-            color: $c-peach;
+            color: var(--peach);
         }
 
         &.AZ {
-            color: $c-olive-green;
+            color: var(--green);
         }
 
         &._09 {
-            color: $c-red;
+            color: var(--red);
         }
 
         &._s {
-            color: $c-lightblue;
+            color: var(--lightblue);
         }
     }
 
@@ -370,7 +379,7 @@ password-strength-bar {
     margin: 10px auto;
     width: 100%;
     overflow: hidden;
-    background-color: $bg-3;
+    background-color: var(--bg-3);
     padding: 5px;
     border-radius: $br-s;
     font-size: $fs-m;
@@ -391,23 +400,23 @@ password-strength-bar {
         font-family: $monospace;
 
         &._1 {
-            background-color: rgba($c-danger, 0.3);
-            color: $c-danger;
+            background-color: color-mix(in srgb, var(--danger), transparent 70%);
+            color: var(--danger);
         }
 
         &._2 {
-            background-color: rgba($c-warning, 0.3);
-            color: $c-warning;
+            background-color: color-mix(in srgb, var(--warning), transparent 70%);
+            color: var(--warning);
         }
 
         &._3 {
-            background-color: rgba($c2, 0.3);
-            color: $c2;
+            background-color: color-mix(in srgb, var(--mint), transparent 70%);
+            color: var(--mint);
         }
 
         &._4 {
-            background-color: rgba($c1, 0.3);
-            color: $c1;
+            background-color: color-mix(in srgb, var(--green), transparent 70%);
+            color: var(--green);
         }
     }
 }
@@ -426,13 +435,13 @@ passkey-list-item {
     gap: $br-m;
     padding: $br-m;
     border-radius: $br-m;
-    background-color: $bg-4;
+    background-color: var(--bg-4);
 
     .token-id {
         display: flex;
         gap: 5px;
         align-items: center;
-        color: $text-color-2;
+        color: var(--text-color-2);
         font-size: $fs-s;
 
         i {
@@ -443,7 +452,7 @@ passkey-list-item {
 
     &.current {
         .token-id {
-            color: $c-purple;
+            color: var(--purple);
         }
     }
 
@@ -468,7 +477,7 @@ passkey-list-item {
     z-index: 2000;
     width: 100%;
     height: 100%;
-    background-color: rgba($bg-1, 0.5);
+    background-color: rgba(var(--bg-1), 0.5);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     display: none;
@@ -496,7 +505,7 @@ passkey-list-item {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba($bg-1, 0.7);
+    background-color: color-mix(in srgb, var(--bg-1), transparent 30%);
     z-index: 9;
     // ---
     opacity: 0;

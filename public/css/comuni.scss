@@ -9,7 +9,7 @@ label,
 label,
 .label {
     .material-symbols-rounded {
-        color: $c1;
+        color: var(--c1);
     }
 
     margin: 7px 0 7px 0;
@@ -96,7 +96,7 @@ $spacers: (
     3: 0.75rem,
     4: 1rem,
     5: 1.25rem,
-    6: 1.50rem,
+    6: 1.5rem,
 );
 
 @each $key, $value in $spacers {
@@ -147,10 +147,10 @@ h5 {
 
     &.icon {
         .material-symbols-rounded {
-            color: $c1;
+            color: var(--c1);
 
             &.warning {
-                color: $c-warning !important;
+                color: var(--warning) !important;
             }
         }
     }
@@ -164,39 +164,39 @@ h5 {
         font-family: $monospace;
         justify-content: center;
         letter-spacing: 10px;
-        color: $c1;
+        color: var(--c1);
     }
 }
 
 .color {
     &.warn {
-        color: $c-warning !important;
+        color: var(--warning) !important;
     }
 
     &.danger {
-        color: $c-danger !important;
+        color: var(--danger) !important;
     }
 }
 
 p {
     font-size: $fs-m;
-    color: $text-color;
+    color: var(--text-color);
     margin: 0.5em auto;
     line-height: 1.5;
 
     a {
-        color: $c2;
+        color: var(--c2);
         text-decoration: none;
-        border-bottom: 1px dashed $c2;
+        border-bottom: 1px dashed var(--c2);
         cursor: pointer;
 
         &:hover {
-            border-bottom: 1px solid $c2;
+            border-bottom: 1px solid var(--c2);
         }
     }
 
     b {
-        color: $c1;
+        color: var(--c1);
         font-weight: normal;
     }
 
@@ -205,17 +205,17 @@ p {
     }
 
     &.secondary {
-        color: $text-color-2;
+        color: var(--text-color-2);
     }
 
     &.description {
-        color: $text-color-2;
+        color: var(--text-color-2);
         font-size: $fs-s;
     }
 }
 
 colored {
-    color: $c1;
+    color: var(--c1);
 }
 
 .fs-l {
@@ -232,13 +232,13 @@ colored {
 
 hr {
     margin: 0.8rem 0;
-    color: $border-color;
+    color: var(--border-color);
     border: 0;
-    border-top: 1px solid $border-color;
+    border-top: 1px solid var(--border-color);
 
     &.dashed {
         background-color: transparent;
-        border-bottom: 1px dashed $border-color;
+        border-bottom: 1px dashed var(--border-color);
     }
 
     &.s {
@@ -256,7 +256,7 @@ hr {
     border: none;
     transition: 0.2s;
     cursor: pointer;
-    color: $text-color;
+    color: var(--text-color);
     font-size: $fs-m;
     font-weight: normal !important;
 
@@ -270,68 +270,68 @@ hr {
     }
 
     &.primary {
-        background-color: rgba($c1, 0.15);
-        color: lighten($c1, 5);
+        background-color: color-mix(in srgb, var(--c1), transparent 85%);
+        color: var(--c1);
 
         &:hover {
-            background-color: rgba($c1, 0.2);
+            background-color: color-mix(in srgb, var(--c1), transparent 80%);
         }
     }
 
     &.secondary {
-        background-color: $bg-5;
-        color: $text-color-15;
+        background-color: var(--bg-5);
+        color: var(--text-color-15);
 
         &:hover {
-            background-color: $bg-6;
-            color: $text-color;
+            background-color: var(--bg-6);
+            color: var(--text-color);
         }
     }
 
     &.warning {
-        background-color: rgba($c-warning, 0.2);
-        color: $c-warning;
+        background-color: color-mix(in srgb, var(--warning), transparent 80%);
+        color: var(--warning);
 
         &:hover {
-            background-color: rgba($c-warning, 0.3);
+            background-color: color-mix(in srgb, var(--warning), transparent 70%);
         }
     }
 
     &.danger {
-        background-color: rgba(236, 55, 82, 0.2);
-        color: $c-danger;
+        background-color: color-mix(in srgb, var(--danger), transparent 80%);
+        color: var(--danger);
 
         &:hover {
-            background-color: rgba(236, 55, 82, 0.3);
+            background-color: color-mix(in srgb, var(--danger), transparent 70%);
         }
     }
 
-    @mixin button-color-styles($color-name, $color-value) {
+    @mixin button-color-styles($color-name) {
         &.#{$color-name} {
-            background-color: rgba($color-value, 0.2);
-            color: $color-value;
+            background-color: color-mix(in srgb, var(--#{$color-name}), transparent 80%);
+            color: var(--#{$color-name});
 
             &:hover {
-                background-color: rgba($color-value, 0.3);
+                background-color: color-mix(in srgb, var(--#{$color-name}), transparent 70%);
             }
         }
     }
 
-    @each $color-name, $color-value in $colors {
-        @include button-color-styles($color-name, $color-value);
+    @each $color-name in $color-names {
+        @include button-color-styles($color-name);
     }
 
     &.t {
         background-color: transparent;
-        color: $text-color-2;
+        color: var(--text-color-2);
 
         &:hover {
-            box-shadow: 0 0 0 4px $bg-5;
-            color: $text-color;
+            box-shadow: 0 0 0 4px var(--bg-5);
+            color: var(--text-color);
         }
 
         &:active {
-            box-shadow: 0 0 0 6px $bg-5;
+            box-shadow: 0 0 0 6px var(--bg-5);
         }
     }
 
@@ -366,7 +366,7 @@ hr {
     min-height: 100px;
     overflow-y: scroll;
     z-index: 10;
-    background-color: $bg-3;
+    background-color: var(--bg-3);
     transition: all 200ms cubic-bezier(1, 0, 1, 1);
     opacity: 0;
 
@@ -423,62 +423,65 @@ hr {
     /*
     COLORI PRINCIPALI
     */
-    @mixin color-styles($color-name, $color-value) {
+    @mixin color-styles($color-name) {
         &.#{$color-name} {
-
-            h1, h2, h3, h4 {
+            h1,
+            h2,
+            h3,
+            h4 {
                 .material-symbols-rounded {
-                    color: $color-value;
+                    color: var(--#{$color-name});
                 }
             }
 
             p {
                 colored {
-                    color: $color-value;
+                    color: var(--#{$color-name});
                 }
             }
 
             label .material-symbols-rounded {
-                color: $color-value;
+                color: var(--#{$color-name});
             }
-            
+
             .input-text {
                 &:hover {
-                    box-shadow: 0 0 0 1px rgba($color-value, 0.2);
+                    box-shadow: 0 0 0 1px color-mix(in srgb, var(--#{$color-name}), transparent 80%);
                 }
 
                 &:focus {
-                    box-shadow: 0 0 0 4px rgba($color-value, 0.2);
+                    box-shadow: 0 0 0 4px color-mix(in srgb, var(--#{$color-name}), transparent 80%);
                 }
             }
 
             .container-input-text {
                 &:has(textarea:hover) {
-                    box-shadow: 0 0 0 1px rgba($color-value, 0.2);
+                    box-shadow: 0 0 0 1px color-mix(in srgb, var(--#{$color-name}), transparent 80%);
                 }
-            
+
                 &:has(textarea:focus) {
-                    box-shadow: 0 0 0 4px rgba($color-value, 0.2);
+                    box-shadow: 0 0 0 4px color-mix(in srgb, var(--#{$color-name}), transparent 80%);
                 }
             }
 
             .btn.primary {
-                color: $color-value !important;
-                background-color: rgba($color-value, 0.2);
+                color: var(--#{$color-name}) !important;
+                background-color: color-mix(in srgb, var(--#{$color-name}), transparent 80%);
 
                 &:hover {
-                    background-color: rgba($color-value, 0.3);
+                    background-color: color-mix(in srgb, var(--#{$color-name}), transparent 70%);
                 }
             }
 
-            .input-switch input:checked+label {
-                background-color: rgba($color-value, 0.5);
+            .input-switch input:checked + label {
+                background-color: color-mix(in srgb, var(--#{$color-name}), transparent 50%);
             }
         }
     }
 
-    @each $color-name, $color-value in $colors {
-        @include color-styles($color-name, $color-value);
+    // Generiamo le classi in automatico per tutti i colori
+    @each $color-name in $color-names {
+        @include color-styles($color-name);
     }
 }
 
@@ -501,31 +504,31 @@ hr {
 
     // BACKGROUND COLOR
     &.bg-1 {
-        background-color: $bg-1;
+        background-color: var(--bg-1);
     }
 
     &.bg-2 {
-        background-color: $bg-2;
+        background-color: var(--bg-2);
     }
 
     &.bg-3 {
-        background-color: $bg-3;
+        background-color: var(--bg-3);
     }
 
     &.bg-4 {
-        background-color: $bg-4;
+        background-color: var(--bg-4);
     }
 
     &.bg-5 {
-        background-color: $bg-5;
+        background-color: var(--bg-5);
     }
 
     &.bg-6 {
-        background-color: $bg-6;
+        background-color: var(--bg-6);
     }
 
     &.bg-7 {
-        background-color: $bg-7;
+        background-color: var(--bg-7);
     }
     // BORDER RADIUS
     &.br-m {
@@ -549,23 +552,34 @@ hr {
     align-items: center;
     flex-direction: row;
     // ---
-    .icon { font-size: $fs-xxl; margin-left: 2px; }
-    p { margin: 0; }
+    .icon {
+        font-size: $fs-xxl;
+        margin-left: 2px;
+    }
+    p {
+        margin: 0;
+    }
     // ---
     &.danger {
-        background-color: rgba($c-red, 0.1);
-        color: $c-red !important;
-        p { color: $c-red }
+        background-color: color-mix(in srgb, var(--red), transparent 90%);
+        color: var(--red) !important;
+        p {
+            color: var(--red);
+        }
     }
     &.warning {
-        background-color: rgba($c-warning, 0.1);
-        color: $c-warning !important;
-        p { color: $c-warning }
+        background-color: color-mix(in srgb, var(--warning), transparent 90%);
+        color: var(--warning) !important;
+        p {
+            color: var(--warning);
+        }
     }
     &.success {
-        background-color: rgba($c-olive-green, 0.1);
-        color: $c-olive-green !important;
-        p { color: $c-olive-green }
+        background-color: color-mix(in srgb, var(--olivegreen), transparent 90%);
+        color: var(--olivegreen) !important;
+        p {
+            color: var(--olivegreen);
+        }
     }
 }
 
@@ -593,20 +607,21 @@ monospace,
     font-weight: normal;
 }
 
-input[type=password] {
+input[type="password"] {
     font-family: $monospace !important;
 }
 
-.input-text, .container-input-text {
+.input-text,
+.container-input-text {
     display: block;
     margin: 0 auto;
     padding: $br-m;
     border-radius: $br-m;
     transition: 0.2s;
     outline: none;
-    background-color: $bg-1;
+    background-color: var(--bg-1);
     border: none;
-    color: $text-color;
+    color: var(--text-color);
     width: 100%;
     font-size: $fs-m;
     resize: none;
@@ -630,7 +645,7 @@ input[type=password] {
     &[disabled] {
         opacity: 0.5;
         cursor: not-allowed;
-        color: $text-color-2;
+        color: var(--text-color-2);
     }
 
     &.mfa {
@@ -640,7 +655,7 @@ input[type=password] {
     }
 
     &.bg-2 {
-        background-color: $bg-3;
+        background-color: var(--bg-3);
     }
 
     &.mono {
@@ -658,7 +673,7 @@ input[type=password] {
         outline: none;
         border-radius: 0;
         background-color: transparent;
-        color: $text-color;
+        color: var(--text-color);
         font-size: $fs-m;
         width: 100%;
         margin: 0;
@@ -667,20 +682,20 @@ input[type=password] {
     }
 
     &:has(textarea:hover) {
-        box-shadow: 0 0 0 1px rgba($c1, 0.2);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--c1), transparent 80%);
     }
 
     &:has(textarea:focus) {
-        box-shadow: 0 0 0 4px rgba($c1, 0.2);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--c1), transparent 80%);
     }
 }
 
 .input-text {
     &:hover {
-        box-shadow: 0 0 0 1px rgba($c1, 0.2);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--c1), transparent 80%);
     }
     &:focus {
-        box-shadow: 0 0 0 4px rgba($c1, 0.2);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--c1), transparent 80%);
     }
 }
 
@@ -694,35 +709,34 @@ input[type=password] {
         display: block;
         width: ($k * 4em);
         height: ($k * 2em);
-        background-color: $border-color;
+        background-color: var(--border-color);
         border-radius: ($k * 1.5em);
         cursor: pointer;
         position: relative;
         transition: background-color 0.2s ease;
 
         &::before {
-            content: '';
+            content: "";
             position: absolute;
             top: ($k * 0.25em);
             left: ($k * 0.25em);
             width: ($k * 1.5em);
             height: ($k * 1.5em);
-            background-color: $text-color;
+            background-color: var(--text-color);
             border-radius: 50%;
             transition: left 0.2s ease;
         }
-
     }
 
     input {
         display: none;
     }
 
-    input:checked+label {
-        background-color: rgba($c1, 0.5);
+    input:checked + label {
+        background-color: color-mix(in srgb, var(--c1), transparent 50%);
     }
 
-    input:checked+label::before {
+    input:checked + label::before {
         left: ($k * 2.25em); // 1.75em = 32px
     }
 }
@@ -735,15 +749,15 @@ input[type="range"] {
     border-radius: 0.2rem;
     display: block;
     margin: 15px auto;
-    background-color: $c1;
+    background-color: var(--c1);
 
     &::-webkit-slider-thumb {
         appearance: none;
         width: 1.25rem;
         height: 1.25rem;
-        background-color: $c1;
-        border: 0.2rem solid $c1;
-        background-color: $text-color;
+        background-color: var(--c1);
+        border: 0.2rem solid var(--c1);
+        background-color: var(--text-color);
         border-radius: 1.25rem;
         cursor: pointer;
     }

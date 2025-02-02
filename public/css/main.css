@@ -7,6 +7,241 @@ font e icone
 */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+:root {
+  --text-color: #f5f5f5;
+  --text-color-15: #ddd;
+  --text-color-2: #888;
+  --text-color-21: #555;
+}
+
+.theme-earth {
+  --c1: #a8af74;
+  --c2: #738e54;
+  --c3: #35322A;
+  --danger: #ee7184;
+  --red: #F7A7A0;
+  --warning: #eead71;
+  --blue: #7dbaff;
+  --lightblue: #A8D8FF;
+  --yellow: #eec471;
+  --orange: #e59e7a;
+  --peach: #FFD6A5;
+  --purple: #D3B4FF;
+  --pink: #FFB7C5;
+  --mint: #AEE5D8;
+  --lightgray: #E0E0E0;
+  --green: #86cd86;
+  --olivegreen: #B9D19C;
+  --bg-1: #171414;
+  --bg-2: #1f1b1b;
+  --bg-3: #272222;
+  --bg-4: #302929;
+  --bg-5: #383030;
+  --bg-6: #403838;
+  --bg-7: #483f3f;
+  --border-color: #584d4d;
+}
+
+.theme-monokai {
+  --c1: #96cf0b;
+  --c2: #a6e22e;
+  --c3: #66d9ef;
+  --danger: #f92672;
+  --red: #fd6883;
+  --warning: #e6db74;
+  --blue: #66d9ef;
+  --lightblue: #78dce8;
+  --yellow: #e6db74;
+  --orange: #fd971f;
+  --peach: #ffaf87;
+  --purple: #a99ae8;
+  --pink: #ff6188;
+  --mint: #a9dc76;
+  --lightgray: #75715e;
+  --green: #A6E22E;
+  --olivegreen: #829372;
+  --bg-1: #221f22;
+  --bg-2: #2a262a;
+  --bg-3: #322e32;
+  --bg-4: #3a353a;
+  --bg-5: #423c42;
+  --bg-6: #4a434a;
+  --bg-7: #524b52;
+  --border-color: #625962;
+}
+
+.theme-dracula {
+  --c1: #50FA7B;
+  --c2: #fa50f7;
+  --c3: #8BE9FD;
+  --danger: #FF5555;
+  --red: #FF6E6E;
+  --warning: #F1FA8C;
+  --blue: #6272A4;
+  --lightblue: #8BE9FD;
+  --yellow: #F1FA8C;
+  --orange: #FFB86C;
+  --peach: #FF9F7E;
+  --purple: #BD93F9;
+  --pink: #FF79C6;
+  --mint: #69DCCF;
+  --lightgray: #44475A;
+  --green: #50FA7B;
+  --olivegreen: #5F7761;
+  --bg-1: #161B20;
+  --bg-2: #1c2329;
+  --bg-3: #222a32;
+  --bg-4: #29323b;
+  --bg-5: #2f3a44;
+  --bg-6: #35414d;
+  --bg-7: #3b4956;
+  --border-color: #485869;
+}
+
+.theme-cyberpunk {
+  --c1: #FFEE58;
+  --c2: #00E0E0;
+  --c3: #FF007F;
+  --danger: #FF3131;
+  --red: #FF0055;
+  --warning: #FAEA48;
+  --blue: #00FFFF;
+  --lightblue: #00BFFF;
+  --yellow: #FFD700;
+  --orange: #FF8800;
+  --peach: #FFAE70;
+  --purple: #A020F0;
+  --pink: #FF00FF;
+  --mint: #00FF99;
+  --lightgray: #808080;
+  --green: #00ff00;
+  --olivegreen: #739900;
+  --bg-1: #0D0D0D;
+  --bg-2: #151515;
+  --bg-3: #1c1c1c;
+  --bg-4: #242424;
+  --bg-5: #2c2c2c;
+  --bg-6: #333333;
+  --bg-7: #3b3b3b;
+  --border-color: #4a4a4a;
+}
+
+.theme-ocean {
+  --c1: #A8C5DA;
+  --c2: #AEE5D8;
+  --c3: #F3D5B5;
+  --danger: #E8A39B;
+  --red: #F7B6A3;
+  --warning: #F4CFA0;
+  --blue: #A8C5DA;
+  --lightblue: #D0E7F2;
+  --yellow: #F3E9C5;
+  --orange: #EFB797;
+  --peach: #FFD6B5;
+  --purple: #D3B4FF;
+  --pink: #FFB7C5;
+  --mint: #BFE2C5;
+  --lightgray: #EAEAEA;
+  --green: #5ADEA8;
+  --olivegreen: #C4D7A1;
+  --bg-1: #0a0c11;
+  --bg-2: #10131b;
+  --bg-3: #151a24;
+  --bg-4: #1b202e;
+  --bg-5: #212738;
+  --bg-6: #262e41;
+  --bg-7: #2c354b;
+  --border-color: #566791;
+}
+
+.theme-sunset {
+  --c1: #d3755e;
+  --c2: #FDCB82;
+  --c3: #F5B56D;
+  --danger: #FF5E3A;
+  --red: #F77F5B;
+  --warning: #F4A261;
+  --blue: #5B8FB9;
+  --lightblue: #A4D1E6;
+  --yellow: #F2C14D;
+  --orange: #FF7E29;
+  --peach: #FF9F82;
+  --purple: #9B68A2;
+  --pink: #F1A7D3;
+  --mint: #A7D8C6;
+  --lightgray: #E0D4C9;
+  --green: #A1E44D;
+  --olivegreen: #B4A766;
+  --bg-1: #181110;
+  --bg-2: #211816;
+  --bg-3: #2a1e1c;
+  --bg-4: #342522;
+  --bg-5: #3d2b28;
+  --bg-6: #46322f;
+  --bg-7: #4f3835;
+  --border-color: #614541;
+}
+
+.theme-blossom {
+  --c1: #EEC7C2;
+  --c2: #F7D5CC;
+  --c3: #D4A5C6;
+  --danger: #E89DA5;
+  --red: #F5B2A8;
+  --warning: #F5D7A1;
+  --blue: #C3DDFD;
+  --lightblue: #D7E3FC;
+  --yellow: #FAE3B0;
+  --orange: #F6BEA2;
+  --peach: #FFD6B5;
+  --purple: #D3B4FF;
+  --pink: #FFB7C5;
+  --mint: #BFE2C5;
+  --lightgray: #F0E8E6;
+  --green: #A3D977;
+  --olivegreen: #C4D7A1;
+  --bg-1: #221E22;
+  --bg-2: #2a252a;
+  --bg-3: #322c32;
+  --bg-4: #3a343a;
+  --bg-5: #433b43;
+  --bg-6: #4b424b;
+  --bg-7: #534953;
+  --border-color: #635763;
+}
+
+.theme-cloud {
+  --c1: #1E3A5F;
+  --c2: #345C85;
+  --c3: #4F769D;
+  --danger: #D43F52;
+  --red: #C7434D;
+  --warning: #D98E00;
+  --blue: #2C5E96;
+  --lightblue: #4A87C2;
+  --yellow: #CC8800;
+  --orange: #B85C2F;
+  --peach: #D48055;
+  --purple: #7747A6;
+  --pink: #B24C7B;
+  --mint: #4D8B74;
+  --lightgray: #B0B0B0;
+  --green: #56933d;
+  --olivegreen: #5D7440;
+  --bg-1: #f5f5f5;
+  --bg-2: #ebebeb;
+  --bg-3: #e1e1e1;
+  --bg-4: #d6d6d6;
+  --bg-5: #cccccc;
+  --bg-6: #c2c2c2;
+  --bg-7: #b8b8b8;
+  --border-color: darkgray;
+  --text-color: #111;
+  --text-color-15: #333;
+  --text-color-2: #666;
+  --text-color-21: #555;
+}
+
 * {
   box-sizing: border-box;
   font-family: "Rubik", sans-serif;
@@ -16,16 +251,14 @@ html {
   padding: 0;
   border: 0;
   scroll-behavior: smooth;
-  background-color: #171414;
-  color: #f5f5f5;
-  font-family: "Rubik", sans-serif !important;
 }
 
 body {
   padding: 0;
   border: 0;
+  background-color: var(--bg-1);
+  color: var(--text-color);
   font-family: "Rubik", sans-serif !important;
-  color: #f5f5f5 !important;
 }
 
 .pagina {
@@ -59,7 +292,7 @@ label,
 }
 label .material-symbols-rounded,
 .label .material-symbols-rounded {
-  color: #a8af74;
+  color: var(--c1);
 }
 label input.input-text,
 .label input.input-text {
@@ -394,14 +627,14 @@ h2.icon .material-symbols-rounded,
 h3.icon .material-symbols-rounded,
 h4.icon .material-symbols-rounded,
 h5.icon .material-symbols-rounded {
-  color: #a8af74;
+  color: var(--c1);
 }
 h1.icon .material-symbols-rounded.warning,
 h2.icon .material-symbols-rounded.warning,
 h3.icon .material-symbols-rounded.warning,
 h4.icon .material-symbols-rounded.warning,
 h5.icon .material-symbols-rounded.warning {
-  color: #eead71 !important;
+  color: var(--warning) !important;
 }
 h1 .logo,
 h2 .logo,
@@ -419,48 +652,48 @@ h5.code {
   font-family: "JetBrains Mono", monospace;
   justify-content: center;
   letter-spacing: 10px;
-  color: #a8af74;
+  color: var(--c1);
 }
 
 .color.warn {
-  color: #eead71 !important;
+  color: var(--warning) !important;
 }
 .color.danger {
-  color: #ee7184 !important;
+  color: var(--danger) !important;
 }
 
 p {
   font-size: 1em;
-  color: #f5f5f5;
+  color: var(--text-color);
   margin: 0.5em auto;
   line-height: 1.5;
 }
 p a {
-  color: #738e54;
+  color: var(--c2);
   text-decoration: none;
-  border-bottom: 1px dashed #738e54;
+  border-bottom: 1px dashed var(--c2);
   cursor: pointer;
 }
 p a:hover {
-  border-bottom: 1px solid #738e54;
+  border-bottom: 1px solid var(--c2);
 }
 p b {
-  color: #a8af74;
+  color: var(--c1);
   font-weight: normal;
 }
 p.center {
   text-align: center;
 }
 p.secondary {
-  color: #888;
+  color: var(--text-color-2);
 }
 p.description {
-  color: #888;
+  color: var(--text-color-2);
   font-size: 0.9em;
 }
 
 colored {
-  color: #a8af74;
+  color: var(--c1);
 }
 
 .fs-l {
@@ -477,13 +710,13 @@ colored {
 
 hr {
   margin: 0.8rem 0;
-  color: #584d4d;
+  color: var(--border-color);
   border: 0;
-  border-top: 1px solid #584d4d;
+  border-top: 1px solid var(--border-color);
 }
 hr.dashed {
   background-color: transparent;
-  border-bottom: 1px dashed #584d4d;
+  border-bottom: 1px dashed var(--border-color);
 }
 hr.s {
   width: 90%;
@@ -499,7 +732,7 @@ hr.s {
   border: none;
   transition: 0.2s;
   cursor: pointer;
-  color: #f5f5f5;
+  color: var(--text-color);
   font-size: 1em;
   font-weight: normal !important;
 }
@@ -511,121 +744,128 @@ hr.s {
   gap: 0;
 }
 .btn.primary {
-  background-color: rgba(168, 175, 116, 0.15);
-  color: #b2b884;
+  background-color: color-mix(in srgb, var(--c1), transparent 85%);
+  color: var(--c1);
 }
 .btn.primary:hover {
-  background-color: rgba(168, 175, 116, 0.2);
+  background-color: color-mix(in srgb, var(--c1), transparent 80%);
 }
 .btn.secondary {
-  background-color: #383030;
-  color: #ddd;
+  background-color: var(--bg-5);
+  color: var(--text-color-15);
 }
 .btn.secondary:hover {
-  background-color: #403838;
-  color: #f5f5f5;
+  background-color: var(--bg-6);
+  color: var(--text-color);
 }
 .btn.warning {
-  background-color: rgba(238, 173, 113, 0.2);
-  color: #eead71;
+  background-color: color-mix(in srgb, var(--warning), transparent 80%);
+  color: var(--warning);
 }
 .btn.warning:hover {
-  background-color: rgba(238, 173, 113, 0.3);
+  background-color: color-mix(in srgb, var(--warning), transparent 70%);
 }
 .btn.danger {
-  background-color: rgba(236, 55, 82, 0.2);
-  color: #ee7184;
+  background-color: color-mix(in srgb, var(--danger), transparent 80%);
+  color: var(--danger);
 }
 .btn.danger:hover {
-  background-color: rgba(236, 55, 82, 0.3);
+  background-color: color-mix(in srgb, var(--danger), transparent 70%);
 }
 .btn.red {
-  background-color: rgba(247, 167, 160, 0.2);
-  color: #F7A7A0;
+  background-color: color-mix(in srgb, var(--red), transparent 80%);
+  color: var(--red);
 }
 .btn.red:hover {
-  background-color: rgba(247, 167, 160, 0.3);
+  background-color: color-mix(in srgb, var(--red), transparent 70%);
 }
 .btn.yellow {
-  background-color: rgba(238, 196, 113, 0.2);
-  color: #eec471;
+  background-color: color-mix(in srgb, var(--yellow), transparent 80%);
+  color: var(--yellow);
 }
 .btn.yellow:hover {
-  background-color: rgba(238, 196, 113, 0.3);
+  background-color: color-mix(in srgb, var(--yellow), transparent 70%);
+}
+.btn.green {
+  background-color: color-mix(in srgb, var(--green), transparent 80%);
+  color: var(--green);
+}
+.btn.green:hover {
+  background-color: color-mix(in srgb, var(--green), transparent 70%);
 }
 .btn.orange {
-  background-color: rgba(229, 158, 122, 0.2);
-  color: #e59e7a;
+  background-color: color-mix(in srgb, var(--orange), transparent 80%);
+  color: var(--orange);
 }
 .btn.orange:hover {
-  background-color: rgba(229, 158, 122, 0.3);
+  background-color: color-mix(in srgb, var(--orange), transparent 70%);
 }
 .btn.peach {
-  background-color: rgba(255, 214, 165, 0.2);
-  color: #FFD6A5;
+  background-color: color-mix(in srgb, var(--peach), transparent 80%);
+  color: var(--peach);
 }
 .btn.peach:hover {
-  background-color: rgba(255, 214, 165, 0.3);
+  background-color: color-mix(in srgb, var(--peach), transparent 70%);
 }
 .btn.purple {
-  background-color: rgba(211, 180, 255, 0.2);
-  color: #D3B4FF;
+  background-color: color-mix(in srgb, var(--purple), transparent 80%);
+  color: var(--purple);
 }
 .btn.purple:hover {
-  background-color: rgba(211, 180, 255, 0.3);
+  background-color: color-mix(in srgb, var(--purple), transparent 70%);
 }
 .btn.pink {
-  background-color: rgba(255, 183, 197, 0.2);
-  color: #FFB7C5;
+  background-color: color-mix(in srgb, var(--pink), transparent 80%);
+  color: var(--pink);
 }
 .btn.pink:hover {
-  background-color: rgba(255, 183, 197, 0.3);
+  background-color: color-mix(in srgb, var(--pink), transparent 70%);
 }
 .btn.mint {
-  background-color: rgba(174, 229, 216, 0.2);
-  color: #AEE5D8;
+  background-color: color-mix(in srgb, var(--mint), transparent 80%);
+  color: var(--mint);
 }
 .btn.mint:hover {
-  background-color: rgba(174, 229, 216, 0.3);
+  background-color: color-mix(in srgb, var(--mint), transparent 70%);
 }
 .btn.blue {
-  background-color: rgba(125, 186, 255, 0.2);
-  color: #7dbaff;
+  background-color: color-mix(in srgb, var(--blue), transparent 80%);
+  color: var(--blue);
 }
 .btn.blue:hover {
-  background-color: rgba(125, 186, 255, 0.3);
+  background-color: color-mix(in srgb, var(--blue), transparent 70%);
 }
 .btn.lightblue {
-  background-color: rgba(168, 216, 255, 0.2);
-  color: #A8D8FF;
+  background-color: color-mix(in srgb, var(--lightblue), transparent 80%);
+  color: var(--lightblue);
 }
 .btn.lightblue:hover {
-  background-color: rgba(168, 216, 255, 0.3);
+  background-color: color-mix(in srgb, var(--lightblue), transparent 70%);
 }
 .btn.lightgray {
-  background-color: rgba(224, 224, 224, 0.2);
-  color: #E0E0E0;
+  background-color: color-mix(in srgb, var(--lightgray), transparent 80%);
+  color: var(--lightgray);
 }
 .btn.lightgray:hover {
-  background-color: rgba(224, 224, 224, 0.3);
+  background-color: color-mix(in srgb, var(--lightgray), transparent 70%);
 }
 .btn.olivegreen {
-  background-color: rgba(185, 209, 156, 0.2);
-  color: #B9D19C;
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 80%);
+  color: var(--olivegreen);
 }
 .btn.olivegreen:hover {
-  background-color: rgba(185, 209, 156, 0.3);
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
 }
 .btn.t {
   background-color: transparent;
-  color: #888;
+  color: var(--text-color-2);
 }
 .btn.t:hover {
-  box-shadow: 0 0 0 4px #383030;
-  color: #f5f5f5;
+  box-shadow: 0 0 0 4px var(--bg-5);
+  color: var(--text-color);
 }
 .btn.t:active {
-  box-shadow: 0 0 0 6px #383030;
+  box-shadow: 0 0 0 6px var(--bg-5);
 }
 .btn.s {
   font-size: 0.9em;
@@ -654,7 +894,7 @@ hr.s {
   min-height: 100px;
   overflow-y: scroll;
   z-index: 10;
-  background-color: #272222;
+  background-color: var(--bg-3);
   transition: all 200ms cubic-bezier(1, 0, 1, 1);
   opacity: 0;
 }
@@ -700,346 +940,413 @@ hr.s {
   COLORI PRINCIPALI
   */
 }
-.maincolor.red h1 .material-symbols-rounded, .maincolor.red h2 .material-symbols-rounded, .maincolor.red h3 .material-symbols-rounded, .maincolor.red h4 .material-symbols-rounded {
-  color: #F7A7A0;
+.maincolor.red h1 .material-symbols-rounded,
+.maincolor.red h2 .material-symbols-rounded,
+.maincolor.red h3 .material-symbols-rounded,
+.maincolor.red h4 .material-symbols-rounded {
+  color: var(--red);
 }
 .maincolor.red p colored {
-  color: #F7A7A0;
+  color: var(--red);
 }
 .maincolor.red label .material-symbols-rounded {
-  color: #F7A7A0;
+  color: var(--red);
 }
 .maincolor.red .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(247, 167, 160, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--red), transparent 80%);
 }
 .maincolor.red .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--red), transparent 80%);
 }
 .maincolor.red .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(247, 167, 160, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--red), transparent 80%);
 }
 .maincolor.red .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(247, 167, 160, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--red), transparent 80%);
 }
 .maincolor.red .btn.primary {
-  color: #F7A7A0 !important;
-  background-color: rgba(247, 167, 160, 0.2);
+  color: var(--red) !important;
+  background-color: color-mix(in srgb, var(--red), transparent 80%);
 }
 .maincolor.red .btn.primary:hover {
-  background-color: rgba(247, 167, 160, 0.3);
+  background-color: color-mix(in srgb, var(--red), transparent 70%);
 }
 .maincolor.red .input-switch input:checked + label {
-  background-color: rgba(247, 167, 160, 0.5);
+  background-color: color-mix(in srgb, var(--red), transparent 50%);
 }
-.maincolor.yellow h1 .material-symbols-rounded, .maincolor.yellow h2 .material-symbols-rounded, .maincolor.yellow h3 .material-symbols-rounded, .maincolor.yellow h4 .material-symbols-rounded {
-  color: #eec471;
+.maincolor.yellow h1 .material-symbols-rounded,
+.maincolor.yellow h2 .material-symbols-rounded,
+.maincolor.yellow h3 .material-symbols-rounded,
+.maincolor.yellow h4 .material-symbols-rounded {
+  color: var(--yellow);
 }
 .maincolor.yellow p colored {
-  color: #eec471;
+  color: var(--yellow);
 }
 .maincolor.yellow label .material-symbols-rounded {
-  color: #eec471;
+  color: var(--yellow);
 }
 .maincolor.yellow .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--yellow), transparent 80%);
 }
 .maincolor.yellow .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--yellow), transparent 80%);
 }
 .maincolor.yellow .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(238, 196, 113, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--yellow), transparent 80%);
 }
 .maincolor.yellow .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(238, 196, 113, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--yellow), transparent 80%);
 }
 .maincolor.yellow .btn.primary {
-  color: #eec471 !important;
-  background-color: rgba(238, 196, 113, 0.2);
+  color: var(--yellow) !important;
+  background-color: color-mix(in srgb, var(--yellow), transparent 80%);
 }
 .maincolor.yellow .btn.primary:hover {
-  background-color: rgba(238, 196, 113, 0.3);
+  background-color: color-mix(in srgb, var(--yellow), transparent 70%);
 }
 .maincolor.yellow .input-switch input:checked + label {
-  background-color: rgba(238, 196, 113, 0.5);
+  background-color: color-mix(in srgb, var(--yellow), transparent 50%);
 }
-.maincolor.orange h1 .material-symbols-rounded, .maincolor.orange h2 .material-symbols-rounded, .maincolor.orange h3 .material-symbols-rounded, .maincolor.orange h4 .material-symbols-rounded {
-  color: #e59e7a;
+.maincolor.green h1 .material-symbols-rounded,
+.maincolor.green h2 .material-symbols-rounded,
+.maincolor.green h3 .material-symbols-rounded,
+.maincolor.green h4 .material-symbols-rounded {
+  color: var(--green);
+}
+.maincolor.green p colored {
+  color: var(--green);
+}
+.maincolor.green label .material-symbols-rounded {
+  color: var(--green);
+}
+.maincolor.green .input-text:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--green), transparent 80%);
+}
+.maincolor.green .input-text:focus {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--green), transparent 80%);
+}
+.maincolor.green .container-input-text:has(textarea:hover) {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--green), transparent 80%);
+}
+.maincolor.green .container-input-text:has(textarea:focus) {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--green), transparent 80%);
+}
+.maincolor.green .btn.primary {
+  color: var(--green) !important;
+  background-color: color-mix(in srgb, var(--green), transparent 80%);
+}
+.maincolor.green .btn.primary:hover {
+  background-color: color-mix(in srgb, var(--green), transparent 70%);
+}
+.maincolor.green .input-switch input:checked + label {
+  background-color: color-mix(in srgb, var(--green), transparent 50%);
+}
+.maincolor.orange h1 .material-symbols-rounded,
+.maincolor.orange h2 .material-symbols-rounded,
+.maincolor.orange h3 .material-symbols-rounded,
+.maincolor.orange h4 .material-symbols-rounded {
+  color: var(--orange);
 }
 .maincolor.orange p colored {
-  color: #e59e7a;
+  color: var(--orange);
 }
 .maincolor.orange label .material-symbols-rounded {
-  color: #e59e7a;
+  color: var(--orange);
 }
 .maincolor.orange .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(229, 158, 122, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--orange), transparent 80%);
 }
 .maincolor.orange .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--orange), transparent 80%);
 }
 .maincolor.orange .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(229, 158, 122, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--orange), transparent 80%);
 }
 .maincolor.orange .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(229, 158, 122, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--orange), transparent 80%);
 }
 .maincolor.orange .btn.primary {
-  color: #e59e7a !important;
-  background-color: rgba(229, 158, 122, 0.2);
+  color: var(--orange) !important;
+  background-color: color-mix(in srgb, var(--orange), transparent 80%);
 }
 .maincolor.orange .btn.primary:hover {
-  background-color: rgba(229, 158, 122, 0.3);
+  background-color: color-mix(in srgb, var(--orange), transparent 70%);
 }
 .maincolor.orange .input-switch input:checked + label {
-  background-color: rgba(229, 158, 122, 0.5);
+  background-color: color-mix(in srgb, var(--orange), transparent 50%);
 }
-.maincolor.peach h1 .material-symbols-rounded, .maincolor.peach h2 .material-symbols-rounded, .maincolor.peach h3 .material-symbols-rounded, .maincolor.peach h4 .material-symbols-rounded {
-  color: #FFD6A5;
+.maincolor.peach h1 .material-symbols-rounded,
+.maincolor.peach h2 .material-symbols-rounded,
+.maincolor.peach h3 .material-symbols-rounded,
+.maincolor.peach h4 .material-symbols-rounded {
+  color: var(--peach);
 }
 .maincolor.peach p colored {
-  color: #FFD6A5;
+  color: var(--peach);
 }
 .maincolor.peach label .material-symbols-rounded {
-  color: #FFD6A5;
+  color: var(--peach);
 }
 .maincolor.peach .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--peach), transparent 80%);
 }
 .maincolor.peach .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--peach), transparent 80%);
 }
 .maincolor.peach .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(255, 214, 165, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--peach), transparent 80%);
 }
 .maincolor.peach .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--peach), transparent 80%);
 }
 .maincolor.peach .btn.primary {
-  color: #FFD6A5 !important;
-  background-color: rgba(255, 214, 165, 0.2);
+  color: var(--peach) !important;
+  background-color: color-mix(in srgb, var(--peach), transparent 80%);
 }
 .maincolor.peach .btn.primary:hover {
-  background-color: rgba(255, 214, 165, 0.3);
+  background-color: color-mix(in srgb, var(--peach), transparent 70%);
 }
 .maincolor.peach .input-switch input:checked + label {
-  background-color: rgba(255, 214, 165, 0.5);
+  background-color: color-mix(in srgb, var(--peach), transparent 50%);
 }
-.maincolor.purple h1 .material-symbols-rounded, .maincolor.purple h2 .material-symbols-rounded, .maincolor.purple h3 .material-symbols-rounded, .maincolor.purple h4 .material-symbols-rounded {
-  color: #D3B4FF;
+.maincolor.purple h1 .material-symbols-rounded,
+.maincolor.purple h2 .material-symbols-rounded,
+.maincolor.purple h3 .material-symbols-rounded,
+.maincolor.purple h4 .material-symbols-rounded {
+  color: var(--purple);
 }
 .maincolor.purple p colored {
-  color: #D3B4FF;
+  color: var(--purple);
 }
 .maincolor.purple label .material-symbols-rounded {
-  color: #D3B4FF;
+  color: var(--purple);
 }
 .maincolor.purple .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(211, 180, 255, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--purple), transparent 80%);
 }
 .maincolor.purple .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--purple), transparent 80%);
 }
 .maincolor.purple .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(211, 180, 255, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--purple), transparent 80%);
 }
 .maincolor.purple .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(211, 180, 255, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--purple), transparent 80%);
 }
 .maincolor.purple .btn.primary {
-  color: #D3B4FF !important;
-  background-color: rgba(211, 180, 255, 0.2);
+  color: var(--purple) !important;
+  background-color: color-mix(in srgb, var(--purple), transparent 80%);
 }
 .maincolor.purple .btn.primary:hover {
-  background-color: rgba(211, 180, 255, 0.3);
+  background-color: color-mix(in srgb, var(--purple), transparent 70%);
 }
 .maincolor.purple .input-switch input:checked + label {
-  background-color: rgba(211, 180, 255, 0.5);
+  background-color: color-mix(in srgb, var(--purple), transparent 50%);
 }
-.maincolor.pink h1 .material-symbols-rounded, .maincolor.pink h2 .material-symbols-rounded, .maincolor.pink h3 .material-symbols-rounded, .maincolor.pink h4 .material-symbols-rounded {
-  color: #FFB7C5;
+.maincolor.pink h1 .material-symbols-rounded,
+.maincolor.pink h2 .material-symbols-rounded,
+.maincolor.pink h3 .material-symbols-rounded,
+.maincolor.pink h4 .material-symbols-rounded {
+  color: var(--pink);
 }
 .maincolor.pink p colored {
-  color: #FFB7C5;
+  color: var(--pink);
 }
 .maincolor.pink label .material-symbols-rounded {
-  color: #FFB7C5;
+  color: var(--pink);
 }
 .maincolor.pink .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--pink), transparent 80%);
 }
 .maincolor.pink .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--pink), transparent 80%);
 }
 .maincolor.pink .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(255, 183, 197, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--pink), transparent 80%);
 }
 .maincolor.pink .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(255, 183, 197, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--pink), transparent 80%);
 }
 .maincolor.pink .btn.primary {
-  color: #FFB7C5 !important;
-  background-color: rgba(255, 183, 197, 0.2);
+  color: var(--pink) !important;
+  background-color: color-mix(in srgb, var(--pink), transparent 80%);
 }
 .maincolor.pink .btn.primary:hover {
-  background-color: rgba(255, 183, 197, 0.3);
+  background-color: color-mix(in srgb, var(--pink), transparent 70%);
 }
 .maincolor.pink .input-switch input:checked + label {
-  background-color: rgba(255, 183, 197, 0.5);
+  background-color: color-mix(in srgb, var(--pink), transparent 50%);
 }
-.maincolor.mint h1 .material-symbols-rounded, .maincolor.mint h2 .material-symbols-rounded, .maincolor.mint h3 .material-symbols-rounded, .maincolor.mint h4 .material-symbols-rounded {
-  color: #AEE5D8;
+.maincolor.mint h1 .material-symbols-rounded,
+.maincolor.mint h2 .material-symbols-rounded,
+.maincolor.mint h3 .material-symbols-rounded,
+.maincolor.mint h4 .material-symbols-rounded {
+  color: var(--mint);
 }
 .maincolor.mint p colored {
-  color: #AEE5D8;
+  color: var(--mint);
 }
 .maincolor.mint label .material-symbols-rounded {
-  color: #AEE5D8;
+  color: var(--mint);
 }
 .maincolor.mint .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(174, 229, 216, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mint), transparent 80%);
 }
 .maincolor.mint .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint), transparent 80%);
 }
 .maincolor.mint .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(174, 229, 216, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mint), transparent 80%);
 }
 .maincolor.mint .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(174, 229, 216, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint), transparent 80%);
 }
 .maincolor.mint .btn.primary {
-  color: #AEE5D8 !important;
-  background-color: rgba(174, 229, 216, 0.2);
+  color: var(--mint) !important;
+  background-color: color-mix(in srgb, var(--mint), transparent 80%);
 }
 .maincolor.mint .btn.primary:hover {
-  background-color: rgba(174, 229, 216, 0.3);
+  background-color: color-mix(in srgb, var(--mint), transparent 70%);
 }
 .maincolor.mint .input-switch input:checked + label {
-  background-color: rgba(174, 229, 216, 0.5);
+  background-color: color-mix(in srgb, var(--mint), transparent 50%);
 }
-.maincolor.blue h1 .material-symbols-rounded, .maincolor.blue h2 .material-symbols-rounded, .maincolor.blue h3 .material-symbols-rounded, .maincolor.blue h4 .material-symbols-rounded {
-  color: #7dbaff;
+.maincolor.blue h1 .material-symbols-rounded,
+.maincolor.blue h2 .material-symbols-rounded,
+.maincolor.blue h3 .material-symbols-rounded,
+.maincolor.blue h4 .material-symbols-rounded {
+  color: var(--blue);
 }
 .maincolor.blue p colored {
-  color: #7dbaff;
+  color: var(--blue);
 }
 .maincolor.blue label .material-symbols-rounded {
-  color: #7dbaff;
+  color: var(--blue);
 }
 .maincolor.blue .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--blue), transparent 80%);
 }
 .maincolor.blue .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue), transparent 80%);
 }
 .maincolor.blue .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(125, 186, 255, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--blue), transparent 80%);
 }
 .maincolor.blue .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(125, 186, 255, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue), transparent 80%);
 }
 .maincolor.blue .btn.primary {
-  color: #7dbaff !important;
-  background-color: rgba(125, 186, 255, 0.2);
+  color: var(--blue) !important;
+  background-color: color-mix(in srgb, var(--blue), transparent 80%);
 }
 .maincolor.blue .btn.primary:hover {
-  background-color: rgba(125, 186, 255, 0.3);
+  background-color: color-mix(in srgb, var(--blue), transparent 70%);
 }
 .maincolor.blue .input-switch input:checked + label {
-  background-color: rgba(125, 186, 255, 0.5);
+  background-color: color-mix(in srgb, var(--blue), transparent 50%);
 }
-.maincolor.lightblue h1 .material-symbols-rounded, .maincolor.lightblue h2 .material-symbols-rounded, .maincolor.lightblue h3 .material-symbols-rounded, .maincolor.lightblue h4 .material-symbols-rounded {
-  color: #A8D8FF;
+.maincolor.lightblue h1 .material-symbols-rounded,
+.maincolor.lightblue h2 .material-symbols-rounded,
+.maincolor.lightblue h3 .material-symbols-rounded,
+.maincolor.lightblue h4 .material-symbols-rounded {
+  color: var(--lightblue);
 }
 .maincolor.lightblue p colored {
-  color: #A8D8FF;
+  color: var(--lightblue);
 }
 .maincolor.lightblue label .material-symbols-rounded {
-  color: #A8D8FF;
+  color: var(--lightblue);
 }
 .maincolor.lightblue .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(168, 216, 255, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lightblue), transparent 80%);
 }
 .maincolor.lightblue .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lightblue), transparent 80%);
 }
 .maincolor.lightblue .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(168, 216, 255, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lightblue), transparent 80%);
 }
 .maincolor.lightblue .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lightblue), transparent 80%);
 }
 .maincolor.lightblue .btn.primary {
-  color: #A8D8FF !important;
-  background-color: rgba(168, 216, 255, 0.2);
+  color: var(--lightblue) !important;
+  background-color: color-mix(in srgb, var(--lightblue), transparent 80%);
 }
 .maincolor.lightblue .btn.primary:hover {
-  background-color: rgba(168, 216, 255, 0.3);
+  background-color: color-mix(in srgb, var(--lightblue), transparent 70%);
 }
 .maincolor.lightblue .input-switch input:checked + label {
-  background-color: rgba(168, 216, 255, 0.5);
+  background-color: color-mix(in srgb, var(--lightblue), transparent 50%);
 }
-.maincolor.lightgray h1 .material-symbols-rounded, .maincolor.lightgray h2 .material-symbols-rounded, .maincolor.lightgray h3 .material-symbols-rounded, .maincolor.lightgray h4 .material-symbols-rounded {
-  color: #E0E0E0;
+.maincolor.lightgray h1 .material-symbols-rounded,
+.maincolor.lightgray h2 .material-symbols-rounded,
+.maincolor.lightgray h3 .material-symbols-rounded,
+.maincolor.lightgray h4 .material-symbols-rounded {
+  color: var(--lightgray);
 }
 .maincolor.lightgray p colored {
-  color: #E0E0E0;
+  color: var(--lightgray);
 }
 .maincolor.lightgray label .material-symbols-rounded {
-  color: #E0E0E0;
+  color: var(--lightgray);
 }
 .maincolor.lightgray .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lightgray), transparent 80%);
 }
 .maincolor.lightgray .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lightgray), transparent 80%);
 }
 .maincolor.lightgray .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lightgray), transparent 80%);
 }
 .maincolor.lightgray .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(224, 224, 224, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lightgray), transparent 80%);
 }
 .maincolor.lightgray .btn.primary {
-  color: #E0E0E0 !important;
-  background-color: rgba(224, 224, 224, 0.2);
+  color: var(--lightgray) !important;
+  background-color: color-mix(in srgb, var(--lightgray), transparent 80%);
 }
 .maincolor.lightgray .btn.primary:hover {
-  background-color: rgba(224, 224, 224, 0.3);
+  background-color: color-mix(in srgb, var(--lightgray), transparent 70%);
 }
 .maincolor.lightgray .input-switch input:checked + label {
-  background-color: rgba(224, 224, 224, 0.5);
+  background-color: color-mix(in srgb, var(--lightgray), transparent 50%);
 }
-.maincolor.olivegreen h1 .material-symbols-rounded, .maincolor.olivegreen h2 .material-symbols-rounded, .maincolor.olivegreen h3 .material-symbols-rounded, .maincolor.olivegreen h4 .material-symbols-rounded {
-  color: #B9D19C;
+.maincolor.olivegreen h1 .material-symbols-rounded,
+.maincolor.olivegreen h2 .material-symbols-rounded,
+.maincolor.olivegreen h3 .material-symbols-rounded,
+.maincolor.olivegreen h4 .material-symbols-rounded {
+  color: var(--olivegreen);
 }
 .maincolor.olivegreen p colored {
-  color: #B9D19C;
+  color: var(--olivegreen);
 }
 .maincolor.olivegreen label .material-symbols-rounded {
-  color: #B9D19C;
+  color: var(--olivegreen);
 }
 .maincolor.olivegreen .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--olivegreen), transparent 80%);
 }
 .maincolor.olivegreen .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--olivegreen), transparent 80%);
 }
 .maincolor.olivegreen .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(185, 209, 156, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--olivegreen), transparent 80%);
 }
 .maincolor.olivegreen .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(185, 209, 156, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--olivegreen), transparent 80%);
 }
 .maincolor.olivegreen .btn.primary {
-  color: #B9D19C !important;
-  background-color: rgba(185, 209, 156, 0.2);
+  color: var(--olivegreen) !important;
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 80%);
 }
 .maincolor.olivegreen .btn.primary:hover {
-  background-color: rgba(185, 209, 156, 0.3);
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
 }
 .maincolor.olivegreen .input-switch input:checked + label {
-  background-color: rgba(185, 209, 156, 0.5);
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 50%);
 }
 
 .isle {
@@ -1056,25 +1363,25 @@ hr.s {
   max-width: 600px;
 }
 .isle.bg-1 {
-  background-color: #171414;
+  background-color: var(--bg-1);
 }
 .isle.bg-2 {
-  background-color: #1f1b1b;
+  background-color: var(--bg-2);
 }
 .isle.bg-3 {
-  background-color: #272222;
+  background-color: var(--bg-3);
 }
 .isle.bg-4 {
-  background-color: #302929;
+  background-color: var(--bg-4);
 }
 .isle.bg-5 {
-  background-color: #383030;
+  background-color: var(--bg-5);
 }
 .isle.bg-6 {
-  background-color: #403838;
+  background-color: var(--bg-6);
 }
 .isle.bg-7 {
-  background-color: #483f3f;
+  background-color: var(--bg-7);
 }
 .isle.br-m {
   border-radius: 8px;
@@ -1102,25 +1409,25 @@ hr.s {
   margin: 0;
 }
 .alert.danger {
-  background-color: rgba(247, 167, 160, 0.1);
-  color: #F7A7A0 !important;
+  background-color: color-mix(in srgb, var(--red), transparent 90%);
+  color: var(--red) !important;
 }
 .alert.danger p {
-  color: #F7A7A0;
+  color: var(--red);
 }
 .alert.warning {
-  background-color: rgba(238, 173, 113, 0.1);
-  color: #eead71 !important;
+  background-color: color-mix(in srgb, var(--warning), transparent 90%);
+  color: var(--warning) !important;
 }
 .alert.warning p {
-  color: #eead71;
+  color: var(--warning);
 }
 .alert.success {
-  background-color: rgba(185, 209, 156, 0.1);
-  color: #B9D19C !important;
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 90%);
+  color: var(--olivegreen) !important;
 }
 .alert.success p {
-  color: #B9D19C;
+  color: var(--olivegreen);
 }
 
 .trans.rotate._90 {
@@ -1145,46 +1452,55 @@ input[type=password] {
   font-family: "JetBrains Mono", monospace !important;
 }
 
-.input-text, .container-input-text {
+.input-text,
+.container-input-text {
   display: block;
   margin: 0 auto;
   padding: 8px;
   border-radius: 8px;
   transition: 0.2s;
   outline: none;
-  background-color: #171414;
+  background-color: var(--bg-1);
   border: none;
-  color: #f5f5f5;
+  color: var(--text-color);
   width: 100%;
   font-size: 1em;
   resize: none;
 }
-.input-text.fs-l, .container-input-text.fs-l {
+.input-text.fs-l,
+.container-input-text.fs-l {
   font-size: 1.2em;
 }
-.input-text.nb, .container-input-text.nb {
+.input-text.nb,
+.container-input-text.nb {
   border-radius: 0;
 }
-.input-text.uppercase, .container-input-text.uppercase {
+.input-text.uppercase,
+.container-input-text.uppercase {
   text-transform: uppercase;
 }
-.input-text:read-only, .container-input-text:read-only {
+.input-text:read-only,
+.container-input-text:read-only {
   cursor: default;
 }
-.input-text[disabled], .container-input-text[disabled] {
+.input-text[disabled],
+.container-input-text[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
-  color: #888;
+  color: var(--text-color-2);
 }
-.input-text.mfa, .container-input-text.mfa {
+.input-text.mfa,
+.container-input-text.mfa {
   letter-spacing: 0.5em;
   text-align: center;
   font-family: "JetBrains Mono", monospace;
 }
-.input-text.bg-2, .container-input-text.bg-2 {
-  background-color: #272222;
+.input-text.bg-2,
+.container-input-text.bg-2 {
+  background-color: var(--bg-3);
 }
-.input-text.mono, .container-input-text.mono {
+.input-text.mono,
+.container-input-text.mono {
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -1198,7 +1514,7 @@ input[type=password] {
   outline: none;
   border-radius: 0;
   background-color: transparent;
-  color: #f5f5f5;
+  color: var(--text-color);
   font-size: 1em;
   width: 100%;
   margin: 0;
@@ -1206,17 +1522,17 @@ input[type=password] {
   resize: none;
 }
 .container-input-text:has(textarea:hover) {
-  box-shadow: 0 0 0 1px rgba(168, 175, 116, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c1), transparent 80%);
 }
 .container-input-text:has(textarea:focus) {
-  box-shadow: 0 0 0 4px rgba(168, 175, 116, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c1), transparent 80%);
 }
 
 .input-text:hover {
-  box-shadow: 0 0 0 1px rgba(168, 175, 116, 0.2);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c1), transparent 80%);
 }
 .input-text:focus {
-  box-shadow: 0 0 0 4px rgba(168, 175, 116, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c1), transparent 80%);
 }
 
 .input-switch {
@@ -1227,7 +1543,7 @@ input[type=password] {
   display: block;
   width: 2.4em;
   height: 1.2em;
-  background-color: #584d4d;
+  background-color: var(--border-color);
   border-radius: 0.9em;
   cursor: pointer;
   position: relative;
@@ -1240,7 +1556,7 @@ input[type=password] {
   left: 0.15em;
   width: 0.9em;
   height: 0.9em;
-  background-color: #f5f5f5;
+  background-color: var(--text-color);
   border-radius: 50%;
   transition: left 0.2s ease;
 }
@@ -1248,7 +1564,7 @@ input[type=password] {
   display: none;
 }
 .input-switch input:checked + label {
-  background-color: rgba(168, 175, 116, 0.5);
+  background-color: color-mix(in srgb, var(--c1), transparent 50%);
 }
 .input-switch input:checked + label::before {
   left: 1.35em;
@@ -1262,15 +1578,15 @@ input[type=range] {
   border-radius: 0.2rem;
   display: block;
   margin: 15px auto;
-  background-color: #a8af74;
+  background-color: var(--c1);
 }
 input[type=range]::-webkit-slider-thumb {
   appearance: none;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: #a8af74;
-  border: 0.2rem solid #a8af74;
-  background-color: #f5f5f5;
+  background-color: var(--c1);
+  border: 0.2rem solid var(--c1);
+  background-color: var(--text-color);
   border-radius: 1.25rem;
   cursor: pointer;
 }
@@ -1285,86 +1601,92 @@ input[type=range]::-webkit-slider-thumb {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #f5f5f5;
+  color: var(--text-color);
   text-decoration: none;
   border-radius: 5px;
   transition: 0.1s;
   cursor: pointer;
 }
 .navbar a.red span {
-  color: #F7A7A0;
+  color: var(--red);
 }
 .navbar a.red:hover {
-  background-color: rgba(247, 167, 160, 0.1);
+  background-color: color-mix(in srgb, var(--red), transparent 90%);
 }
 .navbar a.yellow span {
-  color: #eec471;
+  color: var(--yellow);
 }
 .navbar a.yellow:hover {
-  background-color: rgba(238, 196, 113, 0.1);
+  background-color: color-mix(in srgb, var(--yellow), transparent 90%);
+}
+.navbar a.green span {
+  color: var(--green);
+}
+.navbar a.green:hover {
+  background-color: color-mix(in srgb, var(--green), transparent 90%);
 }
 .navbar a.orange span {
-  color: #e59e7a;
+  color: var(--orange);
 }
 .navbar a.orange:hover {
-  background-color: rgba(229, 158, 122, 0.1);
+  background-color: color-mix(in srgb, var(--orange), transparent 90%);
 }
 .navbar a.peach span {
-  color: #FFD6A5;
+  color: var(--peach);
 }
 .navbar a.peach:hover {
-  background-color: rgba(255, 214, 165, 0.1);
+  background-color: color-mix(in srgb, var(--peach), transparent 90%);
 }
 .navbar a.purple span {
-  color: #D3B4FF;
+  color: var(--purple);
 }
 .navbar a.purple:hover {
-  background-color: rgba(211, 180, 255, 0.1);
+  background-color: color-mix(in srgb, var(--purple), transparent 90%);
 }
 .navbar a.pink span {
-  color: #FFB7C5;
+  color: var(--pink);
 }
 .navbar a.pink:hover {
-  background-color: rgba(255, 183, 197, 0.1);
+  background-color: color-mix(in srgb, var(--pink), transparent 90%);
 }
 .navbar a.mint span {
-  color: #AEE5D8;
+  color: var(--mint);
 }
 .navbar a.mint:hover {
-  background-color: rgba(174, 229, 216, 0.1);
+  background-color: color-mix(in srgb, var(--mint), transparent 90%);
 }
 .navbar a.blue span {
-  color: #7dbaff;
+  color: var(--blue);
 }
 .navbar a.blue:hover {
-  background-color: rgba(125, 186, 255, 0.1);
+  background-color: color-mix(in srgb, var(--blue), transparent 90%);
 }
 .navbar a.lightblue span {
-  color: #A8D8FF;
+  color: var(--lightblue);
 }
 .navbar a.lightblue:hover {
-  background-color: rgba(168, 216, 255, 0.1);
+  background-color: color-mix(in srgb, var(--lightblue), transparent 90%);
 }
 .navbar a.lightgray span {
-  color: #E0E0E0;
+  color: var(--lightgray);
 }
 .navbar a.lightgray:hover {
-  background-color: rgba(224, 224, 224, 0.1);
+  background-color: color-mix(in srgb, var(--lightgray), transparent 90%);
 }
 .navbar a.olivegreen span {
-  color: #B9D19C;
+  color: var(--olivegreen);
 }
 .navbar a.olivegreen:hover {
-  background-color: rgba(185, 209, 156, 0.1);
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 90%);
 }
 .navbar a i {
   font-style: normal;
 }
 .navbar a span {
-  color: #a8af74;
+  color: var(--c1);
 }
 .navbar a:hover {
-  background-color: rgba(168, 175, 116, 0.1);
+  background-color: rgba(var(--c1), 0.1);
 }
 
 vortex-navbar {
@@ -1372,8 +1694,8 @@ vortex-navbar {
   align-items: center;
   padding: 5px;
   border-radius: 8px;
-  background-color: #272222;
-  box-shadow: 0 0 0 1px #383030;
+  background-color: var(--bg-3);
+  box-shadow: 0 0 0 1px var(--bg-5);
   position: fixed;
   top: 7px;
   left: 7px;
@@ -1395,20 +1717,20 @@ vortex-navbar .logo {
   margin-left: auto;
   margin-right: 20px;
   cursor: default;
-  color: #888;
+  color: var(--text-color-2);
 }
 #sudo-indicator.base {
-  color: #a8af74;
+  color: var(--c1);
 }
 #sudo-indicator.sudo {
-  color: #eead71;
+  color: var(--warning);
 }
 
 #accedi,
 #registrati {
   display: block;
   margin: 20px auto;
-  background-color: #1f1b1b;
+  background-color: var(--bg-2);
   padding: 10px;
   border-radius: 10px;
   max-width: 500px;
@@ -1431,8 +1753,8 @@ vortex-navbar .logo {
   padding-bottom: 10px;
   border-radius: 23px;
   overflow: hidden;
-  --bc-log: $bg-1;
-  --i-color: $text-color;
+  --bc-log: var(--bg-1);
+  --i-color: var(--text-color);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   animation: bounce 500ms linear both;
@@ -1450,35 +1772,35 @@ vortex-navbar .logo {
 }
 #logs_container log-info p {
   margin: 0;
-  color: #f5f5f5;
+  color: var(--text-color);
 }
 #logs_container log-info._0 {
-  background-color: rgba(185, 209, 156, 0.3);
-  color: #B9D19C;
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
+  color: var(--olivegreen);
 }
 #logs_container log-info._0::after {
-  background-color: #B9D19C;
+  background-color: var(--olivegreen);
 }
 #logs_container log-info._1 {
-  background-color: rgba(238, 173, 113, 0.3);
-  color: #e59e7a;
+  background-color: rgba(var(--warning), 0.3);
+  color: var(--orange);
 }
 #logs_container log-info._1::after {
-  background-color: #e59e7a;
+  background-color: var(--orange);
 }
 #logs_container log-info._2 {
-  background-color: rgba(238, 113, 132, 0.3);
-  color: #F7A7A0;
+  background-color: color-mix(in srgb, var(--danger), transparent 70%);
+  color: var(--red);
 }
 #logs_container log-info._2::after {
-  background-color: #F7A7A0;
+  background-color: var(--red);
 }
 #logs_container log-info._3 {
-  background-color: rgba(174, 229, 216, 0.3);
-  color: #AEE5D8;
+  background-color: color-mix(in srgb, var(--mint), transparent 70%);
+  color: var(--mint);
 }
 #logs_container log-info._3::after {
-  background-color: #AEE5D8;
+  background-color: var(--mint);
 }
 #logs_container log-info .i-container {
   height: 100%;
@@ -1525,7 +1847,7 @@ vortex-navbar .logo {
   flex-wrap: wrap;
   padding: 8px;
   border-radius: 23px;
-  background-color: #1f1b1b;
+  background-color: var(--bg-2);
 }
 #vaults-list .checkpoint {
   width: 100%;
@@ -1538,7 +1860,7 @@ vortex-navbar .logo {
 #vaults-list.searching {
   padding: 8px 8px 2.5px 8px;
   border-radius: 23px;
-  background-color: #1f1b1b;
+  background-color: var(--bg-2);
   gap: 0;
 }
 #vaults-list.searching .checkpoint {
@@ -1565,52 +1887,55 @@ vortex-navbar .logo {
   cursor: pointer;
   padding: 10px;
   border-radius: 14px;
-  background-color: #272222;
+  background-color: var(--bg-3);
   transition: 0.15s;
   flex-grow: 1;
 }
 #vaults-list vault-li:hover {
-  background-color: #302929;
+  background-color: var(--bg-4);
 }
 #vaults-list vault-li .simbolo {
-  color: #a8af74;
+  color: var(--c1);
   font-size: 1.5em;
   padding: 5px;
   display: flex;
   align-items: center;
 }
 #vaults-list vault-li .simbolo.red {
-  color: #F7A7A0;
+  color: var(--red);
 }
 #vaults-list vault-li .simbolo.yellow {
-  color: #eec471;
+  color: var(--yellow);
+}
+#vaults-list vault-li .simbolo.green {
+  color: var(--green);
 }
 #vaults-list vault-li .simbolo.orange {
-  color: #e59e7a;
+  color: var(--orange);
 }
 #vaults-list vault-li .simbolo.peach {
-  color: #FFD6A5;
+  color: var(--peach);
 }
 #vaults-list vault-li .simbolo.purple {
-  color: #D3B4FF;
+  color: var(--purple);
 }
 #vaults-list vault-li .simbolo.pink {
-  color: #FFB7C5;
+  color: var(--pink);
 }
 #vaults-list vault-li .simbolo.mint {
-  color: #AEE5D8;
+  color: var(--mint);
 }
 #vaults-list vault-li .simbolo.blue {
-  color: #7dbaff;
+  color: var(--blue);
 }
 #vaults-list vault-li .simbolo.lightblue {
-  color: #A8D8FF;
+  color: var(--lightblue);
 }
 #vaults-list vault-li .simbolo.lightgray {
-  color: #E0E0E0;
+  color: var(--lightgray);
 }
 #vaults-list vault-li .simbolo.olivegreen {
-  color: #B9D19C;
+  color: var(--olivegreen);
 }
 #vaults-list vault-li .info {
   width: 100%;
@@ -1628,7 +1953,7 @@ vortex-navbar .logo {
 #vaults-list vault-li .info i {
   font-style: normal;
   font-size: 1em;
-  color: #888;
+  color: var(--text-color-2);
 }
 
 .custom-sections.emt custom-vault-section {
@@ -1638,7 +1963,7 @@ vortex-navbar .logo {
   margin-bottom: 0.5rem;
 }
 .custom-sections custom-vault-section {
-  background-color: #302929;
+  background-color: var(--bg-4);
   padding: 0 7px 7px 7px;
   border-radius: 8px;
 }
@@ -1646,7 +1971,7 @@ vortex-navbar .logo {
   padding: 3px;
 }
 .custom-sections custom-vault-section .remove-custom-section .material-symbols-rounded {
-  color: #888;
+  color: var(--text-color-2);
 }
 
 colored-password i {
@@ -1654,16 +1979,16 @@ colored-password i {
   font-family: "JetBrains Mono", monospace !important;
 }
 colored-password i.az {
-  color: #FFD6A5;
+  color: var(--peach);
 }
 colored-password i.AZ {
-  color: #B9D19C;
+  color: var(--green);
 }
 colored-password i._09 {
-  color: #F7A7A0;
+  color: var(--red);
 }
 colored-password i._s {
-  color: #A8D8FF;
+  color: var(--lightblue);
 }
 colored-password.l {
   font-size: 1.2em;
@@ -1674,7 +1999,7 @@ password-strength-bar {
   margin: 10px auto;
   width: 100%;
   overflow: hidden;
-  background-color: #272222;
+  background-color: var(--bg-3);
   padding: 5px;
   border-radius: 5px;
   font-size: 1em;
@@ -1694,20 +2019,20 @@ password-strength-bar .bar {
   font-family: "JetBrains Mono", monospace;
 }
 password-strength-bar .bar._1 {
-  background-color: rgba(238, 113, 132, 0.3);
-  color: #ee7184;
+  background-color: color-mix(in srgb, var(--danger), transparent 70%);
+  color: var(--danger);
 }
 password-strength-bar .bar._2 {
-  background-color: rgba(238, 173, 113, 0.3);
-  color: #eead71;
+  background-color: color-mix(in srgb, var(--warning), transparent 70%);
+  color: var(--warning);
 }
 password-strength-bar .bar._3 {
-  background-color: rgba(115, 142, 84, 0.3);
-  color: #738e54;
+  background-color: color-mix(in srgb, var(--mint), transparent 70%);
+  color: var(--mint);
 }
 password-strength-bar .bar._4 {
-  background-color: rgba(168, 175, 116, 0.3);
-  color: #a8af74;
+  background-color: color-mix(in srgb, var(--green), transparent 70%);
+  color: var(--green);
 }
 
 #devices-list,
@@ -1724,14 +2049,14 @@ passkey-list-item {
   gap: 8px;
   padding: 8px;
   border-radius: 8px;
-  background-color: #302929;
+  background-color: var(--bg-4);
 }
 device-list-item .token-id,
 passkey-list-item .token-id {
   display: flex;
   gap: 5px;
   align-items: center;
-  color: #888;
+  color: var(--text-color-2);
   font-size: 0.9em;
 }
 device-list-item .token-id i,
@@ -1741,7 +2066,7 @@ passkey-list-item .token-id i {
 }
 device-list-item.current .token-id,
 passkey-list-item.current .token-id {
-  color: #D3B4FF;
+  color: var(--purple);
 }
 device-list-item .info,
 passkey-list-item .info {
@@ -1764,7 +2089,7 @@ passkey-list-item .info {
   z-index: 2000;
   width: 100%;
   height: 100%;
-  background-color: rgba(23, 20, 20, 0.5);
+  background-color: rgba(var(--bg-1), 0.5);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   display: none;
@@ -1789,7 +2114,7 @@ passkey-list-item .info {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(23, 20, 20, 0.7);
+  background-color: color-mix(in srgb, var(--bg-1), transparent 30%);
   z-index: 9;
   opacity: 0;
   visibility: hidden;
