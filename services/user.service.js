@@ -48,7 +48,8 @@ export class UserService {
             'hotmail.com',  // Microsoft (più vecchio, ma ancora usato)
             'yahoo.com',    // Yahoo
             'live.com',     // Microsoft
-            'libero.it'     // Libero
+            'libero.it',    // Libero
+            'tesisquare.com',// Tesisquare
         ];
         // ---
         return verified_domains.includes(email.split('@')[1]);
