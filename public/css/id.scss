@@ -37,7 +37,7 @@
         }
 
         &:hover {
-            background-color: rgba(var(--c1), 0.1);
+            background-color: color-mix(in srgb, var(--c1), transparent 90%);
         }
     }
 }
@@ -142,7 +142,7 @@ vortex-navbar {
             }
         }
         &._1 {
-            background-color: rgba(var(--warning), 0.3);
+            background-color: color-mix(in srgb, var(--warning), transparent 70%);
             // border: 1px solid var(--warning);
             color: var(--orange);
             &::after {
@@ -477,7 +477,7 @@ passkey-list-item {
     z-index: 2000;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--bg-1), 0.5);
+    background-color: color-mix(in srgb, var(--bg-1), transparent 50%);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     display: none;

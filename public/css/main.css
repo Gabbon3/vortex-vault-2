@@ -76,7 +76,7 @@ font e icone
   --c3: #8BE9FD;
   --danger: #FF5555;
   --red: #FF6E6E;
-  --warning: #F1FA8C;
+  --warning: #ffa228;
   --blue: #6272A4;
   --lightblue: #8BE9FD;
   --yellow: #F1FA8C;
@@ -104,13 +104,13 @@ font e icone
   --c3: #FF007F;
   --danger: #FF3131;
   --red: #FF0055;
-  --warning: #FAEA48;
+  --warning: #FF5E00;
   --blue: #00FFFF;
   --lightblue: #00BFFF;
   --yellow: #FFD700;
   --orange: #FF8800;
   --peach: #FFAE70;
-  --purple: #A020F0;
+  --purple: #b054e8;
   --pink: #FF00FF;
   --mint: #00FF99;
   --lightgray: #808080;
@@ -188,7 +188,7 @@ font e icone
   --c3: #D4A5C6;
   --danger: #E89DA5;
   --red: #F5B2A8;
-  --warning: #F5D7A1;
+  --warning: #f5c3a1;
   --blue: #C3DDFD;
   --lightblue: #D7E3FC;
   --yellow: #FAE3B0;
@@ -228,14 +228,14 @@ font e icone
   --lightgray: #B0B0B0;
   --green: #56933d;
   --olivegreen: #5D7440;
-  --bg-1: #f5f5f5;
-  --bg-2: #ebebeb;
-  --bg-3: #e1e1e1;
-  --bg-4: #d6d6d6;
-  --bg-5: #cccccc;
-  --bg-6: #c2c2c2;
-  --bg-7: #b8b8b8;
-  --border-color: darkgray;
+  --bg-1: #f3f5f6;
+  --bg-2: #e7ebed;
+  --bg-3: #dce2e5;
+  --bg-4: #d0d8dc;
+  --bg-5: #c4ced3;
+  --bg-6: #b9c4ca;
+  --bg-7: #adbbc2;
+  --border-color: #9cacb4;
   --text-color: #111;
   --text-color-15: #333;
   --text-color-2: #666;
@@ -1467,6 +1467,13 @@ input[type=password] {
   font-size: 1em;
   resize: none;
 }
+.input-text.color,
+.container-input-text.color {
+  margin: 0;
+  width: 40px;
+  height: 40px;
+  padding: 4px;
+}
 .input-text.fs-l,
 .container-input-text.fs-l {
   font-size: 1.2em;
@@ -1686,7 +1693,7 @@ input[type=range]::-webkit-slider-thumb {
   color: var(--c1);
 }
 .navbar a:hover {
-  background-color: rgba(var(--c1), 0.1);
+  background-color: color-mix(in srgb, var(--c1), transparent 90%);
 }
 
 vortex-navbar {
@@ -1782,7 +1789,7 @@ vortex-navbar .logo {
   background-color: var(--olivegreen);
 }
 #logs_container log-info._1 {
-  background-color: rgba(var(--warning), 0.3);
+  background-color: color-mix(in srgb, var(--warning), transparent 70%);
   color: var(--orange);
 }
 #logs_container log-info._1::after {
@@ -2089,7 +2096,7 @@ passkey-list-item .info {
   z-index: 2000;
   width: 100%;
   height: 100%;
-  background-color: rgba(var(--bg-1), 0.5);
+  background-color: color-mix(in srgb, var(--bg-1), transparent 50%);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   display: none;
