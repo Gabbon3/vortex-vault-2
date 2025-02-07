@@ -11,7 +11,7 @@ export class VortexNavbar extends HTMLElement {
         // <img src="./img/vortex_vault_logo.png" class="logo">
         this.innerHTML = `
             <nav class="navbar">
-                ${path === '/vault' ? `<a class="open blue" data-target-open="win-settings" title="Settings">
+                ${path ? `<a class="open blue" data-target-open="win-settings" title="Settings">
                     <span class="material-symbols-rounded">settings</span>
                     <i>Settings</i>
                 </a>` : ''}

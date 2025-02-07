@@ -273,8 +273,11 @@ export class UserController {
      */
     verify_message_authentication_code = async_handler(async (req, res) => {
         const { email, mac } = req.body; // mac = message_authentication_code
+        // -- verifico che ci siano i dati
+        if (!email) throw new CError("", "No email passed for verification", 422);
+        // ---
         const status = Mailer.verify_message_authentication_code(email, mac);
-        res.status(200).json({ status });
+        res.status(200).json(status);
     });
     /**
      * Imposta nei cookie l'access e il refresh token

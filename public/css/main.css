@@ -77,7 +77,7 @@ font e icone
   --danger: #FF5555;
   --red: #FF6E6E;
   --warning: #ffa228;
-  --blue: #6272A4;
+  --blue: #7485b8;
   --lightblue: #8BE9FD;
   --yellow: #F1FA8C;
   --orange: #FFB86C;
@@ -87,7 +87,7 @@ font e icone
   --mint: #69DCCF;
   --lightgray: #44475A;
   --green: #50FA7B;
-  --olivegreen: #5F7761;
+  --olivegreen: #6b8d6e;
   --bg-1: #161B20;
   --bg-2: #1c2329;
   --bg-3: #222a32;
@@ -96,6 +96,34 @@ font e icone
   --bg-6: #35414d;
   --bg-7: #3b4956;
   --border-color: #485869;
+}
+
+.theme-tokyonight {
+  --c1: #82aaff;
+  --c2: #c3e88d;
+  --c3: #ff98a4;
+  --danger: #ff5370;
+  --red: #f07178;
+  --warning: #ffba6b;
+  --blue: #82aaff;
+  --lightblue: #89ddff;
+  --yellow: #ffcb6b;
+  --orange: #f78c6c;
+  --peach: #ff9cac;
+  --purple: #c792ea;
+  --pink: #f071d1;
+  --mint: #c3e88d;
+  --lightgray: #848bbd;
+  --green: #c3e88d;
+  --olivegreen: #a3be8c;
+  --bg-1: #1a1b26;
+  --bg-2: #20212f;
+  --bg-3: #262838;
+  --bg-4: #2d2e41;
+  --bg-5: #33354a;
+  --bg-6: #393b53;
+  --bg-7: #3f425d;
+  --border-color: #4c4f6f;
 }
 
 .theme-cyberpunk {
@@ -690,6 +718,24 @@ p.secondary {
 p.description {
   color: var(--text-color-2);
   font-size: 0.9em;
+}
+
+p.report {
+  padding: 8px;
+  border-radius: 8px;
+  font-family: "JetBrains Mono", monospace;
+}
+p.report.success {
+  background-color: color-mix(in srgb, var(--olivegreen), transparent 90%);
+  color: var(--olivegreen);
+}
+p.report.warning {
+  background-color: color-mix(in srgb, var(--warning), transparent 90%);
+  color: var(--warning);
+}
+p.report.danger {
+  background-color: color-mix(in srgb, var(--danger), transparent 90%);
+  color: var(--danger);
 }
 
 colored {

@@ -1,5 +1,4 @@
 import { Bytes } from "../utils/bytes.js";
-import { Log } from "../utils/log.js";
 import { TOTP } from "../utils/totp.js";
 
 class BtnOtpCopy extends HTMLElement {

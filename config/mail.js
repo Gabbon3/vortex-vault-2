@@ -16,12 +16,23 @@ export class Mailer {
         }
     });
     /**
+     * Genera una stringa univoca derivata da una mail
+     * @param {string} email 
+     * @returns {string} restituisce una stringa che identifica una email pronta da usare per il mac
+     */
+    static get_email_identity(email) {
+        const [username, domain] = email.split('@');
+        const group = domain.split('.')[0];
+        return `${username}.${group}`;
+    }
+    /**
      * Genera un codice di verifica da includere nelle mail per legittimare la mail
      * @param {string} email_
      * @returns {string}
      */
     static message_authentication_code(email_) {
-        let [email, timestamp] = [email_.split('@')[0], Math.floor(Date.now() / 1000)];
+        const email = this.get_email_identity(email_);
+        let timestamp = Math.floor(Date.now() / 1000);
         // -- comprimo e riduco la dimensione dei dati
         timestamp = BaseConverter.to_string(timestamp, 62);
         // ---
@@ -39,23 +50,25 @@ export class Mailer {
      */
     static verify_message_authentication_code(email, code) {
         const code_parts = code.split('.');
-        // -- decodifico la firma in binario
-        const encoded_signature = Bytes.base62.decode(code_parts.pop());
-        // -- reimposto il payload
-        const payload = code_parts.join('.');
-        // -- ottengo il mittente
-        const email_id = email.split('@')[0].split('.')[0];
-        const receiver = code_parts.shift();
-        // -- ottengo la data per fare il confronto temporale
-        const date = Number(BaseConverter.from_string(code_parts.pop(), 62)) * 1000;
+        const length = code_parts.length;
+        // -- ottengo e decodifico la firma in binario (ultimo elemento)
+        const encoded_signature = Bytes.base62.decode(code_parts[length - 1]);
+        // -- ottengo il timestamp per fare il confronto temporale (penultimo elemento)
+        const timestamp = Number(BaseConverter.from_string(code_parts[length - 2], 62)) * 1000;
+        // -- payload = user + timestamp ottenuto unendo il codice senza signature
+        const payload = code_parts.slice(0, -1).join('.');
+        // -- ottengo il mittente (unendo le parti del codice senza timestamp e signature) e derivo l'id dell'email fornita
+        const receiver = code_parts.slice(0, -2).join('.');
+        const email_id = this.get_email_identity(email);
         // -- calcolo nuovamente la signature
         const signature = Cripto.hmac(payload, Config.FISH_KEY);
         // -- verifico le condizioni
         const valid_signature = Bytes.compare(signature.subarray(0, 12), encoded_signature);
-        const valid_date = Date.now() < new Date(date + (24 * 60 * 60 * 1000));
+        const valid_date = Date.now() < new Date(timestamp + (24 * 60 * 60 * 1000));
         // -- controllo se il ricevente corrisponde
-        if (email_id !== receiver && valid_signature) return 4; // ricevente diverso da quello presente nel codice
-        return valid_signature ? (valid_date ? 1 : 2) : 3;
+        const status = email_id !== receiver && valid_signature ? 4 :
+            valid_signature ? (valid_date ? 1 : 2) : 3;
+        return { status, timestamp: timestamp, receiver };
     }
     /**
      * Invia una mail

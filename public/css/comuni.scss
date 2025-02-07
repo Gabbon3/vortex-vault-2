@@ -214,6 +214,29 @@ p {
     }
 }
 
+p.report {
+    padding: $br-m;
+    border-radius: $br-m;
+    // border: 1px solid #000;
+    font-family: $monospace;
+
+    &.success {
+        background-color: color-mix(in srgb, var(--olivegreen), transparent 90%);
+        color: var(--olivegreen);
+        // border-color: var(--olivegreen);
+    }
+    &.warning {
+        background-color: color-mix(in srgb, var(--warning), transparent 90%);
+        color: var(--warning);
+        // border-color: var(--warning);
+    }
+    &.danger {
+        background-color: color-mix(in srgb, var(--danger), transparent 90%);
+        color: var(--danger);
+        // border-color: var(--danger);
+    }
+}
+
 colored {
     color: var(--c1);
 }
