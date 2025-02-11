@@ -27,7 +27,7 @@ export class VortexNavbar extends HTMLElement {
                     <i>Backup</i>
                 </a>` : ''}
                 </a>` : ''}
-                ${path === '/vault' ? `<a class="open green" data-target-open="win-psw-generator" title="Password Generator">
+                ${path === '/vault' ? `<a class="open olivegreen" data-target-open="win-psw-generator" title="Password Generator">
                     <span class="material-symbols-rounded">key_vertical</span>
                     <i>Generator</i>
                 </a>` : ''}

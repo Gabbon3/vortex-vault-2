@@ -409,14 +409,9 @@ password-strength-bar {
             color: var(--warning);
         }
 
-        &._3 {
-            background-color: color-mix(in srgb, var(--mint), transparent 70%);
-            color: var(--mint);
-        }
-
-        &._4 {
-            background-color: color-mix(in srgb, var(--green), transparent 70%);
-            color: var(--green);
+        &._3, &._4 {
+            background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
+            color: var(--olivegreen);
         }
     }
 }
