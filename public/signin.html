@@ -91,13 +91,6 @@
         <hr>
         <form id="form-password-recovery">
             <div class="isle bg-4 mb-2">
-                <!-- EMAIL -->
-                <label for="recovery-email">
-                    <span class="material-symbols-rounded">person</span>
-                    Email
-                </label>
-                <input type="email" class="input-text" id="recovery-email" name="email" autocomplete="off" required>
-                <hr>
                 <!-- RECOVERY CODE -->
                 <label for="recovery-file">
                     <span class="material-symbols-rounded">password</span>
@@ -107,10 +100,17 @@
                 <p class="description mb-0">
                     .pem file is required
                 </p>
+                <hr>
+                <!-- EMAIL -->
+                <label for="recovery-email">
+                    <span class="material-symbols-rounded">person</span>
+                    Email
+                </label>
+                <input type="email" class="input-text mb-2" id="recovery-email" name="email" autocomplete="off" required>
+                <email-verify-btn email-id="recovery-email" target-id="recovery-password-code"></email-verify-btn>
             </div>
             <!-- --- -->
             <div class="isle bg-4">
-                <email-verify-btn email-id="recovery-email" target-id="recovery-password-code"></email-verify-btn>
                 <mfa-input input-id="recovery-password-code"></mfa-input>
                 <p class="description mb-0">
                     Identity verification is required to recover your password
