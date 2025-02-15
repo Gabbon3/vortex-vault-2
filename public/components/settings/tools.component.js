@@ -86,8 +86,8 @@ class SettingsComponent extends HTMLElement {
         <div class="window m pl" id="win-settings">
         <div class="flex y-center maincolor blue">
             <h2 class="icon mb-0">
-                <span class="material-symbols-rounded">settings</span>
-                Settings
+                <span class="material-symbols-rounded">handyman</span>
+                Tools
             </h2>
             <button class="btn t close l last" data-target-close="win-settings">
                 <span class="material-symbols-rounded">close</span>

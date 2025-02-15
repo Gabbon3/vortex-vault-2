@@ -145,7 +145,7 @@ export class UserController {
      */
     send_email_verification = async_handler(async (req, res) => {
         const email = req.body.email;
-        if (!email || !Validator.email(email)) throw new CError("ValidationError", "Any email founded", 422);
+        if (!email || !Validator.email(email)) throw new CError("ValidationError", "No email provided", 422);
         const code = Cripto.random_mfa_code();
         const request_id = `ear-${email}`; // ear = email auth request
         // -- controllo che non sia gia stata fatta una richiesta

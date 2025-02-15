@@ -17,7 +17,7 @@ import './passkey-btn.component.js';
 import './passkey-list-item.component.js';
 import './otp-copy-button.component.js';
 import './btn-hide-show-protect-input.component.js';
-import './settings/settings.component.js';
+import './settings/tools.component.js';
 import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
 import '../js/theme.ui.js';

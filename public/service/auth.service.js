@@ -149,7 +149,7 @@ export class AuthService {
         if (!lsk) return false;
         const email = await LocalStorage.get('email-utente');
         if (!email) {
-            Log.summon(2, 'Any email founded');
+            Log.summon(2, 'No email found');
             return false;
         }
         const res = await API.fetch('/auth/password', {
