@@ -295,7 +295,9 @@ export class HtmlSecretsRender {
      * @returns {string}
      */
     static get_search_context(vals) {
-        let context = `${vals.secrets.U}`;
+        let context = '';
+        // -- se è presente un username
+        if (vals.secrets.U) context += `@${vals.secrets.U}`;
         // -- se è un login e la password non è sicura
         if (vals.strength_value < 60) context += `@danger`;
         // -- se è presente un codice otp
