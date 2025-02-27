@@ -1,4 +1,7 @@
 export class Search {
+    /**
+     * Utilizza l'attributo 'search-context' per inserire del testo aggiuntivo che funziona nella ricerca
+     */
     cache = {
         // usata per non ricericare sempre l'html
     }
@@ -43,7 +46,8 @@ export class Search {
             let content = riga.textContent.toLowerCase()
                 .replace(/\s+/g, ' ') // Sostituisce tutti gli spazi multipli con uno singolo
                 .trim(); // Rimuove gli spazi iniziali e finali
-            // ---
+            // -- attirbuto con altro testo che puo essere cercato
+            content += riga.getAttribute('search-context') ?? "";
             this.cache[target].push({ riga, content });
         }
     }

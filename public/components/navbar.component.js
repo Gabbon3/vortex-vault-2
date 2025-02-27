@@ -22,11 +22,14 @@ export class VortexNavbar extends HTMLElement {
                 ${path === '/vault' ? `<a class="open red" data-target-open="win-passkey" title="Passkey">
                     <span class="material-symbols-rounded">passkey</span>
                     <i>Passkey</i>
+                </a>` : ''}
                 ${path === '/vault' ? `<a class="open yellow" data-target-open="win-backups" title="Backup">
                     <span class="material-symbols-rounded">cloud</span>
                     <i>Backup</i>
                 </a>` : ''}
-                </a>` : ''}
+                
+
+
                 ${path === '/vault' ? `<a class="open olivegreen" data-target-open="win-psw-generator" title="Password Generator">
                     <span class="material-symbols-rounded">key_vertical</span>
                     <i>Generator</i>
@@ -59,5 +62,11 @@ export class VortexNavbar extends HTMLElement {
         `;
     }
 }
+/*
+${path ? `<a class="open orange" data-target-open="win-totp" title="Time-Based One-Time Password">
+    <span class="material-symbols-rounded">phonelink_lock</span>
+    <i>TOTP</i>
+</a>` : ''}
+*/
 // -- registro il componente nei custom elements
 customElements.define('vortex-navbar', VortexNavbar);

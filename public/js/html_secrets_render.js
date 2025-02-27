@@ -288,6 +288,21 @@ export class HtmlSecretsRender {
     <!-- ... -->
 </div>`;
     }
+
+    /**
+     * Restituisce il contesto di ricerca di ogni vault list item
+     * @param {Object} vals 
+     * @returns {string}
+     */
+    static get_search_context(vals) {
+        let context = `${vals.secrets.U}`;
+        // -- se è un login e la password non è sicura
+        if (vals.strength_value < 60) context += `@danger`;
+        // -- se è presente un codice otp
+        if (vals.secrets.O) context += `@totp`;
+        // ---
+        return context;
+    }
     /**
      * Restituisce il codice html appropriato
      * @param {number} st 
@@ -295,6 +310,7 @@ export class HtmlSecretsRender {
      */
     static get_list_item(st, vals) {
         return `<vault-li 
+    search-context="${this.get_search_context(vals)}"
     title="${vals.secrets.T}"
     st="${st}"
     updated-at="${date.format("%j %M %y", new Date(vals.updatedAt))}"
