@@ -302,6 +302,25 @@ export class HtmlSecretsRender {
      * @param {Object} vals 
      * @param {number} st secret type [0 = login, 1 = note, 2 = carta di credito, 3 = publickeys]
      * @returns {string}
+     * Come effettuare la ricerca:
+     *  * '#' -> identifica una categoria e sono: 
+     *    * titoli dei vault
+     *    * tipi di vault:
+     *      * login
+     *      * note
+     *      * creditcard
+     *      * publickeys
+     *    * password deboli -> #danger
+     *    * vault che hanno il codice totp -> #totp
+     *  * '?' usato per le date, sono due tipi:
+     *    * date specifiche, es:
+     *      * ?1-2-24 -> "Quando? il giorno 1 Febbraio 2024"
+     *    * date generiche, es:
+     *      * ?y2024 -> "Quando? nell'anno 2024"
+     *      * ?m4 -> "Quando? nel mese di Aprile"
+     *      * ?m4?y2024 -> "Quando? nel mese di Aprile dell'anno 2024"
+     *      * ?d10 -> "Quando? Il giorno 10 di qualsiasi mese o anno"
+     *   * '@' usato per gli usernames dei login
      */
     static get_search_context(vals, st) {
         let context = [];

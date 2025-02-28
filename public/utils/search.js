@@ -119,7 +119,7 @@ export class Search {
             if (term.includes("*")) {
                 const regexPattern = term
                     .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // Escape per i caratteri speciali
-                    .replace(/\*/g, ".*"); // Sostituisce * con .*
+                    .replace(/\\\*/g, ".*"); // Sostituisce * con .*
 
                 const regex = new RegExp(regexPattern, "i");
                 return regex.test(content); // Testa il contenuto con la regex
