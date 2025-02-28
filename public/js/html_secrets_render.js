@@ -49,6 +49,14 @@ export class HtmlSecretsRender {
         return null;
     }
     /**
+     * Restituisce il nome relativo a un tipo di segreto
+     * @param {number} st 
+     * @returns 
+     */
+    static get_secret_type_name(st) {
+        return ['login', 'note', 'creditcard', 'publickeys'][st];
+    }
+    /**
      * HTML PER I VAULT
      * @param {object} vals 
      * @return {string} HTML
@@ -292,18 +300,39 @@ export class HtmlSecretsRender {
     /**
      * Restituisce il contesto di ricerca di ogni vault list item
      * @param {Object} vals 
+     * @param {number} st secret type [0 = login, 1 = note, 2 = carta di credito, 3 = publickeys]
      * @returns {string}
      */
-    static get_search_context(vals) {
-        let context = '';
+    static get_search_context(vals, st) {
+        let context = [];
+        // -- inserisco il Secret Type
+        // - # in questo caso lo intendo come "mostrami tutti i segreti di tipo ..."
+        context.push(`#${this.get_secret_type_name(st)}`);
+        // -- inserisco il titolo
+        // -- anche qui uso #, dovrebbe essere inteso come categoria ma puo andare bene anche qui
+        context.push(`#${vals.secrets.T}` ?? "");
+        // -- data
+        // - ? inteso come "Quando?" seguendo quindi una data
+        // - ho inserito due tipi di date per ricerce specifiche o generiche
+        // -- per la specifica: 
+        // --- ?1-2-24 -> "Quando? il giorno 1 Febbraio 2024"
+        // -- per quelle generiche invece, ad esempio:
+        // --- ?y2024 -> "Quando? nell'anno 2024"
+        // --- ?m4 -> "Quando? nel mese di Aprile"
+        // --- ?m4?y2024 -> "Quando? nel mese di Aprile dell'anno 2024"
+        context.push(date.format("?%j-%n-%Y|?d%j?m%n?y%Y", new Date(vals.updatedAt)));
         // -- se è presente un username
-        if (vals.secrets.U) context += `@${vals.secrets.U}`;
+        // - @ intesto come "Chi? | Quale username?"
+        if (vals.secrets.U) context.push(`@${vals.secrets.U}`);
         // -- se è un login e la password non è sicura
-        if (vals.strength_value < 60) context += `@danger`;
+        // - # indica una categoria
+        // -- in questo caso la categoria di password non sicure
+        if (vals.strength_value && vals.strength_value < 60) context.push(`#danger`);
         // -- se è presente un codice otp
-        if (vals.secrets.O) context += `@totp`;
+        // -- in questo caso tutti i login che hanno un totp
+        if (vals.secrets.O) context.push(`#totp`);
         // ---
-        return context;
+        return context.join('|').toLowerCase();
     }
     /**
      * Restituisce il codice html appropriato
@@ -312,7 +341,7 @@ export class HtmlSecretsRender {
      */
     static get_list_item(st, vals) {
         return `<vault-li 
-    search-context="${this.get_search_context(vals)}"
+    search-context="${this.get_search_context(vals, st)}"
     title="${vals.secrets.T}"
     st="${st}"
     updated-at="${date.format("%j %M %y", new Date(vals.updatedAt))}"

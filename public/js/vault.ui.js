@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 export class VaultUI {
-    static search = new Search();
+    static search = new Search(true, null, null, 100);
     static view_indicator = -1; // usata per mostrare tutte o alcune categorie di segreti
     static current_order = 'az';
     static html_list = null;

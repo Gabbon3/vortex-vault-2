@@ -1,90 +1,131 @@
 export class Search {
     /**
-     * Utilizza l'attributo 'search-context' per inserire del testo aggiuntivo che funziona nella ricerca
+     * @param {boolean} setContentManual Se true, utilizza 'search-context' invece di textContent
+     * @param {Function} filterFn Funzione personalizzata per la ricerca
      */
-    cache = {
-        // usata per non ricericare sempre l'html
+    constructor(setContentManual = false, filterFn = null, queryPrepareFn = null, debounceTime = 500) {
+        this.setContentManual = setContentManual;
+        this.filterFn = filterFn || this.defaultFilter; // Usa filtro personalizzato se fornito
+        this.queryPrepareFn = queryPrepareFn || this.defaultQueryPrepareFn;
+        this.cache = {};
+        this.elemento_ricerca = ['tr']; // Ora può essere un array
+        this.debounceTime = debounceTime;
+        this.debounceTimer = null; // Timer per il debounce
     }
-    elemento_ricerca = 'tr';
+
     /**
      * Ricerca nelle tabelle
-     * @param {HTMLElement} input input di ricerca
-     * @param {String} target tabella target
-     * @param {string} elemento_ricerca elemento figlio su cui eseguire la ricerca
+     * @param {HTMLElement} input Input di ricerca
+     * @param {String} target ID della tabella target
+     * @param {string|string[]} elemento_ricerca Elementi su cui eseguire la ricerca
      */
-    tabella(input, target, elemento_ricerca = 'tr') {
-        const match = input.value.toLowerCase();
+    tabella(input, target, elemento_ricerca = ['tr']) {
+        const query = this.queryPrepareFn(input.value);
         const table = document.getElementById(target);
-        // Aggiungo la classe 'searching' alla tabella
-        // Se non esiste già, crea la cache e inizia a monitorare la tabella per eventuali modifiche
+
         if (!this.cache[target]) {
-            this.elemento_ricerca = elemento_ricerca;
-            this.crea_cache(target, elemento_ricerca);
-            this.osserva_modifiche(target); // Inizia a osservare eventuali modifiche alla tabella
+            this.elemento_ricerca = Array.isArray(elemento_ricerca) ? elemento_ricerca : [elemento_ricerca];
+            this.crea_cache(target);
+            this.osserva_modifiche(target);
         }
-        match === '' ? 
-            table.classList.remove('searching') :
-            table.classList.add('searching');
-        // -- ottengo le righe dalla cache
-        const righe_cache = this.cache[target];
-        for (let i = 0; i < righe_cache.length; i++) {
-            const { riga, content } = righe_cache[i];
+
+        // Aggiungi il debounce alla ricerca
+        if (this.debounceTimer) {
+            clearTimeout(this.debounceTimer); // Pulisce il timer precedente
+        }
+
+        this.debounceTimer = setTimeout(() => {
+            // si adatta sia all'array che alla stringa
+            table.classList.toggle('searching', query.length > 0);
             // ---
-            riga.style.display = content.includes(match) ? '' : 'none';
-        }
+            for (const { riga, content } of this.cache[target]) {
+                riga.style.display = this.filterFn(content, query) ? '' : 'none';
+            }
+        }, this.debounceTime);
     }
+
     /**
-     * Crea la cache per una tabella specifica
+     * Crea la cache della tabella
      * @param {String} target ID della tabella target
      */
-    crea_cache(target, elemento_ricerca) {
-        const righe = document.querySelectorAll("#" + target + " " + elemento_ricerca);
+    crea_cache(target) {
+        const righe = document.querySelectorAll(`#${target} ${this.elemento_ricerca.join(', ')}`);
         this.cache[target] = [];
-        for (let r = 0; r < righe.length; r++) {
-            const riga = righe[r];
-            // -- salva il contenuto in un array
-            let content = riga.textContent.toLowerCase()
-                .replace(/\s+/g, ' ') // Sostituisce tutti gli spazi multipli con uno singolo
-                .trim(); // Rimuove gli spazi iniziali e finali
-            // -- attirbuto con altro testo che puo essere cercato
-            content += riga.getAttribute('search-context') ?? "";
+
+        for (const riga of righe) {
+            let content = this.setContentManual ? '' : riga.textContent.toLowerCase().replace(/\s+/g, ' ').trim();
+            const extra = riga.getAttribute('search-context') ?? "";
+            content += extra ? ` | ${extra.toLowerCase()}` : "";
+
             this.cache[target].push({ riga, content });
         }
     }
 
     /**
-     * Invalida la cache per una tabella
+     * Invalida la cache della tabella
      * @param {String} target ID della tabella target
      */
     invalida_cache(target) {
-        if (this.cache[target]) {
-            delete this.cache[target];
-        }
+        delete this.cache[target];
     }
 
     /**
-     * Osserva le modifiche alla tabella e invalida la cache se vengono rilevate modifiche
+     * Osserva le modifiche alla tabella e aggiorna la cache automaticamente
      * @param {String} target ID della tabella target
      */
     osserva_modifiche(target) {
         const tabella = document.getElementById(target);
         if (!tabella) return;
-        // ---
-        const observer = new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.type === 'childList' || mutation.type === 'characterData') {
-                    // -- se ci sono cambiamenti nella lista dei nodi o nel contenuto, invalida la cache
-                    this.invalida_cache(target);
-                    this.crea_cache(target, this.elemento_ricerca);  // -- ricarica la cache aggiornata
-                    break;
-                }
-            }
+
+        const observer = new MutationObserver(() => {
+            this.invalida_cache(target);
+            this.crea_cache(target);
         });
-        // -- configura l'osservatore per monitorare modifiche al contenuto e alla struttura della tabella
-        observer.observe(tabella, {
-            childList: true,           // Per rilevare aggiunta/rimozione di righe
-            subtree: true,             // Include i nodi figli
-            characterData: true        // Rileva modifiche al testo all'interno delle celle
+
+        observer.observe(tabella, { childList: true, subtree: true, characterData: true });
+    }
+
+    /**
+     * prepara il contenuto della query suddidendo tutti i termini di ricerca in un array
+     * ad esempio @gabbo, ?1-2-2024 -> ["@gabbo", "?1-2-2024"]
+     * @param {string} query 
+     * @returns {Array}
+     */
+    defaultQueryPrepareFn(query) {
+        if (!query) return [];
+        query = query.toLowerCase().trim();
+        return query.split(',').map(term => term.trim())
+    }
+
+    /**
+     * Filtro di ricerca di default (supporta includes multiplo e wildcard `*`)
+     * @param {string} content 
+     * @param {Array} query 
+     */
+    defaultFilter(content, query) {
+        // Per ogni termine della query
+        return query.every(term => {
+            // Se il termine è una regex
+            // COMM: attualmente commentato, è esagerato
+            // if (term.startsWith("/") && term.endsWith("/")) {
+            //     try {
+            //         const regex = new RegExp(term.slice(1, -1), "i");
+            //         return regex.test(content); // Se il termine è una regex, lo testa direttamente
+            //     } catch (e) {
+            //         return false; // Se c'è un errore nella regex, non c'è match
+            //     }
+            // }
+            // Se il termine contiene *, lo trasforma in regex
+            if (term.includes("*")) {
+                const regexPattern = term
+                    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // Escape per i caratteri speciali
+                    .replace(/\*/g, ".*"); // Sostituisce * con .*
+
+                const regex = new RegExp(regexPattern, "i");
+                return regex.test(content); // Testa il contenuto con la regex
+            }
+            // Ricerca classica: se il termine è una stringa semplice, usa includes
+            return content.includes(term);
         });
     }
-};
+}
