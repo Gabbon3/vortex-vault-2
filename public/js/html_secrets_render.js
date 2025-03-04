@@ -71,7 +71,7 @@ export class HtmlSecretsRender {
         Title
     </label>
     <div class="flex gap-50">
-        <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+        <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
         <${btn} target="titolo-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
@@ -82,7 +82,7 @@ export class HtmlSecretsRender {
         Username
     </label>
     <div class="flex gap-50">
-        <input name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${HtmlSecretsRender.id}" value="${vals.U ?? ''}" autocomplete="off">
+        <input spellcheck="false" name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${HtmlSecretsRender.id}" value="${vals.U ?? ''}" autocomplete="off">
         <${btn} target="username-${HtmlSecretsRender.id}"></${btn}>
     </div>
     ${!update ? '<datalist id="used-username"></datalist>' : ''}
@@ -94,7 +94,7 @@ export class HtmlSecretsRender {
         Password
     </label>
     <div class="flex gap-50 mb-2">
-        <input name="P" type="password" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
+        <input spellcheck="false" name="P" type="password" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
         <${btn} target="password-${HtmlSecretsRender.id}"></${btn}>
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
@@ -106,7 +106,7 @@ export class HtmlSecretsRender {
         OTP/TOTP
     </label>
     <div class="flex gap-50">
-        <input name="O" type="password" class="input-text mono protected" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
+        <input spellcheck="false" name="O" type="password" class="input-text mono protected" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
         <${btn} target="totp-${HtmlSecretsRender.id}"></${btn}>
     </div>
     ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
@@ -122,7 +122,7 @@ export class HtmlSecretsRender {
         Note
     </label>
     <div class="container-input-text">
-        <textarea name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
+        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
     </div>
 </div>`;
     }
@@ -141,7 +141,7 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">tag</span>
         Title
     </label>
-    <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+    <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
 <!-- NOTE -->
 <div class="isle bg-4">
@@ -150,7 +150,7 @@ export class HtmlSecretsRender {
         Note
     </label>
     <div class="container-input-text">
-        <textarea name="N" id="note-${HtmlSecretsRender.id}" rows="16">${vals.N ?? ''}</textarea>
+        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="16">${vals.N ?? ''}</textarea>
     </div>
 </div>
 <!-- CUSTOM -->
@@ -172,7 +172,7 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">tag</span>
         Title
     </label>
-    <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+    <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
 <!-- TIPO DI CHIAVE == KT -->
 <div class="isle bg-4 mb-2">
@@ -194,7 +194,7 @@ export class HtmlSecretsRender {
         Private Key
     </label>
     <div class="container-input-text mono">
-        <textarea name="R" type="text" id="private-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
+        <textarea spellcheck="false" name="R" type="text" id="private-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
     </div>
     <div class="flex gap-50 mt-2">
         <btn-copy target="private-key-${HtmlSecretsRender.id}"></btn-copy>
@@ -208,7 +208,7 @@ export class HtmlSecretsRender {
         Public Key
     </label>
     <div class="container-input-text">
-        <textarea name="P" type="text" id="public-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
+        <textarea spellcheck="false" name="P" type="text" id="public-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
     </div>
     <div class="flex gap-50 mt-2">
         <btn-copy target="public-key-${HtmlSecretsRender.id}"></btn-copy>
@@ -226,7 +226,7 @@ export class HtmlSecretsRender {
         Note
     </label>
     <div class="container-input-text">
-        <textarea name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
+        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
     </div>
 </div>`;
     }
@@ -246,7 +246,7 @@ export class HtmlSecretsRender {
         Title
     </label>
     <div class="flex gap-50">
-        <input name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required placeholder="My Bank">
+        <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required placeholder="My Bank">
         <${btn} target="titolo-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
@@ -257,7 +257,7 @@ export class HtmlSecretsRender {
         Name
     </label>
     <div class="flex gap-50">
-        <input name="NC" type="text" class="input-text mono" id="name-surname-${HtmlSecretsRender.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">
+        <input spellcheck="false" name="NC" type="text" class="input-text mono" id="name-surname-${HtmlSecretsRender.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">
         <${btn} target="name-surname-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
@@ -268,7 +268,7 @@ export class HtmlSecretsRender {
         Card number
     </label>
     <div class="flex gap-50">
-        <input name="CN" type="password" inputmode="numeric" maxlength="16" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
+        <input spellcheck="false" name="CN" type="password" inputmode="numeric" maxlength="16" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
         <${btn} target="card-number-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
@@ -280,7 +280,7 @@ export class HtmlSecretsRender {
             <span class="material-symbols-rounded">calendar_today</span>
             Expiry date
         </label>
-        <input name="ED" type="text" class="input-text mono" id="expire-date-${HtmlSecretsRender.id}" value="${vals.ED ?? ''}" autocomplete="off" maxlength="8" placeholder="00/00" required>
+        <input spellcheck="false" name="ED" type="text" class="input-text mono" id="expire-date-${HtmlSecretsRender.id}" value="${vals.ED ?? ''}" autocomplete="off" maxlength="8" placeholder="00/00" required>
     </div>
     <!-- CVV -->
     <div class="fg-1" style="max-width:111px">
@@ -288,7 +288,7 @@ export class HtmlSecretsRender {
             <span class="material-symbols-rounded">pin</span>
             CVV
         </label>
-        <input name="CV" type="text" inputmode="numeric" class="input-text mono" id="cvv-${HtmlSecretsRender.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
+        <input spellcheck="false" name="CV" type="text" inputmode="numeric" class="input-text mono" id="cvv-${HtmlSecretsRender.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
     </div>
 </div>
 <!-- CUSTOM -->
