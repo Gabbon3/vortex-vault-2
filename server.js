@@ -88,3 +88,8 @@ try {
 } catch (error) {
     console.error('❌ Errore durante l\'avvio del server => ', error);
 }
+
+/**
+ * AVVIO SERVER CHAT
+ */
+import './chat/websocket/websocket.server.js';

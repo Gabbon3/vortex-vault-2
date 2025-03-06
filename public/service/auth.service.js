@@ -61,6 +61,8 @@ export class AuthService {
         SessionStorage.set('lsk', lsk);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
+        SessionStorage.set('uid', res.uid);
+        SessionStorage.set('access-token', res.access_token);
         // --- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
         // ---

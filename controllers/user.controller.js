@@ -75,6 +75,7 @@ export class UserController {
             refresh_token,
             salt: user.salt,
             bypass_token,
+            uid: user.id
         });
     });
     /**
