@@ -7,12 +7,21 @@ export const logger = pino({
     transport: {
         targets: [
             {
-                target: 'pino-pretty', // Rende i log leggibili sulla console
-                options: { colorize: true },
+                target: 'pino-pretty',
+                options: { 
+                    colorize: true,
+                    ignore: "pid,hostname",
+                    translateTime: "HH:MM:ss"
+                },
             },
             {
-                target: 'pino/file', // Scrive i log su file
-                options: { destination: Config.LOG_PATH }
+                target: 'pino-pretty', // Scrive i log su file
+                options: { 
+                    destination: Config.LOG_PATH,
+                    colorize: false, 
+                    ignore: "pid,hostname",
+                    translateTime: "dd-mm-yyyy HH:MM",
+                }
             }
         ]
     }

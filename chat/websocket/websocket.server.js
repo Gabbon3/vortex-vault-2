@@ -10,6 +10,6 @@ wss.on("connection", (ws, req) => {
     handleConnection(ws, req);
 });
 
-console.log("🚀 WebSocket Server in ascolto su ws://localhost:8080");
+console.log("☑️ WebSocket");
 
 export { wss };

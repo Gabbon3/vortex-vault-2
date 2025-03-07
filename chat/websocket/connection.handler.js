@@ -1,14 +1,15 @@
 import { verify_access_token } from "../middlewares/auth.middleware.js";
-import { MessageService } from "../services/message.service.js";
+import { DataRelayDispatcher } from "../services/dataRelayDispatcher.js";
 import { rocksDb } from "../config/db.js";
 import { logger } from "../config/logger.js";
+import { RocksManager } from "../services/RocksManager.js";
 
 /**
  * Mappa degli utenti connessi
  * UUID utente -> WebSocket connection
  */
 const clients = new Map();
-const messageService = new MessageService(rocksDb);
+const dataRelayDispatcher = new DataRelayDispatcher(rocksDb);
 
 /**
  * Gestisce una nuova connessione WebSocket.
@@ -28,11 +29,10 @@ export const handleConnection = async (ws, req) => {
     const uid = payload.uid;
     // -- memorizzo il client
     clients.set(uid, ws);
-    logger.info("Utente connesso: ", uid);
-    // -- invio messaggi in attesa
-    await messageService.sendPendingMessages(ws, uid);
+    // -- invio i dati in attesa
+    await dataRelayDispatcher.sendPendingData(ws, uid);
     // -- gestisco l'arrivo dei messaggi
-    ws.on('message', (data) => messageService.handleMessage(uid, data, clients));
+    ws.on('message', (data) => dataRelayDispatcher.handleData(data, clients));
     // -- chiudo la connessione ed elimino nella Map
     ws.on('close', () => clients.delete(uid));
 };

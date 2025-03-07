@@ -1,6 +1,7 @@
 import { ECDH } from "../secure/ecdh.js";
 import { Bytes } from "../utils/bytes.js";
 import { LocalStorage } from "../utils/local.js";
+import { SessionStorage } from "../utils/session.js";
 import { PasskeyService } from "./passkey.public.service.js";
 
 // local storage encryption
@@ -65,6 +66,9 @@ export class LSE {
         const public_key = await ECDH.import_public_key(raw_public_key, LSE.curve);
         // -- calcolo la chiave S
         const secret = await ECDH.derive_shared_secret(private_key, public_key);
+        // -- la salvo nel session storage
+        SessionStorage.set('lsk', secret);
+        // ---
         return secret;
     }
 }

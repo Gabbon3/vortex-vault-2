@@ -44,7 +44,7 @@ export class RocksCRUD {
             return msgpack.decode(value);
         } catch (err) {
             if (err.notFound) {
-                logger.info(`Chiave non trovata: ${key}`);
+                console.log(`Chiave non trovata: ${key}`);
                 return null;
             } else {
                 logger.error(`Errore durante il recupero dal database: ${err}`);

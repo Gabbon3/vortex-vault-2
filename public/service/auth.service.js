@@ -205,17 +205,6 @@ export class AuthService {
         return { public_key };
     }
     /**
-     * Recupera la cke dai cookie
-     * @returns {Promise<Uint8Array>}
-     */
-    static async get_cke() {
-        const res = await API.fetch('/auth/cke', {
-            method: 'GET'
-        });
-        if (!res) return null;
-        return Bytes.base64.decode(res.key);
-    }
-    /**
      * Imposta la chiave master dell'utente nel session storage
      * @param {Uint8Array} lsk 
      */
