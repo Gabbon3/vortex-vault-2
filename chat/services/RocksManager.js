@@ -5,11 +5,9 @@ export class RocksManager {
     /**
      * Crea un'istanza di MessageService.
      * @param {RocksCRUD} db
-     * @param {Function} dataPacker - metodo per la compressione dei dati prima di essere inviati tramite socket
      */
-    constructor(db, dataPacker = null) {
+    constructor(db) {
         this.db = db;
-        this.dataPacker = dataPacker ?? this.defaultDataPacker();
     }
     /**
      * Inserisce un dato in un recipiente in RocksDB.
@@ -82,22 +80,15 @@ export class RocksManager {
             // -- se il recipiente  è vuoto
             if (recipientSize === 0) return;
             // --
-            const data = this.extract(recipientID, recipientSize, true);
+            const data = await this.extract(recipientID, recipientSize, true);
             if (data.length === 0) return;
+            console.log(data);
             // ---
             for (const element of data) {
-                ws.send(this.dataPacker(element));
+                ws.sendE(element);
             }
         } catch (error) {
             logger.error(`Errore nell'invio dei messaggi pendenti per ${recipientID}: ${error}`);
         }
     };
-    /**
-     * Metodo di default per impacchettare i dati da trasferire nei web socket
-     * @param {*} data 
-     * @returns {string}
-     */
-    defaultDataPacker(data) {
-        return JSON.stringify(data);
-    }
 }

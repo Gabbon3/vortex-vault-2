@@ -1,5 +1,5 @@
 import WebSocket, { WebSocketServer } from "ws";
-import { handleConnection } from "./connection.handler.js";
+import { SecureWebSocketServer } from "./secureWebSocketServer.js";
 
 /**
  * Crea un WebSocket server in ascolto sulla 8080
@@ -7,7 +7,7 @@ import { handleConnection } from "./connection.handler.js";
 const wss = new WebSocketServer({ port: 8080 });
 
 wss.on("connection", (ws, req) => {
-    handleConnection(ws, req);
+    SecureWebSocketServer.handleConnection(ws, req);
 });
 
 console.log("☑️ WebSocket");

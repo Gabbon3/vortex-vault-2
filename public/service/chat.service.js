@@ -1,4 +1,3 @@
-import { SessionStorage } from "../utils/session.js";
 import { WebSocketClient } from "../clients/webSocket.client.js";
 
 export class ChatService {
@@ -17,32 +16,6 @@ export class ChatService {
         // ---
         this.initialize = true;
         this.client = new WebSocketClient(this.eventsHandler);
-        const uid = SessionStorage.get('uid');
-        const accessToken = SessionStorage.get('access-token');
-        if (!uid) return false;
-        // ---
-        this.socket = new WebSocket(`ws://localhost:8080?token=${accessToken}`);
-        // ---
-        this.socket.onopen = () => {
-            console.log("✅ Connessione WebSocket aperta");
-        }
-        // ---
-        this.events();
-    }
-    /**
-     * Gestione eventi con il web server
-     */
-    static events() {
-        this.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            // ---
-            const eventType = data.shift();
-            console.log(eventType, data);
-        }
-        this.socket.onclose = () => {
-        }
-        this.socket.onerror = (error) => {
-        }
     }
     /**
      * Invia un messaggio al server tramite WebSocket.
@@ -56,24 +29,21 @@ export class ChatService {
         }
         // ---
         const messageData = {
-            receiver: receiver,
+            type: 'msg',
             data: message
         };
         // ---
-        return this.client.send(messageData);
+        return this.client.send(receiver, messageData);
     }
     /**
      * EVENTS HANDLERS
      */
     /**
      * Metodo invocato quando arriva un messaggio web socket
-     * @param {*} event 
+     * @param {*} data 
      */
-    static onmessage(event) {
-        const data = JSON.parse(event.data);
-        // ---
-        const eventType = data.shift();
-        console.log(eventType, data);
+    static onmessage(data) {
+        console.log(data);
     }
     /**
      * Metodo invocato quando la connessione viene chiusa
