@@ -1,6 +1,7 @@
 import { AES256GCM } from "../secure/aesgcm.js";
 import { ECDH } from "../secure/ecdh.js";
 import { Bytes } from "../utils/bytes.js";
+import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { SessionStorage } from "../utils/session.js";
 
@@ -15,7 +16,9 @@ export class WebSocketClient {
      * @param {Object} eventsHandler
      */
     constructor(eventsHandler) {
+        this.ID = null;
         this.initialize = false;
+        this.handShakeCompleted = false;
         this.socket = null;
         this.eventsHandler = eventsHandler;
         // -- Gestione delle chiavi e segreti
@@ -32,14 +35,11 @@ export class WebSocketClient {
      */
     async init() {
         if (this.initialize) return;
-        // ---
         this.initialize = true;
-        const uid = SessionStorage.get("uid");
-        if (!uid) return false;
         // ---
         await this.generateKeyPair();
         // ---
-        const url = `ws://localhost:8080?uuid=${uid}&publickey=${this.clientPublicKeyHex}`;
+        const url = `ws://localhost:8080?publickey=${this.clientPublicKeyHex}`;
         this.socket = new WebSocket(url);
         // ---
         this.socket.onopen = () => {
@@ -53,10 +53,16 @@ export class WebSocketClient {
      */
     events() {
         this.socket.onmessage = async (event) => {
-            const wasHandShake = await this.deriveSharedSecret(event);
-            if (wasHandShake === true) return;
-            // -- decodifico
-            const binary = await this.convertBlob(event);
+            // -- verifico se è un errore, in modo da mostrarlo all'utente
+            if (this.isError(event.data)) return;
+            // -- se l'handShake è stato completato non c'è piu bisogno di terminarlo
+            // - derivando il segreto condiviso della connessione
+            if (this.handShakeCompleted === false) {
+                const wasHandShake = await this.deriveSharedSecret(event);
+                if (wasHandShake === true) return;
+            }
+            // -- tutti i messaggi sono in Blob, li converto in Uint8Array
+            const binary = await this.convertBlob(event.data);
             // -- decifro data
             const decryptedData = await AES256GCM.decrypt(binary, this.sharedSecret);
             const decoded = msgpack.decode(decryptedData);
@@ -71,15 +77,32 @@ export class WebSocketClient {
     }
     /**
      * Converte i dati binari blob in uint8array se ce ne bisogno
-     * @param {*} event 
-     * @returns {*}
+     * @param {Blob | *} data 
+     * @returns {Uint8Array | *}
      */
-    async convertBlob(event) {
-        if (event.data instanceof Blob === false) return event.data;
+    async convertBlob(data) {
+        if (data instanceof Blob === false) return data;
         // ---
-        const arrayBuffer = await event.data.arrayBuffer();
+        const arrayBuffer = await data.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
         return uint8Array;
+    }
+    /**
+     * Verifica se il messaggio in arrivo è un errore
+     * @param {string} data 
+     * @returns {boolean}
+     */
+    isError(data) {
+        try {
+            const { code, error } = JSON.parse(data);
+            if (!code || !error) return false;
+            // -- mostro all'utente l'errore
+            console.error('Errore con la connessione web socket:', { code, error });
+            Log.summon(2, `${code} - ${error}`);
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
     /**
      * Invia un messaggio web socket
@@ -123,6 +146,7 @@ export class WebSocketClient {
     }
     /**
      * Deriva e imposta il segreto comune tra client e server
+     * Completa la connessione inviando l'access token relativo
      * @param {*} event
      * @returns {boolean}
      */
@@ -135,9 +159,13 @@ export class WebSocketClient {
         try {
             const data = JSON.parse(event.data);
             // -- il messaggio potrebbe non essere quello della chiave pubblica
-            // -- questo messaggio è identificato come "handShakePublicKey"
-            // - corrisponde alla prima fase di handshake per il server
-            if (!data.handShakePublicKey) return false;
+            // -- questo messaggio deve contenere:
+            // - "handShakePublicKey" ->
+            // - "handShakeWebSocketUUID" -> uuid della connessione websocket
+            // -- corrisponde alla prima fase di handshake per il server
+            if (!data.handShakePublicKey || !data.handShakeWebSocketUUID) return false;
+            // -- memorizzo lo uuid del web socket generato dal server
+            this.ID = data.handShakeWebSocketUUID;
             // -- ottengo la chiave pubblica del server
             const { handShakePublicKey } = data;
             this.serverPublicKey = await ECDH.import_public_key(
@@ -149,7 +177,7 @@ export class WebSocketClient {
                 this.serverPublicKey
             );
             // -- completo la connessione
-            await this.completeConnection();
+            await this.completeHandShake();
             // ---
             return true;
         } catch (error) {
@@ -161,10 +189,11 @@ export class WebSocketClient {
         }
     }
     /**
-     * Cifra e invia l'access token al server
+     * Cifra e invia l'access token al server, abilitando la connessione con il server
+     * sempre se l'access token è valido
      * @returns {boolean}
      */
-    async completeConnection() {
+    async completeHandShake() {
         const accessToken = SessionStorage.get("access-token");
         if (!accessToken) return false;
         // ---
@@ -175,6 +204,7 @@ export class WebSocketClient {
         );
         // -- invio l'access token al server
         this.socket.send(encryptedMessage);
+        this.handShakeCompleted = true;
         return true;
     }
 }

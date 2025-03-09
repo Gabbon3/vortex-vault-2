@@ -16,7 +16,7 @@ export class DataRelayDispatcher {
      * @param {string} uuid - 
      */
     sendPendingData = async (ws) => {
-        await this.rocksManager.emptyRecipient(ws, ws.clientId);
+        await this.rocksManager.emptyRecipient(ws, ws.userUUID);
     }
     /**
      * Gestisce la ricezione di un dato da WebSocket

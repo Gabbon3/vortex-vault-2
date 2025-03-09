@@ -253,20 +253,22 @@ export class ChatService {
         await LocalStorage.set("sharedSecrets", obj, this.masterKey);
     }
 
-    // -- carica i dati da localStorage
+    /**
+     * Carica i dati dal localstorage, decrittografandoli con la master-key
+     */
     static async loadLocalData() {
-        // carico pendingChats
+        // -- carico pendingChats
         const pending = await LocalStorage.get("pendingChats", this.masterKey);
         if (pending && typeof pending === "object") {
             // ricostruisco la mappa
             this.pendingChats = new Map(Object.entries(pending));
         }
-        // carico sharedSecrets
+        // -- carico sharedSecrets
         const secrets = await LocalStorage.get("sharedSecrets", this.masterKey);
         if (secrets && typeof secrets === "object") {
+            // - i valori recuperati sono typed array (grazie a msgpack),
+            // - quindi li posso usare subito come `Uint8Array`.
             this.sharedSecrets = new Map(Object.entries(secrets));
-            // i valori recuperati sono typed array (grazie a msgpack),
-            // quindi li posso usare subito come `Uint8Array`.
         }
     }
 }

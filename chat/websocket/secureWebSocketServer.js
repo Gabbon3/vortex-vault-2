@@ -34,8 +34,10 @@ export class SecureWebSocketServer {
      */
     static async handleConnection(ws, req) {
         if (!SecureWebSocketServer.performHandshake(ws, req)) return;
-        ws.on("message", (data) => SecureWebSocketServer.handleIncomingMessage(ws, data));
-        ws.on("close", () => SecureWebSocketServer.clients.delete(ws.clientId));
+        ws.on("message", (data) =>
+            SecureWebSocketServer.handleIncomingMessage(ws, data)
+        );
+        ws.on("close", () => SecureWebSocketServer.clients.delete(ws.userUUID));
     }
 
     /**
@@ -45,32 +47,61 @@ export class SecureWebSocketServer {
      * @returns {boolean} - True se l'handshake è andato a buon fine, false altrimenti.
      */
     static performHandshake(ws, req) {
-        const urlParams = new URL(req.url, `http://localhost:8080`).searchParams;
-        const clientId = urlParams.get("uuid");
+        // -- ottengo la chiave pubblica passata dal client
+        const urlParams = new URL(req.url, `http://localhost:8080`)
+            .searchParams;
         const clientPublicKeyHex = urlParams.get("publickey");
-        if (!clientId || !clientPublicKeyHex) {
+        if (!clientPublicKeyHex) {
             ws.close();
             return false;
         }
-
+        // -- genero un uuid unico per la connessione web socket
         ws.uuid = uuidv4();
-        ws.clientId = clientId;
+        // -- questo parametro servirà a indicare se un web socket è stato verificato
+        // - per abilitare la connessione va quindi verificato un access token
+        ws.connectionVerified = false;
+        // -- derivo il segreto condiviso con il client
         const clientPublicKey = Buffer.from(clientPublicKeyHex, "hex");
         const keyPair = ECDH.generate_keys();
-        const sharedSecret = ECDH.derive_shared_secret(keyPair.private_key, clientPublicKey);
-        
+        const sharedSecret = ECDH.derive_shared_secret(
+            keyPair.private_key,
+            clientPublicKey
+        );
+        // - memorizzo il segreto direttamente sul web socket dato che è associato solamente ad esso
         ws.secret = sharedSecret;
         /**
          * Metodo personalizzato per comunicare in maniera protetta
-         * @param {*} data 
+         * crittografando i dati in uscita con la chiave segreta condivisa del web socket
+         * @param {*} data
          */
         ws.sendE = (data) => {
-            const encryptedData = AES256GCM.encrypt(msgpack.encode(data), ws.secret);
+            const encodedData = msgpack.encode(data);
+            const encryptedData = AES256GCM.encrypt(
+                encodedData,
+                ws.secret
+            );
             ws.send(encryptedData.buffer);
         };
-
-        ws.send(JSON.stringify({ handShakePublicKey: keyPair.public_key.toString("hex") }));
-        SecureWebSocketServer.pendingConnections.set(clientId, ws);
+        /**
+         * Metodo personalizzato per:
+         * - chiudere la connessione con il client
+         * - inviare un messaggio con la motivazione della chiusura
+         * @param {number} code - codice di errore (usare i codici http)
+         * @param {string} error - messaggio di errore
+         */
+        ws.closeWithError = (code, error) => {
+            ws.send(JSON.stringify({ code, error }));
+            ws.close();
+        };
+        // -- invio la chiave pubblica e lo UUID della connesssione al client
+        ws.send(
+            JSON.stringify({
+                handShakePublicKey: keyPair.public_key.toString("hex"),
+                handShakeWebSocketUUID: ws.uuid,
+            })
+        );
+        // -- inserisco la connessione del client nelle pending, in attesa di validazione
+        SecureWebSocketServer.pendingConnections.set(ws.uuid, ws);
         return true;
     }
 
@@ -81,30 +112,60 @@ export class SecureWebSocketServer {
      */
     static async handleIncomingMessage(ws, encryptedData) {
         try {
-            const decryptedData = SecureWebSocketServer.decryptMessage(ws.secret, encryptedData);
-            if (decryptedData.handShakeAccessToken) {
-                return SecureWebSocketServer.validateAccessToken(ws, decryptedData.handShakeAccessToken);
+            // # Decifratura Messaggio #
+            // -- Quando la connessione è stabilita ogni dato sarà cifrato
+            // - effettuo quindi la decifratura del dato web socket
+            const decryptedData = SecureWebSocketServer.decryptMessage(
+                ws.secret,
+                encryptedData
+            );
+            // # Validazione Connessione #
+            // -- devo validare la sessione web socket
+            if (ws.connectionVerified === false) {
+                return SecureWebSocketServer.validateConnection(
+                    ws,
+                    decryptedData.handShakeAccessToken
+                );
             }
-            SecureWebSocketServer.dataRelayDispatcher.handleData(decryptedData, SecureWebSocketServer.clients);
+            // # Altri Messaggi #
+            // -- se a questo punto la connessione web socket non è stata verificata
+            // - la connessione verrà chiusa
+            if (ws.connectionVerified === false) {
+                ws.closeWithError(401, 'Unauthorized: invalid access token.');
+                return;
+            }
+            // ## Gestione Dati ##
+            SecureWebSocketServer.dataRelayDispatcher.handleData(
+                decryptedData,
+                SecureWebSocketServer.clients
+            );
         } catch (error) {
-            console.error("❌ Errore nella gestione del messaggio WebSocket:", error);
+            console.error(
+                "❌ Errore nella gestione del messaggio WebSocket:",
+                error
+            );
         }
     }
 
     /**
-     * Valida l'access token e autentica la connessione.
+     * Valida la connessione tramite Access Token
      * @param {WebSocket} ws - Connessione WebSocket.
      * @param {string} accessToken - Token di accesso fornito dal client.
      */
-    static validateAccessToken(ws, accessToken) {
+    static validateConnection(ws, accessToken) {
         const payload = verify_access_token(accessToken);
-        if (!payload || payload.uid !== ws.clientId) {
-            ws.close();
+        if (!payload) {
+            ws.closeWithError(401, "Unauthorized: invalid access token.");
             return;
         }
-
-        SecureWebSocketServer.pendingConnections.delete(ws.clientId);
-        SecureWebSocketServer.clients.set(ws.clientId, ws);
+        // -- valido il web socket
+        ws.connectionVerified = true;
+        // -- memorizzo quale utente è connesso a questo web socket
+        ws.userUUID = payload.uid;
+        // -- sposto il web socket sui client verificati rimuovendolo da quelli in pending
+        SecureWebSocketServer.pendingConnections.delete(ws.uuid);
+        SecureWebSocketServer.clients.set(ws.uuid, ws);
+        // -- invio i dati inviati mentre era offline al client
         SecureWebSocketServer.dataRelayDispatcher.sendPendingData(ws);
     }
 
