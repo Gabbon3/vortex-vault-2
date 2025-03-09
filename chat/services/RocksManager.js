@@ -82,7 +82,6 @@ export class RocksManager {
             // --
             const data = await this.extract(recipientID, recipientSize, true);
             if (data.length === 0) return;
-            console.log(data);
             // ---
             for (const element of data) {
                 ws.sendE(element);

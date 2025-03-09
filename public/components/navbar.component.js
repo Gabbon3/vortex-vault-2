@@ -39,6 +39,10 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">encrypted</span>
                     <i>Vault</i>
                 </a>` : ''}
+                ${path !== '/chat' ? `<a href="/chat"' title="Chat" class="orange">
+                    <span class="material-symbols-rounded">sms</span>
+                    <i>Chat</i>
+                </a>` : ''}
                 
                 ${path === '/signin' ? `<a class="open yellow" data-target-open="win-device-recovery" title="Device Recovery">
                     <span class="material-symbols-rounded">mobile_friendly</span>

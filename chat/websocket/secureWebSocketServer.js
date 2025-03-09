@@ -23,6 +23,12 @@ export class SecureWebSocketServer {
     static clients = new Map();
 
     /**
+     * Mappa che indica quale web socket è usato da quale utente
+     * @type {Map<string, string>}
+     */
+    static wsUserMap = new Map();
+
+    /**
      * Dispatcher per la gestione dei dati in attesa.
      */
     static dataRelayDispatcher = new DataRelayDispatcher(rocksDb);
@@ -37,7 +43,10 @@ export class SecureWebSocketServer {
         ws.on("message", (data) =>
             SecureWebSocketServer.handleIncomingMessage(ws, data)
         );
-        ws.on("close", () => SecureWebSocketServer.clients.delete(ws.userUUID));
+        ws.on("close", () => {
+            SecureWebSocketServer.clients.delete(ws.uuid);
+            SecureWebSocketServer.wsUserMap.delete(ws.userUUID);
+        });
     }
 
     /**
@@ -137,6 +146,7 @@ export class SecureWebSocketServer {
             // ## Gestione Dati ##
             SecureWebSocketServer.dataRelayDispatcher.handleData(
                 decryptedData,
+                SecureWebSocketServer.wsUserMap,
                 SecureWebSocketServer.clients
             );
         } catch (error) {
@@ -165,6 +175,7 @@ export class SecureWebSocketServer {
         // -- sposto il web socket sui client verificati rimuovendolo da quelli in pending
         SecureWebSocketServer.pendingConnections.delete(ws.uuid);
         SecureWebSocketServer.clients.set(ws.uuid, ws);
+        SecureWebSocketServer.wsUserMap.set(ws.userUUID, ws.uuid);
         // -- invio i dati inviati mentre era offline al client
         SecureWebSocketServer.dataRelayDispatcher.sendPendingData(ws);
     }

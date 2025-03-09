@@ -21,17 +21,19 @@ export class DataRelayDispatcher {
     /**
      * Gestisce la ricezione di un dato da WebSocket
      * @param {string} decryptedData - Messaggio ricevuto e decrittato
-     * @param {Map<string, WebSocket>} clients - Mappa utenti connessi
+     * @param {Map<string, WebSocket>} wsUserMap - Mappa utenti connessi
+     * 
      */
-    handleData = (decryptedData, clients) => {
-        const { recipientID, data } = decryptedData;
+    handleData = (decryptedData, wsUserMap, clients) => {
+        const { recipientID: userUUID, data } = decryptedData;
         // -- verifico se il destinatario è online
         // -- se è online, invio il messaggio
         // -- altrimenti, salvo il messaggio in RocksDB per poi inviarlo quando il destinatario riconoscerà la connessione        
-        if (clients.has(recipientID)) {
-            clients.get(recipientID).sendE(data);
+        const wsUUID = wsUserMap.get(userUUID);
+        if (wsUUID) {
+            clients.get(wsUUID).sendE(data);
         } else {
-            this.rocksManager.insert(recipientID, data);
+            this.rocksManager.insert(userUUID, data);
         }
     };
 }

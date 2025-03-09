@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="./css/main.css">
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
+    <script type="module" src="./components/chat/chat.components.js"></script>
     <!-- js -->
     <script type="module" src="./js/chat.ui.js"></script>
 </head>
@@ -31,10 +32,81 @@
     <vortex-navbar></vortex-navbar>
     <main class="pagina">
         <h1 class="icon">
-            <span class="material-symbols-rounded">forum</span>
+            <span class="material-symbols-rounded">sms</span>
             Chat
         </h1>
+        <div class="isle bg-2 br-xl mb-2">
+            <div class="isle br-l bg-3 mb-2">
+                <!-- 
+                SEND CHAT REQUEST
+                -->
+                <form id="form-send-chat-request">
+                    <label for="fscr-user-uuid">
+                        <span class="material-symbols-rounded">fingerprint</span>
+                        User UUID
+                    </label>
+                    <div class="flex gap-50 mb-2">
+                        <input type="text" id="fscr-user-uuid" name="uuid" class="input-text monospace" pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" placeholder="00000000-0000-7000-0000-000000000000" required>
+                        <btn-paste target="fscr-user-uuid"></btn-paste>
+                    </div>
+                    <button class="btn primary mt-2">
+                        <span class="material-symbols-rounded">send</span>
+                        Send Request
+                    </button>
+                </form>
+            </div>
+            <!-- 
+            CERCA CONTATTO
+            -->
+            <div class="isle bg-3 br-l">
+                <label for="search-contact">
+                    <span class="material-symbols-rounded">search</span>
+                    Search
+                </label>
+                <div class="flex gap-75">
+                    <input type="text" class="input-text mono" id="search-contact" autocomplete="off" placeholder="..." required>
+                    <button class="btn t CA del-val" data-target-del="search-contact" type="button">
+                        <span class="material-symbols-rounded">backspace</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="contacts-list">
+            <!-- CONTACTS -->
+        </div>
     </main>
+    <!-- 
+    FINESTRA CHAT
+    -->
+    <div class="window m pr" id="win-chat">
+        <div class="flex y-center win-header">
+            <h2 class="icon flex d-row w-100">
+                <span class="material-symbols-rounded">person</span>
+                <span id="chat-contact-name" class="w-100" spellcheck="false" contenteditable="true">Null</span>
+            </h2>
+            <button class="btn t close l last" data-target-close="win-chat">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div id="messages" class="isle bg-1">
+            <!-- MESSAGGI -->
+        </div>
+        <form class="flex gap-50 d-row nowrap mt-2" id="send-message">
+            <input type="text" name="msg" class="input-text" autocomplete="off" required placeholder="...">
+            <button type="submit" class="btn primary">
+                <span class="material-symbols-rounded">send</span>
+            </button>
+        </form>
+    </div>
+    <!--
+    SETTINGS
+    -->
+    <settings-vault
+        revert="true"
+        app-theme="true"
+        message-authentication-code="true"
+    ></settings-vault>
     <!-- FOOTER -->
     <vortex-footer></vortex-footer>
 </body>
