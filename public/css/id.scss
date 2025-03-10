@@ -20,7 +20,11 @@
                     color: var(--#{$color-name});
                 }
                 &:hover {
-                    background-color: color-mix(in srgb, var(--#{$color-name}), transparent 90%);
+                    background-color: color-mix(
+                        in srgb,
+                        var(--#{$color-name}),
+                        transparent 90%
+                    );
                 }
             }
         }
@@ -134,7 +138,11 @@ vortex-navbar {
         }
 
         &._0 {
-            background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
+            background-color: color-mix(
+                in srgb,
+                var(--olivegreen),
+                transparent 70%
+            );
             // border: 1px solid var(--c1);
             color: var(--olivegreen);
             &::after {
@@ -142,7 +150,11 @@ vortex-navbar {
             }
         }
         &._1 {
-            background-color: color-mix(in srgb, var(--warning), transparent 70%);
+            background-color: color-mix(
+                in srgb,
+                var(--warning),
+                transparent 70%
+            );
             // border: 1px solid var(--warning);
             color: var(--orange);
             &::after {
@@ -150,7 +162,11 @@ vortex-navbar {
             }
         }
         &._2 {
-            background-color: color-mix(in srgb, var(--danger), transparent 70%);
+            background-color: color-mix(
+                in srgb,
+                var(--danger),
+                transparent 70%
+            );
             // border: 1px solid var(--red);
             color: var(--red);
             &::after {
@@ -205,7 +221,8 @@ vortex-navbar {
     }
 }
 
-#vaults-list {
+#vaults-list,
+#contacts-list {
     display: flex;
     margin: 0 auto;
     flex-wrap: wrap;
@@ -246,7 +263,8 @@ vortex-navbar {
             gap: 0;
             flex-direction: column;
 
-            vault-li {
+            vault-li,
+            contact-li {
                 margin-bottom: 7.5px;
             }
         }
@@ -258,7 +276,8 @@ vortex-navbar {
         }
     }
 
-    vault-li {
+    vault-li,
+    contact-li {
         display: flex;
         flex-direction: row;
         gap: 10px;
@@ -317,6 +336,63 @@ vortex-navbar {
         }
     }
 }
+
+// Finestra della chat
+#win-chat {
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+
+    .win-header, #send-message {
+        flex-shrink: 0;
+    }
+}
+
+#messages {
+    display: flex;
+    flex-direction: column;
+    gap: $br-m;
+    flex-grow: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    message-g {
+        display: flex;
+        flex-direction: row;
+        cursor: default;
+    
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background-color: var(--bg-5);
+            color: var(--text-color);
+            padding: $br-m;
+            border-radius: $br-m;
+            min-width: 30%;
+    
+            &.self {
+                margin-left: auto;
+                background-color: color-mix(in srgb, var(--c1), transparent 70%);
+
+                span {
+                    text-align: left;
+                }
+            }
+    
+            p {
+                margin: 0;
+            }
+    
+            span {
+                color: var(--text-color-15);
+                font-size: $fs-s;
+                text-align: right;
+            }
+        }
+    }
+}
+
 
 .custom-sections {
     // element margin top
@@ -400,17 +476,30 @@ password-strength-bar {
         font-family: $monospace;
 
         &._1 {
-            background-color: color-mix(in srgb, var(--danger), transparent 70%);
+            background-color: color-mix(
+                in srgb,
+                var(--danger),
+                transparent 70%
+            );
             color: var(--danger);
         }
 
         &._2 {
-            background-color: color-mix(in srgb, var(--warning), transparent 70%);
+            background-color: color-mix(
+                in srgb,
+                var(--warning),
+                transparent 70%
+            );
             color: var(--warning);
         }
 
-        &._3, &._4 {
-            background-color: color-mix(in srgb, var(--olivegreen), transparent 70%);
+        &._3,
+        &._4 {
+            background-color: color-mix(
+                in srgb,
+                var(--olivegreen),
+                transparent 70%
+            );
             color: var(--olivegreen);
         }
     }

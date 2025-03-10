@@ -20,7 +20,7 @@ export class AES256GCM {
         // -- recupero il tag di autenticazione
         const auth_tag = cipher.getAuthTag();
         // -- concateno nonce, dati cifrati e tag di autenticazione
-        return Buffer.concat([nonce, encrypted_data, auth_tag]);
+        return new Uint8Array(Buffer.concat([nonce, encrypted_data, auth_tag]));
     }
     /**
      * Decifra i dati con AES-256-GCM.
@@ -40,6 +40,6 @@ export class AES256GCM {
         decipher.setAuthTag(authTag);
         // -- decifro i dati
         const decrypted_data = Buffer.concat([decipher.update(encrypted_data), decipher.final()]);
-        return decrypted_data;
+        return new Uint8Array(decrypted_data);
     }
 }

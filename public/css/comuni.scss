@@ -383,9 +383,9 @@ hr {
     transform: translate(-50%, -50%) scale(0);
     padding: 10px;
     border-radius: $br-l;
-    max-height: 98%;
+    max-height: calc(100% - 20px);
     max-width: 950px;
-    width: 95%;
+    width: calc(100% - 20px);
     min-height: 100px;
     overflow-y: scroll;
     z-index: 10;

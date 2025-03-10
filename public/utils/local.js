@@ -12,6 +12,7 @@ export class LocalStorage {
      * @param {Uint8Array} crypto_key se un Uint8Array verrà eseguita la crittografia del value 
      */
     static async set(key, value, crypto_key = null) {
+        if (crypto_key === 1) crypto_key = this.key;
         const buffer = msgpack.encode(value);
         // ---
         const data = crypto_key instanceof Uint8Array ? await AES256GCM.encrypt(buffer, crypto_key) : buffer;
@@ -25,6 +26,7 @@ export class LocalStorage {
      * @returns {Promise<string|Object>}
      */
     static async get(key, crypto_key = null) {
+        if (crypto_key === 1) crypto_key = this.key;
         try {
             const data = localStorage.getItem(`${LocalStorage.prefix}-${key}`);
             if (!data) return null;

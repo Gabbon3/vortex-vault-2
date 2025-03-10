@@ -28,7 +28,10 @@ export class VortexNavbar extends HTMLElement {
                     <i>Backup</i>
                 </a>` : ''}
                 
-
+                ${path === '/chat' ? `<a class="open purple" data-target-open="win-contacts" title="Contacts">
+                    <span class="material-symbols-rounded">group</span>
+                    <i>Contacts</i>
+                </a>` : ''}
 
                 ${path === '/vault' ? `<a class="open olivegreen" data-target-open="win-psw-generator" title="Password Generator">
                     <span class="material-symbols-rounded">key_vertical</span>
@@ -38,6 +41,10 @@ export class VortexNavbar extends HTMLElement {
                 ${path !== '/vault' ? `<a href="/vault"' title="Vault" class="orange">
                     <span class="material-symbols-rounded">encrypted</span>
                     <i>Vault</i>
+                </a>` : ''}
+                ${path !== '/chat' ? `<a href="/chat"' title="Chat" class="orange">
+                    <span class="material-symbols-rounded">sms</span>
+                    <i>Chat</i>
                 </a>` : ''}
                 
                 ${path === '/signin' ? `<a class="open yellow" data-target-open="win-device-recovery" title="Device Recovery">
@@ -53,7 +60,7 @@ export class VortexNavbar extends HTMLElement {
                     <span class="material-symbols-rounded">passkey</span>
                     <i>Sign-in with Passkey</i>
                 </a>` : ''}
-                ${path !== '/signup' && path !== '/vault' ? `<a href="/signup"' title="Sign Up" class="mint">
+                ${path !== '/signup' && path !== '/vault' && path !== '/chat' ? `<a href="/signup"' title="Sign Up" class="mint">
                     <span class="material-symbols-rounded">person_add</span>
                     <i>Sign Up</i>
                 </a>` : ''}

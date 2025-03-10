@@ -75,6 +75,7 @@ export class UserController {
             refresh_token,
             salt: user.salt,
             bypass_token,
+            uid: user.id
         });
     });
     /**
@@ -108,7 +109,18 @@ export class UserController {
         Mailer.send(email, 'Account Deletion Confirmation', text, html);
         // ---
         res.status(200).json({ message: "All data deleted successfully" });
-    })
+    });
+    /**
+     * Restituisce una lista di utenti
+     * cercati in like tramite l'email
+     */
+    search = async_handler(async (req, res) => {
+        const { email } = req.params;
+        // -- ottengo la lista degli utenti
+        const users = await this.service.search(email);
+        // -- restituisco la lista
+        res.status(200).json(users);
+    });
     /**
      * Abilita l'autenticazione a 2 fattori
      * @param {Request} req 

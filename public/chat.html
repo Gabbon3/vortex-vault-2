@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <!-- ICO -->
+    <!-- Favicon generico -->
+    <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
+    <!-- Icona per Android -->
+    <link rel="icon" sizes="192x192" href="./img/android-chrome-192x192.png">
+    <link rel="icon" sizes="512x512" href="./img/android-chrome-512x512.png">
+    <!-- Apple Touch Icon (per dispositivi iOS) -->
+    <link rel="apple-touch-icon" href="./img/apple-touch-icon.png">
+    <!-- Favicon per diverse dimensioni (16x16, 32x32) -->
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32x32.png">
+    <!-- Manifesto del sito web (per miglior supporto su Android e PWA) -->
+    <link rel="manifest" href="./img/site.webmanifest">
+    <!-- END ICO -->
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <!-- stile -->
+    <link rel="stylesheet" href="./css/main.css">
+    <!-- componenti -->
+    <script type="module" src="./components/main.components.js"></script>
+    <script type="module" src="./components/chat/chat.components.js"></script>
+    <!-- js -->
+    <script type="module" src="./js/chat.ui.js"></script>
+</head>
+<body class="theme-earth">
+    <vortex-navbar></vortex-navbar>
+    <main class="pagina">
+        <h1 class="icon">
+            <span class="material-symbols-rounded">sms</span>
+            Chat
+        </h1>
+        <div class="isle bg-2 br-xl mb-2">
+            <!-- 
+            CERCA CONTATTO
+            -->
+            <div class="isle bg-3 br-l">
+                <label for="search-contact">
+                    <span class="material-symbols-rounded">search</span>
+                    Search
+                </label>
+                <div class="flex gap-75">
+                    <input type="text" class="input-text mono" id="search-contact" autocomplete="off" placeholder="..." required>
+                    <button class="btn t CA del-val" data-target-del="search-contact" type="button">
+                        <span class="material-symbols-rounded">backspace</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="contacts-list">
+            <!-- CONTACTS -->
+        </div>
+    </main>
+    <!-- 
+    FINESTRA CHAT
+    -->
+    <div class="window m" id="win-chat">
+        <div class="flex y-center win-header">
+            <h2 class="icon flex d-row w-100">
+                <span class="material-symbols-rounded">person</span>
+                <span id="chat-contact-name" class="w-100" spellcheck="false" contenteditable="true">Null</span>
+            </h2>
+            <button class="btn t close l last" data-target-close="win-chat">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div id="messages">
+            <!-- MESSAGGI -->
+        </div>
+        <form class="flex gap-50 d-row nowrap mt-2" id="send-message">
+            <input type="text" name="msg" class="input-text" autocomplete="off" required placeholder="...">
+            <button type="submit" class="btn primary" title="Send message">
+                <span class="material-symbols-rounded">send</span>
+            </button>
+        </form>
+    </div>
+    <!-- 
+    CONTATTI
+    -->
+    <div class="window m pr maincolor purple" id="win-contacts">
+        <div class="flex y-center">
+            <h2 class="icon mb-0">
+                <span class="material-symbols-rounded">group</span>
+                Contacts
+            </h2>
+            <button class="btn t close l last" data-target-close="win-contacts">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <!-- CERCA UTENTE & INVIA RICHIESTA CONNESSIONE -->
+        <hr>
+        <h3 class="icon slider" slider="cont-send-request">
+            <span class="material-symbols-rounded">add</span>
+            Send request
+        </h3>
+        <div class="isle bg-4" id="cont-send-request" style="display: none;">
+            <form id="form-search-user">
+                <label for="fsu-email">
+                    <span class="material-symbols-rounded">alternate_email</span>
+                    Email
+                </label>
+                <input type="text" name="email" id="fsu-email" class="input-text" autocomplete="off" required>
+                <p class="description">You can also not enter the users' full email, the best match will be returned</p>
+                <button type="submit" class="btn primary" title="Submit search">
+                    Search
+                </button>
+            </form>
+            <hr>
+            <div id="search-user-results" class="flex gap-50 d-column">
+                <!-- lista risultati utente -->
+            </div>
+        </div>
+        <!-- LISTA RICHIESTE -->
+        <hr>
+        <h3 class="icon slider" slider="cont-requests-list">
+            <span class="material-symbols-rounded">check</span>
+            Requests
+        </h3>
+        <div class="isle bg-4" id="cont-requests-list" style="display: none;">
+            <!-- ... -->
+        </div>
+    </div>
+    <!--
+    SETTINGS
+    -->
+    <settings-vault
+        revert="true"
+        app-theme="true"
+        message-authentication-code="true"
+    ></settings-vault>
+    <!-- FOOTER -->
+    <vortex-footer></vortex-footer>
+</body>
+</html>

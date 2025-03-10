@@ -14,6 +14,7 @@ import lse_routes from './routes/lse.routes.js';
 import './models/associations.js';
 import { csp_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
+import { logger } from './chat/config/logger.js';
 // import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
 import https from 'https';
@@ -86,5 +87,10 @@ try {
         console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
 } catch (error) {
-    console.error('❌ Errore durante l\'avvio del server => ', error);
+    logger.error('❌ Errore durante l\'avvio del server => ', error);
 }
+
+/**
+ * AVVIO SERVER CHAT
+ */
+import './chat/websocket/websocket.server.js';

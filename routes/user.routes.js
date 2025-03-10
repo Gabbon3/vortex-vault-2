@@ -18,6 +18,8 @@ router.use(limiter);
 router.post('/registrati', controller.signup);
 router.post('/signin', controller.signin);
 router.post('/password', verify_access_token(), controller.change_password);
+// -- SEARCH
+router.get('/search/:email', verify_access_token(), controller.search);
 // -- QUICK SIGN IN
 router.post('/quick-sign-in', verify_access_token(1), controller.quick_signin);
 router.get('/quick-sign-in/:id', controller.get_quick_signin);
