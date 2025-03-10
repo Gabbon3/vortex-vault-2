@@ -8,6 +8,7 @@ import { Roles } from '../utils/roles.js';
 import { Mailer } from '../config/mail.js';
 import automated_emails from '../public/utils/automated.mails.js';
 import { RamDB } from '../config/ramdb.js';
+import { Op } from 'sequelize';
 
 export class UserService {
     constructor() {
@@ -168,6 +169,7 @@ export class UserService {
      */
     async search(email, limit = 25) {
         return await User.findAll({
+            attributes: ['id', 'email'],
             where: {
                 email: {
                     [Op.like]: `%${email}%` // Works in PostgreSQL

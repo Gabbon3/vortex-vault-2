@@ -2090,9 +2090,8 @@ vortex-navbar .logo {
   flex-direction: column;
   gap: 8px;
   flex-grow: 1;
-  overflow-y: hidden;
-  overflow-x: scroll;
-  border-radius: 14px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 #messages message-g {
   display: flex;
@@ -2103,7 +2102,7 @@ vortex-navbar .logo {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  background-color: var(--bg-4);
+  background-color: var(--bg-5);
   color: var(--text-color);
   padding: 8px;
   border-radius: 8px;
@@ -2113,12 +2112,16 @@ vortex-navbar .logo {
   margin-left: auto;
   background-color: color-mix(in srgb, var(--c1), transparent 70%);
 }
+#messages message-g .container.self span {
+  text-align: left;
+}
 #messages message-g .container p {
   margin: 0;
 }
 #messages message-g .container span {
   color: var(--text-color-15);
   font-size: 0.9em;
+  text-align: right;
 }
 
 .custom-sections.emt custom-vault-section {

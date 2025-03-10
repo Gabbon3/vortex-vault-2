@@ -14,6 +14,7 @@ class ContactElement extends HTMLElement {
         this.uuid = uuid;
         // --
         const contact = ChatService.contacts.get(uuid);
+        
         // -- variabili
         const icon = `<span class="material-symbols-rounded">person</span>`;
         const color = ["red", "yellow", "green", "orange", "peach", "purple", "pink", "mint", "blue", "lightblue", "lightgray", "olivegreen"][Math.floor(Math.random() * 12)];
@@ -24,13 +25,13 @@ class ContactElement extends HTMLElement {
         </div>
         <div class="info">
             <strong>${contact.nickname === "" ? uuid : contact.nickname}</strong>
-            <i>${contact.lastAccess ?? 'Never'}</i>
+            <i>${contact.email}</i>
         </div>`;
         // -- eventi
         this.addEventListener("click", () => {
             ChatUI.openChat(this.uuid);
             ChatUI.activeChatUuid = this.uuid;
-            Windows.open('win-chat')
+            Windows.open('win-chat');
         });
     }
 

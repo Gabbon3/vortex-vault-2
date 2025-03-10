@@ -2,8 +2,9 @@ import { ChatService } from "../service/chat.service.js";
 import { date } from "../utils/dateUtils.js";
 import { Form } from "../utils/form.js";
 import { Search } from "../utils/search.js";
-import { Bus } from "../utils/eventBus.js";
+import { Bus, notify } from "../utils/eventBus.js";
 import { Log } from "../utils/log.js";
+import { Windows } from "../utils/windows.js";
 
 window.ChatService = ChatService;
 
@@ -11,11 +12,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     await ChatService.init();
     ChatUI.init_html();
     ChatUI.html_contacts();
+    ChatUI.htmlChatRequests();
     /**
      * Send Chat Request
      */
-    Form.onsubmit("form-send-chat-request", async (form, elements) => {
-        console.log(elements);
+    Form.onsubmit("form-search-user", async (form, elements) => {
+        const { email } = elements;
+        const result = await ChatService.searchUser(email);
+        if (result) {
+            ChatUI.htmlSearchResults(result, email);
+            form.reset();
+        }
     });
     /**
      * Invio messaggio
@@ -38,13 +45,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     Bus.addEventListener("new-message", (event) => {
         const { message, sender, timestamp, nickname } = event.detail;
         // -- invio una notifica con il browser
-        new Notification(`${nickname}`, {
-            body: message,
-            icon: "./img/vortex_vault_logo.png",
-        });
+        notify(nickname, message);
         if (sender !== ChatUI.activeChatUuid) return;
         // -- stampo il messaggio
         ChatUI.appendMessage(message, timestamp, false);
+    });
+    /**
+     * Nuova richiesta arrivata
+     */
+    Bus.addEventListener("new-chat-request", (event) => {
+        const { from, email, timestamp } = event.detail;
+        // -- invio una notifica con il browser
+        notify('New chat request', `You received a chat request from ${email}`);
+        Log.summon(3, 'New chat request, click here to check it.', () => {
+            Windows.open('win-contacts');
+            document.getElementById('cont-requests-list').style.display = '';
+        })
+        ChatUI.appendRequest(from, email, timestamp);
+    });
+    /**
+     * Chat stabilita con successo
+     */
+    Bus.addEventListener("chat-established", () => {
+        // -- invio una notifica con il browser
+        notify('Chat established', '🔐 Secure chat successfully established.');
+        ChatUI.html_contacts();
     });
     /**
      * Nessuna autenticazione per il web socket
@@ -147,6 +172,7 @@ export class ChatUI {
      */
     static appendMessage(message, timestamp, self) {
         this.messages.innerHTML += this.htmlMessage(message, timestamp, self);
+        this.messages.scrollTop = this.messages.scrollHeight;
     }
     /**
      * Restituisce il codice html di un messaggio
@@ -211,6 +237,39 @@ export class ChatUI {
             ></contact-li>`;
         }
         this.html_list.innerHTML = html;
+    }
+
+    static htmlChatRequests() {
+        if (Object.entries(ChatService.chatRequests).length === 0) return;
+        // ---
+        for (const senderID in ChatService.chatRequests) {
+            const request = ChatService.chatRequests[senderID];
+            this.appendRequest(senderID, request.email, request.timestamp);
+        }
+    }
+    
+    /**
+     * Genera l'html per i risultati della ricerca degli utenti
+     * @param {Array} results 
+     * @param {string} search - la ricerca effettuata
+     */
+    static htmlSearchResults(results, search) {
+        let html = '';
+        for (const user of results) {
+            html += `<user-result uuid="${user.id}" email="${user.email}" search="${search}"></user-result>`;
+        }
+        document.getElementById('search-user-results').innerHTML = html;
+    }
+
+    /**
+     * Stampa l'html per la richiesta
+     * @param {string} senderID 
+     * @param {string} senderEmail 
+     * @param {number} timestamp 
+     */
+    static appendRequest(senderID, senderEmail, timestamp) {
+        const html = `<chat-request uuid="${senderID}" email="${senderEmail}" timestamp="${timestamp}"></chat-request>`;
+        document.querySelector('#cont-requests-list').innerHTML = html;
     }
 }
 

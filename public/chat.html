@@ -36,25 +36,6 @@
             Chat
         </h1>
         <div class="isle bg-2 br-xl mb-2">
-            <div class="isle br-l bg-3 mb-2">
-                <!-- 
-                SEND CHAT REQUEST
-                -->
-                <form id="form-send-chat-request">
-                    <label for="fscr-user-uuid">
-                        <span class="material-symbols-rounded">fingerprint</span>
-                        User UUID
-                    </label>
-                    <div class="flex gap-50 mb-2">
-                        <input type="text" id="fscr-user-uuid" name="uuid" class="input-text monospace" pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" placeholder="00000000-0000-7000-0000-000000000000" required>
-                        <btn-paste target="fscr-user-uuid"></btn-paste>
-                    </div>
-                    <button class="btn primary mt-2">
-                        <span class="material-symbols-rounded">send</span>
-                        Send Request
-                    </button>
-                </form>
-            </div>
             <!-- 
             CERCA CONTATTO
             -->
@@ -79,7 +60,7 @@
     <!-- 
     FINESTRA CHAT
     -->
-    <div class="window m pr" id="win-chat">
+    <div class="window m" id="win-chat">
         <div class="flex y-center win-header">
             <h2 class="icon flex d-row w-100">
                 <span class="material-symbols-rounded">person</span>
@@ -89,15 +70,61 @@
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
-        <div id="messages" class="isle bg-1">
+        <div id="messages">
             <!-- MESSAGGI -->
         </div>
         <form class="flex gap-50 d-row nowrap mt-2" id="send-message">
             <input type="text" name="msg" class="input-text" autocomplete="off" required placeholder="...">
-            <button type="submit" class="btn primary">
+            <button type="submit" class="btn primary" title="Send message">
                 <span class="material-symbols-rounded">send</span>
             </button>
         </form>
+    </div>
+    <!-- 
+    CONTATTI
+    -->
+    <div class="window m pr maincolor purple" id="win-contacts">
+        <div class="flex y-center">
+            <h2 class="icon mb-0">
+                <span class="material-symbols-rounded">group</span>
+                Contacts
+            </h2>
+            <button class="btn t close l last" data-target-close="win-contacts">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <!-- CERCA UTENTE & INVIA RICHIESTA CONNESSIONE -->
+        <hr>
+        <h3 class="icon slider" slider="cont-send-request">
+            <span class="material-symbols-rounded">add</span>
+            Send request
+        </h3>
+        <div class="isle bg-4" id="cont-send-request" style="display: none;">
+            <form id="form-search-user">
+                <label for="fsu-email">
+                    <span class="material-symbols-rounded">alternate_email</span>
+                    Email
+                </label>
+                <input type="text" name="email" id="fsu-email" class="input-text" autocomplete="off" required>
+                <p class="description">You can also not enter the users' full email, the best match will be returned</p>
+                <button type="submit" class="btn primary" title="Submit search">
+                    Search
+                </button>
+            </form>
+            <hr>
+            <div id="search-user-results" class="flex gap-50 d-column">
+                <!-- lista risultati utente -->
+            </div>
+        </div>
+        <!-- LISTA RICHIESTE -->
+        <hr>
+        <h3 class="icon slider" slider="cont-requests-list">
+            <span class="material-symbols-rounded">check</span>
+            Requests
+        </h3>
+        <div class="isle bg-4" id="cont-requests-list" style="display: none;">
+            <!-- ... -->
+        </div>
     </div>
     <!--
     SETTINGS

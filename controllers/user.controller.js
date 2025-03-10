@@ -119,7 +119,7 @@ export class UserController {
         // -- ottengo la lista degli utenti
         const users = await this.service.search(email);
         // -- restituisco la lista
-        res.status(200).json({ users });
+        res.status(200).json(users);
     });
     /**
      * Abilita l'autenticazione a 2 fattori

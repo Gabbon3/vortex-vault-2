@@ -7,6 +7,7 @@ import { LocalStorage } from "../utils/local.js";
 import msgpack from "../utils/msgpack.min.js";
 import { Contact } from "../DTO/contact.js";
 import { Bus } from "../utils/eventBus.js";
+import { API } from "../utils/api.js";
 
 /**
  * Classe che gestisce la logica di chat:
@@ -22,14 +23,33 @@ export class ChatService {
         onerror: this.onerror,
     };
 
-    // istanza del client websocket
+    /**
+     * Istanza del web socket client
+     * @type {WebSocketClient}
+     */
     static client = null;
-    // uuid corrente dell'utente (lo imposteremo all'inizializzazione)
+    /**
+     * email corrente dell'utente (lo imposteremo all'inizializzazione)
+     * @type {string}
+     */
+    static email = null;
+    /**
+     * uuid corrente dell'utente (lo imposteremo all'inizializzazione)
+     * @type {string}
+     */
     static uuid = null;
-    // master key attuale (usata per cifrare i dati in localStorage)
+    /**
+     * master key attuale (usata per cifrare i dati in localStorage)
+     * @type {Uint8Array}
+     */
     static masterKey = null;
     // mappa per richieste di chat in sospeso (chiave = userID, valore = privateKey)
     static pendingChats = new Map();
+    /**
+     * mappa per i metadati delle richieste delle chat in arrivo
+     * @type {Object}
+     */
+    static chatRequests = {};
     // mappa per i segreti condivisi (chiave = userID, valore = Conctact)
     static contacts = new Map();
     static initialize = false;
@@ -45,6 +65,7 @@ export class ChatService {
     static async init() {
         if (this.initialize) return;
         // -- recupero l'uuid locale
+        this.email = await LocalStorage.get('email-utente');
         this.uuid = SessionStorage.get("uid");
         this.masterKey = SessionStorage.get("master-key");
         // -- creo il client websocket
@@ -57,6 +78,7 @@ export class ChatService {
     /**
      * invia una richiesta di chat a un utente
      * @param {string} receiverID - uuid del destinatario
+     * @returns {boolean}
      */
     static async requestChat(receiverID) {
         // -- genero una coppia di chiavi (privata e pubblica)
@@ -70,6 +92,8 @@ export class ChatService {
         // -- creo il messaggio con le proprietà necessarie
         const message = {
             from: this.uuid,
+            email: this.email,
+            timestamp: Date.now(),
             recipientID: receiverID,
             type: "chat_request",
             public_key: publicKeyHex,
@@ -82,8 +106,9 @@ export class ChatService {
      * accetta una richiesta di chat da un altro utente,
      * genera il segreto condiviso e lo memorizza
      * @param {string} senderID - uuid del mittente
+     * @param {string} email - email del mittente
      */
-    static async acceptChat(senderID) {
+    static async acceptChat(senderID, email) {
         // -- recupero la chiave pubblica del mittente in pendingChats
         const senderPublicKeyHex = this.pendingChats.get(senderID);
         if (!senderPublicKeyHex) {
@@ -103,7 +128,7 @@ export class ChatService {
             senderPublicKey
         );
         // -- memorizzo il segreto condiviso
-        this.contacts.set(senderID, new Contact(senderID, "", sharedSecret));
+        this.contacts.set(senderID, new Contact(senderID, email, sharedSecret));
         // -- rimuovo la pending
         this.pendingChats.delete(senderID);
         // -- salvo su localStorage
@@ -111,14 +136,30 @@ export class ChatService {
         await this.saveContacts();
         // -- preparo la risposta
         const responseMessage = {
-            from: this.uuid,
             recipientID: senderID,
+            from: this.uuid,
+            email: this.email,
             type: "chat_response",
             public_key: publicKeyHex,
         };
+        // -- emetto un evento
+        Bus.dispatchEvent(new CustomEvent('chat-established', { detail: email }));
         // -- invio la risposta
         return this.client.send(senderID, responseMessage);
     }
+
+    /**
+     * Ignora una richiesta di chat da parte di un utente
+     * @param {string} senderID 
+     * @returns {boolean}
+     */
+    static async ignoreRequest(senderID) {
+        // -- rimuove la pending
+        this.pendingChats.delete(senderID);
+        // -- salva su localStorage
+        await this.savePendingChats();
+        return true;
+    } 
 
     /**
      * invia un messaggio di testo (o un payload generico) a un utente
@@ -176,7 +217,16 @@ export class ChatService {
         console.log(`📩 richiesta di chat da ${data.from}`);
         // -- salvo la chiave pubblica del mittente in pendingChats
         this.pendingChats.set(data.from, data.public_key);
+        // -- emetto un evento
+        const detail = {
+            from: data.from,
+            email: data.email,
+            timestamp: data.timestamp,
+        }
+        Bus.dispatchEvent(new CustomEvent('new-chat-request', { detail }));
+        this.chatRequests[data.from] = detail;
         // -- salvo su localStorage
+        await this.saveChatRequests();
         await this.savePendingChats();
     }
 
@@ -196,13 +246,15 @@ export class ChatService {
             remotePublicKey
         );
         // -- memorizzo il segreto condiviso
-        this.contacts.set(data.from, new Contact(data.from, "", sharedSecret));
+        this.contacts.set(data.from, new Contact(data.from, data.email, sharedSecret));
         // -- rimuovo la pending
         this.pendingChats.delete(data.from);
         // -- salvo su localStorage
         await this.savePendingChats();
         await this.saveContacts();
         console.log(`🔐 chat sicura stabilita con ${data.from}`);
+        // -- emetto un evento
+        Bus.dispatchEvent(new CustomEvent('chat-established', { detail: data.from }));
     }
 
     // -- gestione msg
@@ -221,7 +273,6 @@ export class ChatService {
         const message = msgpack.decode(plainBytes);
         // -- salvo il messaggio nell'array
         this.saveMessage(data.from, message, data.timestamp, false);
-        // console.log(`💬 messaggio da ${data.from} alle ${date.format("%H:%i", new Date(data.timestamp))}:`, message);
         Bus.dispatchEvent(new CustomEvent('new-message', {
             detail: {
                 nickname: contact.nickname,
@@ -264,12 +315,20 @@ export class ChatService {
         console.error("❌ errore websocket:", error);
     }
 
-    // -- salva la mappa pendingChats su localStorage
+    /**
+     * Salva la mappa delle pendingChat sul localstorage
+     */
     static async savePendingChats() {
         // converto la mappa in oggetto semplice
         const obj = Object.fromEntries(this.pendingChats);
         // salvo cifrato con la masterKey
         await LocalStorage.set("pendingChats", obj, this.masterKey);
+    }
+    /**
+     * Salva l'oggetto delle chat requests
+     */
+    static async saveChatRequests() {
+        await LocalStorage.set("chatRequests", this.chatRequests, this.masterKey);
     }
 
     // -- salva la mappa dei contatti su localStorage
@@ -293,6 +352,11 @@ export class ChatService {
             // ricostruisco la mappa
             this.pendingChats = new Map(Object.entries(pending));
         }
+        // -- carico chatRequests
+        const chatRequests = await LocalStorage.get("chatRequests", this.masterKey);
+        if (chatRequests && typeof chatRequests === "object") {
+            this.chatRequests = chatRequests;
+        }
         // -- carico contatti
         const contacts = await LocalStorage.get(
             "contacts",
@@ -306,5 +370,24 @@ export class ChatService {
                 this.contacts.set(id, contact);
             });
         }
+    }
+
+    /**
+     * API HTTP
+     */
+
+    /**
+     * Restituisce una lista di utenti che corrispondono in like all'email passata
+     * @param {string} email 
+     * @returns {Array}
+     */
+    static async searchUser(email) {
+        const res = await API.fetch(`/auth/search/${email}`, {
+            loader: true,
+            method: 'GET',
+        });
+        // ---
+        if (!res) return false;
+        return res;
     }
 }

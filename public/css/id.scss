@@ -353,9 +353,8 @@ vortex-navbar {
     flex-direction: column;
     gap: $br-m;
     flex-grow: 1;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    border-radius: $br-l;
+    overflow-y: scroll;
+    overflow-x: hidden;
 
     message-g {
         display: flex;
@@ -366,7 +365,7 @@ vortex-navbar {
             display: flex;
             flex-direction: column;
             gap: 5px;
-            background-color: var(--bg-4);
+            background-color: var(--bg-5);
             color: var(--text-color);
             padding: $br-m;
             border-radius: $br-m;
@@ -375,6 +374,10 @@ vortex-navbar {
             &.self {
                 margin-left: auto;
                 background-color: color-mix(in srgb, var(--c1), transparent 70%);
+
+                span {
+                    text-align: left;
+                }
             }
     
             p {
@@ -384,6 +387,7 @@ vortex-navbar {
             span {
                 color: var(--text-color-15);
                 font-size: $fs-s;
+                text-align: right;
             }
         }
     }
