@@ -4,6 +4,7 @@ import { Bytes } from "../utils/bytes.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { SessionStorage } from "../utils/session.js";
+import { Bus } from "../utils/eventBus.js";
 
 export class WebSocketClient {
     /**
@@ -43,7 +44,7 @@ export class WebSocketClient {
         this.socket = new WebSocket(url);
         // ---
         this.socket.onopen = () => {
-            console.log("✅ Connessione WebSocket aperta");
+            console.log("🟠 WS");
         };
         // ---
         this.events();
@@ -59,7 +60,13 @@ export class WebSocketClient {
             // - derivando il segreto condiviso della connessione
             if (this.handShakeCompleted === false) {
                 const wasHandShake = await this.deriveSharedSecret(event);
-                if (wasHandShake === true) return;
+                if (wasHandShake === true) return true;
+                // -- se l'hand shake non è stato completato allora potrebbe esserci stato un errore
+                // -- emetto un evento
+                Bus.dispatchEvent(new CustomEvent('ws-no-auth', {
+                    detail: { error: "access-token non presente in session storage" }
+                }));
+                return false;
             }
             // -- tutti i messaggi sono in Blob, li converto in Uint8Array
             const binary = await this.convertBlob(event.data);
@@ -177,9 +184,9 @@ export class WebSocketClient {
                 this.serverPublicKey
             );
             // -- completo la connessione
-            await this.completeHandShake();
+            const completed = await this.completeHandShake();
             // ---
-            return true;
+            return completed;
         } catch (error) {
             console.warn(
                 "❌ Errore durante il calcolo del segreto comune:",
@@ -205,6 +212,7 @@ export class WebSocketClient {
         // -- invio l'access token al server
         this.socket.send(encryptedMessage);
         this.handShakeCompleted = true;
+        console.log("🟢 WS");
         return true;
     }
 }

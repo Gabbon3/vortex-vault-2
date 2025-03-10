@@ -20,6 +20,7 @@ export class UserService {
      * @returns {string} id dell'utente appena inserito
      */
     async signup(email, password) {
+        email = email.toLowerCase();
         // -- verifico che l'indirizzo email sia valido
         if (!this.verify_email(email)) throw new CError("InvalidEmailDomain", "The email domain is not supported. Please use a well-known email provider like Gmail, iCloud, or Outlook.", 422);
         // -- verifico che l'email sia disponibile
@@ -157,6 +158,23 @@ export class UserService {
         return await User.findOne({
             where: { email },
         })
+    }
+    /**
+     * Restituisce tutti gli utenti
+     * ricercando in like sugli utenti %email%
+     * @param {string} email 
+     * @param {number} limit 
+     * @returns {Array}
+     */
+    async search(email, limit = 25) {
+        return await User.findAll({
+            where: {
+                email: {
+                    [Op.like]: `%${email}%` // Works in PostgreSQL
+                }
+            },
+            limit: limit
+        });
     }
     /**
      * Aggiorna un qualunque campo dell'utente

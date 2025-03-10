@@ -3,6 +3,7 @@ import { date } from "../utils/dateUtils.js";
 import { Form } from "../utils/form.js";
 import { Search } from "../utils/search.js";
 import { Bus } from "../utils/eventBus.js";
+import { Log } from "../utils/log.js";
 
 window.ChatService = ChatService;
 
@@ -44,6 +45,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (sender !== ChatUI.activeChatUuid) return;
         // -- stampo il messaggio
         ChatUI.appendMessage(message, timestamp, false);
+    });
+    /**
+     * Nessuna autenticazione per il web socket
+     */
+    Bus.addEventListener('ws-no-auth', (event) => {
+        Log.summon(1, 'Sign-in first', () => { window.location.href = '/signin' });
     });
 });
 

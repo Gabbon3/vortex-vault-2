@@ -6,7 +6,6 @@ import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import msgpack from "../utils/msgpack.min.js";
 import { Contact } from "../DTO/contact.js";
-import { date } from "../utils/dateUtils.js";
 import { Bus } from "../utils/eventBus.js";
 
 /**
@@ -14,8 +13,6 @@ import { Bus } from "../utils/eventBus.js";
  * - avvio (requestChat)
  * - accettazione (acceptChat)
  * - gestione dei messaggi in arrivo
- *
- * Le mappe pendingChats e sharedSecrets vengono salvate sul localStorage (cifrato con la masterKey).
  */
 export class ChatService {
     // eventi gestiti dal WebSocketClient
