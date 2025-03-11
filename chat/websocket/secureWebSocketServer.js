@@ -5,11 +5,13 @@ import { ECDH } from "../../utils/ecdh.node.js";
 import { v4 as uuidv4 } from "uuid";
 import { AES256GCM } from "../../utils/aesgcm.js";
 import msgpack from "../../public/utils/msgpack.min.js";
+import { Config } from "../../server_config.js";
 
 /**
  * Classe per la gestione delle connessioni WebSocket sicure.
  */
 export class SecureWebSocketServer {
+    static wsUrl = `${Config.HTTPROTOCOL}//${Config.WSORIGIN}`;
     /**
      * Mappa delle connessioni pendenti (in attesa di validazione).
      * @type {Map<string, WebSocket>}
@@ -57,7 +59,7 @@ export class SecureWebSocketServer {
      */
     static performHandshake(ws, req) {
         // -- ottengo la chiave pubblica passata dal client
-        const urlParams = new URL(req.url, `http://localhost:8080`)
+        const urlParams = new URL(req.url, this.wsUrl)
             .searchParams;
         const clientPublicKeyHex = urlParams.get("publickey");
         if (!clientPublicKeyHex) {

@@ -40,7 +40,7 @@ export class WebSocketClient {
         // ---
         await this.generateKeyPair();
         // ---
-        const url = `ws://localhost:8080?publickey=${this.clientPublicKeyHex}`;
+        const url = `ws://${window.location.hostname}:8080?publickey=${this.clientPublicKeyHex}`;
         this.socket = new WebSocket(url);
         // ---
         this.socket.onopen = () => {

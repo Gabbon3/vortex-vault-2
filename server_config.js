@@ -24,4 +24,7 @@ export class Config {
     static ROCKSDB_MSG_PATH = process.env.ROCKSDB_MSG_PATH;
     // Percorso cartella dei log
     static LOG_PATH = process.env.LOG_PATH;
+    // Origin
+    static WSORIGIN = process.env.WSORIGIN;
+    static HTTPROTOCOL = process.env.HTTPROTOCOL;
 }
