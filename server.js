@@ -52,7 +52,7 @@ app.use('/', static_routes);
  */
 app.use(error_handler_middleware);
 
-const PORT = Config.DB_PORT || 3000;
+const PORT = Config.PORT || 3000;
 
 /**
  * HTTPS

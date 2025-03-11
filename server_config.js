@@ -1,13 +1,15 @@
 import 'dotenv/config';
 
 export class Config {
+    // 
+    static PORT = process.env.PORT;
     // JWT
     static ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     static TOKEN_KEY = Buffer.from(process.env.TOKEN_KEY, 'hex'); // usata per gli access token cifrati
     static PASSKEY_TOKEN_SECRET = Buffer.from(process.env.PASSKEY_TOKEN_SECRET, 'hex');
     // Database
     static DB_HOST = process.env.DB_HOST;
-    static DB_PORT = process.env.PORT;
+    static DB_PORT = process.env.DB_PORT;
     static DB_NAME = process.env.DB_NAME;
     static DB_USER = process.env.DB_USER;
     static DB_PASSWORD = process.env.DB_PASSWORD;
