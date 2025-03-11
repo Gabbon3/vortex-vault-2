@@ -85,7 +85,7 @@ try {
         console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
 } catch (error) {
-    logger.error('❌ Errore durante l\'avvio del server => ', error);
+    logger.error('❌ Errore durante l\'avvio del server => ' + error);
 }
 
 /**
