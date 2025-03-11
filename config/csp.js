@@ -1,4 +1,4 @@
-import { Config } from "../server_config";
+import { Config } from "../server_config.js";
 
 export const csp_middleware = (req, res, next) => {
     res.setHeader(
