@@ -11,7 +11,7 @@ import { Config } from "../../server_config.js";
  * Classe per la gestione delle connessioni WebSocket sicure.
  */
 export class SecureWebSocketServer {
-    static wsUrl = `${Config.HTTPROTOCOL}//${Config.WSORIGIN}`;
+    static wsUrl = `${Config.HTTPROTOCOL}://${Config.WSORIGIN}`;
     /**
      * Mappa delle connessioni pendenti (in attesa di validazione).
      * @type {Map<string, WebSocket>}
