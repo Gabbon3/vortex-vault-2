@@ -52,8 +52,6 @@ app.use('/', static_routes);
  */
 app.use(error_handler_middleware);
 
-const PORT = Config.PORT || 3000;
-
 /**
  * HTTPS
  */
@@ -82,7 +80,7 @@ try {
     // await sequelize.sync({ force: true });
     // console.log('☑️ Struct');
     // ---
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(3000, '0.0.0.0', () => {
         console.log(`☑️ Server`);
         console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
