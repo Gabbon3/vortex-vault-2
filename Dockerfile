@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Espone la porta su cui il server Node.js ascolta
-EXPOSE 3000
+EXPOSE 3000 8080
 
 # Comando per avviare l'app
 CMD ["npm", "start"]
