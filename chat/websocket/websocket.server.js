@@ -4,7 +4,7 @@ import { SecureWebSocketServer } from "./secureWebSocketServer.js";
 /**
  * Crea un WebSocket server in ascolto sulla 8080
  */
-const wss = new WebSocketServer({ host: '0.0.0.0', port: 8080 });
+const wss = new WebSocketServer({ port: 8080 });
 
 wss.on("connection", (ws, req) => {
     SecureWebSocketServer.handleConnection(ws, req);

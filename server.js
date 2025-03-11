@@ -80,7 +80,7 @@ try {
     // await sequelize.sync({ force: true });
     // console.log('☑️ Struct');
     // ---
-    app.listen(3000, '0.0.0.0', () => {
+    app.listen(3000, () => {
         console.log(`☑️ Server`);
         console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
