@@ -33,6 +33,13 @@ class ContactElement extends HTMLElement {
             ChatUI.activeChatUuid = this.uuid;
             Windows.open('win-chat');
         });
+        // -- elimina contatto
+        this.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            if (!confirm('Are you sure you want to delete this contact?')) return;
+            // ---
+            ChatService.deleteContact(this.uuid);
+        });
     }
 
     connectedCallback() {

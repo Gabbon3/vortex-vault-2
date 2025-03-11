@@ -9,6 +9,7 @@ class MessageElement extends HTMLElement {
     }
 
     render() {
+        // const id = this.getAttribute('id');
         const self = JSON.parse(this.getAttribute('self'));
         const msg = this.getAttribute('msg');
         const timestamp = new Date(Number(this.getAttribute('timestamp')));

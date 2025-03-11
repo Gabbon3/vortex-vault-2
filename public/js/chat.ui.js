@@ -5,8 +5,10 @@ import { Search } from "../utils/search.js";
 import { Bus, notify } from "../utils/eventBus.js";
 import { Log } from "../utils/log.js";
 import { Windows } from "../utils/windows.js";
+import { UUID } from "../utils/uuid.js";
 
 window.ChatService = ChatService;
+window.UUID = UUID;
 
 document.addEventListener("DOMContentLoaded", async () => {
     await ChatService.init();
@@ -29,26 +31,68 @@ document.addEventListener("DOMContentLoaded", async () => {
      */
     Form.onsubmit("send-message", async (form, elements) => {
         const { msg } = elements;
-        await ChatService.sendMessage(ChatUI.activeChatUuid, msg);
-        ChatUI.appendMessage(msg, Date.now(), true);
+        const ID = await ChatService.sendMessage(ChatUI.activeChatUuid, msg);
+        ChatUI.appendMessage(ID, msg, Date.now(), true);
         form.reset();
     });
     /**
-     * Ricerca Contatto
+     * SEARCH VAULT
      */
-    document.getElementById("search-contact").addEventListener("keyup", (e) => {
-        ChatUI.search.tabella(e.currentTarget, "contacts-list", "contact-li");
+    document.querySelector('#search-contact').addEventListener('keyup', (e) => {
+        ChatUI.search.tabella(
+            e.currentTarget,
+            'contacts-list',
+            'contact-li'
+        );
+    });
+    /**
+     * Ordinamento Contatto
+     */
+    document.querySelectorAll('.order-contacts').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            const order = btn.getAttribute('order');
+            const active = JSON.parse(btn.getAttribute('active'));
+            btn.setAttribute('active', !active);
+            const curr_order =
+                order === 'az'
+                    ? active ? 'az' : 'za'
+                    : order === 'date'
+                        ? active ? 'dateup' : 'datedown'
+                        : null;
+            if (!curr_order) return;
+            ChatUI.current_order = curr_order;
+            ChatUI.html_contacts(curr_order);
+        });
+    });
+    /**
+     * Ordinamento
+     */
+    $('.order-vaults').on('click', (e) => {
+        const btn = e.currentTarget;
+        const order = btn.getAttribute('order');
+        const active = JSON.parse(btn.getAttribute('active'));
+        btn.setAttribute('active', !active);
+        const curr_order = 
+            order == 'az' ? 
+                active ? 'az' : 'za'
+                :
+                order == 'date' ? 
+                    active ? 'dateup' : 'datedown' : null;
+        // ---
+        if (!curr_order) return;
+        VaultUI.current_order = curr_order;
+        VaultUI.html_vaults(curr_order);
     });
     /**
      * Nuovo messaggio arrivato
      */
     Bus.addEventListener("new-message", (event) => {
-        const { message, sender, timestamp, nickname } = event.detail;
+        const { ID, message, sender, timestamp, nickname } = event.detail;
         // -- invio una notifica con il browser
         notify(nickname, message);
         if (sender !== ChatUI.activeChatUuid) return;
         // -- stampo il messaggio
-        ChatUI.appendMessage(message, timestamp, false);
+        ChatUI.appendMessage(ID, message, timestamp, false);
     });
     /**
      * Nuova richiesta arrivata
@@ -59,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         notify('New chat request', `You received a chat request from ${email}`);
         Log.summon(3, 'New chat request, click here to check it.', () => {
             Windows.open('win-contacts');
-            document.getElementById('cont-requests-list').style.display = '';
+            document.getElementById('cont-crl').style.display = '';
         })
         ChatUI.appendRequest(from, email, timestamp);
     });
@@ -69,6 +113,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     Bus.addEventListener("chat-established", () => {
         // -- invio una notifica con il browser
         notify('Chat established', '🔐 Secure chat successfully established.');
+        ChatUI.html_contacts();
+    });
+    /**
+     * Chat stabilita con successo
+     */
+    Bus.addEventListener("chat-deleted", () => {
+        // -- invio una notifica con il browser
+        notify('Chat deleted', 'Chat deleted.');
+        Log.summon(1, 'Chat deleted.');
         ChatUI.html_contacts();
     });
     /**
@@ -159,30 +212,32 @@ export class ChatUI {
         let html = "";
         const l = messages.length;
         for (let i = 0; i < l; i++) {
-            const [message, timestamp, self] = messages[i];
-            html += this.htmlMessage(message, timestamp, self);
+            const [ID, message, timestamp, self] = messages[i];
+            html += this.htmlMessage(ID, message, timestamp, self);
         }
         return html;
     }
     /**
      * Appende un messaggio nella chat html
+     * @param {string} ID -
      * @param {string} message -
      * @param {Date} timestamp -
      * @param {boolean} self - true se il messaggio è dell'utente corrente, false di un contatto
      */
-    static appendMessage(message, timestamp, self) {
-        this.messages.innerHTML += this.htmlMessage(message, timestamp, self);
+    static appendMessage(ID, message, timestamp, self) {
+        this.messages.innerHTML += this.htmlMessage(ID, message, timestamp, self);
         this.messages.scrollTop = this.messages.scrollHeight;
     }
     /**
      * Restituisce il codice html di un messaggio
+     * @param {string} ID 
      * @param {*} message
      * @param {number} timestamp - data in millisecondi
      * @param {boolean} self
      * @returns
      */
-    static htmlMessage(message, timestamp, self) {
-        return `<message-g self="${self}" msg="${message}" timestamp="${timestamp}"></message-g>`;
+    static htmlMessage(ID, message, timestamp, self) {
+        return `<message-g id="${ID}" self="${self}" msg="${message}" timestamp="${timestamp}"></message-g>`;
     }
     /**
      * funzioni di ordinamento

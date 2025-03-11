@@ -44,7 +44,7 @@ export class RefreshTokenController {
             path: '/', // disponibile per tutte le route
         });
         // ---
-        res.status(201).json({ access_token, public_key: Bytes.base64.encode(refresh_token.public_key) });
+        res.status(201).json({ uid: req.user.uid, access_token, public_key: Bytes.base64.encode(refresh_token.public_key) });
     })
     /**
      * Restituisce tutti i token associati ad un utente

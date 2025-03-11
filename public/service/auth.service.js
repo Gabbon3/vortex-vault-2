@@ -191,18 +191,25 @@ export class AuthService {
      * @returns {boolean|object} restituisce un oggetto con degli auth data (la cke), false se non rigenerato
      */
     static async new_access_token() {
-        const public_key = await PasskeyService.authenticate({
+        const res = await PasskeyService.authenticate({
             endpoint: '/auth/token/refresh',
             method: 'POST',
         },
             (response) => {
-                return Bytes.base64.decode(response.public_key);
+                return {
+                    publicKey: Bytes.base64.decode(response.public_key),
+                    accessToken: response.access_token,
+                    uid: response.uid,
+                };
             }
         );
-        if (!public_key) return false;
+        if (!res) return false;
+        // -- imposto l'access token
+        SessionStorage.set('uid', res.uid);
+        SessionStorage.set('access-token', res.accessToken);
         // -- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
-        return { public_key };
+        return { public_key: res.publicKey };
     }
     /**
      * Imposta la chiave master dell'utente nel session storage

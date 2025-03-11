@@ -669,7 +669,7 @@ h2 .logo,
 h3 .logo,
 h4 .logo,
 h5 .logo {
-  width: 1.5em;
+  width: 36px;
   margin: 5px;
 }
 h1.code,
@@ -688,6 +688,9 @@ h5.code {
 }
 .color.danger {
   color: var(--danger) !important;
+}
+.color.primary {
+  color: var(--c1) !important;
 }
 
 p {
@@ -2107,6 +2110,7 @@ vortex-navbar .logo {
   padding: 8px;
   border-radius: 8px;
   min-width: 30%;
+  max-width: 70%;
 }
 #messages message-g .container.self {
   margin-left: auto;

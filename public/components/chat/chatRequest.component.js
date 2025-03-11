@@ -34,7 +34,7 @@ class ChatRequest extends HTMLElement {
         // - IGNORA RICHIESTA
         this.querySelector(".btn.danger").addEventListener("click", (e) => {
             ChatService.ignoreRequest(this.uuid);
-            Log.summon(1, `Chat ignored`);
+            Log.summon(1, `Request ignored`);
             this.remove();
         });
     }

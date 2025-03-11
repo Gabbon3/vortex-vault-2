@@ -32,7 +32,7 @@
     <vortex-navbar></vortex-navbar>
     <main class="pagina">
         <h1 class="icon">
-            <span class="material-symbols-rounded">sms</span>
+            <img src="./img/vortex_vault_logo.png" class="logo">
             Chat
         </h1>
         <div class="isle bg-2 br-xl mb-2">
@@ -51,9 +51,17 @@
                     </button>
                 </div>
             </div>
+            <div class="isle bg-3 br-l mt-2 flex gap-50 wrap">
+                <!-- Order Buttons -->
+                <button class="btn secondary order-contacts last" order="az" active="false" title="Order by title">
+                    <span class="material-symbols-rounded">title</span>
+                </button>
+                <!-- <button class="btn secondary order-contacts" order="date" active="false" title="Order by date">
+                    <span class="material-symbols-rounded">calendar_today</span>
+                </button> -->
+            </div>
         </div>
-        <hr>
-        <div id="contacts-list">
+        <div id="contacts-list" class="list">
             <!-- CONTACTS -->
         </div>
     </main>
@@ -118,12 +126,17 @@
         </div>
         <!-- LISTA RICHIESTE -->
         <hr>
-        <h3 class="icon slider" slider="cont-requests-list">
+        <h3 class="icon slider" slider="cont-crl">
             <span class="material-symbols-rounded">check</span>
             Requests
         </h3>
-        <div class="isle bg-4" id="cont-requests-list" style="display: none;">
-            <!-- ... -->
+        <div class="isle bg-4" id="cont-crl" style="display: none;">
+            <p>
+                All incoming requests will be shown here.
+            </p>
+            <div id="cont-requests-list">
+                <!-- ... -->
+            </div>
         </div>
     </div>
     <!--

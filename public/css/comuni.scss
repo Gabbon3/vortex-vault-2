@@ -156,7 +156,7 @@ h5 {
     }
 
     .logo {
-        width: $fs-xl;
+        width: 36px;
         margin: 5px;
     }
 
@@ -175,6 +175,10 @@ h5 {
 
     &.danger {
         color: var(--danger) !important;
+    }
+
+    &.primary {
+        color: var(--c1) !important;
     }
 }
 
