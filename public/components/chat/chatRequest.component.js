@@ -1,5 +1,4 @@
-import { ChatService } from "../../service/chat.service.js";
-import { Bus } from "../../utils/eventBus.js";
+import { ChatService } from "../../chatmodule/chat.service.js";
 import { Log } from "../../utils/log.js";
 
 class ChatRequest extends HTMLElement {

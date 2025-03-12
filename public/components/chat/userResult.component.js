@@ -1,4 +1,4 @@
-import { ChatService } from "../../service/chat.service.js";
+import { ChatService } from "../../chatmodule/chat.service.js"; 
 import { Log } from "../../utils/log.js";
 
 class UserResult extends HTMLElement {

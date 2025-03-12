@@ -1,4 +1,4 @@
-import { ChatService } from "../service/chat.service.js";
+import { ChatService } from "../chatmodule/chat.service.js";
 import { date } from "../utils/dateUtils.js";
 import { Form } from "../utils/form.js";
 import { Search } from "../utils/search.js";
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
      */
     Bus.addEventListener("chat-deleted", () => {
         // -- invio una notifica con il browser
-        notify('Chat deleted', 'Chat deleted.');
+        notify('Chat deleted', '🗑️ Chat deleted.');
         Log.summon(1, 'Chat deleted.');
         ChatUI.html_contacts();
     });
@@ -194,6 +194,8 @@ export class ChatUI {
      * @param {string} uuid
      */
     static openChat(uuid) {
+        // const chat = ChatService.openChat(uuid);
+        // if (!chat) return;
         const contact = ChatService.contacts.get(uuid);
         if (!contact) return;
         // -- preparo l'html da stampare per i messaggi
@@ -295,10 +297,10 @@ export class ChatUI {
     }
 
     static htmlChatRequests() {
-        if (Object.entries(ChatService.chatRequests).length === 0) return;
+        if (Object.entries(ChatService.incomingChatRequests).length === 0) return;
         // ---
-        for (const senderID in ChatService.chatRequests) {
-            const request = ChatService.chatRequests[senderID];
+        for (const senderID in ChatService.incomingChatRequests) {
+            const request = ChatService.incomingChatRequests[senderID];
             this.appendRequest(senderID, request.email, request.timestamp);
         }
     }

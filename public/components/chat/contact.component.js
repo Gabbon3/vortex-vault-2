@@ -1,5 +1,5 @@
 import { ChatUI } from "../../js/chat.ui.js";
-import { ChatService } from "../../service/chat.service.js";
+import { ChatService } from "../../chatmodule/chat.service.js"; 
 import { Windows } from "../../utils/windows.js";
 
 class ContactElement extends HTMLElement {

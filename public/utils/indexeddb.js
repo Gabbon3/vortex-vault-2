@@ -6,13 +6,14 @@ export class IndexedDb {
      * Costruttore.
      * @param {string} dbName - Il nome del database.
      * @param {string} storeName - Il nome dell'object store.
+     * @param {boolean} [init=true] - se true, inizializza subito l'istanza, se no, init() va richiamato manualmente
      */
-    constructor(dbName, storeName) {
+    constructor(dbName, storeName, init = true) {
         // -- Inizializzo il nome del database e dell'object store.
         this.dbName = dbName;
         this.storeName = storeName;
         this.db = null;
-        this.init();
+        if (init) this.init();
     }
 
     /**

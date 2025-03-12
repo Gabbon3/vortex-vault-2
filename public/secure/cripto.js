@@ -70,7 +70,7 @@ export class Cripto {
      * @param {Object} [options={}] - Opzioni per configurare l'HMAC.
      * @param {string} [options.key_encoding] - Encoding della chiave (es: 'hex' o 'base64').
      * @param {string} [options.algo='SHA-256'] - Algoritmo di hash da usare per l'HMAC.
-     * @param {string} [options.output_encoding='hex'] - Encoding per l'output HMAC, default 'hex'.
+     * @param {string} [options.encoding='hex'] - Encoding per l'output HMAC, default 'hex'.
      * @returns {Promise<string|Uint8Array>} - HMAC del messaggio in formato specificato.
      */
     static async hmac(message, key, options = {}) {
