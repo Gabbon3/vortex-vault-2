@@ -46,11 +46,11 @@ export class Form {
     }
     /**
      * Aggiunge un evento di submit al form
-     * @param {string} form_id - L'ID del form.
+     * @param {string | HTMLElement} form_id - L'ID del form o il form direttamente.
      * @param {FormOnSubmitCallback} callback - La funzione di callback eseguita al submit.
      */
     static onsubmit(form_id, callback) {
-        const form = document.getElementById(form_id);
+        const form = form_id instanceof HTMLElement ? form_id : document.getElementById(form_id);
         if (!form) return;
         // ---
         form.addEventListener('submit', async (e) => {

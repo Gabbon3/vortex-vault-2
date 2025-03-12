@@ -133,7 +133,7 @@ export class Commuters {
             return;
         }
         // -- preparo il messaggio
-        const ID = UUID.v4();
+        const ID = UUID.v7();
         const encoded = msgpack.encode(message);
         const encrypted = await AES256GCM.encrypt(encoded, contact.secret);
         // -- costruisco il payload

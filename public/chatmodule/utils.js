@@ -30,6 +30,13 @@ export class Utils {
         await externalDb.init();
         return await externalDb.deleteDatabase();
     }
+    /**
+     * Elimina un messaggio
+     * @param {string} ID 
+     */
+    async deleteMessage(ID) {
+        return await this.service.currentIndexDb.delete(ID);
+    }
 
     /**
      * Salva un messaggio nell'IndexedDb
@@ -62,6 +69,6 @@ export class Utils {
      * @returns {Array}
      */
     encodeMessage(ID, message, timestamp, self) {
-        return [ID, message, timestamp, self];
+        return { id: ID, msg: [message, timestamp, self]};
     }
 };

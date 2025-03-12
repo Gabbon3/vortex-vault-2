@@ -8,11 +8,15 @@ export class IndexedDb {
      * @param {string} storeName - Il nome dell'object store.
      * @param {boolean} [init=true] - se true, inizializza subito l'istanza, se no, init() va richiamato manualmente
      */
-    constructor(dbName, storeName, init = true) {
+    constructor(dbName, storeName, keyConfig = null, init = true) {
         // -- Inizializzo il nome del database e dell'object store.
         this.dbName = dbName;
         this.storeName = storeName;
         this.db = null;
+        this.keyConfig = keyConfig ?? {
+            keyPath: "id",
+            // autoIncrement: true,
+        };
         if (init) this.init();
     }
 
@@ -30,10 +34,7 @@ export class IndexedDb {
                 // -- Creo lo store se non esiste.
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains(this.storeName)) {
-                    db.createObjectStore(this.storeName, {
-                        keyPath: "id",
-                        autoIncrement: true,
-                    });
+                    db.createObjectStore(this.storeName, this.keyConfig);
                 }
             };
 

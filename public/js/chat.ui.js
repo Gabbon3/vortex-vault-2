@@ -33,11 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Invio messaggio
      */
-    Form.onsubmit("send-message", async (form, elements) => {
+    Form.onsubmit(ChatUI.messageForm, async (form, elements) => {
         const { msg } = elements;
-        const ID = await ChatService.sendMessage(ChatUI.activeChatUuid, msg);
-        ChatUI.appendMessage(ID, msg, Date.now(), true);
+        const message = msg.trim();
+        if (message === '') return;
+        const ID = await ChatService.sendMessage(ChatUI.activeChatUuid, message);
+        ChatUI.appendMessage(ID, message, Date.now(), true);
         form.reset();
+        ChatUI.messageTextarea.rows = 1;
     });
     /**
      * SEARCH VAULT
@@ -48,6 +51,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             'contacts-list',
             'contact-li'
         );
+    });
+    /**
+     * Resize automatico della textarea
+     */
+    ChatUI.messageTextarea.addEventListener('input', () => {
+        const newRowsCount = ChatUI.messageTextarea.value.split('\n').length;
+        if (newRowsCount >= ChatUI.maxMessageRows) return;
+        ChatUI.messageTextarea.rows = newRowsCount;
+    });
+    /**
+     * Premendo Ctrl + Invio, invia il form
+     */
+    ChatUI.messageTextarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            ChatUI.messageForm.requestSubmit();
+        }
     });
     /**
      * Ordinamento Contatto
@@ -136,6 +156,17 @@ export class ChatUI {
     static search = new Search(true, null, null, 100);
     static html_initialized = false;
     /**
+     * Textare dove scrivi il messaggio
+     * @type {HTMLElement}
+     */
+    static messageTextarea = null;
+    static maxMessageRows = 7;
+    /**
+     * Form per l'invio dei messaggi
+     * @type {HTMLElement}
+     */
+    static messageForm = null;
+    /**
      * Container dei contatti
      * @type {HTMLElement}
      */
@@ -169,6 +200,10 @@ export class ChatUI {
         this.contactListContainer = document.getElementById("contacts-list");
         // -- container della chat
         this.messages = document.getElementById("messages");
+        // ---
+        this.messageTextarea = document.querySelector('#message-textarea');
+        // ---
+        this.messageForm = document.querySelector('#send-message');
         // -- Nome di contatto
         this.chatContactName = document.getElementById("chat-contact-name");
         // - evento per selezionare tutto il testo del contatto
@@ -225,7 +260,8 @@ export class ChatUI {
         let html = "";
         const l = messages.length;
         for (let i = 0; i < l; i++) {
-            const [ID, message, timestamp, self] = messages[i];
+            const { id: ID, msg } = messages[i];
+            const [message, timestamp, self] = msg;
             html += this.htmlMessage(ID, message, timestamp, self);
         }
         return html;

@@ -131,6 +131,10 @@ export class ChatService {
         return await this.utils.saveMessage(chatId, ID, message, timestamp, self);
     }
 
+    static async deleteMessage(ID) {
+        return await this.utils.deleteMessage(ID);
+    }
+
     /**
      * Restituisce tutti i messaggi di una chat da indexed db
      * @returns {Array}
