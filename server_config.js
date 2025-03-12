@@ -28,4 +28,6 @@ export class Config {
     // Origin
     static WSORIGIN = process.env.WSORIGIN;
     static HTTPROTOCOL = process.env.HTTPROTOCOL;
+    // Dev
+    static DEV = process.env.DEV === 'true';
 }

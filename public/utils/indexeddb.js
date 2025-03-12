@@ -51,6 +51,22 @@ export class IndexedDb {
     }
 
     /**
+     * Elimina completamente il database.
+     * @returns {Promise<boolean>} True se l'eliminazione ha avuto successo.
+     */
+    async deleteDatabase() {
+        if (this.db) {
+            this.db.close();
+        }
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.deleteDatabase(this.dbName);
+            request.onsuccess = () => resolve(true);
+            request.onerror = () => resolve(false);
+            request.onblocked = () => resolve(false);
+        });
+    }
+
+    /**
      * Esegue una transazione sul database.
      * @param {string} operation - "post", "get", "getAll", "put", "delete", "clear"
      * @param {Object|number} [data] - I dati da usare (o la chiave per get/delete).

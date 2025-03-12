@@ -62,7 +62,7 @@ export class Commuters {
             senderPublicKey
         );
         // -- memorizzo il segreto condiviso
-        this.service.contacts.set(senderID, new Contact(senderID, email, sharedSecret));
+        this.service.contacts.set(senderID, new Contact(senderID, email, sharedSecret, email.split('@')[0]));
         // -- rimuovo la pending
         this.service.pendingKeys.delete(senderID);
         delete this.service.incomingChatRequests[senderID];
@@ -105,7 +105,7 @@ export class Commuters {
         // -- Aggiorno i contatti su localStorage.
         await this.service.storage.saveContacts();
         // -- Rimuovo la cronologia della chat locale se presente.
-        delete this.service.chats[uuid];
+        await this.service.utils.deleteChatFromIndexedDb(uuid);
         // -- Preparo il messaggio di eliminazione chat.
         const message = {
             from: this.service.uuid,

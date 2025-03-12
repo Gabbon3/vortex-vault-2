@@ -17,7 +17,7 @@ class ContactElement extends HTMLElement {
         
         // -- variabili
         const icon = `<span class="material-symbols-rounded">person</span>`;
-        const color = ["red", "yellow", "green", "orange", "peach", "purple", "pink", "mint", "blue", "lightblue", "lightgray", "olivegreen"][Math.floor(Math.random() * 12)];
+        const color = ["red", "yellow", "green", "orange", "peach", "purple", "pink", "mint", "blue", "lightblue", "olivegreen"][Math.floor(Math.random() * 11)];
         // -- html
         this.innerHTML = 
        `<div class="simbolo ${color}">
@@ -28,18 +28,23 @@ class ContactElement extends HTMLElement {
             <i>${contact.email}</i>
         </div>`;
         // -- eventi
-        this.addEventListener("click", () => {
-            ChatUI.openChat(this.uuid);
-            ChatUI.activeChatUuid = this.uuid;
-            Windows.open('win-chat');
+        this.addEventListener("click", (e) => {
+            if (ChatUI.isDeletingChat) this.deleteChat(e)
+            else this.openChat();
         });
-        // -- elimina contatto
-        this.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-            if (!confirm('Are you sure you want to delete this contact?')) return;
-            // ---
-            ChatService.deleteContact(this.uuid);
-        });
+    }
+
+    openChat() {
+        ChatUI.openChat(this.uuid);
+        ChatUI.activeChatUuid = this.uuid;
+        Windows.open('win-chat');
+    }
+
+    deleteChat(e) {
+        e.preventDefault();
+        if (!confirm('Are you sure you want to delete this contact?')) return;
+        // ---
+        ChatService.deleteContact(this.uuid);
     }
 
     connectedCallback() {

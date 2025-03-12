@@ -337,6 +337,12 @@ vortex-navbar {
     }
 }
 
+#contacts-list.is-deleting {
+    contact-li:hover {
+        background-color: color-mix(in srgb, var(--danger), transparent 85%);
+    }
+}
+
 // Finestra della chat
 #win-chat {
     display: flex;

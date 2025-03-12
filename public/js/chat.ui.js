@@ -11,10 +11,14 @@ window.ChatService = ChatService;
 window.UUID = UUID;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    await ChatService.init();
-    ChatUI.init_html();
-    ChatUI.html_contacts();
-    ChatUI.htmlChatRequests();
+    try {
+        await ChatService.init();
+        ChatUI.init_html();
+        ChatUI.html_contacts();
+        ChatUI.htmlChatRequests();
+    } catch (error) {
+        Log.summon(2, error.message);
+    }
     /**
      * Send Chat Request
      */
@@ -65,23 +69,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
     /**
-     * Ordinamento
+     * Pulsante elimina chat
      */
-    $('.order-vaults').on('click', (e) => {
+    document.querySelector('#btn-toggle-chat-delete').addEventListener('click', (e) => {
+        /**
+         * @type {HTMLElement}
+         */
         const btn = e.currentTarget;
-        const order = btn.getAttribute('order');
-        const active = JSON.parse(btn.getAttribute('active'));
-        btn.setAttribute('active', !active);
-        const curr_order = 
-            order == 'az' ? 
-                active ? 'az' : 'za'
-                :
-                order == 'date' ? 
-                    active ? 'dateup' : 'datedown' : null;
+        const isEnabled = btn.classList.contains('danger');
+        ChatUI.isDeletingChat = !isEnabled;
         // ---
-        if (!curr_order) return;
-        VaultUI.current_order = curr_order;
-        VaultUI.html_vaults(curr_order);
+        btn.className = 'btn ' + (isEnabled ? 'secondary' : 'danger');
+        ChatUI.contactListContainer.classList.toggle('is-deleting');
+        document.querySelector('#chat-delete-alert').style.display = isEnabled ? 'none' : '';
     });
     /**
      * Nuovo messaggio arrivato
@@ -135,18 +135,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 export class ChatUI {
     static search = new Search(true, null, null, 100);
     static html_initialized = false;
-    static html_list = null;
+    /**
+     * Container dei contatti
+     * @type {HTMLElement}
+     */
+    static contactListContainer = null;
+    /**
+     * Container dei messaggi
+     * @type {HTMLElement}
+     */
     static messages = null;
     static current_order = "az";
     static chatContactName = null;
     static activeChatUuid = null;
+    static isDeletingChat = false;
     /**
      * Inizializza gli elementi html utili al funzionamento
      */
     static init_html() {
         if (this.html_initialized) return;
         // -- verifico se ce il permesso per le notifiche
-        if (Notification.permission !== "denied" && Notification.permission !== "granted") {
+        if ('Notification' in window && Notification.permission !== "denied" && Notification.permission !== "granted") {
             Notification.requestPermission().then((permission) => {
                 if (permission === "granted") {
                     new Notification("Vortex Chat", {
@@ -157,7 +166,7 @@ export class ChatUI {
             });
         }
         // ---
-        this.html_list = document.getElementById("contacts-list");
+        this.contactListContainer = document.getElementById("contacts-list");
         // -- container della chat
         this.messages = document.getElementById("messages");
         // -- Nome di contatto
@@ -193,15 +202,17 @@ export class ChatUI {
      * Apre la finestra della chat con una persona
      * @param {string} uuid
      */
-    static openChat(uuid) {
-        // const chat = ChatService.openChat(uuid);
-        // if (!chat) return;
+    static async openChat(uuid) {
         const contact = ChatService.contacts.get(uuid);
         if (!contact) return;
+        const chat = await ChatService.openChat(uuid);
+        if (!chat) return;
         // -- preparo l'html da stampare per i messaggi
-        const html = this.htmlChat(ChatService.chats[uuid]);
+        const messages = await ChatService.getMessages();
+        const html = this.htmlChat(messages);
         this.messages.innerHTML = html;
         this.chatContactName.textContent = contact.nickname ?? contact.uuid;
+        this.messages.scrollTop = this.messages.scrollHeight;
     }
     /**
      * Genera il codice html di tutti i messaggi di una chat
@@ -270,7 +281,7 @@ export class ChatUI {
         // -- mostro il numero totale di elementi disponibili
         // this.vault_counter_element.textContent = contactsList.length;
         // -- se non ci sono vault da mostrare termino qui
-        if (contactsList.length === 0) return (this.html_list.innerHTML = "");
+        if (contactsList.length === 0) return (this.contactListContainer.innerHTML = "");
 
         // -- ordino
         const order_function = this.order_functions[order];
@@ -293,7 +304,7 @@ export class ChatUI {
                 search-context="${contact.email}|${contact.nickname}|${contact.uuid}"
             ></contact-li>`;
         }
-        this.html_list.innerHTML = html;
+        this.contactListContainer.innerHTML = html;
     }
 
     static htmlChatRequests() {

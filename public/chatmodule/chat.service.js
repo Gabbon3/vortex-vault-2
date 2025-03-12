@@ -53,16 +53,15 @@ export class ChatService {
      */
     static contacts = new Map();
     /**
-     * contiene gli array dei messaggi che l'utente ha con gli altri, quindi
-     * this.chats[sender] = [self, message, timestamp]
-     * @type {Object<Array>}
-     */
-    static chats = {};
-    /**
      * Istanza di index db per gestire i messaggi della chat corrente
      * @type {IndexedDb}
      */
     static currentIndexDb = null;
+    /**
+     * UUID della chat attualmente attiva
+     * @type {string}
+     */
+    static activeChatUuid = null;
 
     /**
      * Inizializza il ChatService.
@@ -127,8 +126,16 @@ export class ChatService {
         // ---
         return true;
     }
-    // TODO: finire la gestione del salvataggio su indexedDb
-    static saveMessage(chatId, ID, message, timestamp, self) {
-        return this.utils.saveMessage(chatId, ID, message, timestamp, self);
+    
+    static async saveMessage(chatId, ID, message, timestamp, self) {
+        return await this.utils.saveMessage(chatId, ID, message, timestamp, self);
+    }
+
+    /**
+     * Restituisce tutti i messaggi di una chat da indexed db
+     * @returns {Array}
+     */
+    static async getMessages() {
+        return await this.currentIndexDb.getAll();
     }
 }

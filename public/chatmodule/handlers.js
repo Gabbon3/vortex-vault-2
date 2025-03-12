@@ -63,7 +63,7 @@ export class Handlers {
         // -- calcolo il segreto condiviso
         const sharedSecret = await ECDH.derive_shared_secret(privateKey, remotePublicKey);
         // -- memorizzo il segreto condiviso
-        this.service.contacts.set(data.from, new Contact(data.from, data.email, sharedSecret));
+        this.service.contacts.set(data.from, new Contact(data.from, data.email, sharedSecret, data.email.split('@')[0]));
         // -- rimuovo la pending
         this.service.pendingKeys.delete(data.from);
         delete this.service.incomingChatRequests[data.from];
@@ -117,7 +117,7 @@ export class Handlers {
         this.service.contacts.delete(data.from);
         await this.service.storage.saveContacts();
         // -- rimuovo la cronologia
-        delete this.service.chats[data.from];
+        await this.service.utils.deleteChatFromIndexedDb(data.from);
         // -- emetto evento
         Bus.dispatchEvent(new CustomEvent('chat-deleted', { detail: data.from }));
         return true;

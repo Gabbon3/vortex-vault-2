@@ -56,10 +56,20 @@
                 <button class="btn secondary order-contacts last" order="az" active="false" title="Order by title">
                     <span class="material-symbols-rounded">title</span>
                 </button>
+                <button class="btn secondary" id="btn-toggle-chat-delete" title="Enable/Disable chat deletion">
+                    <span class="material-symbols-rounded">delete</span>
+                </button>
+                <!-- Abilita Elimina Chat -->
                 <!-- <button class="btn secondary order-contacts" order="date" active="false" title="Order by date">
                     <span class="material-symbols-rounded">calendar_today</span>
                 </button> -->
             </div>
+        </div>
+        <div class="alert warning" style="display: none;" id="chat-delete-alert">
+            <span class="icon material-symbols-rounded">warning</span>
+            <p>
+                Click on the chats you want to delete.
+            </p>
         </div>
         <div id="contacts-list" class="list">
             <!-- CONTACTS -->

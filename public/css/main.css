@@ -2079,6 +2079,10 @@ vortex-navbar .logo {
   color: var(--text-color-2);
 }
 
+#contacts-list.is-deleting contact-li:hover {
+  background-color: color-mix(in srgb, var(--danger), transparent 85%);
+}
+
 #win-chat {
   display: flex;
   flex-direction: column;
