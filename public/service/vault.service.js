@@ -338,6 +338,7 @@ export class VaultService {
      * @param {Array<Object>} vaults - array dei vari vault
      */
     static async decrypt_vaults(vaults) {
+        if (vaults instanceof Array === false || vaults.length === 0) return true;
         let i = 0;
         try {
             for (i = 0; i < vaults.length; i++) {

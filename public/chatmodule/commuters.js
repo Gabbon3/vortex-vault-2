@@ -153,6 +153,21 @@ export class Commuters {
     }
 
     /**
+     * Ignora una richiesta di chat da parte di un utente
+     * @param {string} senderID
+     * @returns {boolean}
+     */
+    async ignoreRequest(senderID) {
+        // -- rimuove la pending
+        this.service.pendingKeys.delete(senderID);
+        delete this.service.incomingChatRequests[senderID];
+        // -- salva su localStorage
+        await this.service.storage.saveChatRequests();
+        await this.service.storage.savePendingChats();
+        return true;
+    }
+
+    /**
      * Invia un messaggio di eliminazione chat.
      * @param {string} contactUUID
      * @param {string} sign

@@ -40,10 +40,10 @@ export class Handlers {
         console.log(`📩 richiesta di chat da ${data.from}`);
         // -- salvo la chiave pubblica del mittente in pendingChats
         this.service.pendingKeys.set(data.from, data.public_key);
-        // -- emetto un evento
         const detail = { from: data.from, email: data.email, timestamp: data.timestamp };
-        Bus.dispatchEvent(new CustomEvent('new-chat-request', { detail }));
         this.service.incomingChatRequests[data.from] = detail;
+        // -- emetto un evento
+        Bus.dispatchEvent(new CustomEvent('new-chat-request', { detail }));
         // -- salvo su localStorage
         await this.service.storage.saveChatRequests();
         await this.service.storage.savePendingChats();

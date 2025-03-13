@@ -35,7 +35,7 @@ export class Storage {
         const pending = await LocalStorage.get("pendingKeys", this.service.masterKey);
         if (pending) this.service.pendingKeys = new Map(Object.entries(pending));
 
-        const chatRequests = await LocalStorage.get("chatRequests", this.service.masterKey);
+        const chatRequests = await LocalStorage.get("incomingChatRequests", this.service.masterKey);
         if (chatRequests) this.service.incomingChatRequests = chatRequests;
 
         const contacts = await LocalStorage.get("contacts", this.service.masterKey);

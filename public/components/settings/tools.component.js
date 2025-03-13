@@ -260,7 +260,7 @@ class SettingsComponent extends HTMLElement {
                 Check Message Authentication Code
             </h3>
             <div class="isle bg-4 maincolor olivegreen" id="cont-cmac" style="display: none;">
-                <p class="mb-3">
+                <p class="m-0 mb-3">
                     Here you can check the validity of the message authentication codes 
                     in the emails you receive from us, which is useful for verifying 
                     whether the emails actually come from us or are instead phishing 

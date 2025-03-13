@@ -152,7 +152,15 @@ h5 {
             &.warning {
                 color: var(--warning) !important;
             }
+
+            &.danger {
+                color: var(--danger) !important;
+            }
         }
+    }
+
+    &.unbold {
+        font-weight: normal;
     }
 
     .logo {
@@ -179,6 +187,10 @@ h5 {
 
     &.primary {
         color: var(--c1) !important;
+    }
+
+    &.purple {
+        color: var(--purple) !important;
     }
 }
 

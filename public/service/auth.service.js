@@ -172,23 +172,8 @@ export class AuthService {
         return true;
     }
     /**
-     * Attiva l'autenticazione a due fattori
-     * @param {string} request_id - id richiesta de codice email
-     * @param {string} code - email code
-     * @returns {boolean}
-     */
-    static async enable_mfa(email, request_id, code) {
-        const res = await API.fetch('/auth/mfa', {
-            method: 'POST',
-            body: { email, request_id, code }
-        });
-        // ---
-        if (!res) return false;
-        return res.secret;
-    }
-    /**
      * Cerca di ottenere un nuovo access token
-     * @returns {boolean|object} restituisce un oggetto con degli auth data (la cke), false se non rigenerato
+     * @returns {boolean|object} restituisce un oggetto con degli auth data, false se non rigenerato
      */
     static async new_access_token() {
         const res = await PasskeyService.authenticate({

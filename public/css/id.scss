@@ -174,11 +174,11 @@ vortex-navbar {
             }
         }
         &._3 {
-            background-color: color-mix(in srgb, var(--mint), transparent 70%);
+            background-color: color-mix(in srgb, var(--lightblue), transparent 70%);
             // border: 1px solid var(--mint);
-            color: var(--mint);
+            color: var(--lightblue);
             &::after {
-                background-color: var(--mint);
+                background-color: var(--lightblue);
             }
         }
 
@@ -366,25 +366,30 @@ vortex-navbar {
         display: flex;
         flex-direction: row;
         cursor: default;
-    
+
         .container {
+            position: relative;
             display: flex;
             flex-direction: column;
             gap: 5px;
             background-color: var(--bg-5);
             color: var(--text-color);
-            padding: $br-m;
-            border-radius: $br-m;
-            min-width: 30%;
+            padding: $br-s $br-m;
+            border-radius: $br-m $br-m $br-m 0;
+            min-width: 60px;
             max-width: 70%;
-    
-            &.self {
-                margin-left: auto;
-                background-color: color-mix(in srgb, var(--c1), transparent 70%);
+            margin-bottom: 20px;
 
-                span {
-                    text-align: left;
-                }
+            $dim: 11px;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: calc(100% - $dim);
+                transform: rotate(-45deg);
+                left: -$dim;
+                border: $dim solid transparent;
+                border-bottom-color: var(--bg-5);
             }
     
             p {
@@ -392,9 +397,28 @@ vortex-navbar {
             }
     
             span {
+                position: absolute;
+                top: calc(100% + 2px);
+                right: $br-s;
                 color: var(--text-color-15);
                 font-size: $fs-s;
-                text-align: right;
+            }
+
+            &.self {
+                margin-left: auto;
+                background-color: var(--message-bc);
+                border-radius: $br-m $br-m 0 $br-m;
+
+                &::before {
+                    left: inherit;
+                    right: -$dim;
+                    border-bottom-color: transparent;
+                    border-left-color: var(--message-bc);
+                }
+
+                span {
+                    left: $br-s;
+                }
             }
         }
     }

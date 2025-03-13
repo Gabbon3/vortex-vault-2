@@ -31,6 +31,7 @@ $bg-7: lighten($bg-1, 18);
 
 // Specifici
 $border-color: lighten($bg-1, 24);
+$message-bc: #306848;
 // Variabili CSS
 .theme-dracula {
     // Principali
@@ -62,4 +63,5 @@ $border-color: lighten($bg-1, 24);
     --bg-7: #{$bg-7};
     // Specifici
     --border-color: #{$border-color};
+    --message-bc: #{$message-bc};
 }

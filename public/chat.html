@@ -79,9 +79,11 @@
     FINESTRA CHAT
     -->
     <div class="window m" id="win-chat">
-        <div class="flex y-center win-header">
-            <h2 class="icon flex d-row w-100">
-                <span class="material-symbols-rounded">person</span>
+        <div class="flex y-center win-header mb-2">
+            <button class="btn primary mr-2" id="chat-settings">
+                <span class="material-symbols-rounded">settings</span>
+            </button>
+            <h2 class="icon flex d-row w-100 m-0">
                 <span id="chat-contact-name" class="w-100" spellcheck="false" contenteditable="true">Null</span>
             </h2>
             <button class="btn t close l last" data-target-close="win-chat">
@@ -101,7 +103,51 @@
     <!-- 
     CONTATTI
     -->
-    <div class="window m pr maincolor purple" id="win-contacts">
+    <div class="window m maincolor" id="win-contact-manager">
+        <div class="flex y-center">
+            <h2 class="icon mb-0">
+                <span class="material-symbols-rounded">settings</span>
+                Contact Manager
+            </h2>
+            <button class="btn t close l last" data-target-close="win-contact-manager">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <!-- ELIMINA MESSAGGI DELLA CHAT -->
+        <hr>
+        <h3 class="icon slider" slider="cm-cont-clear-chat-messages">
+            <span class="material-symbols-rounded warning">mop</span>
+            Clear chat messages
+        </h3>
+        <div class="isle bg-4" id="cm-cont-clear-chat-messages" style="display: none;">
+            <p class="m-0 mb-2">
+                Messages are only deleted locally, the other user will still be able to view them.
+            </p>
+            <button class="btn warning" id="btn-clear-chat-messages">
+                <span class="material-symbols-rounded danger">mop</span>
+                Clear
+            </button>
+        </div>
+        <!-- ELIMINA LA CHAT -->
+        <hr>
+        <h3 class="icon slider" slider="cm-cont-delete-chat">
+            <span class="material-symbols-rounded danger">delete</span>
+            Delete chat
+        </h3>
+        <div class="isle bg-4" id="cm-cont-delete-chat" style="display: none;">
+            <p class="m-0 mb-2">
+                The deletion of the chat also involves the other party, so the other party will no longer be able to contact you either.
+            </p>
+            <button class="btn danger" id="btn-delete-chat">
+                <span class="material-symbols-rounded danger">delete</span>
+                Delete
+            </button>
+        </div>
+    </div>
+    <!-- 
+    CONTATTI
+    -->
+    <div class="window m maincolor purple" id="win-contacts">
         <div class="flex y-center">
             <h2 class="icon mb-0">
                 <span class="material-symbols-rounded">group</span>
@@ -129,7 +175,6 @@
                     Search
                 </button>
             </form>
-            <hr>
             <div id="search-user-results" class="flex gap-50 d-column">
                 <!-- lista risultati utente -->
             </div>

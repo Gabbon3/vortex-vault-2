@@ -28,6 +28,7 @@ $bg-6: lighten($bg-1, 15);
 $bg-7: lighten($bg-1, 18);
 // Specifici
 $border-color: lighten($bg-1, 40);
+$message-bc: #465461;
 // Variabili CSS
 .theme-ocean {
     // Principali
@@ -59,4 +60,5 @@ $border-color: lighten($bg-1, 40);
     --bg-7: #{$bg-7};
     // Specifici
     --border-color: #{$border-color};
+    --message-bc: #{$message-bc};
 }

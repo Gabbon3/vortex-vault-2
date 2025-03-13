@@ -17,7 +17,7 @@ class UserResult extends HTMLElement {
         this.className = "isle bg-3 flex gap-50 d-row y-center";
         // -- variabili
         const icon = `<span class="material-symbols-rounded">person</span>`;
-        const h3 = `<span>${email.replace(search, `<strong class="color primary">${search}</strong>`)}</span>`;
+        const h3 = `<span>${email.replace(search, `<strong class="color purple">${search}</strong>`)}</span>`;
         const sendRequestBtn = `<button class="btn primary last"><span class="material-symbols-rounded">add</span></button>`;
         // -- html
         this.innerHTML = `${icon}${h3}${sendRequestBtn}`;
@@ -28,9 +28,6 @@ class UserResult extends HTMLElement {
             // ---
             e.currentTarget.disabled = true;
             Log.summon(0, `Successfully sent the request to '${this.email}'`);
-            setTimeout(() => {
-                this.remove();
-            }, 3000);
         });
     }
 

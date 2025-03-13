@@ -66,11 +66,6 @@ export class SecureWebSocketServer {
             ws.close();
             return false;
         }
-        // -- genero un uuid unico per la connessione web socket
-        ws.uuid = uuidv4();
-        // -- questo parametro servirà a indicare se un web socket è stato verificato
-        // - per abilitare la connessione va quindi verificato un access token
-        ws.connectionVerified = false;
         // -- derivo il segreto condiviso con il client
         const clientPublicKey = Buffer.from(clientPublicKeyHex, "hex");
         const keyPair = ECDH.generate_keys();
@@ -80,30 +75,6 @@ export class SecureWebSocketServer {
         );
         // - memorizzo il segreto direttamente sul web socket dato che è associato solamente ad esso
         ws.secret = sharedSecret;
-        /**
-         * Metodo personalizzato per comunicare in maniera protetta
-         * crittografando i dati in uscita con la chiave segreta condivisa del web socket
-         * @param {*} data
-         */
-        ws.sendE = (data) => {
-            const encodedData = msgpack.encode(data);
-            const encryptedData = AES256GCM.encrypt(
-                encodedData,
-                ws.secret
-            );
-            ws.send(encryptedData.buffer);
-        };
-        /**
-         * Metodo personalizzato per:
-         * - chiudere la connessione con il client
-         * - inviare un messaggio con la motivazione della chiusura
-         * @param {number} code - codice di errore (usare i codici http)
-         * @param {string} error - messaggio di errore
-         */
-        ws.closeWithError = (code, error) => {
-            ws.send(JSON.stringify({ code, error }));
-            ws.close();
-        };
         // -- invio la chiave pubblica e lo UUID della connesssione al client
         ws.send(
             JSON.stringify({

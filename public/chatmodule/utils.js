@@ -21,15 +21,35 @@ export class Utils {
     }
 
     /**
-     * Elimina i messaggi salvati su indexed db
-     * @param {string} chatId - uuid dell'utente
+     * Effettua la pulizia di una chat, eliminando tutti i messaggi
+     * @param {string} uuid - id del db, nonche uuid del contatto
      * @returns {boolean}
      */
-    async deleteChatFromIndexedDb(chatId) {
-        const externalDb = new IndexedDb(chatId, 'messages');
+    async clearChat(uuid = null) {
+        // -- se non viene passato un uuid specifico, si presume che il db da svuotare sia quello attualmente attivo
+        // -- oppure se lo uuid passato corrisponde alla chat attualmente attiva
+        if (!uuid || uuid === this.service.activeChatUuid) return this.service.currentIndexDb.clearStore();
+        // -- se no, creo un istanza a parte ed effettuo lo svuotamento
+        const externalDb = new IndexedDb(uuid, 'messages');
+        await externalDb.init();
+        return await externalDb.clearStore();
+    }
+
+    /**
+     * Elimina il db associato ad una chat, quindi anche i messaggi
+     * @param {string} uuid - id del db, nonche uuid del contatto
+     * @returns {boolean}
+     */
+    async deleteChatFromIndexedDb(uuid = null) {
+        // -- se non viene passato un uuid specifico, si presume che il db da eliminare sia quello attualmente attivo
+        // -- oppure se lo uuid passato corrisponde alla chat attualmente attiva
+        if (!uuid || uuid === this.service.activeChatUuid) return this.service.currentIndexDb.clearStore();
+        // -- se no, creo un istanza a parte ed effettuo lo svuotamento
+        const externalDb = new IndexedDb(uuid, 'messages');
         await externalDb.init();
         return await externalDb.deleteDatabase();
     }
+
     /**
      * Elimina un messaggio
      * @param {string} ID 

@@ -62,7 +62,7 @@ app.use(error_handler_middleware);
 // try {
 //     await sequelize.authenticate();
 //     console.log('☑️ DB');
-//     https.createServer(options, app).listen(PORT, () => {
+//     https.createServer(options, app).listen(3000, () => {
 //         console.log(`☑️ Server`);
 //         console.log(`☑️ ${date.format('%H:%i:%s')}`);
 //     });
@@ -73,6 +73,9 @@ app.use(error_handler_middleware);
  * _____
  */
 
+/**
+ * HTTP
+ */
 try {
     await sequelize.authenticate();
     console.log('☑️ DB');
@@ -87,7 +90,6 @@ try {
 } catch (error) {
     logger.error('❌ Errore durante l\'avvio del server => ' + error);
 }
-
 /**
  * AVVIO SERVER CHAT
  */

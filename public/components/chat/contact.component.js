@@ -37,12 +37,13 @@ class ContactElement extends HTMLElement {
     openChat() {
         ChatUI.openChat(this.uuid);
         ChatUI.activeChatUuid = this.uuid;
+        ChatService.activeChatUuid = this.uuid;
         Windows.open('win-chat');
     }
 
     deleteChat(e) {
         e.preventDefault();
-        if (!confirm('Are you sure you want to delete this contact?')) return;
+        if (!confirm('Are you sure you want to delete this chat?')) return;
         // ---
         ChatService.deleteContact(this.uuid);
     }

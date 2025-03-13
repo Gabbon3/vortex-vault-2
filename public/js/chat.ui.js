@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ChatUI.htmlSearchResults(result, email);
             form.reset();
         }
+        if (result.length === 0) Log.summon(3, 'No user found.');
     });
     /**
      * Invio messaggio
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const { msg } = elements;
         const message = msg.trim();
         if (message === '') return;
-        const ID = await ChatService.sendMessage(ChatUI.activeChatUuid, message);
+        const ID = await ChatService.sendMessage(ChatService.activeChatUuid, message);
         ChatUI.appendMessage(ID, message, Date.now(), true);
         form.reset();
         ChatUI.messageTextarea.rows = 1;
@@ -104,13 +105,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector('#chat-delete-alert').style.display = isEnabled ? 'none' : '';
     });
     /**
+     * Pulsante impostazioni chat
+     */
+    document.querySelector('#chat-settings').addEventListener('click', () => {
+        Windows.open('win-contact-manager');
+        // -- altre azioni magari potrebbero servire in futuro
+    });
+    /**
+     * Pulizia chat di tutti i messaggi
+     */
+    document.querySelector('#btn-clear-chat-messages').addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete all messages from this chat?')) return;
+        // ---
+        await ChatUI.clearChat();
+    });
+    /**
+     * Elimina chat dal Contact Manager
+     */
+    document.querySelector('#btn-delete-chat').addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this chat?')) return;
+        // ---
+        const deleted = ChatService.deleteContact();
+        if (deleted) Windows.close('win-contact-manager');
+    });
+    /**
      * Nuovo messaggio arrivato
      */
     Bus.addEventListener("new-message", (event) => {
         const { ID, message, sender, timestamp, nickname } = event.detail;
         // -- invio una notifica con il browser
         notify(nickname, message);
-        if (sender !== ChatUI.activeChatUuid) return;
+        if (sender !== ChatService.activeChatUuid) return;
         // -- stampo il messaggio
         ChatUI.appendMessage(ID, message, timestamp, false);
     });
@@ -124,8 +149,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         Log.summon(3, 'New chat request, click here to check it.', () => {
             Windows.open('win-contacts');
             document.getElementById('cont-crl').style.display = '';
-        })
-        ChatUI.appendRequest(from, email, timestamp);
+        });
+        ChatUI.htmlChatRequests();
     });
     /**
      * Chat stabilita con successo
@@ -178,7 +203,7 @@ export class ChatUI {
     static messages = null;
     static current_order = "az";
     static chatContactName = null;
-    static activeChatUuid = null;
+    static contactManagerCurrentUuid = null;
     static isDeletingChat = false;
     /**
      * Inizializza gli elementi html utili al funzionamento
@@ -223,10 +248,10 @@ export class ChatUI {
             e.currentTarget.blur();
             const newNickname = e.currentTarget.textContent;
             // ---
-            const contact = ChatService.contacts.get(this.activeChatUuid);
+            const contact = ChatService.contacts.get(ChatService.activeChatUuid);
             contact.nickname = newNickname;
             // -- salvo i contatti nuovamente in locale
-            ChatService.contacts.set(this.activeChatUuid, contact);
+            ChatService.contacts.set(ChatService.activeChatUuid, contact);
             ChatService.saveContacts();
             this.html_contacts();
         });
@@ -248,6 +273,17 @@ export class ChatUI {
         this.messages.innerHTML = html;
         this.chatContactName.textContent = contact.nickname ?? contact.uuid;
         this.messages.scrollTop = this.messages.scrollHeight;
+    }
+    /**
+     * Eliminazione chat
+     */
+    static async clearChat() {
+        const uuid = ChatService.activeChatUuid;
+        // ---
+        const clear = await ChatService.clearChat(uuid);
+        if (!clear) return Log.summon(1, 'Something went wrong during chat cleaning.');
+        // ---
+        Log.summon(0, 'Successful clean chat.');
     }
     /**
      * Genera il codice html di tutti i messaggi di una chat
@@ -343,13 +379,18 @@ export class ChatUI {
         this.contactListContainer.innerHTML = html;
     }
 
+    /**
+     * Genera l'html per le richieste di chat
+     */
     static htmlChatRequests() {
         if (Object.entries(ChatService.incomingChatRequests).length === 0) return;
         // ---
-        for (const senderID in ChatService.incomingChatRequests) {
-            const request = ChatService.incomingChatRequests[senderID];
-            this.appendRequest(senderID, request.email, request.timestamp);
+        let html = '';
+        for (const uuid in ChatService.incomingChatRequests) {
+            const request = ChatService.incomingChatRequests[uuid];
+            html += `<chat-request uuid="${uuid}" email="${request.email}" timestamp="${request.timestamp}"></chat-request>`;
         }
+        document.querySelector('#cont-requests-list').innerHTML = html;
     }
     
     /**
@@ -358,22 +399,11 @@ export class ChatUI {
      * @param {string} search - la ricerca effettuata
      */
     static htmlSearchResults(results, search) {
-        let html = '';
+        let html = results.length > 0 ? '<hr>' : '';
         for (const user of results) {
             html += `<user-result uuid="${user.id}" email="${user.email}" search="${search}"></user-result>`;
         }
         document.getElementById('search-user-results').innerHTML = html;
-    }
-
-    /**
-     * Stampa l'html per la richiesta
-     * @param {string} senderID 
-     * @param {string} senderEmail 
-     * @param {number} timestamp 
-     */
-    static appendRequest(senderID, senderEmail, timestamp) {
-        const html = `<chat-request uuid="${senderID}" email="${senderEmail}" timestamp="${timestamp}"></chat-request>`;
-        document.querySelector('#cont-requests-list').innerHTML = html;
     }
 }
 

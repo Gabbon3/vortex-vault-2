@@ -44,7 +44,7 @@ export class ChatService {
     static pendingKeys = new Map();
     /**
      * mappa per i metadati delle richieste delle chat in arrivo
-     * @type {Object}
+     * @type {Object} { from, email, timestamp }
      */
     static incomingChatRequests = {};
     /**
@@ -98,8 +98,12 @@ export class ChatService {
         return this.commuters.sendMessage(contactUUID, message);
     }
 
-    static async deleteContact(uuid) {
+    static async deleteContact(uuid = this.activeChatUuid) {
         return this.commuters.deleteContact(uuid);
+    }
+
+    static async clearChat(uuid) {
+        return this.utils.clearChat(uuid);
     }
 
     static async ignoreRequest(senderID) {

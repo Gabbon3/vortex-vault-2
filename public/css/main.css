@@ -33,13 +33,14 @@ font e icone
   --green: #86cd86;
   --olivegreen: #B9D19C;
   --bg-1: #171414;
-  --bg-2: #1f1b1b;
-  --bg-3: #272222;
-  --bg-4: #302929;
-  --bg-5: #383030;
-  --bg-6: #403838;
-  --bg-7: #483f3f;
-  --border-color: #584d4d;
+  --bg-2: rgb(31.1837209302, 27.1162790698, 27.1162790698);
+  --bg-3: rgb(39.3674418605, 34.2325581395, 34.2325581395);
+  --bg-4: rgb(47.5511627907, 41.3488372093, 41.3488372093);
+  --bg-5: rgb(55.7348837209, 48.4651162791, 48.4651162791);
+  --bg-6: rgb(63.9186046512, 55.5813953488, 55.5813953488);
+  --bg-7: rgb(72.1023255814, 62.6976744186, 62.6976744186);
+  --border-color: rgb(88.4697674419, 76.9302325581, 76.9302325581);
+  --message-bc: #4d4d3b;
 }
 
 .theme-monokai {
@@ -61,13 +62,14 @@ font e icone
   --green: #A6E22E;
   --olivegreen: #829372;
   --bg-1: #221f22;
-  --bg-2: #2a262a;
-  --bg-3: #322e32;
-  --bg-4: #3a353a;
-  --bg-5: #423c42;
-  --bg-6: #4a434a;
-  --bg-7: #524b52;
-  --border-color: #625962;
+  --bg-2: rgb(42.0030769231, 38.2969230769, 42.0030769231);
+  --bg-3: rgb(50.0061538462, 45.5938461538, 50.0061538462);
+  --bg-4: rgb(58.0092307692, 52.8907692308, 58.0092307692);
+  --bg-5: rgb(66.0123076923, 60.1876923077, 66.0123076923);
+  --bg-6: rgb(74.0153846154, 67.4846153846, 74.0153846154);
+  --bg-7: rgb(82.0184615385, 74.7815384615, 82.0184615385);
+  --border-color: rgb(98.0246153846, 89.3753846154, 98.0246153846);
+  --message-bc: #505e26;
 }
 
 .theme-dracula {
@@ -89,13 +91,14 @@ font e icone
   --green: #50FA7B;
   --olivegreen: #6b8d6e;
   --bg-1: #161B20;
-  --bg-2: #1c2329;
-  --bg-3: #222a32;
-  --bg-4: #29323b;
-  --bg-5: #2f3a44;
-  --bg-6: #35414d;
-  --bg-7: #3b4956;
-  --border-color: #485869;
+  --bg-2: rgb(28.2333333333, 34.65, 41.0666666667);
+  --bg-3: rgb(34.4666666667, 42.3, 50.1333333333);
+  --bg-4: rgb(40.7, 49.95, 59.2);
+  --bg-5: rgb(46.9333333333, 57.6, 68.2666666667);
+  --bg-6: rgb(53.1666666667, 65.25, 77.3333333333);
+  --bg-7: rgb(59.4, 72.9, 86.4);
+  --border-color: rgb(71.8666666667, 88.2, 104.5333333333);
+  --message-bc: #306848;
 }
 
 .theme-tokyonight {
@@ -117,13 +120,14 @@ font e icone
   --green: #c3e88d;
   --olivegreen: #a3be8c;
   --bg-1: #1a1b26;
-  --bg-2: #20212f;
-  --bg-3: #262838;
-  --bg-4: #2d2e41;
-  --bg-5: #33354a;
-  --bg-6: #393b53;
-  --bg-7: #3f425d;
-  --border-color: #4c4f6f;
+  --bg-2: rgb(32.215625, 33.4546875, 47.084375);
+  --bg-3: rgb(38.43125, 39.909375, 56.16875);
+  --bg-4: rgb(44.646875, 46.3640625, 65.253125);
+  --bg-5: rgb(50.8625, 52.81875, 74.3375);
+  --bg-6: rgb(57.078125, 59.2734375, 83.421875);
+  --bg-7: rgb(63.29375, 65.728125, 92.50625);
+  --border-color: rgb(75.725, 78.6375, 110.675);
+  --message-bc: #424f74;
 }
 
 .theme-cyberpunk {
@@ -145,13 +149,14 @@ font e icone
   --green: #00ff00;
   --olivegreen: #739900;
   --bg-1: #0D0D0D;
-  --bg-2: #151515;
-  --bg-3: #1c1c1c;
-  --bg-4: #242424;
-  --bg-5: #2c2c2c;
-  --bg-6: #333333;
-  --bg-7: #3b3b3b;
-  --border-color: #4a4a4a;
+  --bg-2: rgb(20.65, 20.65, 20.65);
+  --bg-3: rgb(28.3, 28.3, 28.3);
+  --bg-4: rgb(35.95, 35.95, 35.95);
+  --bg-5: rgb(43.6, 43.6, 43.6);
+  --bg-6: rgb(51.25, 51.25, 51.25);
+  --bg-7: rgb(58.9, 58.9, 58.9);
+  --border-color: rgb(74.2, 74.2, 74.2);
+  --message-bc: #615b2e;
 }
 
 .theme-ocean {
@@ -173,13 +178,14 @@ font e icone
   --green: #5ADEA8;
   --olivegreen: #C4D7A1;
   --bg-1: #11151b;
-  --bg-2: #171c24;
-  --bg-3: #1d242e;
-  --bg-4: #232b37;
-  --bg-5: #293241;
-  --bg-6: #2f3a4a;
-  --bg-7: #344153;
-  --border-color: #607698;
+  --bg-2: rgb(22.9113636364, 28.3022727273, 36.3886363636);
+  --bg-3: rgb(28.8227272727, 35.6045454545, 45.7772727273);
+  --bg-4: rgb(34.7340909091, 42.9068181818, 55.1659090909);
+  --bg-5: rgb(40.6454545455, 50.2090909091, 64.5545454545);
+  --bg-6: rgb(46.5568181818, 57.5113636364, 73.9431818182);
+  --bg-7: rgb(52.4681818182, 64.8136363636, 83.3318181818);
+  --border-color: rgb(95.8181818182, 118.3636363636, 152.1818181818);
+  --message-bc: #465461;
 }
 
 .theme-sunset {
@@ -201,13 +207,14 @@ font e icone
   --green: #A1E44D;
   --olivegreen: #B4A766;
   --bg-1: #181110;
-  --bg-2: #211816;
-  --bg-3: #2a1e1c;
-  --bg-4: #342522;
-  --bg-5: #3d2b28;
-  --bg-6: #46322f;
-  --bg-7: #4f3835;
-  --border-color: #614541;
+  --bg-2: rgb(33.18, 23.5025, 22.12);
+  --bg-3: rgb(42.36, 30.005, 28.24);
+  --bg-4: rgb(51.54, 36.5075, 34.36);
+  --bg-5: rgb(60.72, 43.01, 40.48);
+  --bg-6: rgb(69.9, 49.5125, 46.6);
+  --bg-7: rgb(79.08, 56.015, 52.72);
+  --border-color: rgb(97.44, 69.02, 64.96);
+  --message-bc: #5c3830;
 }
 
 .theme-blossom {
@@ -229,13 +236,14 @@ font e icone
   --green: #A3D977;
   --olivegreen: #C4D7A1;
   --bg-1: #221E22;
-  --bg-2: #2a252a;
-  --bg-3: #322c32;
-  --bg-4: #3a343a;
-  --bg-5: #433b43;
-  --bg-6: #4b424b;
-  --bg-7: #534953;
-  --border-color: #635763;
+  --bg-2: rgb(42.128125, 37.171875, 42.128125);
+  --bg-3: rgb(50.25625, 44.34375, 50.25625);
+  --bg-4: rgb(58.384375, 51.515625, 58.384375);
+  --bg-5: rgb(66.5125, 58.6875, 66.5125);
+  --bg-6: rgb(74.640625, 65.859375, 74.640625);
+  --bg-7: rgb(82.76875, 73.03125, 82.76875);
+  --border-color: rgb(99.025, 87.375, 99.025);
+  --message-bc: #6a5b5d;
 }
 
 .theme-cloud {
@@ -257,13 +265,14 @@ font e icone
   --green: #56933d;
   --olivegreen: #5D7440;
   --bg-1: #f3f5f6;
-  --bg-2: #e7ebed;
-  --bg-3: #dce2e5;
-  --bg-4: #d0d8dc;
-  --bg-5: #c4ced3;
-  --bg-6: #b9c4ca;
-  --bg-7: #adbbc2;
-  --border-color: #9cacb4;
+  --bg-2: rgb(231.3428571429, 235.2857142857, 237.2571428571);
+  --bg-3: rgb(219.6857142857, 225.5714285714, 228.5142857143);
+  --bg-4: rgb(208.0285714286, 215.8571428571, 219.7714285714);
+  --bg-5: rgb(196.3714285714, 206.1428571429, 211.0285714286);
+  --bg-6: rgb(184.7142857143, 196.4285714286, 202.2857142857);
+  --bg-7: rgb(173.0571428571, 186.7142857143, 193.5428571429);
+  --border-color: rgb(155.5714285714, 172.1428571429, 180.4285714286);
+  --message-bc: #a3afbd;
   --text-color: #111;
   --text-color-15: #333;
   --text-color-2: #666;
@@ -664,6 +673,20 @@ h4.icon .material-symbols-rounded.warning,
 h5.icon .material-symbols-rounded.warning {
   color: var(--warning) !important;
 }
+h1.icon .material-symbols-rounded.danger,
+h2.icon .material-symbols-rounded.danger,
+h3.icon .material-symbols-rounded.danger,
+h4.icon .material-symbols-rounded.danger,
+h5.icon .material-symbols-rounded.danger {
+  color: var(--danger) !important;
+}
+h1.unbold,
+h2.unbold,
+h3.unbold,
+h4.unbold,
+h5.unbold {
+  font-weight: normal;
+}
 h1 .logo,
 h2 .logo,
 h3 .logo,
@@ -691,6 +714,9 @@ h5.code {
 }
 .color.primary {
   color: var(--c1) !important;
+}
+.color.purple {
+  color: var(--purple) !important;
 }
 
 p {
@@ -1852,11 +1878,11 @@ vortex-navbar .logo {
   background-color: var(--red);
 }
 #logs_container log-info._3 {
-  background-color: color-mix(in srgb, var(--mint), transparent 70%);
-  color: var(--mint);
+  background-color: color-mix(in srgb, var(--lightblue), transparent 70%);
+  color: var(--lightblue);
 }
 #logs_container log-info._3::after {
-  background-color: var(--mint);
+  background-color: var(--lightblue);
 }
 #logs_container log-info .i-container {
   height: 100%;
@@ -2106,30 +2132,50 @@ vortex-navbar .logo {
   cursor: default;
 }
 #messages message-g .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 5px;
   background-color: var(--bg-5);
   color: var(--text-color);
-  padding: 8px;
-  border-radius: 8px;
-  min-width: 30%;
+  padding: 5px 8px;
+  border-radius: 8px 8px 8px 0;
+  min-width: 60px;
   max-width: 70%;
+  margin-bottom: 20px;
 }
-#messages message-g .container.self {
-  margin-left: auto;
-  background-color: color-mix(in srgb, var(--c1), transparent 70%);
-}
-#messages message-g .container.self span {
-  text-align: left;
+#messages message-g .container::before {
+  content: "";
+  position: absolute;
+  top: calc(100% - 11px);
+  transform: rotate(-45deg);
+  left: -11px;
+  border: 11px solid transparent;
+  border-bottom-color: var(--bg-5);
 }
 #messages message-g .container p {
   margin: 0;
 }
 #messages message-g .container span {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 5px;
   color: var(--text-color-15);
   font-size: 0.9em;
-  text-align: right;
+}
+#messages message-g .container.self {
+  margin-left: auto;
+  background-color: var(--message-bc);
+  border-radius: 8px 8px 0 8px;
+}
+#messages message-g .container.self::before {
+  left: inherit;
+  right: -11px;
+  border-bottom-color: transparent;
+  border-left-color: var(--message-bc);
+}
+#messages message-g .container.self span {
+  left: 5px;
 }
 
 .custom-sections.emt custom-vault-section {

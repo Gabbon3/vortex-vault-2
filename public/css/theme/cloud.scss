@@ -30,6 +30,7 @@ $bg-7: darken($bg-1, 24);
 
 // Specifici
 $border-color: darken($bg-1, 30);
+$message-bc: #a3afbd;
 .theme-cloud {
     // Principali
     --c1: #{$c1};
@@ -60,6 +61,7 @@ $border-color: darken($bg-1, 30);
     --bg-7: #{$bg-7};
     // Specifici
     --border-color: #{$border-color};
+    --message-bc: #{$message-bc};
     // Testo
     --text-color: #111;
     --text-color-15: #333;

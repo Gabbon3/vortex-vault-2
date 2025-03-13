@@ -19,6 +19,7 @@ class MessageElement extends HTMLElement {
         // -- eventi
         // -- doppio click per eliminare un messaggio
         this.addEventListener('dblclick', async () => {
+            if (!confirm('Confirm that you wish to delete this message?')) return;
             const deleted = await ChatService.deleteMessage(this.uuid);
             if (deleted) this.remove();
         });
