@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(true);
         const vault_id = await VaultService.create(elements);
         if (vault_id) {
-            create_dinamic_secrets.innerHTML = '';
+            VaultUI.create_dinamic_secrets.innerHTML = '';
             Log.summon(0, `${elements.T} saved.`);
             Windows.close('win-create-vault');
             form.reset();
