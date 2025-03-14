@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // ---
         Windows.loader(true);
         if (await AuthUI.enable_mfa(request_id, code)) {
-            $(form).trigger('reset');
+            form.reset();
         }
         Windows.loader(false);
     });
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Windows.loader(true);
         if (await AuthService.change_password(elements.old_password, elements.new_password)) {
             Log.summon(0, "Password changed successfully");
-            $(form).trigger('reset');
+            form.reset();
         }
         Windows.loader(false);
     });
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (private_key) {
             Log.summon(0, "Recovery key generated successfully");
             FileUtils.download('Recovery Key', 'pem', Bytes.base64.encode(private_key));
-            $(form).trigger('reset');
+            form.reset();
         }
         Windows.loader(false);
     });
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const activated = await AuthService.enable_advanced_session(email, request_id, code);
         if (activated) {
             Log.summon(0, 'Advanced session started');
-            $(form).trigger('reset');
+            form.reset();
         }
         Windows.loader(false);
     });
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = await AuthService.request_quick_signin();
         if (url) {
             AuthUI.show_quick_signin(url);
-            $(form).trigger('reset');
+            form.reset();
         } else if (url === null) {
             Log.summon(2, "Invalid password");
         }

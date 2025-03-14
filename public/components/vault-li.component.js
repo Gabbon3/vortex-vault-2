@@ -2,17 +2,18 @@ import { HtmlSecretsRender } from "../js/html_secrets_render.js";
 import { VaultUI } from "../js/vault.ui.js";
 import { VaultService } from "../service/vault.service.js";
 import { Windows } from "../utils/windows.js";
+import { date } from "../utils/dateUtils.js";
 
 class VaultLi extends HTMLElement {
     constructor() {
         super();
-        this.id = null;
+        this.uuid = null;
     }
 
     connectedCallback() {
         // -- ottengo gli attributi
         const id = this.getAttribute('id');
-        this.id = id;
+        this.uuid = id;
         const title = this.getAttribute("title");
         const updated_at = this.getAttribute("updated-at");
         const secure = this.getAttribute("secure") === "true";
@@ -61,15 +62,15 @@ class VaultLi extends HTMLElement {
         `;
         // -- eventi
         this.addEventListener('click', (e) => {
-            this.openUpdateWindow(e);
+            this.openUpdateWindow();
         });
     }
     /**
      * 
      * @param {Event} e 
      */
-    openUpdateWindow(e) {
-        const id = $(e.currentTarget).attr('id');
+    openUpdateWindow() {
+        const id = this.uuid;
         Windows.open('win-update-vault');
         // --
         const vault = VaultService.get_vault(id);

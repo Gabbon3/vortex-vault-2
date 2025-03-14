@@ -119,14 +119,15 @@ export class RefreshTokenService {
      * @returns {string} chiave pubblica in base 64
      */
     async get_public_key(uid, token_id) {
-        const { public_key } = await RefreshToken.findOne({
+        const device = await RefreshToken.findOne({
             where: { user_id: uid, id: token_id },
             attributes: ['public_key']
         });
         // ---
-        if (!public_key) throw new CError("", "Public Key not found", 404);
+        if (!device) throw new CError("", "Public Key not found", 404);
+        if (!device.public_key) throw new CError("", "Public Key not found", 404);
         // ---
-        return public_key;
+        return device.public_key;
     }
     /**
      * Elimina tutti i token associati ad un utente e ad un dispositivo
