@@ -18,13 +18,12 @@
     <!-- Manifesto del sito web (per miglior supporto su Android e PWA) -->
     <link rel="manifest" href="./img/site.webmanifest">
     <!-- END ICO -->
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <!-- stile -->
     <link rel="stylesheet" href="./css/main.css">
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
     <script type="module" src="./components/chat/chat.components.js"></script>
+    <script type="module" src="./components/auth/auth.components.js"></script>
     <!-- js -->
     <script type="module" src="./js/chat.ui.js"></script>
 </head>
@@ -56,21 +55,21 @@
                 <button class="btn secondary order-contacts last" order="az" active="false" title="Order by title">
                     <span class="material-symbols-rounded">title</span>
                 </button>
-                <button class="btn secondary" id="btn-toggle-chat-delete" title="Enable/Disable chat deletion">
+                <!-- <button class="btn secondary" id="btn-toggle-chat-delete" title="Enable/Disable chat deletion">
                     <span class="material-symbols-rounded">delete</span>
-                </button>
+                </button> -->
                 <!-- Abilita Elimina Chat -->
                 <!-- <button class="btn secondary order-contacts" order="date" active="false" title="Order by date">
                     <span class="material-symbols-rounded">calendar_today</span>
                 </button> -->
             </div>
         </div>
-        <div class="alert warning" style="display: none;" id="chat-delete-alert">
+        <!-- <div class="alert warning" id="chat-delete-alert">
             <span class="icon material-symbols-rounded">warning</span>
             <p>
                 Click on the chats you want to delete.
             </p>
-        </div>
+        </div> -->
         <div id="contacts-list" class="list">
             <!-- CONTACTS -->
         </div>
@@ -80,7 +79,7 @@
     -->
     <div class="window m" id="win-chat">
         <div class="flex y-center win-header mb-2">
-            <button class="btn primary mr-2" id="chat-settings">
+            <button class="btn primary l mr-2" id="chat-settings">
                 <span class="material-symbols-rounded">settings</span>
             </button>
             <h2 class="icon flex d-row w-100 m-0">
@@ -119,7 +118,7 @@
             <span class="material-symbols-rounded warning">mop</span>
             Clear chat messages
         </h3>
-        <div class="isle bg-4" id="cm-cont-clear-chat-messages" style="display: none;">
+        <div class="isle bg-4 slider-cont close" data-open="false" id="cm-cont-clear-chat-messages">
             <p class="m-0 mb-2">
                 Messages are only deleted locally, the other user will still be able to view them.
             </p>
@@ -134,7 +133,7 @@
             <span class="material-symbols-rounded danger">delete</span>
             Delete chat
         </h3>
-        <div class="isle bg-4" id="cm-cont-delete-chat" style="display: none;">
+        <div class="isle bg-4 slider-cont close" data-open="false" id="cm-cont-delete-chat">
             <p class="m-0 mb-2">
                 The deletion of the chat also involves the other party, so the other party will no longer be able to contact you either.
             </p>
@@ -159,11 +158,11 @@
         </div>
         <!-- CERCA UTENTE & INVIA RICHIESTA CONNESSIONE -->
         <hr>
-        <h3 class="icon slider" slider="cont-send-request">
+        <h3 class="icon slider" data-open="false" slider="cont-send-request">
             <span class="material-symbols-rounded">add</span>
             Send request
         </h3>
-        <div class="isle bg-4" id="cont-send-request" style="display: none;">
+        <div class="isle bg-4 slider-cont close" id="cont-send-request">
             <form id="form-search-user">
                 <label for="fsu-email">
                     <span class="material-symbols-rounded">alternate_email</span>
@@ -185,8 +184,8 @@
             <span class="material-symbols-rounded">check</span>
             Requests
         </h3>
-        <div class="isle bg-4" id="cont-crl" style="display: none;">
-            <p>
+        <div class="isle bg-4 slider-cont close" data-open="false" id="cont-crl">
+            <p class="m-0">
                 All incoming requests will be shown here.
             </p>
             <div id="cont-requests-list">

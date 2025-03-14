@@ -92,18 +92,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Pulsante elimina chat
      */
-    document.querySelector('#btn-toggle-chat-delete').addEventListener('click', (e) => {
-        /**
-         * @type {HTMLElement}
-         */
-        const btn = e.currentTarget;
-        const isEnabled = btn.classList.contains('danger');
-        ChatUI.isDeletingChat = !isEnabled;
-        // ---
-        btn.className = 'btn ' + (isEnabled ? 'secondary' : 'danger');
-        ChatUI.contactListContainer.classList.toggle('is-deleting');
-        document.querySelector('#chat-delete-alert').style.display = isEnabled ? 'none' : '';
-    });
+    // document.querySelector('#btn-toggle-chat-delete').addEventListener('click', (e) => {
+    //     /**
+    //      * @type {HTMLElement}
+    //      */
+    //     const btn = e.currentTarget;
+    //     const isEnabled = btn.classList.contains('danger');
+    //     ChatUI.isDeletingChat = !isEnabled;
+    //     // ---
+    //     btn.className = 'btn ' + (isEnabled ? 'secondary' : 'danger');
+    //     ChatUI.contactListContainer.classList.toggle('is-deleting');
+    //     document.querySelector('#chat-delete-alert').style.display = isEnabled ? 'none' : '';
+    // });
     /**
      * Pulsante impostazioni chat
      */

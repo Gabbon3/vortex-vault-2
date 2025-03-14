@@ -1,11 +1,11 @@
 import { BackupService } from "../service/backup.service.js";
 import { Log } from "../utils/log.js";
 import { Form } from "../utils/form.js";
-import { Windows } from "../../utils/windows.js";
+import { Windows } from "../utils/windows.js";
 
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
     // crea backup su server
-    $('#btn-create-backup').on('click', async () => {
+    document.querySelector('#btn-create-backup').addEventListener('click', async () => {
         if (!confirm('Are you sure you want to create new backup, you will replace the current one if theres another?')) return;
         // ---
         Windows.loader(true);
@@ -19,7 +19,7 @@ $(document).ready(() => {
     /**
      * RESTORE
      */
-    $('#btn-restore-backup-server').on('click', async () => {
+    document.querySelector('#btn-restore-backup-server').addEventListener('click', async () => {
         if (!confirm('Are you sure you want to restore from the last backup?')) return;
         // ---
         Windows.loader(true);
@@ -39,7 +39,7 @@ $(document).ready(() => {
         if (key !== key_r) return Log.summon(1, "Custom passwords do not match");
         // ---
         await BackupService.create_locally(key === '' ? null : key);
-        $(form).trigger('reset');
+        form.reset();
     });
     /**
      * Ripristina un backup da un file locale
@@ -50,7 +50,7 @@ $(document).ready(() => {
         Windows.loader(true);
         if (await BackupService.restore_locally(backup_file, key === ''? null : key)) {
             Log.summon(0, "Backup restored successfully");
-            $(form).trigger('reset');
+            form.reset();
         } else {
             Log.summon(1, "Error restoring backup");
         }

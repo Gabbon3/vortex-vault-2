@@ -17,12 +17,11 @@
     <!-- Manifesto del sito web (per miglior supporto su Android e PWA) -->
     <link rel="manifest" href="./img/site.webmanifest">
     <!-- END ICO -->
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <!-- stile -->
     <link rel="stylesheet" href="./css/main.css">
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
+    <script type="module" src="./components/auth/auth.components.js"></script>
     <!-- auth -->
     <script type="module" src="./js/login.js"></script>
 </head>
@@ -142,7 +141,7 @@
             <span class="material-symbols-rounded">passkey</span>
             Recover with Passkey
         </h3>
-        <div class="isle bg-4" id="cont-passkey-recovery" style="display: none;">
+        <div class="isle bg-4 slider-cont close" data-open="false" id="cont-passkey-recovery">
             <p>
                 Use a passkey to unlock this device.
             </p>
@@ -154,7 +153,7 @@
             <span class="material-symbols-rounded">mail</span>
             Recover with Email
         </h3>
-        <div id="cont-email-recovery" style="display: none;">
+        <div class=" slider-cont close" data-open="false" id="cont-email-recovery">
             <form id="form-device-recovery-email">
                 <!-- EMAIL -->
                 <div class="isle bg-4 mb-2">

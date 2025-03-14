@@ -1,6 +1,7 @@
 export class Windows {
     static current = null;
     static bc = null;
+    static loaderElement = null;
     /**
      * 
      */
@@ -8,6 +9,11 @@ export class Windows {
         this.bc = document.getElementById('modal-backdrop');
         this.bc.addEventListener('click', () => {
             Windows.close();
+        });
+        // ---
+        this.loaderElement = document.querySelector('#loader');
+        this.loaderElement.addEventListener('dblclick', () => {
+            this.loaderElement.classList.remove('show');
         });
     }
     /**
@@ -40,9 +46,9 @@ export class Windows {
      */
     static loader(active) {
         if (active) {
-            $("#loader").fadeIn(150);
+            this.loaderElement.classList.add('show');
         } else {
-            $("#loader").fadeOut(150);
+            this.loaderElement.classList.remove('show');
         }
     }
 }

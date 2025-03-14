@@ -5,9 +5,8 @@ import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { Bytes } from "../utils/bytes.js";
-import { LSE } from "../service/lse.public.service.js";
 
-$(document).ready(async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     /**
      * Micro utility per l'accesso
      */
@@ -64,7 +63,7 @@ $(document).ready(async () => {
         Windows.loader(true);
         // -- accedo
         if (await AuthService.signin(email, password, null, true)) {
-            $(form).trigger('reset');
+            form.reset();
             // Log.summon(0, `Authenticated as ${email}`);
             window.location.href = '/vault';
         } else {
@@ -117,7 +116,7 @@ $(document).ready(async () => {
             Log.summon(0, 'Your master password has been decrypted.');
             navigator.clipboard.writeText(password);
             document.getElementById('password').value = password;
-            $(form).trigger('reset');
+            form.reset();
             Windows.close('win-password-recovery');
         } else {
             Log.summon(2, 'Decryption failed');
@@ -134,7 +133,7 @@ $(document).ready(async () => {
         const message = await AuthService.device_recovery_email(email, request_id, code);
         if (message) {
             Log.summon(0, message);
-            $(form).trigger('reset');
+            form.reset();
             Windows.close('win-device-recovery');
         }
         Windows.loader(false);

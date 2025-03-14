@@ -1,37 +1,5 @@
 import { DeviceService } from "../service/device.service.js";
 import { date } from "../utils/dateUtils.js";
-import { Windows } from "../utils/windows.js";
-
-$(document).ready(async () => {
-    /**
-     * DEVICE NAME
-     */
-    $('#devices-list').on('keyup', '.device-name', async (e) => {
-        const key = e.key;
-        const token_id = e.currentTarget.parentElement.parentElement.getAttribute('id');
-        // ---
-        if (key === 'Enter') {
-            Windows.loader(true);
-            const device_name = e.currentTarget.value;
-            const device = DeviceService.get_device(token_id);
-            if (confirm(`Are you sure you want to rename this device into "${device_name}"?`)) {
-                await DeviceService.update_device_name(token_id, device_name);
-                device.device_name = device_name;
-            } else {
-                e.currentTarget.value = device.device_name;
-            }
-        }
-        Windows.loader(false);
-    })
-    /**
-     * SYNC
-     */
-    $('#btn-sync-devices').on('click', async () => {
-        Windows.loader(true);
-        await DeviceUI.init();
-        Windows.loader(false);
-    });
-});
 
 export class DeviceUI {
     static async init() {

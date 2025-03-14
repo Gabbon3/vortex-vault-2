@@ -1,11 +1,12 @@
+// MOTION ONE
+// import { animate, scroll } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm";
 // WASM
 import '../secure/rust.init.js';
 // ---
+import './footer.component.js';
 import './navbar.component.js';
 import './log.component.js';
 import './vault-li.component.js';
-import './footer.component.js';
-import './device-list-item.component.js';
 import './custom-vault-section.component.js';
 import './colored-password.component.js';
 import './password-strenght-bar.component.js';
@@ -34,60 +35,79 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * FINESTRE
      */
-    $(document).on("click", ".close", (btn) => {
-        btn = btn.currentTarget;
-        const target = $(btn).attr("data-target-close");
-        Windows.close(target);
+    document.addEventListener("click", function(event) {
+        const btn = event.target.closest(".close");
+        if (btn) {
+            const target = btn.getAttribute("data-target-close");
+            Windows.close(target);
+        }
     });
-    $(document).on("click", ".open", (btn) => {
-        btn = btn.currentTarget;
-        const target = $(btn).attr("data-target-open");
-        Windows.open(target);
-    });
+    document.addEventListener("click", function(event) {
+        const btn = event.target.closest(".open");
+        if (btn) {
+            const target = btn.getAttribute("data-target-open");
+            Windows.open(target);
+        }
+    });    
     /**
      * pulsanti che richiedono l'animazione di check
      */
-    $(document).on('click', '.CA', (e) => {
-        const btn = e.currentTarget.querySelector('span');
-        const current_icon = btn.textContent;
-        if (current_icon === 'check') return;
-        // ---
+    document.addEventListener('click', (e) => {
+        const ca = e.target.closest('.CA');
+        if (!ca) return;
+    
+        const btn = ca.querySelector('span');
+        const currentIcon = btn.textContent;
+        if (currentIcon === 'check') return;
+    
         btn.textContent = 'check';
         setTimeout(() => {
-            btn.textContent = current_icon;
+            btn.textContent = currentIcon;
         }, 1000);
-    });
+    });    
     /**
      * Pulsanti cancella testo
      */
-    $(document).on('click', '.del-val', (e) => {
-        const target = document.getElementById(e.currentTarget.getAttribute('data-target-del'));
-        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ?
-            target.value = '' :
+    document.addEventListener('click', (e) => {
+        const delBtn = e.target.closest('.del-val');
+        if (!delBtn) return;
+    
+        const targetId = delBtn.getAttribute('data-target-del');
+        const target = document.getElementById(targetId);
+        if (!target) return;
+    
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            target.value = '';
+        } else {
             target.textContent = '';
-        // --- simulo l'evento
-        const keyupevent = new KeyboardEvent('keyup', {
+        }
+    
+        const keyupEvent = new KeyboardEvent('keyup', {
             key: 'Delete',
             bubbles: true,
             cancelable: true,
         });
-        // ---
-        target.dispatchEvent(keyupevent);
-    });
+    
+        target.dispatchEvent(keyupEvent);
+    });    
     /**
      * Chiudi Caricamento
      */
-    $('#loader').on('dblclick', (e) => {
-        $(e.currentTarget).fadeOut(200);
+    document.querySelector('#loader', 'dblclick', (e) => {
+        e.currentTarget.classList.remove('show');
     });
     /**
      * sliders
      */
+    document.addEventListener("click", (e) => {
+        const sliderBtn = e.target.closest('.slider');
+        if (!sliderBtn) return;
     
-    $('.slider').on('click', (e) => {
-        // -- id del container
-        const target = document.getElementById(e.currentTarget.getAttribute('slider'));
-        // ---
-        $(target).slideToggle(200);
+        const targetId = sliderBtn.getAttribute('slider');
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        // target.style.display = target.style.display === 'none' ? '' : 'none';
+        target.classList.toggle('close');
     });
 });

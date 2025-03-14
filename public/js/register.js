@@ -7,7 +7,7 @@ import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { LocalStorage } from "../utils/local.js";
 import { PasskeyService } from "../service/passkey.public.service.js";
 
-$(document).ready(async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const email = await LocalStorage.get('email-utente');
     if (email) {
         document.getElementById('verify-email-email').value = email;
@@ -23,7 +23,7 @@ $(document).ready(async () => {
         Windows.loader(true);
         if (await AuthService.register(email, password)) {
             LocalStorage.set('email-utente', email);
-            $(form).trigger('reset');
+            form.reset();
             Log.summon(1, "Almost done! Now you need to verify your email and create your first passkey.");
             document.getElementById('verify-email-email').value = email;
         }

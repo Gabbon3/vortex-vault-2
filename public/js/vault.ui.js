@@ -16,16 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     // ---
     await VaultUI.init();
-    // add
-    const create_dinamic_secrets = document.getElementById('dinamic-secrets');
-    // update
-    const secrets_type_input = document.getElementById('secrets-type');
-    const update_secrets_type_input = document.getElementById('update-secrets-type');
-    const update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
-    // windows
-    const win_create_vault = document.getElementById('win-create-vault');
-    const title_create_vault = document.getElementById('create-vault-title');
-    const icon_create_vault = document.getElementById('create-vault-icon');
     // const win_update_vault = document.getElementById('win-update-vault');
     const addButtonListeners = () => {
         const config = [
@@ -37,11 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // -- aggiungo i listeners
         config.forEach(({ id, type, render, color, title }) => {
             document.getElementById(id).addEventListener('click', () => {
-                secrets_type_input.value = type;
-                create_dinamic_secrets.innerHTML = render();
-                win_create_vault.setAttribute('class', 'window m pr show maincolor ' + color);
-                title_create_vault.textContent = title;
-                icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
+                VaultUI.secrets_type_input.value = type;
+                VaultUI.create_dinamic_secrets.innerHTML = render();
+                VaultUI.win_create_vault.setAttribute('class', 'window m pr show maincolor ' + color);
+                VaultUI.title_create_vault.textContent = title;
+                VaultUI.icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
                 if (type === 0) VaultUI.html_used_usernames();
             });
         });
@@ -69,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             create_dinamic_secrets.innerHTML = '';
             Log.summon(0, `${elements.T} saved.`);
             Windows.close('win-create-vault');
-            $(form).trigger("reset");
+            form.reset();
             await VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
@@ -79,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * NEW VAULT CUSTOM SECTION
      */
-    $('#add-custom-section-new-vault').on('click', () => {
+    document.querySelector('#add-custom-section-new-vault').addEventListener('click', () => {
         // -- memorizzo i dati degli input precedenti
         document.querySelectorAll('custom-vault-section input').forEach((e) => {
             e.setAttribute("value", e.value);
@@ -93,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * UPDATE VAULT CUSTOM SECTION
      */
-    $('#add-custom-section-update-vault').on('click', () => {
+    document.querySelector('#add-custom-section-update-vault').addEventListener('click', () => {
         // -- memorizzo i dati degli input precedenti
         document.querySelectorAll('custom-vault-section input').forEach((e) => {
             e.setAttribute("value", e.value);
@@ -119,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (updated) {
             Log.summon(0, `${elements.T} edited`);
             Windows.close('win-update-vault');
-            $(form).trigger("reset");
+            form.reset();
             await VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Errore durante la modifica di ${elements.T}`);
@@ -127,46 +117,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(false);
     });
     /**
-     * ON CLICK VAULT-LI UPDATE (LOAD VIEW)
-     */
-    $('#vaults-list').on('click', 'vault-li', (e) => {
-        const id = $(e.currentTarget).attr('id');
-        Windows.open('win-update-vault');
-        // --
-        const vault = VaultService.get_vault(id);
-        // -- imposto il vault id nel pulsante elimina
-        document.getElementById('btn-delete-vault').setAttribute('vault-id', id);
-        // -- ottengo il Secret Type
-        const ST = vault.secrets.ST ?? 0;
-        update_secrets_type_input.value = ST;
-        // -- imposto il colore della finestra
-        const color = HtmlSecretsRender.get_color(ST);
-        document.getElementById('win-update-vault').setAttribute('class', 'window m show maincolor ' + color);
-        // -- genero l'html
-        update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
-        // -- imposto il titolo
-        document.getElementById('vault-title-to-update').textContent = vault.secrets.T;
-        // -- importo l'id del vault
-        document.getElementById('update-vault-id').value = vault.id;
-        // -- riempio le date
-        document.getElementById('update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
-        document.getElementById('update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
-        // -- riempio i campi custom
-        const custom_container = document.getElementById('update-custom-sections-vault');
-        custom_container.innerHTML = '';
-        let i = 0;
-        for (const secret in vault.secrets) {
-            if (secret.length === 1 || secret.length === 2) continue;
-            // ---
-            custom_container.innerHTML += 
-            `<custom-vault-section input-id="${`ucs-${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}" paste="false"></custom-vault-section>`; 
-            i++;
-        }
-    });
-    /**
      * SYNCRONIZE VAULT
      */
-    $('#btn-sync-vault').on('click', async () => {
+    document.querySelector('#btn-sync-vault').addEventListener('click', async () => {
         if (!confirm('Do you confirm that you want to synchronize with the server?')) return;
         // ---
         Windows.loader(true);
@@ -177,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * DELETE VAULT
      */
-    $('#btn-delete-vault').on('click', async (e) => {
+    document.querySelector('#btn-delete-vault').addEventListener('click', async (e) => {
         const vault_id = e.currentTarget.getAttribute('vault-id');
         const vault = VaultService.get_vault(vault_id);
         const title = vault.secrets.T;
@@ -197,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * SEARCH VAULT
      */
-    $('#search-vault').on('keyup', (e) => {
+    document.querySelector('#search-vault').addEventListener('keyup', (e) => {
         VaultUI.search.tabella(
             document.getElementById('search-vault'),
             'vaults-list',
@@ -208,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      * PASSWORD GENERATOR
      */
     const psw_gen_test = document.getElementById('psw-generator-tester');
-    $('#psw-gen-len').on('input', (e) => {
+    document.querySelector('#psw-gen-len').addEventListener('input', (e) => {
         document.getElementById('psw-gen-length-indicator').textContent = e.currentTarget.value;
     });
     
@@ -226,29 +179,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * Ordinamento
      */
-    $('.order-vaults').on('click', (e) => {
-        const btn = e.currentTarget;
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.order-vaults');
+        if (!btn) return;
+    
         const order = btn.getAttribute('order');
         const active = JSON.parse(btn.getAttribute('active'));
         btn.setAttribute('active', !active);
-        const curr_order = 
-            order == 'az' ? 
-                active ? 'az' : 'za'
-                :
-                order == 'date' ? 
-                    active ? 'dateup' : 'datedown' : null;
-        // ---
+    
+        let curr_order = null;
+        
+        if (order === 'az') {
+            curr_order = active ? 'az' : 'za';
+        } else if (order === 'date') {
+            curr_order = active ? 'dateup' : 'datedown';
+        }
+    
         if (!curr_order) return;
+    
         VaultUI.current_order = curr_order;
         VaultUI.html_vaults(curr_order);
-    });
+    });    
     /**
      * Vista dei vault
      */
     const vaults_grid = document.getElementById('vaults-list');
     let vaults_view_active = await LocalStorage.get('vaults-view') ?? false;
     if (vaults_view_active) vaults_grid.classList.toggle('list');
-    $('.vaults-view').on('click', () => {
+    document.querySelector('.vaults-view').addEventListener('click', () => {
         vaults_grid.classList.toggle('list');
         // ---
         vaults_view_active = !vaults_view_active;
@@ -261,6 +219,17 @@ export class VaultUI {
     static view_indicator = -1; // usata per mostrare tutte o alcune categorie di segreti
     static current_order = 'az';
     static html_list = null;
+    // ---
+    // add
+    static create_dinamic_secrets = null;
+    // update
+    static secrets_type_input = null;
+    static update_secrets_type_input = null;
+    static update_dinamic_secrets = null;
+    // windows
+    static win_create_vault = null;
+    static title_create_vault = null;
+    static icon_create_vault = null;
     // cache per salvare i dati scritti nella finestra CREATE
     // static create_cache = { login: null, note: null, card: null, keys: null };
     // pulsante categoria
@@ -276,6 +245,18 @@ export class VaultUI {
         this.html_list = document.getElementById("vaults-list");
         this.btn_category = document.getElementById('btn-view-switch');
         this.vault_counter_element = this.btn_category.children[1];
+        // ---
+        // add
+        this.create_dinamic_secrets = document.getElementById('dinamic-secrets');
+        // update
+        this.secrets_type_input = document.getElementById('secrets-type');
+        this.update_secrets_type_input = document.getElementById('update-secrets-type');
+        this.update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
+        // windows
+        this.win_create_vault = document.getElementById('win-create-vault');
+        this.title_create_vault = document.getElementById('create-vault-title');
+        this.icon_create_vault = document.getElementById('create-vault-icon');
+        // ---
         this.html_initialized = true;
     }
     /**

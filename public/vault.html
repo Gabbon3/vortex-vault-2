@@ -18,12 +18,12 @@
     <!-- Manifesto del sito web (per miglior supporto su Android e PWA) -->
     <link rel="manifest" href="./img/site.webmanifest">
     <!-- END ICO -->
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <!-- stile -->
     <link rel="stylesheet" href="./css/main.css">
     <!-- componenti -->
     <script type="module" src="./components/main.components.js"></script>
+    <script type="module" src="./components/auth/auth.components.js"></script>
+    <script type="module" src="./components/device/device.components.js"></script>
     <!-- js -->
     <script type="module" src="./js/vault.ui.js"></script>
     <script type="module" src="./js/backup.ui.js"></script>
@@ -248,10 +248,7 @@
             The <colored>highlighted</colored> device represents the current one.
         </p>
         <div class="flex gap-50 mb-2">
-            <button class="btn primary" id="btn-sync-devices" title="Syncronize">
-                <span class="material-symbols-rounded">sync_alt</span>
-                Syncronize
-            </button>
+            <btn-sync-device class="btn primary" title="Syncronize"></btn-sync-device>
         </div>
         <div id="devices-list">
             <!-- ... -->

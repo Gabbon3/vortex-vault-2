@@ -6,9 +6,8 @@ import { LocalStorage } from "../utils/local.js";
 import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../../utils/windows.js";
-import { API } from "../utils/api.js";
 
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
     /**
      * ENABLE 2FA AUTH
      */
@@ -89,21 +88,6 @@ $(document).ready(() => {
             $(form).trigger('reset');
         } else if (url === null) {
             Log.summon(2, "Invalid password");
-        }
-    });
-    /**
-     * SIGN-OUT
-     */
-    $('#logout-btn').on('click', async () => {
-        if (!confirm('Are you sure you want to sign out?')) return;
-        // ---
-        const signed_out = await AuthService.signout();
-        if (signed_out) {
-            Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
-            Windows.loader(true);
-            setTimeout(() => {
-                window.location.href = '/signin';
-            }, 3000);
         }
     });
 });
