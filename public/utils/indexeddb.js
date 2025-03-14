@@ -1,45 +1,25 @@
-/**
- * Classe wrapper per operazioni su IndexedDB.
- */
 export class IndexedDb {
-    /**
-     * Costruttore.
-     * @param {string} dbName - Il nome del database.
-     * @param {string} storeName - Il nome dell'object store.
-     * @param {boolean} [init=true] - se true, inizializza subito l'istanza, se no, init() va richiamato manualmente
-     */
-    constructor(dbName, storeName, keyConfig = null, init = true) {
-        // -- Inizializzo il nome del database e dell'object store.
+    constructor(dbName = "chatDB") {
         this.dbName = dbName;
-        this.storeName = storeName;
         this.db = null;
-        this.keyConfig = keyConfig ?? {
-            keyPath: "id",
-            // autoIncrement: true,
-        };
-        if (init) this.init();
     }
 
     /**
-     * Inizializza il database creando lo store se non esiste.
-     * @returns {Promise<boolean>} True se l'inizializzazione ha avuto successo.
+     * Inizializza il database.
+     * @returns {Promise<boolean>}
      */
     async init() {
         if (this.db) return true;
+
         return new Promise((resolve, reject) => {
-            // -- Apro il database con la versione 1.
             const request = indexedDB.open(this.dbName, 1);
 
             request.onupgradeneeded = (event) => {
-                // -- Creo lo store se non esiste.
                 const db = event.target.result;
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    db.createObjectStore(this.storeName, this.keyConfig);
-                }
+                console.log("Upgrade: Controllo esistenza store...");
             };
 
             request.onsuccess = (event) => {
-                // -- Salvo il riferimento al database.
                 this.db = event.target.result;
                 resolve(true);
             };
@@ -52,41 +32,70 @@ export class IndexedDb {
     }
 
     /**
-     * Elimina completamente il database.
-     * @returns {Promise<boolean>} True se l'eliminazione ha avuto successo.
+     * Crea dinamicamente uno store se non esiste
+     * @param {string} storeName - Il nome dello store (UUID della chat)
+     * @returns {Promise<boolean>}
      */
-    async deleteDatabase() {
-        if (this.db) {
-            this.db.close();
-        }
+    async createStore(storeName) {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.deleteDatabase(this.dbName);
-            request.onsuccess = () => resolve(true);
-            request.onerror = () => resolve(false);
-            request.onblocked = () => resolve(false);
+            const request = indexedDB.open(this.dbName, this.db.version + 1);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(storeName)) {
+                    db.createObjectStore(storeName, { keyPath: "id" });
+                }
+            };
+            request.onsuccess = (event) => {
+                this.db = event.target.result;
+                resolve(true);
+            };
+            request.onerror = (event) => resolve(false);
         });
     }
 
     /**
-     * Esegue una transazione sul database.
-     * @param {string} operation - "post", "get", "getAll", "put", "delete", "clear"
-     * @param {Object|number} [data] - I dati da usare (o la chiave per get/delete).
-     * @returns {Promise<boolean|Array|Object>} Il risultato della transazione.
+     * Elimina uno store dal database.
+     * @param {string} storeName - Nome dello store da eliminare (UUID della chat).
+     * @returns {Promise<boolean>}
      */
-    async transaction(operation, data) {
+    async deleteStore(storeName) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, this.db.version + 1);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (db.objectStoreNames.contains(storeName)) {
+                    db.deleteObjectStore(storeName);
+                    console.log(`🗑️ Store ${storeName} eliminato.`);
+                }
+            };
+            request.onsuccess = (event) => {
+                this.db = event.target.result;
+                resolve(true);
+            };
+            request.onerror = (event) => {
+                console.warn(`❌ Errore nell'eliminazione dello store ${storeName}`);
+                resolve(false);
+            };
+        });
+    }
+
+    /**
+     * Esegue una transazione sullo store specificato.
+     * @param {string} storeName - Nome dello store (UUID della chat).
+     * @param {string} operation - Tipo di operazione ("post", "get", "getAll", "put", "delete", "clear").
+     * @param {Object|number} [data] - Dati da inserire/eliminare/recuperare.
+     * @returns {Promise<boolean|Array|Object>}
+     */
+    async transaction(storeName, operation, data) {
         if (this.db === null) throw new Error("DB not initialized");
 
-        // -- Determino la modalità della transazione: readwrite per post, put, delete, clear; readonly per get, getAll.
-        const mode = ["post", "put", "delete", "clear"].includes(operation)
-            ? "readwrite"
-            : "readonly";
+        const mode = ["post", "put", "delete", "clear"].includes(operation) ? "readwrite" : "readonly";
 
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction(this.storeName, mode);
-            const store = transaction.objectStore(this.storeName);
+            const transaction = this.db.transaction(storeName, mode);
+            const store = transaction.objectStore(storeName);
             let request;
 
-            // -- Seleziono l'operazione da eseguire.
             switch (operation) {
                 case "post":
                     request = store.add(data);
@@ -112,7 +121,6 @@ export class IndexedDb {
             }
 
             request.onsuccess = (event) => {
-                // -- Risolvo con il risultato per get e getAll, altrimenti true.
                 if (operation === "get" || operation === "getAll") {
                     resolve(event.target.result || false);
                 } else {
@@ -128,61 +136,40 @@ export class IndexedDb {
     }
 
     /**
-     * Inserisce un nuovo elemento nel database.
-     * @param {Object} data - I dati da inserire.
-     * @returns {Promise<boolean>} True se l'inserimento ha avuto successo.
+     * Inserisce un nuovo messaggio nello store specificato.
+     * @param {string} storeName - Nome dello store (UUID della chat).
+     * @param {Object} data - Dati del messaggio.
+     * @returns {Promise<boolean>}
      */
-    async insert(data) {
-        // -- Eseguo l'inserimento dei dati.
-        return await this.transaction("post", data);
+    async insert(storeName, data) {
+        return await this.transaction(storeName, "post", data);
     }
 
     /**
-     * Aggiorna un elemento esistente.
-     * @param {number} id - L'identificatore dell'elemento.
-     * @param {Object} data - I nuovi dati da aggiornare.
-     * @returns {Promise<boolean>} True se l'aggiornamento ha avuto successo.
+     * Elimina un singolo messaggio da una chat.
+     * @param {string} storeName - Nome dello store (UUID della chat).
+     * @param {string} ID - ID del messaggio da eliminare.
+     * @returns {Promise<boolean>}
      */
-    async update(id, data) {
-        // -- Eseguo l'aggiornamento, combinando l'id con i nuovi dati.
-        return await this.transaction("put", { id, ...data });
+    async delete(storeName, ID) {
+        return await this.transaction(storeName, "delete", ID);
     }
 
     /**
-     * Elimina un elemento.
-     * @param {number} id - L'identificatore dell'elemento da eliminare.
-     * @returns {Promise<boolean>} True se l'eliminazione ha avuto successo.
+     * Recupera tutti i messaggi di una chat.
+     * @param {string} storeName - Nome dello store (UUID della chat).
+     * @returns {Promise<Array>}
      */
-    async delete(id) {
-        // -- Eseguo la cancellazione dell'elemento.
-        return await this.transaction("delete", id);
+    async getAll(storeName) {
+        return await this.transaction(storeName, "getAll");
     }
 
     /**
-     * Ottiene un elemento.
-     * @param {number} id - L'identificatore dell'elemento da ottenere.
-     * @returns {Promise<boolean|Object>} L'elemento trovato o false se non esiste.
+     * Elimina tutti i messaggi di una chat.
+     * @param {string} storeName - Nome dello store (UUID della chat).
+     * @returns {Promise<boolean>}
      */
-    async get(id) {
-        // -- Eseguo il recupero dell'elemento per id.
-        return await this.transaction("get", id);
-    }
-
-    /**
-     * Ottiene tutti gli elementi.
-     * @returns {Promise<Array>} Un array di tutti gli elementi.
-     */
-    async getAll() {
-        // -- Eseguo il recupero di tutti gli elementi.
-        return await this.transaction("getAll");
-    }
-
-    /**
-     * Elimina tutti gli elementi dallo store.
-     * @returns {Promise<boolean>} True se lo store è stato svuotato con successo.
-     */
-    async clearStore() {
-        // -- Eseguo la cancellazione di tutti gli elementi dallo store.
-        return await this.transaction("clear");
+    async clearStore(storeName) {
+        return await this.transaction(storeName, "clear");
     }
 }

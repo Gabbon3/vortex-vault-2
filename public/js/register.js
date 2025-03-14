@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!passkey_registered) return Log.summon(1, 'Try again');
         // ---
         Log.summon(0, "Everything is ready, welcome to Vortex Vault");
+        setTimeout(() => {
+            window.location.href = '/signin';
+        }, 3000);
     });
 });
 

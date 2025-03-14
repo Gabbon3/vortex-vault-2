@@ -266,7 +266,7 @@ export class ChatUI {
         const contact = ChatService.contacts.get(uuid);
         if (!contact) return;
         const chat = await ChatService.openChat(uuid);
-        if (!chat) return;
+        if (!chat) return false;
         // -- preparo l'html da stampare per i messaggi
         const messages = await ChatService.getMessages();
         const html = this.htmlChat(messages);

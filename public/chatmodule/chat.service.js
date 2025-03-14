@@ -56,7 +56,7 @@ export class ChatService {
      * Istanza di index db per gestire i messaggi della chat corrente
      * @type {IndexedDb}
      */
-    static currentIndexDb = null;
+    static IndexedDb = new IndexedDb('chatDB');
     /**
      * UUID della chat attualmente attiva
      * @type {string}
@@ -72,6 +72,9 @@ export class ChatService {
         this.email = await LocalStorage.get("email-utente");
         this.uuid = SessionStorage.get("uid");
         this.masterKey = SessionStorage.get("master-key");
+
+        // -- inizializzo l'indexed db
+        await this.IndexedDb.init();
 
         // -- inizializzo il websocket
         this.client = new WebSocketClient({
@@ -124,19 +127,17 @@ export class ChatService {
      * @returns 
      */
     static async openChat(uuid) {
-        // -- istanzio un index db per la chat
-        this.currentIndexDb = new IndexedDb(uuid, 'messages');
-        await this.currentIndexDb.init();
+        await this.IndexedDb.createStore(uuid);
         // ---
         return true;
     }
     
-    static async saveMessage(chatId, ID, message, timestamp, self) {
-        return await this.utils.saveMessage(chatId, ID, message, timestamp, self);
+    static async saveMessage(uuid, ID, message, timestamp, self) {
+        return await this.utils.saveMessage(uuid, ID, message, timestamp, self);
     }
 
-    static async deleteMessage(ID) {
-        return await this.utils.deleteMessage(ID);
+    static async deleteMessage(uuid, ID) {
+        return await this.utils.deleteMessage(uuid, ID);
     }
 
     /**
@@ -144,6 +145,6 @@ export class ChatService {
      * @returns {Array}
      */
     static async getMessages() {
-        return await this.currentIndexDb.getAll();
+        return await this.IndexedDb.getAll();
     }
 }

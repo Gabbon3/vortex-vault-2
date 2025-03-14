@@ -131,6 +131,38 @@ $spacers: (
     }
 }
 
+@each $key, $value in $spacers {
+    .p-#{$key} {
+        padding: $value !important;
+    }
+
+    .pt-#{$key} {
+        padding-top: $value !important;
+    }
+
+    .pr-#{$key} {
+        padding-right: $value !important;
+    }
+
+    .pb-#{$key} {
+        padding-bottom: $value !important;
+    }
+
+    .pl-#{$key} {
+        padding-left: $value !important;
+    }
+
+    .px-#{$key} {
+        padding-left: $value !important;
+        padding-right: $value !important;
+    }
+
+    .py-#{$key} {
+        padding-top: $value !important;
+        padding-bottom: $value !important;
+    }
+}
+
 .none {
     display: none;
 }
@@ -512,6 +544,14 @@ hr {
 
                 &:focus {
                     box-shadow: 0 0 0 4px color-mix(in srgb, var(--#{$color-name}), transparent 80%);
+                }
+            }
+
+            input[type="range"] {
+                background-color: var(--#{$color-name});
+
+                &::-webkit-slider-thumb {
+                    border-color: var(--#{$color-name});
                 }
             }
 
