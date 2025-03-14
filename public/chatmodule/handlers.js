@@ -117,7 +117,7 @@ export class Handlers {
         this.service.contacts.delete(data.from);
         await this.service.storage.saveContacts();
         // -- rimuovo la cronologia
-        await this.service.utils.deleteChatFromIndexedDb(data.from);
+        await this.service.utils.clearChat(data.from);
         // -- emetto evento
         Bus.dispatchEvent(new CustomEvent('chat-deleted', { detail: data.from }));
         return true;

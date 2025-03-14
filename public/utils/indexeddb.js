@@ -1,175 +1,188 @@
 export class IndexedDb {
-    constructor(dbName = "chatDB") {
+    constructor(dbName = "appDB") {
         this.dbName = dbName;
         this.db = null;
     }
 
     /**
-     * Inizializza il database.
+     * Inizializza il database con uno store specificato.
+     * @param {string} storeName - Nome dello store da creare
+     * @param {string} keyPath - Chiave primaria per lo store
+     * @param {Array} indexes - Array di oggetti { name, keyPath, unique }
      * @returns {Promise<boolean>}
      */
-    async init() {
+    async init(storeName, keyPath = "id", indexes = []) {
         if (this.db) return true;
 
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.dbName, 1);
-
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                console.log("Upgrade: Controllo esistenza store...");
-            };
-
-            request.onsuccess = (event) => {
-                this.db = event.target.result;
-                resolve(true);
-            };
-
-            request.onerror = (event) => {
-                console.warn(event.target.error);
-                resolve(false);
-            };
-        });
-    }
-
-    /**
-     * Crea dinamicamente uno store se non esiste
-     * @param {string} storeName - Il nome dello store (UUID della chat)
-     * @returns {Promise<boolean>}
-     */
-    async createStore(storeName) {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, this.db.version + 1);
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains(storeName)) {
-                    db.createObjectStore(storeName, { keyPath: "id" });
+                    const store = db.createObjectStore(storeName, { keyPath });
+                    // -- Creazione degli indici dinamici
+                    indexes.forEach(({ name, keyPath, unique }) => {
+                        store.createIndex(name, keyPath, { unique });
+                    });
                 }
             };
-            request.onsuccess = (event) => {
-                this.db = event.target.result;
-                resolve(true);
-            };
-            request.onerror = (event) => resolve(false);
-        });
-    }
 
-    /**
-     * Elimina uno store dal database.
-     * @param {string} storeName - Nome dello store da eliminare (UUID della chat).
-     * @returns {Promise<boolean>}
-     */
-    async deleteStore(storeName) {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, this.db.version + 1);
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                if (db.objectStoreNames.contains(storeName)) {
-                    db.deleteObjectStore(storeName);
-                    console.log(`🗑️ Store ${storeName} eliminato.`);
-                }
-            };
             request.onsuccess = (event) => {
                 this.db = event.target.result;
                 resolve(true);
             };
+
             request.onerror = (event) => {
-                console.warn(`❌ Errore nell'eliminazione dello store ${storeName}`);
+                console.warn(`❌ Errore nell'inizializzazione del database:`, event.target.error);
                 resolve(false);
             };
         });
     }
 
     /**
-     * Esegue una transazione sullo store specificato.
-     * @param {string} storeName - Nome dello store (UUID della chat).
-     * @param {string} operation - Tipo di operazione ("post", "get", "getAll", "put", "delete", "clear").
-     * @param {Object|number} [data] - Dati da inserire/eliminare/recuperare.
-     * @returns {Promise<boolean|Array|Object>}
+     * Inserisce un elemento nello store specificato.
+     * @param {string} storeName - Nome dello store
+     * @param {Object} data - Dati da inserire (deve contenere la chiave primaria)
+     * @returns {Promise<boolean>}
      */
-    async transaction(storeName, operation, data) {
-        if (this.db === null) throw new Error("DB not initialized");
-
-        const mode = ["post", "put", "delete", "clear"].includes(operation) ? "readwrite" : "readonly";
-
+    async insert(storeName, data) {
+        if (!this.db) throw new Error("DB not initialized");
+        // ---
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction(storeName, mode);
+            const transaction = this.db.transaction(storeName, "readwrite");
             const store = transaction.objectStore(storeName);
+            // ---
+            const request = store.add(data);
+            request.onsuccess = () => resolve(true);
+            request.onerror = (event) => {
+                console.warn(`❌ Errore nell'inserimento:`, event.target.error);
+                resolve(false);
+            };
+        });
+    }
+
+    /**
+     * Recupera un elemento dallo store tramite chiave primaria.
+     * @param {string} storeName - Nome dello store
+     * @param {string|number} id - Chiave primaria dell'elemento
+     * @returns {Promise<Object|null>}
+     */
+    async get(storeName, id) {
+        if (!this.db) throw new Error("DB not initialized");
+        // ---
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
+            // ---
+            const request = store.get(id);
+            request.onsuccess = () => resolve(request.result || null);
+            request.onerror = (event) => {
+                console.warn(`❌ Errore nel recupero:`, event.target.error);
+                resolve(null);
+            };
+        });
+    }
+
+    /**
+     * Recupera tutti gli elementi dallo store o quelli filtrati da un indice.
+     * @param {string} storeName - Nome dello store
+     * @param {string} [indexName] - Nome dell'indice per filtrare i risultati (opzionale)
+     * @param {string|number} [queryValue] - Valore da cercare nell'indice (opzionale)
+     * @returns {Promise<Array>}
+     */
+    async getAll(storeName, indexName = null, queryValue = null) {
+        if (!this.db) throw new Error("DB not initialized");
+        // ---
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
+            // ---
             let request;
-
-            switch (operation) {
-                case "post":
-                    request = store.add(data);
-                    break;
-                case "get":
-                    request = store.get(data);
-                    break;
-                case "getAll":
-                    request = store.getAll();
-                    break;
-                case "put":
-                    request = store.put(data);
-                    break;
-                case "delete":
-                    request = store.delete(data);
-                    break;
-                case "clear":
-                    request = store.clear();
-                    break;
-                default:
-                    reject(new Error("Invalid operation"));
-                    return;
+            if (indexName && queryValue !== null) {
+                const index = store.index(indexName);
+                request = index.getAll(queryValue);
+            } else {
+                request = store.getAll();
             }
+            // ---
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = (event) => {
+                console.warn(`❌ Errore nel recupero dei dati:`, event.target.error);
+                resolve([]);
+            };
+        });
+    }
 
+    /**
+     * Elimina un elemento dallo store tramite chiave primaria.
+     * @param {string} storeName - Nome dello store
+     * @param {string|number} id - Chiave primaria dell'elemento
+     * @returns {Promise<boolean>}
+     */
+    async delete(storeName, id) {
+        if (!this.db) throw new Error("DB not initialized");
+        // ---
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+            // ---
+            const request = store.delete(id);
+            request.onsuccess = () => resolve(true);
+            request.onerror = (event) => {
+                console.warn(`❌ Errore nella cancellazione:`, event.target.error);
+                resolve(false);
+            };
+        });
+    }
+
+    /**
+     * Elimina tutti gli elementi di uno store in base a un valore di un indice.
+     * @param {string} storeName - Nome dello store
+     * @param {string} indexName - Nome dell'indice
+     * @param {string|number} queryValue - Valore da filtrare
+     * @returns {Promise<boolean>}
+     */
+    async deleteByIndex(storeName, indexName, queryValue) {
+        if (!this.db) throw new Error("DB not initialized");
+        // ---
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+            const index = store.index(indexName);
+            // ---
+            const request = index.openCursor(queryValue);
             request.onsuccess = (event) => {
-                if (operation === "get" || operation === "getAll") {
-                    resolve(event.target.result || false);
+                const cursor = event.target.result;
+                if (cursor) {
+                    cursor.delete();
+                    cursor.continue();
                 } else {
                     resolve(true);
                 }
             };
-
             request.onerror = (event) => {
-                console.warn(event.target.error);
+                console.warn(`❌ Errore nella cancellazione:`, event.target.error);
                 resolve(false);
             };
         });
     }
 
     /**
-     * Inserisce un nuovo messaggio nello store specificato.
-     * @param {string} storeName - Nome dello store (UUID della chat).
-     * @param {Object} data - Dati del messaggio.
+     * Cancella completamente il database.
      * @returns {Promise<boolean>}
      */
-    async insert(storeName, data) {
-        return await this.transaction(storeName, "post", data);
-    }
-
-    /**
-     * Elimina un singolo messaggio da una chat.
-     * @param {string} storeName - Nome dello store (UUID della chat).
-     * @param {string} ID - ID del messaggio da eliminare.
-     * @returns {Promise<boolean>}
-     */
-    async delete(storeName, ID) {
-        return await this.transaction(storeName, "delete", ID);
-    }
-
-    /**
-     * Recupera tutti i messaggi di una chat.
-     * @param {string} storeName - Nome dello store (UUID della chat).
-     * @returns {Promise<Array>}
-     */
-    async getAll(storeName) {
-        return await this.transaction(storeName, "getAll");
-    }
-
-    /**
-     * Elimina tutti i messaggi di una chat.
-     * @param {string} storeName - Nome dello store (UUID della chat).
-     * @returns {Promise<boolean>}
-     */
-    async clearStore(storeName) {
-        return await this.transaction(storeName, "clear");
+    async deleteDatabase() {
+        return new Promise((resolve, reject) => {
+            if (this.db) {
+                this.db.close();
+            }
+            // ---
+            const request = indexedDB.deleteDatabase(this.dbName);
+            request.onsuccess = () => resolve(true);
+            request.onerror = (event) => {
+                console.warn(`❌ Errore nell'eliminazione del database:`, event.target.error);
+                resolve(false);
+            };
+        });
     }
 }

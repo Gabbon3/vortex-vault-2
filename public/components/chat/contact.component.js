@@ -36,8 +36,6 @@ class ContactElement extends HTMLElement {
 
     openChat() {
         ChatUI.openChat(this.uuid);
-        ChatUI.activeChatUuid = this.uuid;
-        ChatService.activeChatUuid = this.uuid;
         Windows.open('win-chat');
     }
 

@@ -56,7 +56,7 @@ export class ChatService {
      * Istanza di index db per gestire i messaggi della chat corrente
      * @type {IndexedDb}
      */
-    static IndexedDb = new IndexedDb('chatDB');
+    static IndexedDb = null;
     /**
      * UUID della chat attualmente attiva
      * @type {string}
@@ -72,9 +72,15 @@ export class ChatService {
         this.email = await LocalStorage.get("email-utente");
         this.uuid = SessionStorage.get("uid");
         this.masterKey = SessionStorage.get("master-key");
-
+        
         // -- inizializzo l'indexed db
-        await this.IndexedDb.init();
+        this.IndexedDb = new IndexedDb('chatDB');
+        const dbInit = await this.IndexedDb.init('messages', 'id', [{
+            name: 'chatIdIndex',
+            keyPath: 'chatId',
+            unique: false,
+        }]);
+        console.log('Db Init ->',dbInit);
 
         // -- inizializzo il websocket
         this.client = new WebSocketClient({
@@ -122,12 +128,12 @@ export class ChatService {
     }
 
     /**
-     * Per il service, avviare una chat significa istanzare l'IndexedDb associato all'utente con cui la si vuole avviare
-     * @param {string} uuid - uuid dell'utente destinatario, nonche id del db indexed
+     * 
+     * @param {string} uuid - uuid dell'utente destinatario
      * @returns 
      */
     static async openChat(uuid) {
-        await this.IndexedDb.createStore(uuid);
+        this.activeChatUuid = uuid;
         // ---
         return true;
     }
@@ -136,15 +142,16 @@ export class ChatService {
         return await this.utils.saveMessage(uuid, ID, message, timestamp, self);
     }
 
-    static async deleteMessage(uuid, ID) {
-        return await this.utils.deleteMessage(uuid, ID);
+    static async deleteMessage(ID) {
+        return await this.utils.deleteMessage(ID);
     }
 
     /**
      * Restituisce tutti i messaggi di una chat da indexed db
+     * @param {string} uuid 
      * @returns {Array}
      */
-    static async getMessages() {
-        return await this.IndexedDb.getAll();
+    static async getMessages(uuid) {
+        return await this.IndexedDb.getAll('messages', 'chatIdIndex', uuid);
     }
 }

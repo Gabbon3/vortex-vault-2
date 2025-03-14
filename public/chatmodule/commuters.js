@@ -105,7 +105,7 @@ export class Commuters {
         // -- Aggiorno i contatti su localStorage.
         await this.service.storage.saveContacts();
         // -- Rimuovo la cronologia della chat locale se presente.
-        await this.service.utils.deleteChatFromIndexedDb(uuid);
+        await this.service.utils.clearChat(uuid);
         // -- Preparo il messaggio di eliminazione chat.
         const message = {
             from: this.service.uuid,

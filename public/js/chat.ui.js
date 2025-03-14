@@ -129,6 +129,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (deleted) Windows.close('win-contact-manager');
     });
     /**
+     * Elimina messaggio
+     */
+    ChatUI.messages.addEventListener("dblclick", async (event) => {
+        const messageElement = event.target.closest("message-g"); // Trova il messaggio più vicino
+        if (!messageElement) return;
+    
+        if (!confirm("Confirm that you wish to delete this message?")) return;
+    
+        const deleted = await ChatService.deleteMessage(messageElement.getAttribute('id'));
+        if (deleted) messageElement.remove();
+    });
+    /**
      * Nuovo messaggio arrivato
      */
     Bus.addEventListener("new-message", (event) => {
@@ -148,7 +160,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         notify('New chat request', `You received a chat request from ${email}`);
         Log.summon(3, 'New chat request, click here to check it.', () => {
             Windows.open('win-contacts');
-            document.getElementById('cont-crl').style.display = '';
+            document.getElementById('cont-crl').classList.remove('close');
         });
         ChatUI.htmlChatRequests();
     });
@@ -268,9 +280,14 @@ export class ChatUI {
         const chat = await ChatService.openChat(uuid);
         if (!chat) return false;
         // -- preparo l'html da stampare per i messaggi
-        const messages = await ChatService.getMessages();
-        const html = this.htmlChat(messages);
-        this.messages.innerHTML = html;
+        const messages = await ChatService.getMessages(uuid);
+        // -- genero l'html della chat
+        const messageNodesArray = this.getMessagesNodes(messages);
+        // -- 
+        const fragment = document.createDocumentFragment();
+        messageNodesArray.forEach(node => fragment.appendChild(node));
+        this.messages.innerHTML = '';
+        this.messages.appendChild(fragment);
         this.chatContactName.textContent = contact.nickname ?? contact.uuid;
         this.messages.scrollTop = this.messages.scrollHeight;
     }
@@ -278,9 +295,8 @@ export class ChatUI {
      * Eliminazione chat
      */
     static async clearChat() {
-        const uuid = ChatService.activeChatUuid;
         // ---
-        const clear = await ChatService.clearChat(uuid);
+        const clear = await ChatService.clearChat(ChatService.activeChatUuid);
         if (!clear) return Log.summon(1, 'Something went wrong during chat cleaning.');
         // ---
         Log.summon(0, 'Successful clean chat.');
@@ -290,17 +306,17 @@ export class ChatUI {
      * @param {Array} messages
      * @returns {string}
      */
-    static htmlChat(messages) {
+    static getMessagesNodes(messages) {
         if (!messages || !(messages instanceof Array)) return "";
         // ---
-        let html = "";
+        let nodes = new Array(messages.length);
         const l = messages.length;
         for (let i = 0; i < l; i++) {
             const { id: ID, msg } = messages[i];
             const [message, timestamp, self] = msg;
-            html += this.htmlMessage(ID, message, timestamp, self);
+            nodes[i] = this.getMessageElement(ID, message, timestamp, self);
         }
-        return html;
+        return nodes;
     }
     /**
      * Appende un messaggio nella chat html
@@ -310,7 +326,7 @@ export class ChatUI {
      * @param {boolean} self - true se il messaggio è dell'utente corrente, false di un contatto
      */
     static appendMessage(ID, message, timestamp, self) {
-        this.messages.innerHTML += this.htmlMessage(ID, message, timestamp, self);
+        this.messages.appendChild(this.getMessageElement(ID, message, timestamp, self));
         this.messages.scrollTop = this.messages.scrollHeight;
     }
     /**
@@ -319,10 +335,16 @@ export class ChatUI {
      * @param {*} message
      * @param {number} timestamp - data in millisecondi
      * @param {boolean} self
-     * @returns
+     * @returns {HTMLElement}
      */
-    static htmlMessage(ID, message, timestamp, self) {
-        return `<message-g id="${ID}" self="${self}" msg="${message}" timestamp="${timestamp}"></message-g>`;
+    static getMessageElement(ID, message, timestamp, self) {
+        const newMessage = document.createElement("message-g");
+        newMessage.setAttribute("id", ID);
+        newMessage.setAttribute("self", self);
+        newMessage.setAttribute("timestamp", timestamp);
+        newMessage.setAttribute("self", self);
+        newMessage.innerHTML = message;
+        return newMessage;
     }
     /**
      * funzioni di ordinamento

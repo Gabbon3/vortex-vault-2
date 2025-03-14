@@ -26,37 +26,16 @@ export class Utils {
      * @returns {boolean}
      */
     async clearChat(uuid = null) {
-        // -- se non viene passato un uuid specifico, si presume che il db da svuotare sia quello attualmente attivo
-        // -- oppure se lo uuid passato corrisponde alla chat attualmente attiva
-        if (!uuid || uuid === this.service.activeChatUuid) return this.service.IndexedDb.clearStore();
-        // -- se no, creo un istanza a parte ed effettuo lo svuotamento
-        const externalDb = new IndexedDb(uuid, 'messages');
-        await externalDb.init();
-        return await externalDb.clearStore();
-    }
-
-    /**
-     * Elimina il db associato ad una chat, quindi anche i messaggi
-     * @param {string} uuid - id del db, nonche uuid del contatto
-     * @returns {boolean}
-     */
-    async deleteChatFromIndexedDb(uuid = null) {
-        // -- se non viene passato un uuid specifico, si presume che il db da eliminare sia quello attualmente attivo
-        // -- oppure se lo uuid passato corrisponde alla chat attualmente attiva
-        if (!uuid || uuid === this.service.activeChatUuid) return this.service.IndexedDb.clearStore();
-        // -- se no, creo un istanza a parte ed effettuo lo svuotamento
-        const externalDb = new IndexedDb(uuid, 'messages');
-        await externalDb.init();
-        return await externalDb.deleteDatabase();
+        if (!uuid) return false;
+        return await this.service.IndexedDb.deleteByIndex('messages', 'chatIdIndex', uuid);
     }
 
     /**
      * Elimina un messaggio
-     * @param {string} uuid - uuid della chat, nonche uuid dell'utente opposto
      * @param {string} ID 
      */
-    async deleteMessage(uuid, ID) {
-        return await this.service.IndexedDb.delete(uuid, ID);
+    async deleteMessage(ID) {
+        return await this.service.IndexedDb.delete('messages', ID);
     }
 
     /**
@@ -69,18 +48,19 @@ export class Utils {
      */
     async saveMessage(uuid, ID, message, timestamp, self) {
         // -- salvataggio su indexedDb
-        const data = this.encodeMessage(ID, message, timestamp, self);
-        this.service.IndexedDb.insert(uuid, data);
+        const data = this.encodeMessage(uuid, ID, message, timestamp, self);
+        this.service.IndexedDb.insert('messages', data);
     }
     /**
      * Codifica un messaggio per essere memorizzato su indexed db
+     * @param {string} uuid - uuid del contatto
      * @param {string} ID - uuid del messaggio
      * @param {*} message - messaggio da salvare
      * @param {number} timestamp - data del messaggio
      * @param {boolean} self - true se inviato da me, false se ricevuto
      * @returns {Array}
      */
-    encodeMessage(ID, message, timestamp, self) {
-        return { id: ID, msg: [message, timestamp, self]};
+    encodeMessage(uuid, ID, message, timestamp, self) {
+        return { id: ID, chatId: uuid, msg: [message, timestamp, self]};
     }
 };
