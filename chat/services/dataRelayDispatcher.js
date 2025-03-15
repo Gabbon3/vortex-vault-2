@@ -25,12 +25,13 @@ export class DataRelayDispatcher {
      * 
      */
     handleData = (decryptedData, wsUserMap, clients) => {
-        const { recipientID: userUUID, data } = decryptedData;
+        const { recipientID: userUUID, data, noPersistance } = decryptedData;
+        // -- la proprietà noPersistance se true fa si che i dati non vengano messi in attesa sul db
         // -- verifico se il destinatario è online
         // -- se è online, invio il messaggio
         // -- altrimenti, salvo il messaggio in RocksDB per poi inviarlo quando il destinatario riconoscerà la connessione        
         const wsUUID = wsUserMap.get(userUUID);
-        if (wsUUID) {
+        if ((noPersistance && wsUUID) || wsUUID) {
             clients.get(wsUUID).sendE(data);
         } else {
             this.rocksManager.insert(userUUID, data);

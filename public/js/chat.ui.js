@@ -56,19 +56,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Resize automatico della textarea
      */
-    ChatUI.messageTextarea.addEventListener('input', () => {
-        const newRowsCount = ChatUI.messageTextarea.value.split('\n').length;
-        if (newRowsCount >= ChatUI.maxMessageRows) return;
-        ChatUI.messageTextarea.rows = newRowsCount;
-    });
+    // ChatUI.messageTextarea.addEventListener('input', () => {
+    //     const newRowsCount = ChatUI.messageTextarea.value.split('\n').length;
+    //     if (newRowsCount >= ChatUI.maxMessageRows) return;
+    //     ChatUI.messageTextarea.rows = newRowsCount;
+    // });
     /**
-     * Premendo Ctrl + Invio, invia il form
+     * Premendo Ctrl + Invio, va a capo
      */
     ChatUI.messageTextarea.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             ChatUI.messageForm.requestSubmit();
         }
+        /**
+         * Sta scrivendo...
+         */
+        if (!ChatUI.isTyping) {
+            ChatUI.sendIsTyping(true);
+        }
+        clearTimeout(ChatUI.typingTimeout);
+        ChatUI.typingTimeout = setTimeout(() => {
+            ChatUI.sendIsTyping(false);
+        }, 1000);
     });
     /**
      * Ordinamento Contatto
@@ -182,6 +192,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         ChatUI.html_contacts();
     });
     /**
+     * Evento tipizzazione in ingresso
+     */
+    Bus.addEventListener('is-typing', (event) => {
+        const { from, isTyping } = event.detail;
+        ChatUI.handleTypingIndicator(from, isTyping);
+    });
+    /**
      * Nessuna autenticazione per il web socket
      */
     Bus.addEventListener('ws-no-auth', (event) => {
@@ -197,6 +214,9 @@ export class ChatUI {
      * @type {HTMLElement}
      */
     static messageTextarea = null;
+    static isTyping = false;
+    static typingTimeout = null;
+    static contactStatus = null;
     static maxMessageRows = 7;
     /**
      * Form per l'invio dei messaggi
@@ -239,6 +259,8 @@ export class ChatUI {
         this.messages = document.getElementById("messages");
         // ---
         this.messageTextarea = document.querySelector('#message-textarea');
+        // ---
+        this.contactStatus = document.querySelector('#chat-contact-status');
         // ---
         this.messageForm = document.querySelector('#send-message');
         // -- Nome di contatto
@@ -317,6 +339,23 @@ export class ChatUI {
             nodes[i] = this.getMessageElement(ID, message, timestamp, self);
         }
         return nodes;
+    }
+    /**
+     * Invia un messaggio ws di tipo typing
+     * @param {boolean} isTyping 
+     */
+    static sendIsTyping(isTyping) {
+        ChatService.sendIsTyping(isTyping);
+    }
+    /**
+     * Gestisce l'evento di tipizzazione
+     * @param {string} from 
+     * @param {boolean} isTyping 
+     */
+    static handleTypingIndicator(from, isTyping) {
+        if (from !== ChatService.activeChatUuid) return;
+        // ---
+        this.contactStatus.textContent = isTyping ? 'is typing...' : '*';
     }
     /**
      * Appende un messaggio nella chat html

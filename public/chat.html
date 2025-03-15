@@ -87,9 +87,10 @@
             <button class="btn primary l mr-2" id="chat-settings">
                 <span class="material-symbols-rounded">settings</span>
             </button>
-            <h2 class="icon flex d-row w-100 m-0">
-                <span id="chat-contact-name" class="w-100" spellcheck="false" contenteditable="true">Null</span>
-            </h2>
+            <div class="icon flex d-column w-100">
+                <h3 id="chat-contact-name" class="m-0" spellcheck="false" contenteditable="true">Null</h3>
+                <p class="description m-0" id="chat-contact-status">*</p>
+            </div>
             <button class="btn t close l last" data-target-close="win-chat">
                 <span class="material-symbols-rounded">close</span>
             </button>
@@ -98,7 +99,8 @@
             <!-- MESSAGGI -->
         </div>
         <form class="flex gap-50 d-row nowrap mt-2" id="send-message">
-            <textarea type="text" rows="1" resize="none" name="msg" id="message-textarea" class="input-text" autocomplete="off" required placeholder="..."></textarea>
+            <!-- <textarea type="text" rows="1" resize="none" name="msg" id="message-textarea" class="input-text" autocomplete="off" required placeholder="..."></textarea> -->
+            <input type="text" name="msg" id="message-textarea" class="input-text" autocomplete="off" required placeholder="...">
             <button type="submit" class="btn primary" title="Send message">
                 <span class="material-symbols-rounded">send</span>
             </button>

@@ -107,6 +107,10 @@ export class ChatService {
         return this.commuters.sendMessage(contactUUID, message);
     }
 
+    static async sendIsTyping(isTyping) {
+        return this.commuters.sendIsTyping(this.activeChatUuid, isTyping);
+    }
+
     static async deleteContact(uuid = this.activeChatUuid) {
         return this.commuters.deleteContact(uuid);
     }

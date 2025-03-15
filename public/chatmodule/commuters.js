@@ -153,6 +153,22 @@ export class Commuters {
     }
 
     /**
+     * 
+     * @param {string} contactUUID 
+     * @param {boolean} isTyping 
+     */
+    async sendIsTyping(contactUUID, isTyping) {
+        const message = {
+            from: this.service.uuid,
+            recipientID: contactUUID,
+            type: "is_typing",
+            isTyping,
+            noPersistance: true,
+        };
+        this.service.client.send(contactUUID, message);
+    }
+
+    /**
      * Ignora una richiesta di chat da parte di un utente
      * @param {string} senderID
      * @returns {boolean}

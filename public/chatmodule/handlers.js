@@ -26,6 +26,8 @@ export class Handlers {
                 return this.handleMsg(data);
             case "chat_delete":
                 return this.handleChatDelete(data);
+            case "is_typing":
+                return this.handleIsTyping(data);
             default:
                 return this.handleUnknownType(data);
         }
@@ -121,6 +123,17 @@ export class Handlers {
         // -- emetto evento
         Bus.dispatchEvent(new CustomEvent('chat-deleted', { detail: data.from }));
         return true;
+    }
+
+    /**
+     * Gestisce l'evento della tipizzazione
+     * @param {*} data 
+     */
+    async handleIsTyping(data) {
+        Bus.dispatchEvent(new CustomEvent('is-typing', { detail: {
+            from: data.from,
+            isTyping: data.isTyping,
+        }}));
     }
 
     /**
