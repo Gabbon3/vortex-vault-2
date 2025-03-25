@@ -97,6 +97,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.currentTarget.classList.remove('show');
     });
     /**
+     * per ogni slider-container, elimino padding top e bottom e memorizzo anche 
+     */
+    document.querySelectorAll('.slider-cont').forEach(e => {
+        const style = window.getComputedStyle(e);
+        e.dataset.pt = pxToNumber(style.paddingTop);
+        e.dataset.pb = pxToNumber(style.paddingBottom);
+        e.style.paddingBottom = 0;
+        e.style.paddingTop = 0;
+    });
+    /**
      * sliders
      */
     document.addEventListener("click", (e) => {
@@ -106,8 +116,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const targetId = sliderBtn.getAttribute('slider');
         const target = document.getElementById(targetId);
         if (!target) return;
-
-        // target.style.display = target.style.display === 'none' ? '' : 'none';
-        target.classList.toggle('close');
+    
+        const isOpen = target.style.maxHeight;
+        target.classList.toggle('slider-open');
+    
+        if (isOpen) {
+            target.style.maxHeight = null;
+            target.style.paddingTop = 0;
+            target.style.paddingBottom = 0;
+        } else {
+            target.style.paddingTop = null;
+            target.style.paddingBottom = null;
+            const contentHeight = target.scrollHeight + Number(target.dataset.pt) + Number(target.dataset.pb);
+            target.style.maxHeight = contentHeight + 'px';
+        }
     });
+
+    function pxToNumber(px) {
+        return parseFloat(px.replace('px', '')) || 0;
+    }
 });

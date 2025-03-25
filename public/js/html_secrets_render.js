@@ -122,7 +122,7 @@ export class HtmlSecretsRender {
         Note
     </label>
     <div class="container-input-text">
-        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
+        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="4">${vals.N ?? ''}</textarea>
     </div>
 </div>`;
     }
@@ -226,7 +226,7 @@ export class HtmlSecretsRender {
         Note
     </label>
     <div class="container-input-text">
-        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="3">${vals.N ?? ''}</textarea>
+        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="4">${vals.N ?? ''}</textarea>
     </div>
 </div>`;
     }

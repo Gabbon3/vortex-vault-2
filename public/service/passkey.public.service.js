@@ -170,8 +170,8 @@ export class PasskeyService {
             }
             return false;
         }
-        // -- se ce stata una risposta ed non è ancora stato abilitato il passkey token lo imposto
-        if (!passkey_token_is_valid || options.passkey_need === true) await LocalStorage.set('passkey-token-expire', new Date(Date.now() + (10 * 60 * 1000)));
+        // -- se ce stata una risposta e non è ancora stato abilitato il passkey token lo imposto
+        if ((!passkey_token_is_valid || options.passkey_need === true) && !bypass_token) await LocalStorage.set('passkey-token-expire', new Date(Date.now() + (10 * 60 * 1000)));
         // -- passo alla callback la risposta
         return callback instanceof Function ? await callback(response) : true;
     }

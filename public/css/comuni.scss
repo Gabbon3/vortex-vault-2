@@ -490,28 +490,6 @@ hr {
     }
 }
 
-.slider {
-    margin: 0 !important;
-}
-
-.slider-cont {
-    margin-top: 0.5rem;
-    overflow: hidden !important;
-    max-height: 500px;
-    opacity: 1;
-    padding-top: inherit;
-    padding-bottom: inherit;
-    transition: max-height 0.3s linear, margin-top 0.3s linear, opacity 0.3s linear, padding 0.3s linear;
-    
-    &.close {
-        margin-top: 0;
-        max-height: 0;
-        opacity: 0;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-    }
-}
-
 .maincolor {
     /*
     COLORI PRINCIPALI
@@ -869,4 +847,17 @@ input[type="range"] {
         border-radius: 1.25rem;
         cursor: pointer;
     }
+}
+
+.slider {
+    margin: 0 !important;
+    cursor: pointer;
+}
+
+.slider-cont {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+
+    // &.slider-open {}
 }

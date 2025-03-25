@@ -401,7 +401,7 @@ export class ChatUI {
     static html_contacts(order = this.current_order) {
         const contactsList = Array.from(ChatService.contacts.values());
         if (contactsList.length === 0)
-            return (document.querySelector("#contacts-list").innerHTML = "");
+            return (document.querySelector("#contacts-list").innerHTML = "No contacts yet.");
         let html = ``;
         const get_checkpoint = (order, vault) => {
             return order === "az" || order === "za"
