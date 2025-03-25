@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const vault = VaultService.get_vault(id);
         // -- imposto il vault id nel pulsante elimina
         document.getElementById('btn-delete-vault').setAttribute('vault-id', id);
+        document.getElementById('update-vault-uuid').textContent = "ID " + id;
         // -- ottengo il Secret Type
         const ST = vault.secrets.ST ?? 0;
         VaultUI.update_secrets_type_input.value = ST;
@@ -401,6 +402,12 @@ export class VaultUI {
             html += HtmlSecretsRender.get_list_item(ST, vault);
         }
         this.html_list.innerHTML = html;
+        // -- se ce una ricerca attiva, la mantengo
+        this.search.tabella(
+            document.getElementById('search-vault'),
+            'vaults-list',
+            'vault-li'
+        );
     }
     /**
      * Carica gli username utilizzati dall'utente sul datalist
