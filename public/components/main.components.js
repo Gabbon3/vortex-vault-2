@@ -97,14 +97,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.currentTarget.classList.remove('show');
     });
     /**
-     * per ogni slider-container, elimino padding top e bottom e memorizzo anche 
+     * per ogni slider-container, memorizzo padding e margin, top e bottom
+     * settandoli a 0, quindi lo slider è chiuso
      */
     document.querySelectorAll('.slider-cont').forEach(e => {
         const style = window.getComputedStyle(e);
         e.dataset.pt = pxToNumber(style.paddingTop);
         e.dataset.pb = pxToNumber(style.paddingBottom);
-        e.style.paddingBottom = 0;
         e.style.paddingTop = 0;
+        e.style.paddingBottom = 0;
+        e.style.marginTop = 0;
+        e.style.marginBottom = 0;
     });
     /**
      * sliders
@@ -122,9 +125,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     
         if (isOpen) {
             target.style.maxHeight = null;
+            // -- margin
+            target.style.marginTop = 0;
+            target.style.marginBottom = 0;
+            // -- padding
             target.style.paddingTop = 0;
             target.style.paddingBottom = 0;
         } else {
+            // -- margin
+            target.style.marginTop = null;
+            target.style.marginBottom = null;
+            // -- padding
             target.style.paddingTop = null;
             target.style.paddingBottom = null;
             const contentHeight = target.scrollHeight + Number(target.dataset.pt) + Number(target.dataset.pb);

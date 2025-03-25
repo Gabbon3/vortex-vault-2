@@ -850,14 +850,18 @@ input[type="range"] {
 }
 
 .slider {
-    margin: 0 !important;
+    margin: 0;
     cursor: pointer;
 }
 
 .slider-cont {
+    margin-top: 0.5rem;
     max-height: 0;
+    opacity: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
+    transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
 
-    // &.slider-open {}
+    &.slider-open {
+        opacity: 1;
+    }
 }
