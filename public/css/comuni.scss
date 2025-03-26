@@ -162,6 +162,13 @@ $spacers: (
         padding-bottom: $value !important;
     }
 }
+// margin e padding top e bottom = 0
+.mpy-0 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
 
 .none {
     display: none;

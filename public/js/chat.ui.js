@@ -6,6 +6,7 @@ import { Bus, notify } from "../utils/eventBus.js";
 import { Log } from "../utils/log.js";
 import { Windows } from "../utils/windows.js";
 import { UUID } from "../utils/uuid.js";
+import { Sliders } from "../utils/sliders.js";
 
 window.ChatService = ChatService;
 window.UUID = UUID;
@@ -170,7 +171,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         notify('New chat request', `You received a chat request from ${email}`);
         Log.summon(3, 'New chat request, click here to check it.', () => {
             Windows.open('win-contacts');
-            document.getElementById('cont-crl').classList.remove('close');
+            Sliders.manageSlider('cont-crl', true);
         });
         ChatUI.htmlChatRequests();
     });

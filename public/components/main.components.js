@@ -22,6 +22,7 @@ import './settings/tools.component.js';
 import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
 import '../js/theme.ui.js';
+import { Sliders } from '../utils/sliders.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log(
@@ -97,53 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.currentTarget.classList.remove('show');
     });
     /**
-     * per ogni slider-container, memorizzo padding e margin, top e bottom
-     * settandoli a 0, quindi lo slider è chiuso
+     * SLIDERS
      */
-    document.querySelectorAll('.slider-cont').forEach(e => {
-        const style = window.getComputedStyle(e);
-        e.dataset.pt = pxToNumber(style.paddingTop);
-        e.dataset.pb = pxToNumber(style.paddingBottom);
-        e.style.paddingTop = 0;
-        e.style.paddingBottom = 0;
-        e.style.marginTop = 0;
-        e.style.marginBottom = 0;
-    });
-    /**
-     * sliders
-     */
-    document.addEventListener("click", (e) => {
-        const sliderBtn = e.target.closest('.slider');
-        if (!sliderBtn) return;
-    
-        const targetId = sliderBtn.getAttribute('slider');
-        const target = document.getElementById(targetId);
-        if (!target) return;
-    
-        const isOpen = target.style.maxHeight;
-        target.classList.toggle('slider-open');
-    
-        if (isOpen) {
-            target.style.maxHeight = null;
-            // -- margin
-            target.style.marginTop = 0;
-            target.style.marginBottom = 0;
-            // -- padding
-            target.style.paddingTop = 0;
-            target.style.paddingBottom = 0;
-        } else {
-            // -- margin
-            target.style.marginTop = null;
-            target.style.marginBottom = null;
-            // -- padding
-            target.style.paddingTop = null;
-            target.style.paddingBottom = null;
-            const contentHeight = target.scrollHeight + Number(target.dataset.pt) + Number(target.dataset.pb);
-            target.style.maxHeight = contentHeight + 'px';
-        }
-    });
-
-    function pxToNumber(px) {
-        return parseFloat(px.replace('px', '')) || 0;
-    }
+    Sliders.init();
 });
