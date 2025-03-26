@@ -104,7 +104,7 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded warning">vpn_key</span>
                 Advanced Session
             </h3>
-            <div class="isle bg-4 slider-cont" data-open="false" id="cont-sudo-session">
+            <div class="isle bg-4 slider-cont slow" data-open="false" id="cont-sudo-session">
                 <p>
                     Enable <strong>advanced session</strong> to perform critical operations.
                     The session will only last 45 minutes for safety reasons. <br>
@@ -151,7 +151,7 @@ class SettingsComponent extends HTMLElement {
                 Change Password
                 <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
             </h3>
-            <form class="isle bg-4 slider-cont" data-open="false" id="form-change-password">
+            <form class="isle bg-4 slider-cont slow" data-open="false" id="form-change-password">
                 <p>
                     <strong>Before changing your password</strong>
                     you should know that you will have to manually restore a backup, 
@@ -301,7 +301,7 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded">palette</span>
                 Theme
             </h3>
-            <div class="isle bg-4 slider-cont" data-open="false" id="cont-theme">
+            <div class="isle bg-4 slider-cont fast" data-open="false" id="cont-theme">
                 <p class="m-0 mb-2">
                     Change the color scheme.
                 </p>
