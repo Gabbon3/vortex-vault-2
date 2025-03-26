@@ -862,15 +862,15 @@ input[type="range"] {
     transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
 
     &.fast {
-        transition-duration: 0.2s;
+        transition-duration: 0.25s;
     }
 
     &.slow {
-        transition-duration: 0.4s;
+        transition-duration: 0.35s;
     }
 
     &.slower {
-        transition-duration: 0.5s;
+        transition-duration: 0.4s;
     }
 
     &.slider-open {
