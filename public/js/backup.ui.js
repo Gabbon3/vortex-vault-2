@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Genera e scarica un file di backup
      */
-    Form.onsubmit('form-create-backup-locally', async (form, elements) => {
+    Form.register('form-create-backup-locally', async (form, elements) => {
         const { key, key_r } = elements;
         // ---
         if (key !== key_r) return Log.summon(1, "Custom passwords do not match");
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Ripristina un backup da un file locale
      */
-    Form.onsubmit('form-restore-backup-from-file', async (form, elements) => {
+    Form.register('form-restore-backup-from-file', async (form, elements) => {
         const { key, backup_file } = elements;
         // ---
         Windows.loader(true);

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Send Chat Request
      */
-    Form.onsubmit("form-search-user", async (form, elements) => {
+    Form.register("form-search-user", async (form, elements) => {
         const { email } = elements;
         const result = await ChatService.searchUser(email);
         if (result) {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Invio messaggio
      */
-    Form.onsubmit(ChatUI.messageForm, async (form, elements) => {
+    Form.register(ChatUI.messageForm, async (form, elements) => {
         const { msg } = elements;
         const message = msg.trim();
         if (message === '') return;

@@ -1,10 +1,10 @@
-import { Windows } from "../utils/windows.js";
 import { AuthService } from "../service/auth.service.js";
+import { Bytes } from "../utils/bytes.js";
+import { FileUtils } from "../utils/file.utils.js";
 import { Form } from "../utils/form.js";
 import { LocalStorage } from "../utils/local.js";
 import { Log } from "../utils/log.js";
-import { FileUtils } from "../utils/file.utils.js";
-import { Bytes } from "../utils/bytes.js";
+import { Windows } from "../utils/windows.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     /**
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * LOGIN
      */
-    Form.onsubmit('accedi', async (form, elements) => {
+    Form.register('accedi', async (form, elements) => {
         const { email, password } = elements;
         // ---
         Windows.loader(true);
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * PASSWORD DIMENTICATA
      */
-    Form.onsubmit('form-password-recovery', async (form, elements) => {
+    Form.register('form-password-recovery', async (form, elements) => {
         const { email, file, request_id, code } = elements;
         Windows.loader(true);
         // ---
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * DEVICE RECOVERY EMAIL
      */
-    Form.onsubmit('form-device-recovery-email', async (form, elements) => {
+    Form.register('form-device-recovery-email', async (form, elements) => {
         const { email, request_id, code } = elements;
         if (!code || code.length !== 6) return;
         Windows.loader(true);

@@ -11,12 +11,12 @@ import { DeviceUI } from "./device.ui.js";
 import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";
+import { VaultDelegator } from "../components/delegators/vault.delegator.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     // ---
     await VaultUI.init();
-    // const win_update_vault = document.getElementById('win-update-vault');
     const addButtonListeners = () => {
         const config = [
             { id: 'btn-add-vault', type: 0, render: HtmlSecretsRender.vault, color: 'orange', title: "New Login" },
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * CREATE VAULT
      */
-    Form.onsubmit("form-create-vault", async (form, elements) => {
+    Form.register("form-create-vault", async (form, elements) => {
         if (!confirm(`Have you entered everything for ${elements.T}`)) return;
         // ---
         Windows.loader(true);
@@ -65,47 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             Log.summon(2, `Error while saving ${elements.T}`);
         }
         Windows.loader(false);
-    });
-    /**
-     * Visualizza un Vault
-     */
-    VaultUI.html_list.addEventListener("click", async (event) => {
-        const vaultElement = event.target.closest("vault-li"); // Trova il messaggio più vicino
-        if (!vaultElement) return;
-        // ---
-        const id = vaultElement.getAttribute("id");
-        Windows.open('win-update-vault');
-        // --
-        const vault = VaultService.get_vault(id);
-        // -- imposto il vault id nel pulsante elimina
-        document.getElementById('btn-delete-vault').setAttribute('vault-id', id);
-        document.getElementById('update-vault-uuid').textContent = "ID " + id;
-        // -- ottengo il Secret Type
-        const ST = vault.secrets.ST ?? 0;
-        VaultUI.update_secrets_type_input.value = ST;
-        // -- imposto il colore della finestra
-        const color = HtmlSecretsRender.get_color(ST);
-        document.getElementById('win-update-vault').setAttribute('class', 'window m show maincolor ' + color);
-        // -- genero l'html
-        VaultUI.update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
-        // -- imposto il titolo
-        document.getElementById('vault-title-to-update').textContent = vault.secrets.T;
-        // -- importo l'id del vault
-        document.getElementById('update-vault-id').value = vault.id;
-        // -- riempio le date
-        document.getElementById('update-created-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.createdAt));
-        document.getElementById('update-last-modified-date').textContent = date.format("%j %M %Y at %H:%i", new Date(vault.updatedAt));
-        // -- riempio i campi custom
-        const custom_container = document.getElementById('update-custom-sections-vault');
-        custom_container.innerHTML = '';
-        let i = 0;
-        for (const secret in vault.secrets) {
-            if (secret.length === 1 || secret.length === 2) continue;
-            // ---
-            custom_container.innerHTML += 
-            `<custom-vault-section input-id="${`ucs-${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]}" paste="false"></custom-vault-section>`; 
-            i++;
-        }
     });
     /**
      * NEW VAULT CUSTOM SECTION
@@ -138,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * UPDATE VAULT
      */
-    Form.onsubmit("form-update-vault", async (form, elements) => {
+    Form.register("form-update-vault", async (form, elements) => {
         if (!confirm(`Do you confirm that you want to edit ${elements.T}`)) return;
         // ---
         const { vault_id } = elements;
@@ -206,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('psw-gen-length-indicator').textContent = e.currentTarget.value;
     });
     
-    Form.onsubmit('form-psw-gen', (form, elements) => {
+    Form.register('form-psw-gen', (form, elements) => {
         const { length, az, AZ, _09, _$ } = elements;
         try {
             const password = ptg.generate(length, az, AZ, _09, _$);
@@ -217,30 +176,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             Log.summon(3, "Error while generating new password");
         }
     });
-    /**
-     * Ordinamento
-     */
-    document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.order-vaults');
-        if (!btn) return;
-    
-        const order = btn.getAttribute('order');
-        const active = JSON.parse(btn.getAttribute('active'));
-        btn.setAttribute('active', !active);
-    
-        let curr_order = null;
-        
-        if (order === 'az') {
-            curr_order = active ? 'az' : 'za';
-        } else if (order === 'date') {
-            curr_order = active ? 'dateup' : 'datedown';
-        }
-    
-        if (!curr_order) return;
-    
-        VaultUI.current_order = curr_order;
-        VaultUI.html_vaults(curr_order);
-    });    
     /**
      * Vista dei vault
      */
@@ -305,6 +240,11 @@ export class VaultUI {
      */
     static async init() {
         this.init_html();
+        /**
+         * EVENT DELEGATIONS INIT
+         */
+        VaultDelegator.init();
+        // ----
         // - controllo se è possibile usare il vault configurando i segreti
         const configured = await VaultService.config_secrets();
         let timeout = 0;

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * REGISTER
      */
-    Form.onsubmit('registrati', async (form, elements) => {
+    Form.register('registrati', async (form, elements) => {
         const { email, password, password2 } = elements;
         // -- controllo sulle password
         if (password !== password2) return Log.summon(1, 'Passwords doesn\'t match');;
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * EMAIL VERIFY & ENABLE 2FA AUTH
      */
-    Form.onsubmit('setup-passkey', async (form, elements) => {
+    Form.register('setup-passkey', async (form, elements) => {
         if (!elements.code || elements.code.length != 6) return Log.summon(1, "Invalid code");
         // ---
         const { email, request_id, code } = elements;

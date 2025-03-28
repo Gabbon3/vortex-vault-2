@@ -24,7 +24,7 @@ class SettingsComponent extends HTMLElement {
                 /**
                  * CHECK MESSAGE AUTHENTICATION CODE
                  */
-                Form.onsubmit('form-cmac', async (form, elements) => {
+                Form.register('form-cmac', async (form, elements) => {
                     const { code } = elements;
                     if (!code.includes('.')) return Log.summon(1, "Invalid format");
                     // -- email
@@ -105,7 +105,7 @@ class SettingsComponent extends HTMLElement {
                 Advanced Session
             </h3>
             <div class="isle bg-4 slider-cont slow" data-open="false" id="cont-sudo-session">
-                <p>
+                <p class="mt-0 mb-2">
                     Enable <strong>advanced session</strong> to perform critical operations.
                     The session will only last 45 minutes for safety reasons. <br>
                     All operations that require this session are marked with this symbol
@@ -152,7 +152,7 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
             </h3>
             <form class="isle bg-4 slider-cont slow" data-open="false" id="form-change-password">
-                <p>
+                <p class="mt-0 mb-2">
                     <strong>Before changing your password</strong>
                     you should know that you will have to manually restore a backup, 
                     which will be generated locally after the change, 
@@ -198,7 +198,7 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
             </h3>
             <div class="isle bg-4 slider-cont" data-open="false" id="cont-rec-code">
-                <p>
+                <p class="mt-0 mb-2">
                     Generate a recovery key to help you recover your master password if you forget it.
                 </p>
                 <form id="form-new-recovery-code">
@@ -236,7 +236,7 @@ class SettingsComponent extends HTMLElement {
                 Quick Sign-in
             </h3>
             <div class="isle bg-4 slider-cont" data-open="false" id="cont-qsi">
-                <p>
+                <p class="mt-0 mb-2">
                     Generates a single-use link shown via Qr code for quick Sign-in from another device.
                 </p>
                 <form id="form-fsi">

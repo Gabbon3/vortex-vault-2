@@ -356,4 +356,4 @@ export class VaultService {
     }
 }
 
-window.Vault = VaultService;
+window.VaultService = VaultService;

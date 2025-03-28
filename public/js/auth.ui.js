@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * ENABLE 2FA AUTH
      */
-    Form.onsubmit('form-new-mfa-secret', async (form, elements) => {
+    Form.register('form-new-mfa-secret', async (form, elements) => {
         if (!elements.code || elements.code.length != 6) return Log.summon(1, "Invalid code");
         if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
         // ---
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * CAMBIO PASSWORD
      */
-    Form.onsubmit('form-change-password', async (form, elements) => {
+    Form.register('form-change-password', async (form, elements) => {
         // -- check if new passwords corresponds
         if (elements.new_password !== elements.new_password_2) return Log.summon(1, 'New Password doesn\'t match');
         // ---
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * GENERATE RECOVERY CODE
      */
-    Form.onsubmit('form-new-recovery-code', async (form, elements) => {
+    Form.register('form-new-recovery-code', async (form, elements) => {
         const { password } = elements;
         // -- verifico la password dell'utente
         if (!(await AuthService.verify_master_password(password))) {
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * SESSIONE AVANZATA VIA MAIL
      */
-    Form.onsubmit('form-advanced-session-with-email', async (form, elements) => {
+    Form.register('form-advanced-session-with-email', async (form, elements) => {
         const { request_id, code } = elements;
         if (!code || code.length!== 6) return Log.summon(1, "Invalid code");
         // ---
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * QUICK SIGN-IN
      */
-    Form.onsubmit('form-fsi', async (form, elements) => {
+    Form.register('form-fsi', async (form, elements) => {
         const url = await AuthService.request_quick_signin();
         if (url) {
             AuthUI.show_quick_signin(url);

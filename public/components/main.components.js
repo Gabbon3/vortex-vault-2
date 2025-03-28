@@ -19,14 +19,15 @@ import './passkey-list-item.component.js';
 import './otp-copy-button.component.js';
 import './btn-hide-show-protect-input.component.js';
 import './settings/tools.component.js';
-import { Windows } from '../utils/windows.js';
 import { QrCodeDisplay } from '../utils/qrcode-display.js';
 import '../js/theme.ui.js';
 import { Sliders } from '../utils/sliders.js';
+import { GlobalDelegator } from './delegators/global.delegator.js';
+import { Form } from '../utils/form.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log(
-`__         __  __         __
+        `__         __  __         __
 \\ \\       / /  \\ \\       / /
  \\ \\     / /    \\ \\     / /
   \\ \\   / /      \\ \\   / /
@@ -34,63 +35,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     \\___/ ORTEX    \\___/ AUTL`);
     QrCodeDisplay.init();
     /**
-     * FINESTRE
+     * Delegazione Eventi Globali
      */
-    document.addEventListener("click", function(event) {
-        const btn = event.target.closest(".close");
-        if (btn) {
-            const target = btn.getAttribute("data-target-close");
-            Windows.close(target);
-        }
-    });
-    document.addEventListener("click", function(event) {
-        const btn = event.target.closest(".open");
-        if (btn) {
-            const target = btn.getAttribute("data-target-open");
-            Windows.open(target);
-        }
-    });    
-    /**
-     * pulsanti che richiedono l'animazione di check
-     */
-    document.addEventListener('click', (e) => {
-        const ca = e.target.closest('.CA');
-        if (!ca) return;
-    
-        const btn = ca.querySelector('span');
-        const currentIcon = btn.textContent;
-        if (currentIcon === 'check') return;
-    
-        btn.textContent = 'check';
-        setTimeout(() => {
-            btn.textContent = currentIcon;
-        }, 1000);
-    });    
-    /**
-     * Pulsanti cancella testo
-     */
-    document.addEventListener('click', (e) => {
-        const delBtn = e.target.closest('.del-val');
-        if (!delBtn) return;
-    
-        const targetId = delBtn.getAttribute('data-target-del');
-        const target = document.getElementById(targetId);
-        if (!target) return;
-    
-        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-            target.value = '';
-        } else {
-            target.textContent = '';
-        }
-    
-        const keyupEvent = new KeyboardEvent('keyup', {
-            key: 'Delete',
-            bubbles: true,
-            cancelable: true,
-        });
-    
-        target.dispatchEvent(keyupEvent);
-    });    
+    GlobalDelegator.init();
+    Form.init();
     /**
      * Chiudi Caricamento
      */

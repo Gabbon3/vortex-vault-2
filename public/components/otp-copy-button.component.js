@@ -2,6 +2,13 @@ import { Bytes } from "../utils/bytes.js";
 import { TOTP } from "../utils/totp.js";
 
 class BtnOtpCopy extends HTMLElement {
+    static delegationEvent(event) {
+        const btn = event.currentTarget;
+        if (!btn.secret) return;
+        navigator.clipboard.writeText(btn.code);
+        btn.check_animation();
+    }
+
     constructor() {
         super();
         this.span = null;
@@ -18,8 +25,7 @@ class BtnOtpCopy extends HTMLElement {
         // ---
         this.title = 'Copy OTP code';
         // -- html
-        this.innerHTML = `<span class="material-symbols-rounded">content_copy</span>
-            <strong class="mfa ml-2">000 000</strong>`;
+        this.innerHTML = `<span class="material-symbols-rounded">content_copy</span><strong class="mfa ml-2">000 000</strong>`;
         // ---
         this.span = this.querySelector('span');
         this.strong = this.querySelector('strong');

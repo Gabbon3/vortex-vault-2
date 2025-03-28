@@ -1,4 +1,30 @@
 export class Form {
+    static callbacks = {};
+    /**
+     * Inizializza il delegatore globale per i submit
+     */
+    static init() {
+        document.addEventListener('submit', async (e) => {
+            const form = e.target.closest('form');
+            if (!form) return;
+
+            const callbackName = form.getAttribute('id');
+            if (!callbackName || !Form.callbacks[callbackName]) return;
+
+            e.preventDefault();
+
+            const data = Form.get_data(form);
+            await Form.callbacks[callbackName](form, data);
+        });
+    }
+    /**
+     * Registra una callback da usare via attributo `data-callback`
+     * @param {string} name - nome univoco della callback
+     * @param {FormOnSubmitCallback} callback
+     */
+    static register(name, callback) {
+        Form.callbacks[name] = callback;
+    }
     /**
      * Restituisce i dati di un form sotto forma di json
      * @param {String|HTMLElement} form 
@@ -35,7 +61,7 @@ export class Form {
                     case 'file':
                         value = element.files.length > 0 ? element.files[0] : null;
                         break;
-                        
+
                 }
                 // ---
                 json[name] = value;
@@ -44,26 +70,6 @@ export class Form {
         // ---
         return json;
     }
-    /**
-     * Aggiunge un evento di submit al form
-     * @param {string | HTMLElement} form_id - L'ID del form o il form direttamente.
-     * @param {FormOnSubmitCallback} callback - La funzione di callback eseguita al submit.
-     */
-    static onsubmit(form_id, callback) {
-        const form = form_id instanceof HTMLElement ? form_id : document.getElementById(form_id);
-        if (!form) return;
-        // ---
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            callback(e.currentTarget, Form.get_data(e.currentTarget));
-        });
-    }
-    /**
-     * Questo callback gestisce l'evento submit dei form
-     * @callback FormOnSubmitCallback
-     * @param {HTMLElement} form - Elemento html del form
-     * @param {Object} elements - un oggetto che contiene gli input del form indicati tramite i loro "name"
-     */
 }
 
 window.Form = Form;
