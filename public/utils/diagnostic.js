@@ -27,4 +27,4 @@ const MemDiag = {
     }
 };
 
-// window.MemDiag = MemDiag;
+window.MemDiag = MemDiag;

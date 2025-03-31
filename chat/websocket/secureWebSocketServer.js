@@ -38,7 +38,7 @@ export class SecureWebSocketServer {
     /**
      * Gestisce una nuova connessione WebSocket.
      * @param {WebSocket} ws - Connessione WebSocket dell'utente.
-     * @param {import('http').IncomingMessage} req - Richiesta HTTP della connessione.
+     * @param {IncomingMessage} req - Richiesta HTTP della connessione.
      */
     static async handleConnection(ws, req) {
         if (!SecureWebSocketServer.performHandshake(ws, req)) return;
@@ -54,7 +54,7 @@ export class SecureWebSocketServer {
     /**
      * Gestisce l'handshake iniziale e deriva il segreto condiviso.
      * @param {WebSocket} ws - Connessione WebSocket.
-     * @param {import('http').IncomingMessage} req - Richiesta HTTP.
+     * @param {IncomingMessage} req - Richiesta HTTP.
      * @returns {boolean} - True se l'handshake è andato a buon fine, false altrimenti.
      */
     static performHandshake(ws, req) {

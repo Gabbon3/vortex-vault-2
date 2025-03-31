@@ -12,7 +12,7 @@ import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
 import lse_routes from './routes/lse.routes.js';
 import './models/associations.js';
-import { csp_middleware, security_headers } from './config/csp.js';
+import { cors_middleware, csp_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 import { logger } from './chat/config/logger.js';
 // import { UID } from './utils/uid.js';
@@ -28,6 +28,8 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
+// ---
+app.use(cors_middleware);
 app.use(csp_middleware);
 app.use(security_headers);
 
