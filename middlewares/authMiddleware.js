@@ -40,7 +40,7 @@ export const verify_access_token = (required_role = Roles.BASE) => (req, res, ne
 export const verify_password = async_handler(async (req, res, next) => {
     const from_token = req.user ? true : false;
     // -- ottengo un identificatore per l'utente
-    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 429);
+    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 422);
     // -- ottengo le variabili
     const password = req.body.password;
     const uid = from_token ? req.user.uid : req.body.email;
@@ -102,7 +102,7 @@ export const verify_email_code = async_handler(async (req, res, next) => {
 export const verify_mfa_code = async_handler(async (req, res, next) => {
     const from_token = req.user ? true : false;
     // -- ottengo un identificatore per l'utente
-    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 429);
+    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 422);
     // -- ottengo le variabili
     const code = req.body.code;
     const uid = from_token ? req.user.uid : req.body.email;

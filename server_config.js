@@ -30,4 +30,6 @@ export class Config {
     static HTTPROTOCOL = process.env.HTTPROTOCOL;
     // Dev
     static DEV = process.env.DEV === 'true';
+    // Numero di tentativi massimi per rate limiter -> email
+    static TRLEMAIL = 5; // TRL = Tentativi Rate Limiter per Email
 }

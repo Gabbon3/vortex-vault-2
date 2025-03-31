@@ -69,6 +69,8 @@ export class UserController {
                 refresh_token
             });
         }
+        // -- rimuovo dal ramdb il controllo sui tentativi per accedere all'account
+        RamDB.delete(`login-attempts-${email}`);
         // ---
         res.status(201).json({
             access_token,
@@ -243,7 +245,7 @@ export class UserController {
     change_password = async_handler(async (req, res) => {
         const { old_password, new_password, email } = req.body;
         // ---
-        if (!old_password || !new_password || !email) throw new CError("", "Missing data needed to make password change", 429);
+        if (!old_password || !new_password || !email) throw new CError("", "Missing data needed to make password change", 422);
         // ---
         const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
         if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);

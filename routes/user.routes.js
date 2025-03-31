@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 import { UserController } from "../controllers/user.controller.js";
 import { verify_access_token, verify_email_code } from "../middlewares/authMiddleware.js";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
+import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -10,13 +11,13 @@ const controller = new UserController();
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 150,
+    max: 100,
     message: "Too many requests, try later",
 });
 router.use(limiter);
 // -- AUTH ROUTES (USER)
 router.post('/registrati', controller.signup);
-router.post('/signin', controller.signin);
+router.post('/signin', emailRateLimiter, controller.signin);
 router.post('/password', verify_access_token(), controller.change_password);
 // -- SEARCH
 router.get('/search/:email', verify_access_token(), controller.search);

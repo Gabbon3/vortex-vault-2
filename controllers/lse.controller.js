@@ -14,7 +14,7 @@ export class LSEController {
      */
     set = async_handler(async (req, res) => {
         const { public_key: public_key_base64 } = req.body;
-        if (!public_key_base64) throw new CError("", "Public key is missing", 429);
+        if (!public_key_base64) throw new CError("", "Public key is missing", 422);
         const public_key = Buffer.from(Bytes.base64.decode(public_key_base64));
         // ---
         const token_id = req.cookies.refresh_token;
