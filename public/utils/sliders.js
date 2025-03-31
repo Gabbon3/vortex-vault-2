@@ -90,4 +90,4 @@ export class Sliders {
     }
 }
 
-window.Sliders = Sliders;
+// window.Sliders = Sliders;

@@ -59,4 +59,4 @@ export class QrCodeDisplay {
     }
 }
 
-window.QrCodeDisplay = QrCodeDisplay;
+// window.QrCodeDisplay = QrCodeDisplay;

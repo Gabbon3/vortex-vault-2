@@ -8,8 +8,8 @@ import { Windows } from "../utils/windows.js";
 import { UUID } from "../utils/uuid.js";
 import { Sliders } from "../utils/sliders.js";
 
-window.ChatService = ChatService;
-window.UUID = UUID;
+// window.ChatService = ChatService;
+// window.UUID = UUID;
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -469,4 +469,4 @@ export class ChatUI {
     }
 }
 
-window.ChatUI = ChatUI;
+// window.ChatUI = ChatUI;

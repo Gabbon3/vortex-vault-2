@@ -21,9 +21,11 @@ class BtnOtpCopy extends HTMLElement {
     connectedCallback() {
         // -- variables
         const secret_value = this.getAttribute('secret');
-        if (/^[A-Z2-7]+=*$/.test(secret_value)) this.secret = Bytes.base32.decode(secret_value);
+        const formattedSecret = secret_value.toUpperCase().replaceAll(' ', '').trim();
+        if (/^[A-Z2-7]+=*$/.test(formattedSecret)) this.secret = Bytes.base32.decode(formattedSecret);
         // ---
         this.title = 'Copy OTP code';
+        this.classList.add('CA');
         // -- html
         this.innerHTML = `<span class="material-symbols-rounded">content_copy</span><strong class="mfa ml-2">000 000</strong>`;
         // ---
@@ -33,21 +35,21 @@ class BtnOtpCopy extends HTMLElement {
         this.addEventListener('click', () => {
             if (!this.secret) return;
             navigator.clipboard.writeText(this.code);
-            this.check_animation();
+            // this.check_animation();
         });
         // -- Avvia l'aggiornamento periodico ogni 30 secondi
         this.startOtpUpdate();
     }
 
-    check_animation() {
-        const current_icon = this.span.textContent;
-        if (current_icon === 'check') return;
-        // ---
-        this.span.textContent = 'check';
-        setTimeout(() => {
-            this.span.textContent = current_icon;
-        }, 1000);
-    }
+    // check_animation() {
+    //     const current_icon = this.span.textContent;
+    //     if (current_icon === 'check') return;
+    //     // ---
+    //     this.span.textContent = 'check';
+    //     setTimeout(() => {
+    //         this.span.textContent = current_icon;
+    //     }, 1000);
+    // }
 
     /**
      * Avvia un intervallo che aggiorna il codice OTP sincronizzato ai 30 secondi

@@ -54,4 +54,4 @@ export class Windows {
 }
 
 document.addEventListener('DOMContentLoaded', Windows.init());
-window.Windows = Windows;
+// window.Windows = Windows;

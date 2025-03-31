@@ -207,4 +207,4 @@ export class ptg {
     }
 }
 
-window.ptg = ptg;
+// window.ptg = ptg;

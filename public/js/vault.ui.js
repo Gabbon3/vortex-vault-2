@@ -362,4 +362,4 @@ export class VaultUI {
     }
 }
 
-window.VaultUI = VaultUI;
+// window.VaultUI = VaultUI;

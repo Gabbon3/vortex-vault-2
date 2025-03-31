@@ -73,4 +73,4 @@ export class LSE {
     }
 }
 
-window.LSE = LSE;
+// window.LSE = LSE;

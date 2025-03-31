@@ -3,23 +3,37 @@
  */
 export class AES256GCM {
     /**
+     * Importa una chiave AES-256-GCM da un buffer, se necessario.
+     * Se riceve già una CryptoKey, la restituisce direttamente.
+     * 
+     * @param {Uint8Array|CryptoKey} key_input
+     * @returns {Promise<CryptoKey>}
+     */
+    static async resolve_key(key_input) {
+        if (key_input instanceof CryptoKey) return key_input;
+        if (key_input instanceof Uint8Array && key_input.length === 32) {
+            return await crypto.subtle.importKey(
+                "raw",
+                key_input,
+                { name: "AES-GCM" },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+        throw new Error('Invalid key format. Expected 32-byte Uint8Array or CryptoKey.');
+    }
+    /**
      * Cifra i dati utilizzando AES-256-GCM.
      * 
      * @param {Uint8Array} data - I dati da cifrare.
-     * @param {Uint8Array} key_buffer - La chiave di cifratura (32 byte per AES-256).
+     * @param {Uint8Array|CryptoKey} key_buffer - La chiave di cifratura (32 byte per AES-256).
      * @returns {Promise<Uint8Array>} - I dati cifrati concatenati con il nonce e il tag di autenticazione.
      */
     static async encrypt(data, key_buffer) {
         // -- genero un nonce casuale di 12 byte
         const nonce = crypto.getRandomValues(new Uint8Array(12));
         // -- importo la chiave
-        const key = await crypto.subtle.importKey(
-            "raw",
-            key_buffer,
-            { name: "AES-GCM" },
-            false,
-            ["encrypt"]
-        );
+        const key = await this.resolve_key(key_buffer);
         // -- cifro i dati usando AES-GCM
         const cipher = await crypto.subtle.encrypt(
             {
@@ -47,13 +61,7 @@ export class AES256GCM {
         const nonce = encrypted.slice(0, 12);
         const encrypted_data = encrypted.slice(12);
         // -- importo la chiave
-        const key = await crypto.subtle.importKey(
-            "raw",
-            key_buffer,
-            { name: "AES-GCM" },
-            false,
-            ["decrypt"]
-        );
+        const key = await this.resolve_key(key_buffer);
         // -- cifro i dati usando AES-GCM
         try {
             const decrypted = await crypto.subtle.decrypt(

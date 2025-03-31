@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (await AuthService.register(email, password)) {
             LocalStorage.set('email-utente', email);
             form.reset();
-            Log.summon(1, "Almost done! Now you need to verify your email and create your first passkey.");
+            Log.summon(1, "Almost done! now, to verify your email and create your first passkey, click on the \"Verify email & Create your first Passkey\" button.");
             document.getElementById('verify-email-email').value = email;
         }
         Windows.loader(false);

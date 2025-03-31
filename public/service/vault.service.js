@@ -8,7 +8,7 @@ import { API } from "../utils/api.js";
 import { LocalStorage } from "../utils/local.js";
 import { VaultLocal } from "./vault.local.js";
 
-window.VaultLocal = VaultLocal;
+// window.VaultLocal = VaultLocal;
 
 export class VaultService {
     static master_key = null;

@@ -66,4 +66,4 @@ export class SecureLink {
     }
 }
 
-window.SecureLink = SecureLink;
+// window.SecureLink = SecureLink;

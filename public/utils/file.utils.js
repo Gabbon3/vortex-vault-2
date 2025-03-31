@@ -29,13 +29,15 @@ export class FileUtils {
      * @param {String} type tipo, default 'text/plain'
      */
     static async download(file_name, extension, file_content, type = 'text/plain') {
-        const blob = new Blob([file_content], { type: type });
+        const blob = new Blob([file_content], { type });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = file_name + '.' + extension;
+        link.download = `${file_name}.${extension}`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    }
+        // Revoke URL per liberare la memoria
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }    
 }

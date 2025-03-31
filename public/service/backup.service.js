@@ -98,4 +98,4 @@ export class BackupService {
     }
 }
 
-window.BackupService = BackupService;
+// window.BackupService = BackupService;

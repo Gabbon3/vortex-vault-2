@@ -49,4 +49,4 @@ export class BaseConverter {
     }
 }
 
-window.BaseConverter = BaseConverter;
+// window.BaseConverter = BaseConverter;

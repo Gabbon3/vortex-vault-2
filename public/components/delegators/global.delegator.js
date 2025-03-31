@@ -21,7 +21,8 @@ export const GlobalDelegator = {
             this.handlePasskeyBtnClick,
         ];
         for (const handler of handlers) {
-            if (handler.call(this, e)) break;
+            // if (handler.call(this, e)) break;
+            handler.call(this, e);
         }
     },
     /**

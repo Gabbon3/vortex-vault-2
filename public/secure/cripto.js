@@ -211,4 +211,4 @@ export class Cripto {
     }
 }
 
-window.Cripto = Cripto;
+// window.Cripto = Cripto;
