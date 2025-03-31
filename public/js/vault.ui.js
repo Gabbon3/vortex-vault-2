@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // -- aggiungo i listeners
         config.forEach(({ id, type, render, color, title }) => {
             document.getElementById(id).addEventListener('click', () => {
-                VaultUI.secrets_type_input.value = type;
-                VaultUI.create_dinamic_secrets.innerHTML = render();
-                VaultUI.win_create_vault.setAttribute('class', 'window m pr show maincolor ' + color);
-                VaultUI.title_create_vault.textContent = title;
-                VaultUI.icon_create_vault.innerHTML = HtmlSecretsRender.get_html_icon(type);
+                document.getElementById('secrets-type').value = type;
+                document.getElementById('dinamic-secrets').innerHTML = render();
+                document.getElementById('win-create-vault').setAttribute('class', 'window m pr show maincolor ' + color);
+                document.getElementById('create-vault-title').textContent = title;
+                document.getElementById('create-vault-icon').innerHTML = HtmlSecretsRender.get_html_icon(type);
                 if (type === 0) VaultUI.html_used_usernames();
             });
         });
@@ -40,11 +40,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * Abilita la vista degli elementi se uno solo per categoria o tutti
      */
-    VaultUI.btn_category.addEventListener('click', (e) => {
+    document.getElementById('btn-view-switch').addEventListener('click', (e) => {
         VaultUI.view_indicator = VaultUI.view_indicator + 1 > 3 ? -1 : VaultUI.view_indicator + 1;
         // -- colore pulsante per mostrare tramite la ui la vista corrente
         const color = HtmlSecretsRender.get_color(VaultUI.view_indicator) ?? 'secondary';
-        VaultUI.btn_category.setAttribute('class', `btn ${color}`);
+        e.currentTarget.setAttribute('class', `btn ${color}`);
         VaultUI.html_vaults();
     });
     /**
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(true);
         const vault_id = await VaultService.create(elements);
         if (vault_id) {
-            VaultUI.create_dinamic_secrets.innerHTML = '';
+            document.getElementById('dinamic-secrets').innerHTML = '';
             Log.summon(0, `${elements.T} saved.`);
             Windows.close('win-create-vault');
             form.reset();
@@ -194,52 +194,14 @@ export class VaultUI {
     static search = new Search(true, null, null, 100);
     static view_indicator = -1; // usata per mostrare tutte o alcune categorie di segreti
     static current_order = 'az';
-    static html_list = null;
     // ---
-    // add
-    static create_dinamic_secrets = null;
-    // update
-    static secrets_type_input = null;
-    static update_secrets_type_input = null;
-    static update_dinamic_secrets = null;
-    // windows
-    static win_create_vault = null;
-    static title_create_vault = null;
-    static icon_create_vault = null;
     // cache per salvare i dati scritti nella finestra CREATE
     // static create_cache = { login: null, note: null, card: null, keys: null };
-    // pulsante categoria
-    static btn_category = null;
-    static vault_counter_element = null;
     // ---
-    static html_initialized = false;
-    /**
-     * Inizializza gli elementi html utili al funzionamento
-     */
-    static init_html() {
-        if (this.html_initialized) return;
-        this.html_list = document.getElementById("vaults-list");
-        this.btn_category = document.getElementById('btn-view-switch');
-        this.vault_counter_element = this.btn_category.children[1];
-        // ---
-        // add
-        this.create_dinamic_secrets = document.getElementById('dinamic-secrets');
-        // update
-        this.secrets_type_input = document.getElementById('secrets-type');
-        this.update_secrets_type_input = document.getElementById('update-secrets-type');
-        this.update_dinamic_secrets = document.getElementById('update-dinamic-secrets');
-        // windows
-        this.win_create_vault = document.getElementById('win-create-vault');
-        this.title_create_vault = document.getElementById('create-vault-title');
-        this.icon_create_vault = document.getElementById('create-vault-icon');
-        // ---
-        this.html_initialized = true;
-    }
     /**
      * inizializza tutto il necessario per avviare il vault se possibile
      */
     static async init() {
-        this.init_html();
         /**
          * EVENT DELEGATIONS INIT
          */
@@ -311,9 +273,9 @@ export class VaultUI {
         const filter_condition = (vault) => { return secret_type_view === -1 || secret_type_view === (vault.secrets.ST ?? 0)};
         const vaults_list = vaults.filter((vault) => filter_condition(vault));
         // -- mostro il numero totale di elementi disponibili
-        this.vault_counter_element.textContent = vaults_list.length;
+        document.getElementById('vault-counter').textContent = vaults_list.length;
         // -- se non ci sono vault da mostrare termino qui
-        if (vaults_list.length === 0) return this.html_list.innerHTML = '';
+        if (vaults_list.length === 0) return document.querySelector("#vaults-list").innerHTML = '';
 
         // -- ordino
         const order_function = this.order_functions[order];
@@ -341,7 +303,7 @@ export class VaultUI {
             // ---
             html += HtmlSecretsRender.get_list_item(ST, vault);
         }
-        this.html_list.innerHTML = html;
+        document.querySelector("#vaults-list").innerHTML = html;
         // -- se ce una ricerca attiva, la mantengo
         this.search.tabella(
             document.getElementById('search-vault'),

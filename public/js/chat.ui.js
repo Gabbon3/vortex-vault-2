@@ -5,7 +5,7 @@ import { Search } from "../utils/search.js";
 import { Bus, notify } from "../utils/eventBus.js";
 import { Log } from "../utils/log.js";
 import { Windows } from "../utils/windows.js";
-import { UUID } from "../utils/uuid.js";
+// import { UUID } from "../utils/uuid.js";
 import { Sliders } from "../utils/sliders.js";
 
 // window.ChatService = ChatService;
@@ -35,14 +35,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Invio messaggio
      */
-    Form.register(ChatUI.messageForm, async (form, elements) => {
+    Form.register('send-message', async (form, elements) => {
         const { msg } = elements;
         const message = msg.trim();
         if (message === '') return;
         const ID = await ChatService.sendMessage(ChatService.activeChatUuid, message);
         ChatUI.appendMessage(ID, message, Date.now(), true);
         form.reset();
-        ChatUI.messageTextarea.rows = 1;
+        document.querySelector('#message-textarea').rows = 1;
     });
     /**
      * SEARCH VAULT
@@ -57,18 +57,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Resize automatico della textarea
      */
-    // ChatUI.messageTextarea.addEventListener('input', () => {
-    //     const newRowsCount = ChatUI.messageTextarea.value.split('\n').length;
+    // document.querySelector('#message-textarea').addEventListener('input', (e) => {
+    //     const newRowsCount = e.currentTarget.value.split('\n').length;
     //     if (newRowsCount >= ChatUI.maxMessageRows) return;
-    //     ChatUI.messageTextarea.rows = newRowsCount;
+    //     e.currentTarget.rows = newRowsCount;
     // });
     /**
      * Premendo Ctrl + Invio, va a capo
      */
-    ChatUI.messageTextarea.addEventListener('keydown', (e) => {
+    document.querySelector('#message-textarea').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            ChatUI.messageForm.requestSubmit();
+            document.querySelector('#send-message').requestSubmit();
         }
         /**
          * Sta scrivendo...
@@ -101,21 +101,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
     /**
-     * Pulsante elimina chat
-     */
-    // document.querySelector('#btn-toggle-chat-delete').addEventListener('click', (e) => {
-    //     /**
-    //      * @type {HTMLElement}
-    //      */
-    //     const btn = e.currentTarget;
-    //     const isEnabled = btn.classList.contains('danger');
-    //     ChatUI.isDeletingChat = !isEnabled;
-    //     // ---
-    //     btn.className = 'btn ' + (isEnabled ? 'secondary' : 'danger');
-    //     ChatUI.contactListContainer.classList.toggle('is-deleting');
-    //     document.querySelector('#chat-delete-alert').style.display = isEnabled ? 'none' : '';
-    // });
-    /**
      * Pulsante impostazioni chat
      */
     document.querySelector('#chat-settings').addEventListener('click', () => {
@@ -142,7 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Elimina messaggio
      */
-    ChatUI.messages.addEventListener("dblclick", async (event) => {
+    document.getElementById("messages").addEventListener("dblclick", async (event) => {
         const messageElement = event.target.closest("message-g"); // Trova il messaggio più vicino
         if (!messageElement) return;
     
@@ -219,23 +204,7 @@ export class ChatUI {
     static typingTimeout = null;
     static contactStatus = null;
     static maxMessageRows = 7;
-    /**
-     * Form per l'invio dei messaggi
-     * @type {HTMLElement}
-     */
-    static messageForm = null;
-    /**
-     * Container dei contatti
-     * @type {HTMLElement}
-     */
-    static contactListContainer = null;
-    /**
-     * Container dei messaggi
-     * @type {HTMLElement}
-     */
-    static messages = null;
     static current_order = "az";
-    static chatContactName = null;
     static contactManagerCurrentUuid = null;
     static isDeletingChat = false;
     /**
@@ -254,20 +223,9 @@ export class ChatUI {
                 }
             });
         }
-        // ---
-        this.contactListContainer = document.getElementById("contacts-list");
-        // -- container della chat
-        this.messages = document.getElementById("messages");
-        // ---
-        this.messageTextarea = document.querySelector('#message-textarea');
-        // ---
-        this.contactStatus = document.querySelector('#chat-contact-status');
-        // ---
-        this.messageForm = document.querySelector('#send-message');
-        // -- Nome di contatto
-        this.chatContactName = document.getElementById("chat-contact-name");
         // - evento per selezionare tutto il testo del contatto
-        this.chatContactName.addEventListener("click", (e) => {
+        const chatContactName = document.getElementById("chat-contact-name");
+        chatContactName.addEventListener("click", (e) => {
             // -- creo un range e seleziona il contenuto del nodo
             const range = document.createRange();
             range.selectNodeContents(e.currentTarget);
@@ -277,7 +235,7 @@ export class ChatUI {
             selection.addRange(range);
         });
         // - evento per cambiare il nickname di un contatto
-        this.chatContactName.addEventListener("keydown", (e) => {
+        chatContactName.addEventListener("keydown", (e) => {
             if (e.key !== "Enter") return;
             e.preventDefault();
             e.currentTarget.blur();
@@ -309,10 +267,12 @@ export class ChatUI {
         // -- 
         const fragment = document.createDocumentFragment();
         messageNodesArray.forEach(node => fragment.appendChild(node));
-        this.messages.innerHTML = '';
-        this.messages.appendChild(fragment);
-        this.chatContactName.textContent = contact.nickname ?? contact.uuid;
-        this.messages.scrollTop = this.messages.scrollHeight;
+        // --
+        const container = document.getElementById("messages");
+        container.innerHTML = '';
+        container.appendChild(fragment);
+        document.getElementById("chat-contact-name").textContent = contact.nickname ?? contact.uuid;
+        container.scrollTop = container.scrollHeight;
     }
     /**
      * Eliminazione chat
@@ -356,7 +316,7 @@ export class ChatUI {
     static handleTypingIndicator(from, isTyping) {
         if (from !== ChatService.activeChatUuid) return;
         // ---
-        this.contactStatus.textContent = isTyping ? 'is typing...' : '*';
+        document.querySelector('#chat-contact-status').textContent = isTyping ? 'is typing...' : '*';
     }
     /**
      * Appende un messaggio nella chat html
@@ -366,8 +326,9 @@ export class ChatUI {
      * @param {boolean} self - true se il messaggio è dell'utente corrente, false di un contatto
      */
     static appendMessage(ID, message, timestamp, self) {
-        this.messages.appendChild(this.getMessageElement(ID, message, timestamp, self));
-        this.messages.scrollTop = this.messages.scrollHeight;
+        const container = document.getElementById("messages");
+        container.appendChild(this.getMessageElement(ID, message, timestamp, self));
+        container.scrollTop = container.scrollHeight;
     }
     /**
      * Restituisce il codice html di un messaggio
@@ -401,6 +362,7 @@ export class ChatUI {
      */
     static html_contacts(order = this.current_order) {
         const contactsList = Array.from(ChatService.contacts.values());
+        const contactsListContainer = document.getElementById("contacts-list");
         if (contactsList.length === 0)
             return (document.querySelector("#contacts-list").innerHTML = "No contacts yet.");
         let html = ``;
@@ -415,7 +377,7 @@ export class ChatUI {
         // -- mostro il numero totale di elementi disponibili
         // this.vault_counter_element.textContent = contactsList.length;
         // -- se non ci sono vault da mostrare termino qui
-        if (contactsList.length === 0) return (this.contactListContainer.innerHTML = "");
+        if (contactsList.length === 0) return (contactsListContainer.innerHTML = "");
 
         // -- ordino
         const order_function = this.order_functions[order];
@@ -438,7 +400,7 @@ export class ChatUI {
                 search-context="${contact.email}|${contact.nickname}|${contact.uuid}"
             ></contact-li>`;
         }
-        this.contactListContainer.innerHTML = html;
+        contactsListContainer.innerHTML = html;
     }
 
     /**

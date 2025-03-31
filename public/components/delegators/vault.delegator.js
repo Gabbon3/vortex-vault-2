@@ -42,12 +42,12 @@ export const VaultDelegator = {
         document.getElementById('update-vault-uuid').textContent = "ID " + id;
         // -- ottengo il Secret Type
         const ST = vault.secrets.ST ?? 0;
-        VaultUI.update_secrets_type_input.value = ST;
+        document.getElementById('update-secrets-type').value = ST;
         // -- imposto il colore della finestra
         const color = HtmlSecretsRender.get_color(ST);
         document.getElementById('win-update-vault').setAttribute('class', 'window m show maincolor ' + color);
         // -- genero l'html
-        VaultUI.update_dinamic_secrets.innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
+        document.getElementById('update-dinamic-secrets').innerHTML = HtmlSecretsRender.get_by_type(ST, vault.secrets);
         // -- imposto il titolo
         document.getElementById('vault-title-to-update').textContent = vault.secrets.T;
         // -- importo l'id del vault

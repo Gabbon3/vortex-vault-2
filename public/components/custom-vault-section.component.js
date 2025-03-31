@@ -1,3 +1,5 @@
+import { ptg } from "../utils/ptg.js";
+
 class CustomVaultSection extends HTMLElement {
     static id_ctr = 0;
     constructor() {
