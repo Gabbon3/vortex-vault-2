@@ -40,6 +40,13 @@ export class VaultService {
         const configured = await this.config_secrets();
         if (!configured || !this.master_key) return Log.summon(2, 'Any Crypto Key founded');
         const vault_update = await LocalStorage.get('vault-update') ?? null;
+        let selectFrom = null;
+        /**
+         * non mi allineo esattamente alla data di ultima sincronizzazione dal db
+         * in questo modo evito di farmi restituire dati incompleti per
+         * disincronizzazione tra client e server
+         */
+        if (vault_update) selectFrom = new Date(Date.now() - (2 * 60 * 1000));
         // ---
         try {
             this.vaults = await VaultLocal.get(this.master_key);
@@ -49,7 +56,7 @@ export class VaultService {
             if (n_local_vaults > n_db_vaults) full = true;
             // se ci sono dei vault nel localstorage recupero solo quelli nuovi
             // recupero tutti i vault se full è true
-            const vaults_from_db = await this.get(full ? null : vault_update);
+            const vaults_from_db = await this.get(full ? null : selectFrom);
             if (vaults_from_db.length > 0) {
                 if (full) {
                     await VaultLocal.save(vaults_from_db, this.master_key);
