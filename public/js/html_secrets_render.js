@@ -14,6 +14,7 @@ export class HtmlSecretsRender {
         if (secret_type === 0) icon = 'key_vertical';
         else if (secret_type === 1) icon = 'sticky_note_2';
         else if (secret_type === 2) icon = 'credit_card';
+        else if (secret_type === 4) icon = 'instant_mix';
         if (icon) return `<span class="material-symbols-rounded">${icon}</span>`;
         // ---
         if (secret_type === 3) return `<div class="flex"><span class="material-symbols-rounded trans rotate _180">key_vertical</span><span class="material-symbols-rounded" style="margin-left: -15px;">key_vertical</span></div>`;
@@ -33,6 +34,7 @@ export class HtmlSecretsRender {
         if (secret_type === 1) return this.note(vals);
         if (secret_type === 2) return this.credit_card(vals);
         if (secret_type === 3) return this.public_key(vals);
+        if (secret_type === 4) return this.env(vals);
         return false;
     }
     /**
@@ -46,6 +48,7 @@ export class HtmlSecretsRender {
         if (secret_type === 1) return "lightblue";
         if (secret_type === 2) return "yellow";
         if (secret_type === 3) return "purple";
+        if (secret_type === 4) return "red";
         return null;
     }
     /**
@@ -295,6 +298,43 @@ export class HtmlSecretsRender {
 <div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
 </div>`;
+    }
+
+    /**
+     * HTML PER LE ENVIROMENTS
+     * @param {object} vals 
+     * @return {string} HTML
+     */
+    static env(vals = {}) {
+        HtmlSecretsRender.id++;
+        const update = vals.T !== undefined;
+        return `<div class="isle bg-4 mb-2">
+    <label for="titolo-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">tag</span>
+        Title
+    </label>
+    <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
+</div>
+<!-- RAW ENV -->
+<div class="isle bg-4">
+    <label for="raw-env-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">edit_note</span>
+        Raw
+    </label>
+    <div class="container-input-text">
+        <textarea spellcheck="false" class="monospace" name="R" id="raw-env-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>
+    </div>
+    <div class="flex gap-50 mt-2">
+        ${update ? `<button type="button" class="btn primary export-to-env" data-target="raw-env-${HtmlSecretsRender.id}" title="Export as .env"><span class="material-symbols-rounded">download</span></button>` : ''}
+        ${update ? `<button type="button" class="btn primary format-env-textarea" data-target="raw-env-${HtmlSecretsRender.id}" title="Format this env variables"><span class="material-symbols-rounded">sort</span></button>` : ''}
+        ${update ? `<btn-copy target="raw-env-${HtmlSecretsRender.id}"></btn-copy>` : ''}
+        ${!update ? `<btn-paste target="raw-env-${HtmlSecretsRender.id}"></btn-paste>` : ''}
+    </div>
+</div>
+<!-- CUSTOM -->
+<div class="custom-sections flex d-column emt mb-2" id="${update ? 'update-' : ''}custom-sections-vault">
+    <!-- ... -->
+</div>`
     }
 
     /**

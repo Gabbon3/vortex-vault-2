@@ -19,8 +19,6 @@ export class Config {
     // PASSKEYS
     static ORIGIN = process.env.ORIGIN;
     static RPID = process.env.RPID;
-    // TOTP
-    static MFA_KEYS = Buffer.from(process.env.MFA_KEYS, 'hex');
     // Percorso Rocks DB
     static ROCKSDB_MSG_PATH = process.env.ROCKSDB_MSG_PATH;
     // Percorso cartella dei log

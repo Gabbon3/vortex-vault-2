@@ -23,6 +23,7 @@ class VaultLi extends HTMLElement {
          * note: 1 azzurro
          * card: 2 giallo
          * chiavi pubbliche: 3 viola
+         * ENV: 4 rosso
          */
         let icon = '';
         let color = '';
@@ -40,6 +41,9 @@ class VaultLi extends HTMLElement {
                 break;
             case '3':
                 icon = 'key_vertical';
+                break;
+            case '4':
+                icon = 'instant_mix';
                 break;
         }
         if (st === '3') {
