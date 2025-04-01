@@ -57,7 +57,7 @@ export class HtmlSecretsRender {
      * @returns 
      */
     static get_secret_type_name(st) {
-        return ['login', 'note', 'creditcard', 'publickeys'][st];
+        return ['login', 'note', 'creditcard', 'publickeys', 'env'][st];
     }
     /**
      * HTML PER I VAULT
