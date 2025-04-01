@@ -410,7 +410,7 @@ export class HtmlSecretsRender {
         <span class="material-symbols-rounded">door_front</span>
         Port
     </label>
-    <div class="flex gap-50 mb-2">
+    <div class="flex gap-50">
         <input spellcheck="false" name="P" inputmode="numeric" class="input-text mono" id="port-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" placeholder="5432" autocomplete="off">
         <${btn} target="port-${HtmlSecretsRender.id}"></${btn}>
     </div>

@@ -43,7 +43,8 @@ class CustomVaultSection extends HTMLElement {
             { keywords: ["security", "domanda", "answer", "risposta"], svg: "help" },
             { keywords: ["bank", "conto", "iban", "swift", "banca"], svg: "account_balance" },
             { keywords: ["personal", "note", "appunto", "memo"], svg: "sticky_note_2" },
-            { keywords: ["date"], svg: "calendar_today" }
+            { keywords: ["date"], svg: "calendar_today" },
+            { keywords: ["path", "dir", "percorso"], svg: "folder" },
         ];
         // -- cerco l'icona
         svg = iconMap.find((item) =>

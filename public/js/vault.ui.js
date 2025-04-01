@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      * Abilita la vista degli elementi se uno solo per categoria o tutti
      */
     document.getElementById('btn-view-switch').addEventListener('click', (e) => {
-        VaultUI.view_indicator = VaultUI.view_indicator + 1 > 4 ? -1 : VaultUI.view_indicator + 1;
+        VaultUI.view_indicator = VaultUI.view_indicator + 1 > 5 ? -1 : VaultUI.view_indicator + 1;
         // -- colore pulsante per mostrare tramite la ui la vista corrente
         const color = HtmlSecretsRender.get_color(VaultUI.view_indicator) ?? 'secondary';
         e.currentTarget.setAttribute('class', `btn ${color}`);
