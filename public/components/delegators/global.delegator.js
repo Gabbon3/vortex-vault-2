@@ -19,6 +19,9 @@ export const GlobalDelegator = {
             this.handleCheckAnimationClick,
             this.handleDeleteTextClick,
             this.handlePasskeyBtnClick,
+            this.handleCopyBtnClick,
+            this.handlePasteBtnClick,
+            this.handleCopySelfContentClick,
         ];
         for (const handler of handlers) {
             // if (handler.call(this, e)) break;
@@ -96,6 +99,58 @@ export const GlobalDelegator = {
         });
 
         target.dispatchEvent(keyupEvent);
+        return true;
+    },
+    /**
+     * Gestisce i pulsanti copia
+     * @param {Event} e
+     * @returns {boolean} 
+     */
+    handleCopyBtnClick(e) {
+        const btn = e.target.closest('btn-copy');
+        if (!btn) return false;
+        // ---
+        const target = document.getElementById(btn.target);
+        // ---
+        navigator.clipboard.writeText(target.value ?? target.textContent);
+        return true;
+    },
+    /**
+     * Gestisce i pulsanti copia
+     * @param {Event} e
+     * @returns {boolean}
+     */
+    handlePasteBtnClick(e) {
+        const btn = e.target.closest('btn-paste');
+        if (!btn) return false;
+        // ---
+        const target = document.getElementById(btn.target);
+        // ---
+        navigator.clipboard.readText().then((text) => {
+            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ?
+                target.value = text :
+                target.textContent = text;
+            // --- simulo l'evento
+            const keyupevent = new KeyboardEvent('input', {
+                key: '',
+                bubbles: true,
+                cancelable: true,
+            });
+            // ---
+            target.dispatchEvent(keyupevent);
+        }).catch((error) => { console.warn(error) });
+        return true;
+    },
+    /**
+     * Evento per gestire i click sui pulsanti 'copy-content'
+     * @param {Event} e 
+     * @returns {boolean}
+     */
+    handleCopySelfContentClick(e) {
+        const element = e.target.closest('.copy-content');
+        if (!element) return false;
+        // ---
+        navigator.clipboard.writeText(element.value ?? element.textContent);
         return true;
     },
     /**

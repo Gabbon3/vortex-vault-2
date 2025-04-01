@@ -318,16 +318,17 @@ export class HtmlSecretsRender {
 <!-- RAW ENV -->
 <div class="isle bg-4">
     <label for="raw-env-${HtmlSecretsRender.id}">
-        <span class="material-symbols-rounded">edit_note</span>
-        Raw
+        <span class="material-symbols-rounded">lock</span>
+        Enviroments
     </label>
     <div class="container-input-text">
         <textarea spellcheck="false" class="monospace" name="R" id="raw-env-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>
     </div>
+    ${update ? `<div id="formatted-env-update" class="isle bg-1 formatted-env" style="display: none"></div>` : ''}
     <div class="flex gap-50 mt-2">
         ${update ? `<button type="button" class="btn primary export-to-env" data-target="raw-env-${HtmlSecretsRender.id}" title="Export as .env"><span class="material-symbols-rounded">download</span></button>` : ''}
-        ${update ? `<button type="button" class="btn primary format-env-textarea" data-target="raw-env-${HtmlSecretsRender.id}" title="Format this env variables"><span class="material-symbols-rounded">sort</span></button>` : ''}
         ${update ? `<btn-copy target="raw-env-${HtmlSecretsRender.id}"></btn-copy>` : ''}
+        ${update ? `<button type="button" class="btn primary format-env-textarea last" data-input="raw-env-${HtmlSecretsRender.id}" data-output="formatted-env-update" title="Toggle beautify"><span class="material-symbols-rounded">brush</span> Toggle beautify</button>` : ''}
         ${!update ? `<btn-paste target="raw-env-${HtmlSecretsRender.id}"></btn-paste>` : ''}
     </div>
 </div>

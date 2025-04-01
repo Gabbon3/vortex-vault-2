@@ -139,11 +139,18 @@ export const VaultDelegator = {
         const btn = e.target.closest(".format-env-textarea");
         if (!btn) return false;
         // ---
-        const target = btn.dataset.target;
-        const element = document.getElementById(target);
-        const rawEnv = element.value || element.textContent;
+        const input = btn.dataset.input;
+        const output = btn.dataset.output;
         // ---
-        const isActive = element.classList.contains("formatted-env");
+        const inputElement = document.getElementById(input);
+        const outputElement = document.getElementById(output);
+        const rawEnv = inputElement.value || inputElement.textContent;
+        // ---
+        const isActive = inputElement.style.display === "none";
+        // -- tramite lo slider apro un container e chiudo l'altro
+        inputElement.style.display = isActive ? '' : 'none';
+        outputElement.style.display = isActive ? 'none' : '';
+        // ---
         if (!isActive) {
             const lines = rawEnv.split("\n");
             const html = lines
@@ -160,17 +167,13 @@ export const VaultDelegator = {
                     if (!key || value === undefined) return "";
 
                     return `<div>
-            <span class="env-key">${key}</span>
-            <span>=</span>
-            <span class="env-value">${value}</span>
+            <span class="env-key copy-content">${key}</span>
+            =
+            <span class="env-value copy-content">${value}</span>
         </div>`;
                 })
                 .join("");
-            element.innerHTML = html;
-            element.classList.add("formatted-env");
-        } else {
-            element.innerHTML = element.textContent;
-            element.classList.remove("formatted-env");
+            outputElement.innerHTML = html;
         }
         return true;
     },

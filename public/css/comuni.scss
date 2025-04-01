@@ -697,6 +697,33 @@ input[type="password"] {
     font-family: $monospace !important;
 }
 
+.formatted-env {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    
+    span {
+        transition: 0.05s;
+        font-family: $monospace !important;
+        word-wrap: break-word;
+        padding: 3px;
+        border-radius: 3px;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: var(--bg-3);
+        }
+    }
+
+    .env-key {
+        color: var(--yellow);
+    }
+
+    .env-value {
+        color: var(--olivegreen);
+    }
+}
+
 .input-text,
 .container-input-text {
     display: block;
