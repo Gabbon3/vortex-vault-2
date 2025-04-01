@@ -51,7 +51,7 @@ export class HtmlSecretsRender {
         if (secret_type === 2) return "yellow";
         if (secret_type === 3) return "purple";
         if (secret_type === 4) return "red";
-        if (secret_type === 5) return "mint";
+        if (secret_type === 5) return "peach";
         return null;
     }
     /**
@@ -60,7 +60,7 @@ export class HtmlSecretsRender {
      * @returns 
      */
     static get_secret_type_name(st) {
-        return ['login', 'note', 'creditcard', 'publickeys', 'env', 'lan'][st];
+        return ['login', 'note', 'creditcard', 'publickeys', 'env', 'connection'][st];
     }
     /**
      * HTML PER I VAULT

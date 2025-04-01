@@ -80,7 +80,7 @@ export class API {
         } catch (error) {
             Windows.loader(false);
             // -- gestisco eventuali errori nella chiamata
-            console.warn(`fetch error: ${error.message}`);
+            console.warn(`fetch error: `, error);
             return null;
         }
     }

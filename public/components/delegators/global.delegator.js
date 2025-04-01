@@ -173,7 +173,7 @@ export const GlobalDelegator = {
         const pre_callback = btn.getAttribute('pre-callback');
         const callback = btn.getAttribute('callback');
         const endpoint = btn.getAttribute('endpoint');
-        const method = btn.getAttribute('method');
+        const method = btn.getAttribute('method') ?? 'POST';
         const passkey_need = btn.getAttribute('passkey-need');
         /**
          * Fase preliminare

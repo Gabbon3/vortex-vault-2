@@ -450,21 +450,13 @@ hr {
 
     // posizione iniziale top
     &.pt {
-        top: -100%;
+        top: 0;
     }
 
     // posizione iniziale sinistra
     &.pl {
         top: 50%;
-        right: 100%;
-        transform: translate(50%, -50%) scale(0);
-        left: unset;
-
-        &.show {
-            right: 50%;
-            left: unset;
-            transform: translate(50%, -50%) scale(1);
-        }
+        left: 0;
     }
 
     // posizione iniziale destra

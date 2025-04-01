@@ -24,14 +24,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             { id: 'btn-add-card', type: 2, render: HtmlSecretsRender.credit_card, color: 'yellow', title: "New Card" },
             { id: 'btn-add-asimmetric', type: 3, render: HtmlSecretsRender.public_key, color: 'purple', title: "New Asymmetric keys" },
             { id: 'btn-add-env', type: 4, render: HtmlSecretsRender.env, color: 'red', title: "New Enviroments" },
-            { id: 'btn-add-connection', type: 5, render: HtmlSecretsRender.connection, color: 'mint', title: "New Connection" },
+            { id: 'btn-add-connection', type: 5, render: HtmlSecretsRender.connection, color: 'peach', title: "New Connection" },
         ];
         // -- aggiungo i listeners
         config.forEach(({ id, type, render, color, title }) => {
             document.getElementById(id).addEventListener('click', () => {
                 document.getElementById('secrets-type').value = type;
                 document.getElementById('dinamic-secrets').innerHTML = render();
-                document.getElementById('win-create-vault').setAttribute('class', 'window m pr show maincolor ' + color);
+                document.getElementById('win-create-vault').setAttribute('class', 'window m pt show maincolor ' + color);
                 document.getElementById('create-vault-title').textContent = title;
                 document.getElementById('create-vault-icon').innerHTML = HtmlSecretsRender.get_html_icon(type);
                 if (type === 0) VaultUI.html_used_usernames();
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      * CREATE VAULT
      */
     Form.register("form-create-vault", async (form, elements) => {
-        if (!confirm(`Have you entered everything for ${elements.T}`)) return;
+        if (!confirm(`Do you confirm that you want to protect ${elements.T}?`)) return;
         // ---
         Windows.loader(true);
         const vault_id = await VaultService.create(elements);
