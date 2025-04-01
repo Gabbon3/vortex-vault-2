@@ -1,3 +1,5 @@
+import { PasskeyService } from "../../service/passkey.public.service.js";
+import { BtnCopy } from "../btn-copy.component.js";
 import { Windows } from "../../utils/windows.js";
 import { PasskeyBtn } from "../passkey-btn.component.js";
 
@@ -111,8 +113,14 @@ export const GlobalDelegator = {
         if (!btn) return false;
         // ---
         const target = document.getElementById(btn.target);
+        let content = target.value ?? target.textContent;
+        // -- verifico se questo pulsante vuole elaborare il testo prima di restituirlo
+        const callback = btn.getAttribute('callback');
+        if (callback) {
+            content = BtnCopy.callbacks[callback](content);
+        }
         // ---
-        navigator.clipboard.writeText(target.value ?? target.textContent);
+        navigator.clipboard.writeText(content);
         return true;
     },
     /**

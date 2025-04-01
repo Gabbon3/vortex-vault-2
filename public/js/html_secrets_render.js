@@ -15,6 +15,7 @@ export class HtmlSecretsRender {
         else if (secret_type === 1) icon = 'sticky_note_2';
         else if (secret_type === 2) icon = 'credit_card';
         else if (secret_type === 4) icon = 'instant_mix';
+        else if (secret_type === 5) icon = 'vpn_lock_2';
         if (icon) return `<span class="material-symbols-rounded">${icon}</span>`;
         // ---
         if (secret_type === 3) return `<div class="flex"><span class="material-symbols-rounded trans rotate _180">key_vertical</span><span class="material-symbols-rounded" style="margin-left: -15px;">key_vertical</span></div>`;
@@ -35,6 +36,7 @@ export class HtmlSecretsRender {
         if (secret_type === 2) return this.credit_card(vals);
         if (secret_type === 3) return this.public_key(vals);
         if (secret_type === 4) return this.env(vals);
+        if (secret_type === 5) return this.connection(vals);
         return false;
     }
     /**
@@ -49,6 +51,7 @@ export class HtmlSecretsRender {
         if (secret_type === 2) return "yellow";
         if (secret_type === 3) return "purple";
         if (secret_type === 4) return "red";
+        if (secret_type === 5) return "mint";
         return null;
     }
     /**
@@ -57,7 +60,7 @@ export class HtmlSecretsRender {
      * @returns 
      */
     static get_secret_type_name(st) {
-        return ['login', 'note', 'creditcard', 'publickeys', 'env'][st];
+        return ['login', 'note', 'creditcard', 'publickeys', 'env', 'lan'][st];
     }
     /**
      * HTML PER I VAULT
@@ -271,8 +274,19 @@ export class HtmlSecretsRender {
         Card number
     </label>
     <div class="flex gap-50">
-        <input spellcheck="false" name="CN" type="password" inputmode="numeric" maxlength="16" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
-        <${btn} target="card-number-${HtmlSecretsRender.id}"></${btn}>
+        <input spellcheck="false" name="CN" type="password" inputmode="numeric" maxlength="19" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
+        <${btn} target="card-number-${HtmlSecretsRender.id}" callback="rmSpace"></${btn}>
+    </div>
+</div>
+<!-- PIN DELLA CARTA -->
+<div class="isle bg-4 mb-2">
+    <label for="card-pin-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">password</span>
+        Pin
+    </label>
+    <div class="flex gap-50">
+        <input spellcheck="false" name="PI" type="password" inputmode="numeric" class="input-text mono protected" maxlength="10" id="card-pin-${HtmlSecretsRender.id}" value="${vals.PI ?? ''}" placeholder="1234" autocomplete="off">
+        <${btn} target="card-pin-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- DATA SCADENZA & CVV -->
@@ -292,6 +306,17 @@ export class HtmlSecretsRender {
             CVV
         </label>
         <input spellcheck="false" name="CV" type="text" inputmode="numeric" class="input-text mono" id="cvv-${HtmlSecretsRender.id}" value="${vals.CV ?? ''}" autocomplete="off" maxlength="3" placeholder="000" required>
+    </div>
+</div>
+<!-- IBAN -->
+<div class="isle bg-4 mb-2">
+    <label for="iban-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">account_balance</span>
+        IBAN
+    </label>
+    <div class="flex gap-50">
+        <input spellcheck="false" name="IB" type="text" class="input-text mono" maxlength="34" id="iban-${HtmlSecretsRender.id}" value="${vals.IB ?? ''}" placeholder="IT60X0542811101000000123456" autocomplete="off">
+        <${btn} target="iban-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
 <!-- CUSTOM -->
@@ -337,7 +362,108 @@ export class HtmlSecretsRender {
     <!-- ... -->
 </div>`
     }
-
+    /*
+    {
+      T: "PostgreSQL - Prod",   // Titolo (nome connessione)
+      H: "prod.db.internal",    // Hostname
+      P: 5432,                  // Porta
+      U: "postgres",            // Username
+      K: "*****",               // Password o key
+      S: "postgresql",          // Tipo di servizio (es: pg, mysql, sftp, wireguard)
+      N: "DB di produzione",    // Note
+      C: "postgresql://..."     // (facoltativo) Connection string generata o inserita
+    }
+    */
+    /**
+     * HTML PER LE CONNESSIONI (DB, SFTP, VPN...)
+     * @param {object} vals 
+     * @return {string} HTML
+     */
+    static connection(vals = {}) {
+        HtmlSecretsRender.id++;
+        const update = vals.T !== undefined;
+        const btn = `btn-${update ? 'copy' : 'paste'}`;
+        return `<div class="isle bg-4 mb-2">
+    <label for="titolo-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">tag</span>
+        Title
+    </label>
+    <div class="flex gap-50">
+        <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" placeholder="PostgreSQL - Prod" autocomplete="off" required>
+        <${btn} target="titolo-${HtmlSecretsRender.id}"></${btn}>
+    </div>
+</div>
+<!-- HOSTNAME -->
+<div class="isle bg-4 mb-2">
+    <label for="hostname-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">link</span>
+        Hostname
+    </label>
+    <div class="flex gap-50">
+        <input spellcheck="false" name="H" type="text" class="input-text mono" id="hostname-${HtmlSecretsRender.id}" value="${vals.H ?? ''}" placeholder="prod.db.internal" autocomplete="off">
+        <${btn} target="hostname-${HtmlSecretsRender.id}"></${btn}>
+    </div>
+</div>
+<!-- PORT -->
+<div class="isle bg-4 mb-2">
+    <label for="port-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">door_front</span>
+        Port
+    </label>
+    <div class="flex gap-50 mb-2">
+        <input spellcheck="false" name="P" inputmode="numeric" class="input-text mono" id="port-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" placeholder="5432" autocomplete="off">
+        <${btn} target="port-${HtmlSecretsRender.id}"></${btn}>
+    </div>
+</div>
+<!-- USERNAME -->
+<div class="isle bg-4 mb-2">
+    <label for="username-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">person</span>
+        Username
+    </label>
+    <div class="flex gap-50">
+        <input spellcheck="false" name="U" type="text" class="input-text mono" id="username-${HtmlSecretsRender.id}" value="${vals.U ?? ''}" placeholder="postgres" autocomplete="off">
+        <${btn} target="username-${HtmlSecretsRender.id}"></${btn}>
+    </div>
+</div>
+<!-- PASSWORD -->
+<div class="isle bg-4 mb-2">
+    <label for="password-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">key_vertical</span>
+        Password / Key
+    </label>
+    <div class="flex gap-50 mb-2">
+        <input spellcheck="false" name="K" type="password" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.K ?? ''}" placeholder="*****" autocomplete="off">
+        <${btn} target="password-${HtmlSecretsRender.id}"></${btn}>
+    </div>
+    <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
+</div>
+<!-- SERVICE -->
+<div class="isle bg-4 mb-2">
+    <label for="service-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">settings</span>
+        Service
+    </label>
+    <div class="flex gap-50">
+        <input spellcheck="false" name="S" type="text" class="input-text mono" id="service-${HtmlSecretsRender.id}" value="${vals.S ?? ''}" autocomplete="off" placeholder="pg, mysql, sftp, wireguard">
+        <${btn} target="service-${HtmlSecretsRender.id}"></${btn}>
+    </div>
+</div>
+<!-- CUSTOM -->
+<div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
+    <!-- ... -->
+</div>
+<!-- NOTE -->
+<div class="isle bg-4 mb-2">
+    <label for="note-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">info</span>
+        Note
+    </label>
+    <div class="container-input-text">
+        <textarea spellcheck="false" name="N" id="note-${HtmlSecretsRender.id}" rows="4">${vals.N ?? ''}</textarea>
+    </div>
+</div>`;
+    }
     /**
      * Restituisce il contesto di ricerca di ogni vault list item
      * @param {Object} vals 

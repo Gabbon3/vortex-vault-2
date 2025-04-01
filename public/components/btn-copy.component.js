@@ -1,4 +1,4 @@
-class BtnCopy extends HTMLElement {
+export class BtnCopy extends HTMLElement {
     constructor() {
         super();
         this.target = null;
@@ -14,6 +14,16 @@ class BtnCopy extends HTMLElement {
         this.innerHTML = `${text}<span class="material-symbols-rounded">content_copy</span>`;
         // ---
         this.target = target;
+    }
+
+    static callbacks = {
+        /**
+         * COPIA CONTENUTO ELIMINANDO GLI SPAZI
+         * @param {string} t
+         */
+        'rmSpace': (t) => {
+            return t.replaceAll(' ', '').trim();
+        }
     }
 }
 

@@ -24,6 +24,7 @@ class VaultLi extends HTMLElement {
          * card: 2 giallo
          * chiavi pubbliche: 3 viola
          * ENV: 4 rosso
+         * Connection 5: blu
          */
         let icon = '';
         let color = '';
@@ -44,6 +45,9 @@ class VaultLi extends HTMLElement {
                 break;
             case '4':
                 icon = 'instant_mix';
+                break;
+            case '5':
+                icon = 'lan';
                 break;
         }
         if (st === '3') {
