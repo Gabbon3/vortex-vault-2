@@ -84,9 +84,9 @@ The project was born from a simple question: <br>
 
 🚧 Project in active development.
 
-## 📃 Licenza
+## 📃 License
 GNU Affero General Public License
 
-## 🙋‍♂️ Autore
+## 🙋‍♂️ Author
 Gabbon3 - Gabriele Gherlone
 > “I needed a password manager. So I wrote it down.”
