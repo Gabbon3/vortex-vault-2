@@ -2,6 +2,8 @@
  * Classe statica per la cifratura e decifratura dei dati usando AES-256-GCM con le Web Crypto API.
  */
 export class AES256GCM {
+    // mappa di supporto per riutilizzare le stesse crypto key
+    static keyMap = new Map();
     /**
      * Importa una chiave AES-256-GCM da un buffer, se necessario.
      * Se riceve già una CryptoKey, la restituisce direttamente.
@@ -12,13 +14,19 @@ export class AES256GCM {
     static async resolve_key(key_input) {
         if (key_input instanceof CryptoKey) return key_input;
         if (key_input instanceof Uint8Array && key_input.length === 32) {
-            return await crypto.subtle.importKey(
+            // -- verifico se la chiave non è in cache
+            const hash = [...key_input].join('');
+            if (this.keyMap.has(hash)) return this.keyMap.get(hash);
+            // -- se non lo è importo la cripto key e metto in cache
+            const key = await crypto.subtle.importKey(
                 "raw",
                 key_input,
                 { name: "AES-GCM" },
                 false,
                 ["encrypt", "decrypt"]
             );
+            this.keyMap.set(hash, key);
+            return key;
         }
         throw new Error('Invalid key format. Expected 32-byte Uint8Array or CryptoKey.');
     }
@@ -79,3 +87,5 @@ export class AES256GCM {
         }
     }
 }
+
+window.AES256GCM = AES256GCM;

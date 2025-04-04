@@ -272,8 +272,6 @@ export class VaultService {
             const encrypted_vault = await this.encrypt(vault, null, export_key);
             backup.push(encrypted_vault);
         }
-        // --
-        console.log("Cripto Key Fingerprint", await Cripto.hash(export_key, { encoding: 'hex' }));
         // -- converto il backup completo in formato MessagePack
         return msgpack.encode(backup);
     }
@@ -291,8 +289,6 @@ export class VaultService {
         // -- ottengo il salt del backup cosi genero la chiave del backup
         const backup_salt = backup.shift();
         const backup_key = await Cripto.argon2(custom_key ?? this.master_key, backup_salt);
-        // ---
-        console.log("Cripto Key Fingerprint", await Cripto.hash(backup_key, { encoding: 'hex' }));
         // -- decifro ogni vault
         for (let i = 0; i < backup.length; i++) {
             const decoded_vault = await this.decrypt(backup[i], backup_key);
