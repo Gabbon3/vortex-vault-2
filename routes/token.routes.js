@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 import { RefreshTokenController } from "../controllers/refreshToken.controller.js";
 import { verify_access_token, verify_email_code } from "../middlewares/authMiddleware.js";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
+import { Roles } from "../utils/roles.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -18,12 +19,12 @@ router.use(limiter);
 // /auth/token
 router.post('/refresh', verify_passkey(), controller.generate_access_token);
 router.post('/rename', verify_access_token(), controller.rename);
-router.post('/revoke', verify_access_token(1), controller.revoke);
+router.post('/revoke', verify_access_token(Roles.SUDO), controller.revoke);
 // -- device recovery
 router.post('/unlock', verify_passkey(), controller.unlock);
 router.post('/unlockwithemail', verify_email_code, controller.unlock);
-router.post('/revoke-all', verify_access_token(1), controller.revoke_all);
+router.post('/revoke-all', verify_access_token(Roles.SUDO), controller.revoke_all);
 router.get('/', verify_access_token(), controller.get_all);
-router.post('/delete', verify_access_token(1), controller.delete)
+router.post('/delete', verify_access_token(Roles.SUDO), controller.delete)
 
 export default router;

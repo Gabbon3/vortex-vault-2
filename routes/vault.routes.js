@@ -2,6 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import { VaultController } from "../controllers/vault.controller.js";
 import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { Roles } from "../utils/roles.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -15,7 +16,7 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- /vaults
 // -- routes that require sudo access token
-router.post('/restore', verify_access_token(1), express.raw({ type: 'application/octet-stream' }), controller.restore);
+router.post('/restore', verify_access_token(Roles.SUDO), express.raw({ type: 'application/octet-stream' }), controller.restore);
 // -- routes that require simple access token
 router.use(verify_access_token());
 router.post('/create', controller.create);

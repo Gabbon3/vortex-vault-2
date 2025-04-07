@@ -6,7 +6,6 @@ import { Bytes } from "../utils/bytes.js";
 import { Roles } from "../utils/roles.js";
 import { JWT } from "../utils/jwt.utils.js";
 import { User } from "../models/user.js";
-import { RefreshToken } from "../models/refreshToken.js";
 
 export class RefreshTokenController {
     constructor() {
