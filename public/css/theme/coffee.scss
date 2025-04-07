@@ -4,20 +4,21 @@ $c1: #f09177;
 $c2: #F07D78;
 $c3: #F0BC78;
 // colori
-$c-danger: #b85a43;        // Un marrone rossastro, come chicchi tostati
-$c-red: #b55e4a;           // Rosso mattone caldo, meno saturo
-$c-warning: #c48a4a;       // Caramello scuro, simile al brown sugar
-$c-blue: #6f7c8a;          // Blu grigiastro, desaturato, simile al denim stinto
-$c-lightblue: #a2b1b9;     // Grigio-azzurro tenue, tipo carta da zucchero
-$c-yellow: #d1a054;        // Miele o crema cotta
-$c-orange: #bb6f41;        // Arancione bruciato, tono terracotta
-$c-peach: #e2b18c;         // Pesca tendente al beige, delicata
-$c-purple: #92707a;        // Mauve spento, come un vino rosato
-$c-pink: #c68987;          // Rosa antico, tono polveroso
-$c-mint: #a4b5a0;          // Verde salvia chiaro, soft
-$c-lightgray: #c1b8b0;     // Grigio caldo, tipo argilla chiara
-$c-green: #7c9c7c;         // Verde muschio tenue
-$c-olive-green: #a59b74;   // Verde oliva desaturato, tono secco
+$c-danger:      #e05d61;    // Rosso caldo, deciso ma non aggressivo
+$c-red:         #e86a6d;    // Rosso lampone chiaro, differenziato da danger
+$c-warning:     #d39448;    // Caramello pieno, caldo, leggibile
+$c-blue:        #5c9ced;    // Blu vivace ma non glaciale
+$c-lightblue:   #6fd0e1;    // Azzurro fresco, elegante su dark mode
+$c-yellow:      #f5e26b;    // Giallo crema brillante
+$c-orange:      #df7967;    // Terracotta caldo (già sistemato, confermato)
+$c-peach:       #f7a48c;    // Pesca leggera ma visibile
+$c-purple:      #9e90f4;    // Lavanda vibrante (già approvato)
+$c-pink:        #f3a4b2;    // Rosa sorbetto, moderno
+$c-mint:        #a3cab3;    // Verde menta soft e coerente
+$c-lightgray:   #bfb5ac;    // Beige/grigio caldo, ottimo per contrasto delicato
+$c-green:       #9fcd41;    // Verde mela brillante (già sistemato, confermato)
+$c-olive-green: #a49b72;    // Verde oliva caldo, stabile, elegante
+
 // sfondo
 $bg-1: #1a1716;
 $bg-2: lighten($bg-1, 3);
