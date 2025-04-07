@@ -1,7 +1,11 @@
-.navbar {
+vortex-navbar {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+
+    .last {
+        margin-left: auto;
+    }
 
     a {
         padding: 10px;

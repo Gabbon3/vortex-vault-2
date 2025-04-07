@@ -11,20 +11,20 @@
         left: 0;
         width: 100%;
         border-radius: 0;
-        
-        .navbar {
-            width: 100%;
-            flex-wrap: nowrap;
+        flex-wrap: nowrap;
 
-            a {
-                justify-content: center;
-                flex-grow: 1;
-                font-size: $fs-l;
+        a {
+            justify-content: center;
+            flex-grow: 1;
+            font-size: $fs-l;
 
-                i {
-                    display: none;
-                }
+            i {
+                display: none;
             }
+        }
+
+        .last {
+            margin-left: unset;
         }
 
         .logo {

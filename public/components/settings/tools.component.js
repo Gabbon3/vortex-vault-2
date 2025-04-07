@@ -312,7 +312,7 @@ class SettingsComponent extends HTMLElement {
                     <option value="dracula">🧛‍♂️ Dracula</option>
                     <option value="tokyonight">🌆 Tokyo Night</option>
                     <option value="cyberpunk">🚀 Cyber Punk</option>
-                    <option value="sunset">🌅 Sunset</option>
+                    <option value="coffee">☕ Coffee</option>
                     <option value="blossom">🌸 Blossom</option>
                     <option value="ocean">🌊 Ocean</option>
                     <option disabled>Light Theme</option>

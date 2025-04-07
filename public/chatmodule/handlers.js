@@ -4,6 +4,7 @@ import { ECDH } from "../secure/ecdh.js";
 import { Contact } from "../DTO/contact.js";
 import { AES256GCM } from "../secure/aesgcm.js";
 import { Cripto } from "../secure/cripto.js";
+import { Bytes } from "../utils/bytes.js";
 
 /**
  * Modulo per la gestione degli eventi in arrivo tramite WebSocket.
