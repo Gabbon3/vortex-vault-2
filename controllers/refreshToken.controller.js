@@ -18,19 +18,21 @@ export class RefreshTokenController {
      * @param {Response} res 
      */
     generate_access_token = async_handler(async (req, res) => {
-        const token_id = req.cookies.refresh_token;
-        if (!token_id) throw new CError("AuthenticationError", "Invalid refresh token", 403);
+        const refresh_token_cookie = req.cookies.refresh_token;
+        if (!refresh_token_cookie) throw new CError("AuthenticationError", "Invalid refresh token", 403);
+        // -- hash del token
+        const token_hash = this.service.get_token_digest(refresh_token_cookie);
         // ---
         const user_agent = req.get('user-agent');
         // ---
-        const refresh_token = await this.service.verify(req.user.uid, token_id, user_agent);
+        const refresh_token = await this.service.verify({ user_id: req.user.uid, token_hash }, user_agent);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
         const access_token = await JWT.genera_access_token({ uid: req.user.uid, role: Roles.BASE });
         // -- ottengo l'ip adress del richiedente
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token
-        await this.service.update_token_info(token_id, {
+        await this.service.update_token_info({ token_hash }, {
             last_used_at: new Date().toISOString(),
             ip_address: ip_address ?? ''
         });
@@ -64,7 +66,7 @@ export class RefreshTokenController {
         const current_token = req.cookies.refresh_token;
         if (token_id === current_token) throw new CError('SelfRevocationError', "Self-revocation of the current device's token is not allowed.", 403);
         // ---
-        await this.service.revoke(token_id, revoke);
+        await this.service.revoke({ id: token_id }, revoke);
         res.status(200).json({ "revoked": revoke });
     });
     /**
@@ -76,6 +78,8 @@ export class RefreshTokenController {
         const current_token = req.cookies.refresh_token;
         if (!current_token) throw new Error('ValidationError', 'Any token avaiable', 404);
         // ---
+        const token_hash = this.service.get_token_digest(current_token);
+        // ---
         let uid = req.user?.uid ?? null;
         if (!uid) {
             const { email } = req.user;
@@ -85,7 +89,7 @@ export class RefreshTokenController {
             });
             uid = user.id;
         }
-        const [affectedCount] = await this.service.update_token_info(uid, current_token, {
+        const [affectedCount] = await this.service.update_token_info({ user_id: uid, token_hash: token_hash }, {
             is_revoked: false
         });
         // ---
@@ -108,7 +112,8 @@ export class RefreshTokenController {
      */
     rename = async_handler(async (req, res) => {
         const { token_id, device_name } = req.body;
-        await this.service.update_token_info(req.user.uid, token_id, { device_name });
+        // ---
+        await this.service.update_token_info({ user_id: req.user.uid, id: token_id }, { device_name });
         res.status(200).json({ "renamed": true });
     });
     /**

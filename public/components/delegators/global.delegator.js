@@ -2,6 +2,7 @@ import { PasskeyService } from "../../service/passkey.public.service.js";
 import { BtnCopy } from "../btn-copy.component.js";
 import { Windows } from "../../utils/windows.js";
 import { PasskeyBtn } from "../passkey-btn.component.js";
+import { Log } from "../../utils/log.js";
 
 export const GlobalDelegator = {
     initialized: false,

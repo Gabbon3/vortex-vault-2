@@ -100,7 +100,7 @@ export class UserService {
         // -- genero un bypass token
         const bypass_token = Cripto.bypass_token();
         RamDB.set(`byp-${bypass_token}`, { uid: user.id }, 30);
-        return { access_token, refresh_token: refresh_token.id, user, bypass_token };
+        return { access_token, refresh_token: refresh_token.plain, user, bypass_token };
     }
     /**
      * Generate an advanced access token

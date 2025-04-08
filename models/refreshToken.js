@@ -10,6 +10,12 @@ export const RefreshToken = sequelize.define(
             defaultValue: () => uuidv7(),
             primaryKey: true,
         },
+        token_hash: {
+            type: DataTypes.STRING(64),
+            allowNull: false,
+            unique: true,
+            comment: "64 caratteri corrispondono ad una stringa hex da 32 byte",
+        },
         user_id: { 
             type: DataTypes.UUID,
             allowNull: false 

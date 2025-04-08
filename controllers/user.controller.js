@@ -51,12 +51,12 @@ export class UserController {
         // -- refresh token 
         let old_refresh_token = null;
         if (refresh_token_cookie) {
-            // -- verifico se il formato va bene, se non va bene assegno null
-            if (!uuidValidate(refresh_token_cookie)) {
-                old_refresh_token = null;
-            } else if (await this.refresh_token_service.verify(false, refresh_token_cookie, user_agent)) {
+            // -- hash del refresh token
+            const hash_current_token = this.refresh_token_service.get_token_digest(refresh_token_cookie);
+            // ---
+            if (await this.refresh_token_service.verify({ token_hash: hash_current_token }, user_agent)) {
                 // -- verifico se è valido
-                old_refresh_token = refresh_token_cookie
+                old_refresh_token = hash_current_token;
             }
         }
         // -- Access Token
@@ -105,7 +105,7 @@ export class UserController {
             res.clearCookie(cookie_name, { path: '/' });
         });
         // -- invio una mail
-        const { text, html } = automated_emails.deleteAccount({ 
+        const { text, html } = automated_emails.deleteAccount({
             email,
         });
         Mailer.send(email, 'Account Deletion Confirmation', text, html);
@@ -175,7 +175,7 @@ export class UserController {
         const is_set = RamDB.set(request_id, db_data, 60);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
-        const body = automated_emails.otpCode({email, code});
+        const body = automated_emails.otpCode({ email, code });
         const is_send = await Mailer.send(
             email,
             'Vortex Verification Code',
@@ -193,7 +193,7 @@ export class UserController {
         const { credentials } = req.body;
         // ---
         const id = uuidv7();
-        const is_set = 
+        const is_set =
             RamDB.set('fsi' + id, credentials, 150) // fsi = fast sign-in 
             && RamDB.set('passKey' + id, true, 150); // passKey = per saltare il controllo del refresh token
         if (!is_set) throw new Error("RamDB error");
@@ -247,10 +247,10 @@ export class UserController {
         // ---
         if (!old_password || !new_password || !email) throw new CError("", "Missing data needed to make password change", 422);
         // ---
-        const [ affected ] = await this.service.change_password(req.user.uid, old_password, new_password);
+        const [affected] = await this.service.change_password(req.user.uid, old_password, new_password);
         if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
         // -- invio una mail
-        const { text, html } = automated_emails.changePassword({ 
+        const { text, html } = automated_emails.changePassword({
             email,
         });
         Mailer.send(email, 'Password Change Confirmation', text, html);
@@ -265,7 +265,7 @@ export class UserController {
     set_recovery = async_handler(async (req, res) => {
         const recovery = req.body;
         // -- salvo sul db
-        const [ affected ] = await this.service.update_user_info({ id: req.user.uid }, { recovery });
+        const [affected] = await this.service.update_user_info({ id: req.user.uid }, { recovery });
         if (affected !== 1) throw new CError("ServerError", "Not able to set recovery informations", 500);
         // ---
         res.status(200).json({ message: 'Recovery access enabled successfully' });

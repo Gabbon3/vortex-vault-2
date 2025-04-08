@@ -30,42 +30,45 @@ export class RefreshTokenService {
         // -- se non ci sono token associati quindi si tratta del primo accesso
         // -- abilito il token, se no bisogna approvarlo
         const revoke_this_token = count > 0;
+        // -- genero il token casualmente 32 byte
+        const plain_token = Cripto.random_bytes(32, 'hex');
+        // ---
+        const token_hash = this.get_token_digest(plain_token);
         // ---
         const token = await RefreshToken.create({
+            token_hash,
             user_id,
             user_agent_summary,
             user_agent_hash,
             ip_address: ip_address ?? '',
             is_revoked: revoke_this_token
         });
+        // -- aggiungo il token non hashato
+        token.plain = plain_token;
         // ---
         return token ? token : null;
     }
     /**
      * Aggiorna qualsiasi campo di un token 
-     * @param {string} uid user id 
-     * @param {string} token_id 
+     * @param {object} where_conditions - oggetto con le condizioni per trovare il token (tipo uid, id o token_hash)
      * @param {Object} updated_info un oggetto con le informazioni da modificare
      * @returns
      */
-    async update_token_info(uid, token_id, updated_info) {
-        const where = { id: token_id, user_id: uid };
-        // if (uid) where.user_id = uid;
-        // ---
+    async update_token_info(where_conditions, updated_info) {
         return await RefreshToken.update(
             updated_info,
-            { where }
+            { where: where_conditions }
         );
     }
     /**
      * Revoca no un token
-     * @param {string} token_id
+     * @param {object} where
      * @param {boolean} is_revoked
      */
-    async revoke(token_id, is_revoked) {
+    async revoke(where, is_revoked) {
         return await RefreshToken.update(
             { is_revoked },
-            { where: { id: token_id } }
+            { where }
         );
     }
     /**
@@ -97,6 +100,7 @@ export class RefreshTokenService {
      * @returns
      */
     async get_all(user_id, current_token_id) {
+        const hash_current = this.get_token_digest(current_token_id);
         const tokens = await RefreshToken.findAll({
             where: { user_id },
             attributes: {
@@ -106,7 +110,7 @@ export class RefreshTokenService {
         // -- converto in json e verifico per ogni token se l'id corrisponde a quello corrente
         const tokens_json = tokens.map(token => {
             const token_json = token.get();
-            token_json.current = token_json.id === current_token_id;
+            token_json.current = token_json.id === hash_current;
             return token_json;
         });
         // ---
@@ -115,12 +119,14 @@ export class RefreshTokenService {
     /**
      * Restituisce la public key associata ad un refresh token
      * @param {string} uid 
-     * @param {string} token_id 
+     * @param {object} where_conditions 
      * @returns {string} chiave pubblica in base 64
      */
-    async get_public_key(uid, token_id) {
+    async get_public_key(where_conditions) {
+        this.digest_where_token_hash(where_conditions);
+        // ---
         const device = await RefreshToken.findOne({
-            where: { user_id: uid, id: token_id },
+            where: where_conditions,
             attributes: ['public_key']
         });
         // ---
@@ -162,16 +168,13 @@ export class RefreshTokenService {
     }
     /**
      * Verifica la validità dei refresh token restituendo le informazioni associate se valido
-     * @param {string} uid user id
-     * @param {string} token_id
+     * @param {object} where_conditions - oggetto per trovare il token (user_id, token_hash, id)
      * @param {string} user_agent
      * @returns {boolean | Object}
      */
-    async verify(uid, token_id, user_agent) {
-        const where = { id: token_id };
-        if (uid) where.user_id = uid;
+    async verify(where_conditions, user_agent) {
         // ---
-        const refresh_token = await RefreshToken.findOne({ where });
+        const refresh_token = await RefreshToken.findOne({ where_conditions });
         // -- se il token non esiste o non è associato a quell'utente non è valido
         if (!refresh_token) return false;
         // -- se il token è stato revocato non è valido
@@ -185,6 +188,21 @@ export class RefreshTokenService {
         // if (user_agent_hash != refresh_token.user_agent_hash) return false;
         // ---
         return refresh_token;
+    }
+    /**
+     * Effettua l'hash del token
+     */
+    digest_where_token_hash(where) {
+        if (!where.token_hash) return;
+        where.token_hash = this.get_token_digest(where.token_hash);
+    }
+    /**
+     * Restituisce il token hashato
+     * @param {string} token 
+     * @returns {string}
+     */
+    get_token_digest(token) {
+        return Cripto.hash(token, { algorithm: 'sha256', encoding: 'hex' });
     }
     /**
      * Crea l'hash MD5 dell'user agent restituendo in formato hex
