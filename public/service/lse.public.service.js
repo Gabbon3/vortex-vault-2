@@ -62,6 +62,7 @@ export class LSE {
                 });
         if (!raw_public_key) {
             LocalStorage.remove('lse-private-key');
+            LocalStorage.remove('lse-private-key-expire-date');
             return false;
         }
         // -- importo le chiavi come Crypto Key
