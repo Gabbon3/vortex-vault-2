@@ -60,7 +60,10 @@ export class LSE {
                     const { public_key } = response;
                     return Bytes.base64.decode(public_key);
                 });
-        if (!raw_public_key) return false;
+        if (!raw_public_key) {
+            LocalStorage.remove('lse-private-key');
+            return false;
+        }
         // -- importo le chiavi come Crypto Key
         const private_key = await ECDH.import_private_key(raw_private_key, LSE.curve);
         const public_key = await ECDH.import_public_key(raw_public_key, LSE.curve);
