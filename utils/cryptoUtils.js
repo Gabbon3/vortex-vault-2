@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { Bytes } from './bytes.js';
+// import { Bytes } from './bytes.js';
 
 export class Cripto {
     /**
@@ -83,6 +83,42 @@ export class Cripto {
         // ---
         const new_hash = this.hmac(message, salt);
         return Buffer.compare(hash, new_hash) === 0;
+    }
+    /**
+     * Tronca un UInt8Array
+     * @param {Uint8Array} buf 
+     * @param {number} length 
+     * @param {string} mode "start": keeps the first N bytes, "end": keeps the last N bytes, "middle": keeps the center part, "smart": keeps start and end, drops the middle
+     * @returns {Uint8Array}
+     */
+    static truncateBuffer(buf, length, mode = "start") {
+        if (!(buf instanceof Uint8Array)) {
+            throw new TypeError("Expected a Uint8Array");
+        }
+
+        if (length >= buf.length) return buf;
+
+        switch (mode) {
+            case "start":
+                return buf.slice(0, length);
+            case "end":
+                return buf.slice(buf.length - length);
+            case "middle": {
+                const start = Math.floor((buf.length - length) / 2);
+                return buf.slice(start, start + length);
+            }
+            case "smart": {
+                const half = Math.floor(length / 2);
+                const startPart = buf.slice(0, half);
+                const endPart = buf.slice(buf.length - (length - half));
+                const combined = new Uint8Array(length);
+                combined.set(startPart);
+                combined.set(endPart, half);
+                return combined;
+            }
+            default:
+                throw new Error(`Unknown truncation mode: ${mode}`);
+        }
     }
     /**
      * Calcola l'hash di un messaggio.

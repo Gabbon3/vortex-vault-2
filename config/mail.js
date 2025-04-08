@@ -18,12 +18,21 @@ export class Mailer {
     /**
      * Genera una stringa univoca derivata da una mail
      * @param {string} email 
+     * @param {boolean} [truncate=false] se true tronca l'hash dell email
+     * @param {Uint8Array} [salt=null] se presente un salt, verrà concatenato all'email da hashare
      * @returns {string} restituisce una stringa che identifica una email pronta da usare per il mac
      */
-    static get_email_identity(email) {
-        const [username, domain] = email.split('@');
-        const group = domain.split('.')[0];
-        return `${username}.${group}`;
+    static get_hash_email_identity(email, truncate = false, salt = null) {
+        // --
+        const emailBytes = new TextEncoder().encode(email);
+        // -- preparo il contenuto da hashare
+        const prepare = salt instanceof Uint8Array ? Bytes.merge([emailBytes, salt], 8) : emailBytes;
+        // -- effettuo l'hash
+        const hash = Cripto.hash(prepare, { algorithm: 'sha256' });
+        // -- effettuo il troncamento se richiesto
+        const result = !truncate ? Bytes.base62.encode(hash) : Cripto.truncateBuffer(hash, 12, 'smart');
+        // -- restituisco in base 62
+        return Bytes.base62.encode(result);
     }
     /**
      * Genera un codice di verifica da includere nelle mail per legittimare la mail
@@ -31,7 +40,7 @@ export class Mailer {
      * @returns {string}
      */
     static message_authentication_code(email_) {
-        const email = this.get_email_identity(email_);
+        const email = this.get_hash_email_identity(email_, true, Config.FISH_SALT);
         let timestamp = Math.floor(Date.now() / 1000);
         // -- comprimo e riduco la dimensione dei dati
         timestamp = BaseConverter.to_string(timestamp, 62);
@@ -39,7 +48,7 @@ export class Mailer {
         const payload = `${email}.${timestamp}`;
         const signature = Cripto.hmac(payload, Config.FISH_KEY);
         // ---
-        const encoded_signature = Bytes.base62.encode(signature.subarray(0, 12), true);
+        const encoded_signature = Bytes.base62.encode(signature.subarray(0, 16), true);
         return `${payload}.${encoded_signature}`;
     }
     /**
@@ -59,16 +68,22 @@ export class Mailer {
         const payload = code_parts.slice(0, -1).join('.');
         // -- ottengo il mittente (unendo le parti del codice senza timestamp e signature) e derivo l'id dell'email fornita
         const receiver = code_parts.slice(0, -2).join('.');
-        const email_id = this.get_email_identity(email);
+        const email_id = this.get_hash_email_identity(email, true, Config.FISH_SALT);
         // -- calcolo nuovamente la signature
         const signature = Cripto.hmac(payload, Config.FISH_KEY);
         // -- verifico le condizioni
-        const valid_signature = Bytes.compare(signature.subarray(0, 12), encoded_signature);
+        const valid_signature = Bytes.compare(signature.subarray(0, 16), encoded_signature);
         const valid_date = Date.now() < new Date(timestamp + (24 * 60 * 60 * 1000));
-        // -- controllo se il ricevente corrisponde
+        /**
+         * se la firma è corretta ma il destinatario non corrisponde (codice 4)
+         * se la firma è valida, verifico se la data è valida:
+         *  - se si il token è valido (codice 1)
+         *  - se no token scaduto (ma comunque valido) (codice 2)
+         * se la firma non è valida, il token non è valido (codice 3)
+         */
         const status = email_id !== receiver && valid_signature ? 4 :
             valid_signature ? (valid_date ? 1 : 2) : 3;
-        return { status, timestamp: timestamp, receiver };
+        return { status, timestamp };
     }
     /**
      * Invia una mail

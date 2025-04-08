@@ -14,6 +14,7 @@ export class Config {
     static DB_PASSWORD = process.env.DB_PASSWORD;
     // Mail
     static FISH_KEY = Buffer.from(process.env.FISH_SECRET, "hex");
+    static FISH_SALT = Buffer.from(process.env.FISH_SALT, "hex");
     static EMAIL_USER = process.env.EMAIL_USER;
     static EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
     // PASSKEYS

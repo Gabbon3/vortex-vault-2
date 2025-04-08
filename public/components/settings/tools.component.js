@@ -35,16 +35,18 @@ class SettingsComponent extends HTMLElement {
                         body: { email, mac: code.trim() },
                         loader: true,
                     });
-                    const { status, timestamp, receiver } = res;
+                    const { status, timestamp } = res;
                     // -- creo il report
                     const type = ['success', 'warning', 'danger', 'danger'][status - 1];
-                    const message = ['valid', 'valid but expired', 'not valid', 'It looks like the receiver is not you, someone tried to use their valid code against you.'][status - 1];
-                    let report = `<p class="mb-0 report ${type}">
-                    status: ${message} <br>
-                    issued on: ${date.format('%d %M %Y at %H:%i', new Date(timestamp))} <br>
-                    receiver: ${receiver} <br>
-                    </p>`;
+                    const comment = ['Valid', 'Valid but expired', 'Not valid', 'The token was not intended for you.'][status - 1];
+                    let report = `<div class="mt-2 alert ${type} monospace">
+                    <div class="flex d-column gap-75">
+                        <strong title="Status" class="flex y-center gap-75"><span class="material-symbols-rounded">shield</span> <span>${comment}</span> </strong>
+                        <div title="Issued on" class="flex y-center gap-75"><span class="material-symbols-rounded">today</span> <span>${date.format('%d %M %Y at %H:%i', new Date(timestamp))}</span> </div>
+                        <div title="Original token" class="flex y-center gap-75"><span class="material-symbols-rounded">password</span> <span class="monospace work-break-all">${code.trim()}</span></div>
+                    </div></div>`;
                     // ---
+                    form.reset();
                     document.getElementById('cmac-result').innerHTML = report;
                 });
             }
