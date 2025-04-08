@@ -53,6 +53,10 @@ export class AuthService {
         }
         // -- Recupero la LSK tramite protocollo LSE
         const lsk = await LSE.S(null, res.bypass_token);
+        if (!lsk) {
+            Log.summon(1, "Something went wrong.");
+            return false;
+        }
         // -- cifro le credenziali sul localstorage
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, master_key);

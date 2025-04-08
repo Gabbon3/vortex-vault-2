@@ -2,7 +2,7 @@ import { UAParser } from "ua-parser-js";
 import { RefreshToken } from "../models/refreshToken.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
-import { validate as uuidValidate } from 'uuid';
+import { stringify, validate as uuidValidate } from 'uuid';
 import { Bytes } from "../utils/bytes.js";
 import { CError } from "../helpers/cError.js";
 
@@ -110,7 +110,7 @@ export class RefreshTokenService {
         // -- converto in json e verifico per ogni token se l'id corrisponde a quello corrente
         const tokens_json = tokens.map(token => {
             const token_json = token.get();
-            token_json.current = token_json.id === hash_current;
+            token_json.current = token_json.token_hash === hash_current;
             return token_json;
         });
         // ---
@@ -152,18 +152,13 @@ export class RefreshTokenService {
     }
     /**
      * Elimina un token
-     * @param {string} token_id 
-     * @param {number} user_id 
-     * @returns 
+     * @param {object} where_conditions
+     * @returns {number} numero di record eliminato
      */
-    async delete(token_id, user_id) {
-        if (!uuidValidate(token_id)) return false;
+    async delete(where_conditions) {
         // ---
         return await RefreshToken.destroy({
-            where: {
-                id: token_id,
-                user_id,
-            },
+            where: where_conditions,
         });
     }
     /**
@@ -188,6 +183,13 @@ export class RefreshTokenService {
         // if (user_agent_hash != refresh_token.user_agent_hash) return false;
         // ---
         return refresh_token;
+    }
+    /**
+     * Valida un refresh token
+     * @param {string} token - stringa esadecimale da 32 byte
+     */
+    validateRefreshToken(token) {
+        return typeof token === 'string' && token.length === 64;
     }
     /**
      * Effettua l'hash del token

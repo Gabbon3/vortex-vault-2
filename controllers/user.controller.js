@@ -85,8 +85,15 @@ export class UserController {
      */
     signout = async_handler(async (req, res) => {
         const refresh_token = req.cookies.refresh_token;
+        // -- verifico se è valido
+        if (!this.refresh_token_service.validateRefreshToken(refresh_token)) throw new CError('', 'Invalid refresh token', 400);
+        // -- hash refresh token
+        const token_hash = this.refresh_token_service.get_token_digest(refresh_token);
         // -- elimino il refresh token
-        if (refresh_token) await this.refresh_token_service.delete(refresh_token, req.user.uid);
+        await this.refresh_token_service.delete({
+            user_id: req.user.uid,
+            token_hash: token_hash,
+        });
         // -- elimino i cookie
         Object.keys(req.cookies).forEach((cookie_name) => {
             res.clearCookie(cookie_name, { path: '/' });
@@ -98,8 +105,8 @@ export class UserController {
      * Elimina un account
      */
     delete = async_handler(async (req, res) => {
-        const deleted = await this.service.delete_by_id(req.user.uid);
-        if (deleted === 0) throw new Error("Nessun utente eliminato");
+        const deletedCount = await this.service.delete_by_id(req.user.uid);
+        if (deletedCount === 0) throw new Error("Nessun utente eliminato");
         // -- elimino i cookie
         Object.keys(req.cookies).forEach((cookie_name) => {
             res.clearCookie(cookie_name, { path: '/' });

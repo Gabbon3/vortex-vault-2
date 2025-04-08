@@ -96,4 +96,4 @@ export class DeviceService {
     }
 }
 
-// window.DeviceService = DeviceService;
+window.DeviceService = DeviceService;
