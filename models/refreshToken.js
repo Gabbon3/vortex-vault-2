@@ -41,6 +41,7 @@ export const RefreshToken = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW,
+            comment: "Data di creazione del token",
         },
         last_used_at: {
             type: DataTypes.DATE,

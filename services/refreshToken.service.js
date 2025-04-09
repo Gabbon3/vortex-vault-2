@@ -2,8 +2,6 @@ import { UAParser } from "ua-parser-js";
 import { RefreshToken } from "../models/refreshToken.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { RamDB } from "../config/ramdb.js";
-import { stringify, validate as uuidValidate } from 'uuid';
-import { Bytes } from "../utils/bytes.js";
 import { CError } from "../helpers/cError.js";
 
 export class RefreshTokenService {
