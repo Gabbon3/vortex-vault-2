@@ -8,6 +8,7 @@ import { CError } from "../helpers/cError.js";
 
 export class RefreshTokenService {
     static random_c_length = 10;
+    static max_tempo_inattivita = 30 * 24 * 60 * 60 * 1000;
     /**
      * Crea un nuovo refresh token salvandolo sul db e restituendolo
      * @param {string} user_id
@@ -52,7 +53,7 @@ export class RefreshTokenService {
      * Aggiorna qualsiasi campo di un token 
      * @param {object} where_conditions - oggetto con le condizioni per trovare il token (tipo uid, id o token_hash)
      * @param {Object} updated_info un oggetto con le informazioni da modificare
-     * @returns
+     * @returns {Array} [affectedRows]
      */
     async update_token_info(where_conditions, updated_info) {
         return await RefreshToken.update(
@@ -165,9 +166,10 @@ export class RefreshTokenService {
      * Verifica la validità dei refresh token restituendo le informazioni associate se valido
      * @param {object} where_conditions - oggetto per trovare il token (user_id, token_hash, id)
      * @param {string} user_agent
+     * @param {boolean} [rotate=false] se true, viene effettuata la rotazione del token
      * @returns {boolean | Object}
      */
-    async verify(where_conditions, user_agent) {
+    async verify(where_conditions, user_agent, rotate = false) {
         // ---
         const refresh_token = await RefreshToken.findOne({ where_conditions });
         // -- se il token non esiste o non è associato a quell'utente non è valido
@@ -176,13 +178,40 @@ export class RefreshTokenService {
         if (refresh_token.is_revoked === true) return false;
         // -- se il token è inutilizzato da piu di 30 giorni non è piu valido
         const scadenza =
-            refresh_token.last_used_at.getTime() + this.max_tempo_inattivita;
+            refresh_token.last_used_at.getTime() + RefreshTokenService.max_tempo_inattivita;
         if (scadenza < Date.now()) return false;
+        /**
+         * Effettuo la rotazione del token se richiesto
+         * e restituisco quello anziche il precedente
+         */
+        if (rotate) {
+            const new_refresh_token = await this.rotate(refresh_token);
+            return new_refresh_token;
+        }
         // -- se l'user agent non corrisponde non è valido, rimosso poichè superfluo
         // const user_agent_hash = this.user_agent_hash(user_agent);
         // if (user_agent_hash != refresh_token.user_agent_hash) return false;
         // ---
         return refresh_token;
+    }
+    /**
+     * Effettua la rotazione di un refresh token
+     * @param {RefreshToken} refresh_token 
+     */
+    async rotate(refresh_token) {
+        const new_random_token = Cripto.random_bytes(32, 'hex');
+        const hash_new_random_token = this.get_token_digest(new_random_token);
+        // ---
+        const [affectedRows] = await this.update_token_info({
+            token_hash: refresh_token.token_hash
+        }, {
+            token_hash: hash_new_random_token
+        });
+        if (affectedRows === 0) throw new CError('', 'Error while rotate refresh token', 500);
+        // -- restituisco il refresh token
+        const updated_token = await RefreshToken.findOne({ where: { token_hash: hash_new_random_token }});
+        updated_token.plain = new_random_token;
+        return updated_token;
     }
     /**
      * Valida un refresh token

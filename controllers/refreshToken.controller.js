@@ -24,8 +24,10 @@ export class RefreshTokenController {
         const token_hash = this.service.get_token_digest(refresh_token_cookie);
         // ---
         const user_agent = req.get('user-agent');
-        // ---
-        const refresh_token = await this.service.verify({ user_id: req.user.uid, token_hash }, user_agent);
+        /**
+         * effettuo la rotazione del token qui, quindi quello ottenuto sarà il nuovo refresh token
+         */
+        const refresh_token = await this.service.verify({ user_id: req.user.uid, token_hash }, user_agent, true);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
         // ---
         const access_token = await JWT.genera_access_token({ uid: req.user.uid, role: Roles.BASE });
@@ -36,13 +38,22 @@ export class RefreshTokenController {
             last_used_at: new Date().toISOString(),
             ip_address: ip_address ?? ''
         });
-        // -- imposto il cookie
+        /**
+         * Imposto i cookie
+         */
         res.cookie('access_token', access_token, {
             httpOnly: true,
             secure: JWT.secure_option, // da mettere true in produzione
             maxAge: JWT.access_token_cookie_lifetime,
             sameSite: 'Strict',
             path: '/', // disponibile per tutte le route
+        });
+        res.cookie('refresh_token', refresh_token.plain, {
+            httpOnly: true,
+            secure: true,
+            maxAge: JWT.refresh_token_cookie_lifetime,
+            sameSite: 'Strict',
+            path: '/auth',
         });
         // ---
         res.status(201).json({ uid: req.user.uid, access_token, public_key: Bytes.base64.encode(refresh_token.public_key) });
