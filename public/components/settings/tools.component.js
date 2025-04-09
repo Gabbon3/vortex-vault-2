@@ -12,6 +12,7 @@ class SettingsComponent extends HTMLElement {
         'quick-sign-in',
         'message-authentication-code',
         'app-theme',
+        'help',
         'delete-account',
     ];
 
@@ -320,6 +321,28 @@ class SettingsComponent extends HTMLElement {
                     <option disabled>Light Theme</option>
                     <option value="cloud">☁️ Cloud</option>
                 </select>
+            </div>
+        </div>
+        `;
+        }
+        // Sezione Aiuto
+        if (sections['help']) {
+            html += `
+            <hr>
+        <!-- HELP -->
+        <div class="maincolor orange">
+            <h3 class="icon slider" slider="cont-help-tools">
+                <span class="material-symbols-rounded">help</span>
+                Help
+            </h3>
+            <div class="isle bg-4 slider-cont fast" data-open="false" id="cont-help-tools">
+                <p class="m-0 mb-2">
+                    if you cannot log in correctly, press "Delete local data".
+                </p>
+                <button class="btn warning" id="btn-delete-local-data">
+                    <span class="material-symbols-rounded">delete</span>
+                    Delete local data
+                </button>
             </div>
         </div>
         `;

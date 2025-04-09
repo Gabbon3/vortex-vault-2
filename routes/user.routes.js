@@ -41,6 +41,7 @@ router.post('/sudotoken', verify_passkey(), controller.start_sudo_session);
 router.post('/sudotoken-email', verify_access_token(), verify_email_code, controller.start_sudo_session);
 // -- SIGN-OUT
 router.post('/signout', verify_access_token(), controller.signout);
+router.post('/clear-cookies', controller.clearCookies);
 // -- DELETE
 router.post('/delete', verify_passkey(true), controller.delete);
 // -- MESSAGE AUTHENTICATION CODE VERIFICATION

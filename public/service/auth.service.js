@@ -101,6 +101,20 @@ export class AuthService {
         return true;
     }
     /**
+     * Elimina tutti i dati locali, inclusi i cookie
+     * @returns {boolean}
+     */
+    static async deleteAllLocalData() {
+        const res = await API.fetch('/auth/clear-cookies', {
+            method: 'POST',
+        });
+        if (!res) return false;
+        // ---
+        localStorage.clear();
+        sessionStorage.clear();
+        return true;
+    }
+    /**
      * Effettua la cancellazione di un account
      */
     static async delete_account(request_id, code) {

@@ -95,11 +95,18 @@ export class UserController {
             token_hash: token_hash,
         });
         // -- elimino i cookie
-        Object.keys(req.cookies).forEach((cookie_name) => {
-            res.clearCookie(cookie_name, { path: '/' });
-        });
+        this.deleteAllCookies(req, res);
         // ---
         res.status(200).json({ message: 'Disconnected' });
+    });
+    /**
+     * Rimuove tutti i cookie del client
+     */
+    clearCookies = async_handler(async (req, res) => {
+        // -- elimino i cookie
+        this.deleteAllCookies(req, res);
+        // ---
+        res.status(200).json({ message: 'All cookies cleared' });
     });
     /**
      * Elimina un account
@@ -108,9 +115,7 @@ export class UserController {
         const deletedCount = await this.service.delete_by_id(req.user.uid);
         if (deletedCount === 0) throw new Error("Nessun utente eliminato");
         // -- elimino i cookie
-        Object.keys(req.cookies).forEach((cookie_name) => {
-            res.clearCookie(cookie_name, { path: '/' });
-        });
+        this.deleteAllCookies(req, res);
         // -- invio una mail
         const { text, html } = automated_emails.deleteAccount({
             email,
@@ -119,6 +124,17 @@ export class UserController {
         // ---
         res.status(200).json({ message: "All data deleted successfully" });
     });
+    /**
+     * Elimina tutti i cookie
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    deleteAllCookies = (req, res) => {
+        // ---
+        Object.keys(req.cookies).forEach((cookie_name) => {
+            res.clearCookie(cookie_name);
+        });
+    }
     /**
      * Restituisce una lista di utenti
      * cercati in like tramite l'email

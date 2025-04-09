@@ -28,10 +28,7 @@ export class LSEController {
                 token_hash: hash_current_token
             }
         });
-        if (!refresh_token) {
-            this.deleteAllCookies(req, res);
-            throw new CError("", "Refresh token not found", 404);
-        }
+        if (!refresh_token) throw new CError("", "Refresh token not found", 404);
         // ---
         refresh_token.public_key = public_key;
         const updated = await refresh_token.save();

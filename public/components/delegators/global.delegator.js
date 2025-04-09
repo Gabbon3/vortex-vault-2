@@ -3,6 +3,8 @@ import { BtnCopy } from "../btn-copy.component.js";
 import { Windows } from "../../utils/windows.js";
 import { PasskeyBtn } from "../passkey-btn.component.js";
 import { Log } from "../../utils/log.js";
+import { API } from "../../utils/api.js";
+import { AuthService } from "../../service/auth.service.js";
 
 export const GlobalDelegator = {
     initialized: false,
@@ -25,6 +27,8 @@ export const GlobalDelegator = {
             this.handleCopyBtnClick,
             this.handlePasteBtnClick,
             this.handleCopySelfContentClick,
+            this.handleLogComponentClick,
+            this.handleDeleteLocaleData,
         ];
         for (const handler of handlers) {
             // if (handler.call(this, e)) break;
@@ -201,5 +205,38 @@ export const GlobalDelegator = {
         }
 
         return true;
-    }
+    },
+    /**
+     * Evento per gestire i click sui Log component
+     * @param {Event} e 
+     * @returns 
+     */
+    handleLogComponentClick(e) {
+        const element = e.target.closest('log-info');
+        if (!element) return false;
+        // ---
+        this.classList.add("chiudi");
+        setTimeout(() => {
+            this.remove();
+        }, 500);
+        return true;
+    },
+    /**
+     * Evento per gestire i click sul pulsante per eliminare tutti i dati locali
+     * @param {Event} e 
+     * @returns {boolean}
+     */
+    handleDeleteLocaleData(e) {
+        const element = e.target.closest('#btn-delete-local-data');
+        if (!element) return false;
+        // ---
+        if (!confirm('You are about to delete all local data, after which you will have to log in again.')) return false;
+        // ---
+        if (AuthService.deleteAllLocalData()) {
+            Log.summon(0, 'All data has been deleted, click here to sign in', () => {
+                window.location.href = '/signin';
+            });
+        }
+        return true;
+    },
 };

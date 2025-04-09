@@ -19,13 +19,6 @@ class LogInfo extends HTMLElement {
         // -- rimuovo il log automaticamente dopo un certo periodo
         setTimeout(() => this.classList.add("chiudi"), 8000);
         setTimeout(() => this.remove(), 8500);
-        // -- rimuovo il log se cliccato
-        this.addEventListener("click", () => {
-            this.classList.add("chiudi")
-            setTimeout(() => {
-                this.remove();
-            }, 500);
-        });
     }
 }
 
