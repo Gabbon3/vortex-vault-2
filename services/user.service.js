@@ -80,7 +80,7 @@ export class UserService {
          * Se il refresh token non esisteva già, quindi è stato passato NULL
          * allora ne creo uno nuovo
          */
-        if (!refresh_token) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, passKey);
+        if (!refresh_token) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey);
         /**
          * Genero l'access token solo se il refresh token NON è REVOCATO
          */
@@ -100,10 +100,13 @@ export class UserService {
      * invia una mail di nuovo accesso se il refresh token viene inizialmente bloccato
      * motivo: non è il primo refresh token associato all'utente
      * @param {User} user - modello dello user
+     * @param {string} user_agent 
+     * @param {string} ip_address 
+     * @param {string} email 
      * @param {string} passKey - stringa che se valida abilita a priori il refresh token -> viene creato un refresh valido
      * @returns {RefreshToken} 
      */
-    async createRefreshToken(user, user_agent, ip_address, passKey) {
+    async createRefreshToken(user, user_agent, ip_address, email, passKey) {
         // ottengo un Model di Refresh token dal suo servizio
         const refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
         // -- avviso l'utente se un nuovo dispositivo accede
