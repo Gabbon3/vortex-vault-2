@@ -215,9 +215,9 @@ export const GlobalDelegator = {
         const element = e.target.closest('log-info');
         if (!element) return false;
         // ---
-        this.classList.add("chiudi");
+        element.classList.add("chiudi");
         setTimeout(() => {
-            this.remove();
+            element.remove();
         }, 500);
         return true;
     },
