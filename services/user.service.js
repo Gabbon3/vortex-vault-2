@@ -62,6 +62,7 @@ export class UserService {
      * @param {string} password 
      * @param {string} user_agent 
      * @param {string} ip_address
+     * @param {string} refresh_token - se null, ne verrà creato uno nuovo
      * @param {string} passKey
      * @returns {{ access_token: string, refresh_token: string, user: User }} - access_token, user
      */
@@ -72,35 +73,55 @@ export class UserService {
         });
         if (!user) throw new CError("AuthenticationError", "Invalid email or password", 401);
         if (user.verified !== true) throw new CError("AuthenticationError", "Email is not verified", 401);
-        // -- cerco se la password è corretta
+        // -- verifico se la password è corretta
         const password_is_correct = await this.verify_password(password, user.password);
         if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
-        // -- Refresh Token
-        if (!refresh_token) {
-            refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
-            // -- avviso l'utente se un nuovo dispositivo accede
-            if (refresh_token.is_revoked) {
-                // -- ottengo il testo
-                const { text, html } = automated_emails.newSignIn({
-                    email,
-                    user_agent: refresh_token.user_agent_summary,
-                    ip_address,
-                });
-                // -- invio la mail
-                await Mailer.send(
-                    email, 
-                    'New device Sign-In', 
-                    text,
-                    html
-                );
-            }
-        }
-        // -- Access Token
+        /**
+         * Se il refresh token non esisteva già, quindi è stato passato NULL
+         * allora ne creo uno nuovo
+         */
+        if (!refresh_token) refresh_token = await this.createRefreshToken(passKey);
+        /**
+         * Genero l'access token solo se il refresh token NON è REVOCATO
+         */
         const access_token = refresh_token.is_revoked ? null : JWT.genera_access_token({ uid: user.id, role: Roles.BASE });
-        // -- genero un bypass token
+        /**
+         * APPROFONDIRE: da capire se generare il bypass anche con refresh non valido
+         */
         const bypass_token = Cripto.bypass_token();
         RamDB.set(`byp-${bypass_token}`, { uid: user.id }, 30);
+        /**
+         * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
+         */
         return { access_token, refresh_token: refresh_token.plain, user, bypass_token };
+    }
+    /**
+     * Crea e restituisce un refresh token
+     * invia una mail di nuovo accesso se il refresh token viene inizialmente bloccato
+     * motivo: non è il primo refresh token associato all'utente
+     * @param {string} passKey - stringa che se valida abilita a priori il refresh token -> viene creato un refresh valido
+     * @returns {RefreshToken} 
+     */
+    async createRefreshToken(passKey) {
+        // ottengo un Model di Refresh token dal suo servizio
+        const refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
+        // -- avviso l'utente se un nuovo dispositivo accede
+        if (refresh_token.is_revoked) {
+            // -- ottengo il testo
+            const { text, html } = automated_emails.newSignIn({
+                email,
+                user_agent: refresh_token.user_agent_summary,
+                ip_address,
+            });
+            // -- invio la mail
+            await Mailer.send(
+                email, 
+                'New device Sign-In', 
+                text,
+                html
+            );
+        }
+        return refresh_token;
     }
     /**
      * Generate an advanced access token

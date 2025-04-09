@@ -47,6 +47,7 @@ export class AuthService {
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
         // -- abilito se necessario il protocollo lse
+        // -- sfrutto il bypass token per bypassare il controllo della passkey
         if (activate_lse === true) {
             const lse_activated = await this.activate_lse(res.bypass_token);
             if (!lse_activated) return false;
@@ -62,6 +63,7 @@ export class AuthService {
         await LocalStorage.set('password-utente', password, master_key);
         await LocalStorage.set('master-key', master_key, lsk);
         await LocalStorage.set('salt', salt, lsk);
+        // -- imposto quelle in chiaro sul session storage
         SessionStorage.set('lsk', lsk);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);

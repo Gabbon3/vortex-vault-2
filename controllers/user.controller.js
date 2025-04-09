@@ -50,6 +50,10 @@ export class UserController {
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- refresh token 
         let old_refresh_token = null;
+        /**
+         * Se esiste gia un refresh token, verifico se è valido
+         * se TRUE allora lo memorizzo come vecchio refresh token
+         */
         if (refresh_token_cookie) {
             // -- hash del refresh token
             const hash_current_token = this.refresh_token_service.get_token_digest(refresh_token_cookie);
@@ -59,7 +63,10 @@ export class UserController {
                 old_refresh_token = hash_current_token;
             }
         }
-        // -- Access Token
+        /**
+         * se il refresh token è valido, otterrò l'access token
+         * gli altri dati verranno restituiti ugualmente
+         */
         const { access_token, refresh_token, user, bypass_token } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
         this.set_token_cookies(res, { access_token, refresh_token, uid: user.id });
         // ---
@@ -69,7 +76,7 @@ export class UserController {
                 refresh_token
             });
         }
-        // -- rimuovo dal ramdb il controllo sui tentativi per accedere all'account
+        // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
         RamDB.delete(`login-attempts-${email}`);
         // ---
         res.status(201).json({

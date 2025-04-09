@@ -11,7 +11,7 @@ export class LSE {
     static curve = "P-384";
     /**
      * Genera una coppia di chiavi ECDH per permettere la crittografia locale
-     * ogni coppia puo essere usata per un mese, poi puo cambiata (questo per evitare sovraccarichi)
+     * ogni coppia puo essere usata per un mese, poi puo essere cambiata (questo per evitare sovraccarichi)
      * @param {string} [bypass_token=null] token per bypassare la passkey
      * @returns {boolean}
      */
