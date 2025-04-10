@@ -29,14 +29,19 @@ export class RefreshTokenController {
          */
         const refresh_token = await this.service.verify({ user_id: req.user.uid, token_hash }, user_agent, true);
         if (!refresh_token) throw new CError("AuthenticationError", "Invalid refresh token", 403);
-        // ---
+        /**
+         * Genero l'access token
+         */
         const access_token = await JWT.genera_access_token({ uid: req.user.uid, role: Roles.BASE });
         // -- ottengo l'ip adress del richiedente
-        const ip_address = req.headers['x-forwarded-for'] || req.ip;
+        /**
+         * DEPRECATED: nessun indirizzo ip memorizzato mantenere il modello zero-knowledge
+         */
+        // const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- aggiorno l'ultimo utilizzo del refresh token
         await this.service.update_token_info({ token_hash }, {
             last_used_at: new Date().toISOString(),
-            ip_address: ip_address ?? ''
+            // ip_address: ip_address ?? ''
         });
         /**
          * Imposto i cookie
@@ -56,7 +61,7 @@ export class RefreshTokenController {
             path: '/auth',
         });
         // ---
-        res.status(201).json({ uid: req.user.uid, access_token, public_key: Bytes.base64.encode(refresh_token.public_key) });
+        res.status(201).json({ uid: req.user.uid, access_token });
     })
     /**
      * Restituisce tutti i token associati ad un utente

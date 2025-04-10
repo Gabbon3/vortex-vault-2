@@ -47,7 +47,12 @@ export class LSE {
     static async S(provided_public_key = null, bypass_token = null) {
         const raw_private_key = await LocalStorage.get('lse-private-key');
         if (!raw_private_key) return undefined;
-        // richiedo al server la chiave pubblica se non è gia stata fornita
+        /**
+         * richiedo al server la chiave pubblica se non è gia stata fornita
+         * se ce, sfrutto un bypass token per bypassare l'autenticazione
+         * in generale però, l'autenticazione viene bypassata, poiche dopo un utilizzo passkey
+         * viene rilasciato un access token speciale che sostituisce la passkey
+         */
         const raw_public_key = 
             provided_public_key instanceof Uint8Array ? 
                 // true
@@ -60,6 +65,10 @@ export class LSE {
                     const { public_key } = response;
                     return Bytes.base64.decode(public_key);
                 });
+        /**
+         * se non ho ottenuto nulla, elimino i riferimenti locali
+         * in questo modo poi otterrò la nuova lsk
+         */
         if (!raw_public_key) {
             LocalStorage.remove('lse-private-key');
             LocalStorage.remove('lse-private-key-expire-date');
@@ -77,4 +86,4 @@ export class LSE {
     }
 }
 
-// window.LSE = LSE;
+window.LSE = LSE;

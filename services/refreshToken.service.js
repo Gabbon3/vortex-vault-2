@@ -116,25 +116,6 @@ export class RefreshTokenService {
         return tokens_json;
     }
     /**
-     * Restituisce la public key associata ad un refresh token
-     * @param {string} uid 
-     * @param {object} where_conditions 
-     * @returns {string} chiave pubblica in base 64
-     */
-    async get_public_key(where_conditions) {
-        this.digest_where_token_hash(where_conditions);
-        // ---
-        const device = await RefreshToken.findOne({
-            where: where_conditions,
-            attributes: ['public_key']
-        });
-        // ---
-        if (!device) throw new CError("", "Public Key not found", 404);
-        if (!device.public_key) throw new CError("", "Public Key not found", 404);
-        // ---
-        return device.public_key;
-    }
-    /**
      * Elimina tutti i token associati ad un utente e ad un dispositivo
      * utile per non accumulare token sullo stesso dispositivo
      * @param {string} user_id

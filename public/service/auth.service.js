@@ -202,7 +202,6 @@ export class AuthService {
         },
             (response) => {
                 return {
-                    publicKey: Bytes.base64.decode(response.public_key),
                     accessToken: response.access_token,
                     uid: response.uid,
                 };
@@ -214,7 +213,7 @@ export class AuthService {
         SessionStorage.set('access-token', res.accessToken);
         // -- imposto la scadenza dell'access token
         await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
-        return { public_key: res.publicKey };
+        return true;
     }
     /**
      * Imposta la chiave master dell'utente nel session storage
@@ -375,10 +374,14 @@ export class AuthService {
         // - l'utente dovrebbe accedere nuovamente
         if (!auth_data) return -1;
         // -- se non ce la chiave mi fermo
-        if (!auth_data.public_key) return -2;
+        // if (!auth_data.public_key) return -2;
         // ---
-        const { public_key } = auth_data;
-        const lsk = await LSE.S(public_key);
+        const lsk = await LSE.S();
+        // -- verifico
+        if (!lsk) {
+            console.warn("LSK non ottenuta.");
+            return false;
+        }
         // -- imposto le variabili di sessione
         const initialized = await this.config_session_vars(lsk);
         // ---
