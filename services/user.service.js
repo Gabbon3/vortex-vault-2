@@ -80,6 +80,7 @@ export class UserService {
          * Se il refresh token non esisteva già, quindi è stato passato NULL
          * allora ne creo uno nuovo
          */
+        // TODO: verificare se il token passato esiste, se non esiste, va creato
         if (!refresh_token) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey);
         /**
          * Genero l'access token solo se il refresh token NON è REVOCATO
