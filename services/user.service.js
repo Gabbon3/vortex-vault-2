@@ -81,7 +81,13 @@ export class UserService {
          * allora ne creo uno nuovo
          */
         // TODO: verificare se il token passato esiste, se non esiste, va creato
-        if (!refresh_token) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey);
+        // -- verifico se il token esiste
+        let refresh_token_exists = false;
+        if (refresh_token) {
+            refresh_token_exists = await this.refresh_token_service.exists(refresh_token);
+        }
+        // -- creo il refresh token se non esisteva già
+        if (!refresh_token_exists) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey);
         /**
          * Genero l'access token solo se il refresh token NON è REVOCATO
          */

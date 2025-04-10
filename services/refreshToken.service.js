@@ -62,6 +62,15 @@ export class RefreshTokenService {
         );
     }
     /**
+     * Verifica se un token esiste
+     * @param {object} where_conditions 
+     * @returns {boolean}
+     */
+    async exists(where_conditions) {
+        const token = await RefreshToken.findOne({ where: where_conditions });
+        return token ? true : false;
+    }
+    /**
      * Revoca no un token
      * @param {object} where
      * @param {boolean} is_revoked
