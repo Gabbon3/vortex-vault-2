@@ -155,13 +155,13 @@ export class RefreshTokenService {
      * @param {object} where_conditions - oggetto per trovare il token (user_id, token_hash, id)
      * @param {string} user_agent
      * @param {boolean} [rotate=false] se true, viene effettuata la rotazione del token
-     * @returns {boolean | Object}
+     * @returns {null | boolean | RefreshToken} null se non esiste sul db, false se esiste ma è revocato, RefreshToken se è valido
      */
     async verify(where_conditions, user_agent, rotate = false) {
         // ---
-        const refresh_token = await RefreshToken.findOne({ where_conditions });
+        const refresh_token = await RefreshToken.findOne({ where: where_conditions });
         // -- se il token non esiste o non è associato a quell'utente non è valido
-        if (!refresh_token) return false;
+        if (!refresh_token) return null;
         // -- se il token è stato revocato non è valido
         if (refresh_token.is_revoked === true) return false;
         // -- se il token è inutilizzato da piu di 30 giorni non è piu valido

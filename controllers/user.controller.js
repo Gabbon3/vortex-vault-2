@@ -10,7 +10,7 @@ import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
 import { LSKService } from "../services/lsk.service.js";
-import { v7 as uuidv7, validate as uuidValidate } from 'uuid';
+import { v7 as uuidv7, validate as uuidValidate } from "uuid";
 import automated_emails from "../public/utils/automated.mails.js";
 
 export class UserController {
@@ -21,59 +21,61 @@ export class UserController {
     }
     /**
      * Registra utente
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     signup = async_handler(async (req, res) => {
         const { email, password } = req.body;
         if (!email || !password) {
-            throw new CError("ValidationError", "Email and password are required", 422);
+            throw new CError(
+                "ValidationError",
+                "Email and password are required",
+                422
+            );
         }
         // ---
         const user = await this.service.signup(email, password);
-        res.status(201).json({ message: 'User registered', id: user.id });
-    })
+        res.status(201).json({ message: "User registered", id: user.id });
+    });
     /**
      * Accede
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     signin = async_handler(async (req, res) => {
         const { email, password, passKey } = req.body;
         const refresh_token_cookie = req.cookies.refresh_token;
         // ---
         if (!email || !password) {
-            throw new CError("ValidationError", "Email and password are required", 422);
+            throw new CError(
+                "ValidationError",
+                "Email and password are required",
+                422
+            );
         }
         // ---
-        const user_agent = req.get('user-agent');
-        const ip_address = req.headers['x-forwarded-for'] || req.ip;
-        // -- refresh token 
-        let old_refresh_token = null;
-        /**
-         * Se esiste gia un refresh token, verifico se è valido
-         * se TRUE allora lo memorizzo come vecchio refresh token
-         */
-        if (refresh_token_cookie) {
-            // -- hash del refresh token
-            const hash_current_token = this.refresh_token_service.get_token_digest(refresh_token_cookie);
-            // ---
-            if (await this.refresh_token_service.verify({ token_hash: hash_current_token }, user_agent)) {
-                // -- verifico se è valido
-                old_refresh_token = hash_current_token;
-            }
-        }
-        /**
-         * se il refresh token è valido, otterrò l'access token
-         * gli altri dati verranno restituiti ugualmente
-         */
-        const { access_token, refresh_token, user, bypass_token } = await this.service.signin(email, password, user_agent, ip_address, old_refresh_token, passKey);
-        this.set_token_cookies(res, { access_token, refresh_token, uid: user.id });
+        const user_agent = req.get("user-agent");
+        const ip_address = req.headers["x-forwarded-for"] || req.ip;
+        // ---
+        const { access_token, refresh_token, user, bypass_token } =
+            await this.service.signin(
+                email,
+                password,
+                user_agent,
+                ip_address,
+                refresh_token_cookie,
+                passKey
+            );
+        this.set_token_cookies(res, {
+            access_token,
+            refresh_token,
+            uid: user.id,
+        });
         // ---
         if (!access_token) {
             return res.status(403).json({
                 error: "This device is locked",
-                refresh_token
+                refresh_token,
             });
         }
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
@@ -84,7 +86,7 @@ export class UserController {
             refresh_token,
             salt: user.salt,
             bypass_token,
-            uid: user.id
+            uid: user.id,
         });
     });
     /**
@@ -93,9 +95,11 @@ export class UserController {
     signout = async_handler(async (req, res) => {
         const refresh_token = req.cookies.refresh_token;
         // -- verifico se è valido
-        if (!this.refresh_token_service.validateRefreshToken(refresh_token)) throw new CError('', 'Invalid refresh token', 400);
+        if (!this.refresh_token_service.validateRefreshToken(refresh_token))
+            throw new CError("", "Invalid refresh token", 400);
         // -- hash refresh token
-        const token_hash = this.refresh_token_service.get_token_digest(refresh_token);
+        const token_hash =
+            this.refresh_token_service.get_token_digest(refresh_token);
         // -- elimino il refresh token
         await this.refresh_token_service.delete({
             user_id: req.user.uid,
@@ -104,7 +108,7 @@ export class UserController {
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
         // ---
-        res.status(200).json({ message: 'Disconnected' });
+        res.status(200).json({ message: "Disconnected" });
     });
     /**
      * Rimuove tutti i cookie del client
@@ -113,7 +117,7 @@ export class UserController {
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
         // ---
-        res.status(200).json({ message: 'All cookies cleared' });
+        res.status(200).json({ message: "All cookies cleared" });
     });
     /**
      * Elimina un account
@@ -127,21 +131,21 @@ export class UserController {
         const { text, html } = automated_emails.deleteAccount({
             email,
         });
-        Mailer.send(email, 'Account Deletion Confirmation', text, html);
+        Mailer.send(email, "Account Deletion Confirmation", text, html);
         // ---
         res.status(200).json({ message: "All data deleted successfully" });
     });
     /**
      * Elimina tutti i cookie
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     deleteAllCookies = (req, res) => {
         // ---
         Object.keys(req.cookies).forEach((cookie_name) => {
             res.clearCookie(cookie_name);
         });
-    }
+    };
     /**
      * Restituisce una lista di utenti
      * cercati in like tramite l'email
@@ -155,8 +159,8 @@ export class UserController {
     });
     /**
      * Abilita l'autenticazione a 2 fattori
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     enable_mfa = async_handler(async (req, res) => {
         const { email } = req.body;
@@ -166,19 +170,25 @@ export class UserController {
         // --
         const { final, secret } = MFAService.generate(id);
         // -- salvo nel db
-        const [affected] = await this.service.update_user_info({ email }, { mfa_secret: Buffer.from(final) });
+        const [affected] = await this.service.update_user_info(
+            { email },
+            { mfa_secret: Buffer.from(final) }
+        );
         // ---
-        if (affected !== 1) throw new CError("Internal error", "Not able to enable MFA", 500);
+        if (affected !== 1)
+            throw new CError("Internal error", "Not able to enable MFA", 500);
         // ---
         res.status(201).json({ secret: Bytes.hex.encode(secret) });
     });
     /**
      * Release sudo access token
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     start_sudo_session = async_handler(async (req, res) => {
-        const access_token = await this.service.generate_sudo_access_token(req.user.uid);
+        const access_token = await this.service.generate_sudo_access_token(
+            req.user.uid
+        );
         this.set_token_cookies(res, { access_token });
         res.status(201).json({ access_token });
     });
@@ -189,11 +199,17 @@ export class UserController {
      */
     send_email_verification = async_handler(async (req, res) => {
         const email = req.body.email;
-        if (!email || !Validator.email(email)) throw new CError("ValidationError", "No email provided", 422);
+        if (!email || !Validator.email(email))
+            throw new CError("ValidationError", "No email provided", 422);
         const code = Cripto.random_mfa_code();
         const request_id = `ear-${email}`; // ear = email auth request
         // -- controllo che non sia gia stata fatta una richiesta
-        if (RamDB.get(request_id)) throw new CError("RequestError", "There's another active request, check or try again later", 400);
+        if (RamDB.get(request_id))
+            throw new CError(
+                "RequestError",
+                "There's another active request, check or try again later",
+                400
+            );
         // -- salvo nel ramdb
         const salted_hash = Cripto.salting(code);
         // memorizzo il codice hashato con salt con hmac
@@ -208,7 +224,7 @@ export class UserController {
         const body = automated_emails.otpCode({ email, code });
         const is_send = await Mailer.send(
             email,
-            'Vortex Verification Code',
+            "Vortex Verification Code",
             body
         );
         if (!is_send) throw new Error("Not able to send the email");
@@ -224,8 +240,8 @@ export class UserController {
         // ---
         const id = uuidv7();
         const is_set =
-            RamDB.set('fsi' + id, credentials, 150) // fsi = fast sign-in 
-            && RamDB.set('passKey' + id, true, 150); // passKey = per saltare il controllo del refresh token
+            RamDB.set("fsi" + id, credentials, 150) && // fsi = fast sign-in
+            RamDB.set("passKey" + id, true, 150); // passKey = per saltare il controllo del refresh token
         if (!is_set) throw new Error("RamDB error");
         // ---
         res.status(201).json({ id });
@@ -235,9 +251,10 @@ export class UserController {
      */
     get_quick_signin = async_handler(async (req, res) => {
         const { id } = req.params;
-        const credentials = RamDB.get('fsi' + id);
-        if (!credentials) throw new CError("NotFoundError", "Credentials not found", 404);
-        RamDB.delete('fsi' + id);
+        const credentials = RamDB.get("fsi" + id);
+        if (!credentials)
+            throw new CError("NotFoundError", "Credentials not found", 404);
+        RamDB.delete("fsi" + id);
         // ---
         res.status(200).json({ credentials });
     });
@@ -248,7 +265,10 @@ export class UserController {
         const { email } = req.user;
         if (!email) throw new CError("", "Email not found", 404);
         // ---
-        const [affected] = await this.service.update_user_info({ email }, { verified: true });
+        const [affected] = await this.service.update_user_info(
+            { email },
+            { verified: true }
+        );
         if (affected > 1) throw new Error("Updated multiple emails");
         // ---
         res.status(200).json({ message: "Account verified" });
@@ -258,58 +278,83 @@ export class UserController {
      */
     test_email_auth = async_handler(async (req, res) => {
         res.status(200).json({ message: "Valid" });
-    })
+    });
     /**
      * Just a test
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     test_2fa = async_handler(async (req, res) => {
         res.status(200).json({ message: "Valid" });
     });
     /**
-     * 
-     * @param {Request} req 
-     * @param {Response} res 
+     *
+     * @param {Request} req
+     * @param {Response} res
      */
     change_password = async_handler(async (req, res) => {
         const { old_password, new_password, email } = req.body;
         // ---
-        if (!old_password || !new_password || !email) throw new CError("", "Missing data needed to make password change", 422);
+        if (!old_password || !new_password || !email)
+            throw new CError(
+                "",
+                "Missing data needed to make password change",
+                422
+            );
         // ---
-        const [affected] = await this.service.change_password(req.user.uid, old_password, new_password);
-        if (affected !== 1) throw new CError("ServerError", "Not able to change password", 500);
+        const [affected] = await this.service.change_password(
+            req.user.uid,
+            old_password,
+            new_password
+        );
+        if (affected !== 1)
+            throw new CError("ServerError", "Not able to change password", 500);
         // -- invio una mail
         const { text, html } = automated_emails.changePassword({
             email,
         });
-        Mailer.send(email, 'Password Change Confirmation', text, html);
+        Mailer.send(email, "Password Change Confirmation", text, html);
         // ---
         res.status(200).json({ message: "Password changed!" });
     });
     /**
      * Imposta le informazioni di recupero password
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     set_recovery = async_handler(async (req, res) => {
         const recovery = req.body;
         // -- salvo sul db
-        const [affected] = await this.service.update_user_info({ id: req.user.uid }, { recovery });
-        if (affected !== 1) throw new CError("ServerError", "Not able to set recovery informations", 500);
+        const [affected] = await this.service.update_user_info(
+            { id: req.user.uid },
+            { recovery }
+        );
+        if (affected !== 1)
+            throw new CError(
+                "ServerError",
+                "Not able to set recovery informations",
+                500
+            );
         // ---
-        res.status(200).json({ message: 'Recovery access enabled successfully' });
+        res.status(200).json({
+            message: "Recovery access enabled successfully",
+        });
     });
     /**
      * Restituisce le informazioni di recupero password
-     * @param {Request} req 
-     * @param {Response} res 
+     * @param {Request} req
+     * @param {Response} res
      */
     get_recovery = async_handler(async (req, res) => {
         const { email } = req.user;
         // ---
         const user = await this.service.find_by_email(email);
-        if (!user) throw new CError("ValidationError", "Email provided does not exist", 404);
+        if (!user)
+            throw new CError(
+                "ValidationError",
+                "Email provided does not exist",
+                404
+            );
         res.status(200).json({ recovery: user.recovery });
     });
     /**
@@ -318,14 +363,15 @@ export class UserController {
     verify_message_authentication_code = async_handler(async (req, res) => {
         const { email, mac } = req.body; // mac = message_authentication_code
         // -- verifico che ci siano i dati
-        if (!email) throw new CError("", "No email passed for verification", 422);
+        if (!email)
+            throw new CError("", "No email passed for verification", 422);
         // ---
         const status = Mailer.verify_message_authentication_code(email, mac);
         res.status(200).json(status);
     });
     /**
      * Imposta nei cookie l'access e il refresh token
-     * @param {Response} res 
+     * @param {Response} res
      * @param {Object} cookies
      * @param {*} [cookies.access_token]
      * @param {*} [cookies.refresh_token]
@@ -333,32 +379,31 @@ export class UserController {
      */
     set_token_cookies = (res, cookies) => {
         if (cookies.access_token) {
-            res.cookie('access_token', cookies.access_token, {
+            res.cookie("access_token", cookies.access_token, {
                 httpOnly: true,
                 secure: true,
                 maxAge: JWT.access_token_cookie_lifetime,
-                sameSite: 'Strict',
-                path: '/', // disponibile per tutte le route
+                sameSite: "Strict",
+                path: "/", // disponibile per tutte le route
             });
         }
         if (cookies.refresh_token) {
-            res.cookie('refresh_token', cookies.refresh_token, {
+            res.cookie("refresh_token", cookies.refresh_token, {
                 httpOnly: true,
                 secure: true,
                 maxAge: JWT.refresh_token_cookie_lifetime,
-                sameSite: 'Strict',
-                path: '/auth',
+                sameSite: "Strict",
+                path: "/auth",
             });
         }
         if (cookies.uid) {
-            res.cookie('uid', cookies.uid, {
+            res.cookie("uid", cookies.uid, {
                 httpOnly: true,
                 secure: true,
                 maxAge: JWT.access_token_cookie_lifetime,
-                sameSite: 'Strict',
-                path: '/auth/passkey',
+                sameSite: "Strict",
+                path: "/auth/passkey",
             });
         }
-    }
+    };
 }
-

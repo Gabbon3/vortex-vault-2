@@ -62,33 +62,45 @@ export class UserService {
      * @param {string} password 
      * @param {string} user_agent 
      * @param {string} ip_address
-     * @param {string} refresh_token - se null, ne verrà creato uno nuovo
+     * @param {string} refresh_token_string
      * @param {string} passKey
      * @returns {{ access_token: string, refresh_token: string, user: User }} - access_token, user
      */
-    async signin(email, password, user_agent, ip_address, refresh_token, passKey) {
+    async signin(email, password, user_agent, ip_address, refresh_token_string, passKey) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { email }
         });
         if (!user) throw new CError("AuthenticationError", "Invalid email or password", 401);
         if (user.verified !== true) throw new CError("AuthenticationError", "Email is not verified", 401);
+
         // -- verifico se la password è corretta
         const password_is_correct = await this.verify_password(password, user.password);
         if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
+
         /**
-         * Se il refresh token non esisteva già, quindi è stato passato NULL
-         * allora ne creo uno nuovo
+         * Refresh Token
          */
-        // TODO: verificare se il token passato esiste, se non esiste, va creato
-        // -- verifico se il token esiste
-        let refresh_token_exists = false;
-        if (refresh_token) {
-            const token_hash = this.refresh_token_service.get_token_digest(refresh_token);
-            refresh_token_exists = await this.refresh_token_service.exists({ token_hash });
+        let refresh_token = null;
+        let createNewRefreshToken = true;
+        if (refresh_token_string) {
+            // -- hash del refresh token
+            const hash_current_token = this.refresh_token_service.get_token_digest(refresh_token_string);
+            refresh_token = await this.refresh_token_service.verify({ token_hash: hash_current_token }, user_agent);
+            
+            /**
+             * se False -> dispositivo bloccato
+             * se Null -> creerò un nuovo refresh token (inizialmente revocato se non è il primo dispositivo a connettersi all'account)
+             * se RefreshToken -> non ci sarà bisogno di creare nulla perchè è gia tutto in regola
+             */
+            if (refresh_token === false) throw new CError('', 'This device is locked', 403);
+            else if (refresh_token === null) createNewRefreshToken = true;
+            else createNewRefreshToken = false;
         }
-        // -- creo il refresh token se non esisteva già
-        if (!refresh_token_exists) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey);
+
+        // -- creo il refresh token se richiesto
+        if (createNewRefreshToken) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey); 
+        
         /**
          * Genero l'access token solo se il refresh token NON è REVOCATO
          */
