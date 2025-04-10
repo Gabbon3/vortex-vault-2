@@ -42,8 +42,6 @@ export class RefreshTokenService {
             ip_address: ip_address ?? '',
             is_revoked: revoke_this_token
         });
-        console.log("CULOPALLE");
-        console.log(token);
         // -- aggiungo il token non hashato
         token.plain = plain_token;
         // ---

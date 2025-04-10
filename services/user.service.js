@@ -84,7 +84,8 @@ export class UserService {
         // -- verifico se il token esiste
         let refresh_token_exists = false;
         if (refresh_token) {
-            refresh_token_exists = await this.refresh_token_service.exists(refresh_token);
+            const token_hash = this.refresh_token_service.get_token_digest(refresh_token);
+            refresh_token_exists = await this.refresh_token_service.exists({ token_hash });
         }
         // -- creo il refresh token se non esisteva già
         if (!refresh_token_exists) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey);
