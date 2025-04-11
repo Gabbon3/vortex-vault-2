@@ -104,7 +104,7 @@ export class UserService {
 
         // -- creo il refresh token se richiesto
         if (createNewRefreshToken) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey); 
-        
+        console.log(refresh_token_string, refresh_token);
         /**
          * Genero l'access token solo se il refresh token NON è REVOCATO
          */
