@@ -57,7 +57,11 @@ export class UserService {
         return verified_domains.includes(email.split('@')[1]);
     }
     /**
-     * Esegue l'accesso e restituisce un utente 
+     * Esegue l'accesso e restituisce:
+     *  - *Utente (modello sequelize)
+     *  - Access Token (stringa)
+     *  - *Refresh Token (la stringa del hash token originale (non hashata))
+     * Deve generare quelli marcati con *
      * @param {string} email 
      * @param {string} password 
      * @param {string} user_agent 

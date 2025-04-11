@@ -17,7 +17,7 @@ export class Cripto {
      * @param {number} random_size 
      * @returns {string} in esadecimale
      */
-    static bypass_token(random_size = 8) {
+    static bypass_token(random_size = 16) {
         return Date.now().toString(16) + this.random_bytes(random_size, 'hex');
     }
     /**

@@ -66,6 +66,14 @@ export class UserController {
                 refresh_token_cookie,
                 passKey
             );
+        /**
+         * per continuare, verifico per sicurezza se il refresh token è stato generato correttamente
+         */
+        if (!refresh_token) {
+            this.deleteAllCookies(req, res);
+            throw new CError('', 'Unable to sign-in with this device.', 400);
+        }
+        // ---
         this.set_token_cookies(res, {
             access_token,
             refresh_token,
