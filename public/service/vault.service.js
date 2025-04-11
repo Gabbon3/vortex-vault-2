@@ -15,6 +15,8 @@ export class VaultService {
     static lsk = null; // Local Storage Key
     static vaults = [];
     static used_usernames = new Set();
+    // Tempo da rimuovere da Date.now() per ottenere i vault piu recenti
+    static getDateDiff = 30 * 60 * 1000;
     /**
      * Configura i segreti necessari ad utilizzare il vault
      * @returns {boolean} - true se entrambi sono presenti
@@ -45,7 +47,7 @@ export class VaultService {
          * in questo modo evito di farmi restituire dati incompleti per
          * disincronizzazione tra client e server
          */
-        if (vault_update) selectFrom = new Date(Date.now() - (2 * 60 * 1000));
+        if (vault_update) selectFrom = new Date(Date.now() - (this.getDateDiff));
         // ---
         try {
             this.vaults = await VaultLocal.get(this.master_key);
