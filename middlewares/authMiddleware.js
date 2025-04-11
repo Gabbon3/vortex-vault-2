@@ -27,6 +27,7 @@ export const verify_access_token = (required_role = Roles.BASE) => (req, res, ne
     }
     // -- se è tutto ok aggiungo il payload dell'utente alla request
     req.user = payload;
+    console.log(payload);
     // -- verifica del ruolo
     if (req.user.role < required_role) {
         return res.status(403).json({ error: "Insufficient privileges" });
