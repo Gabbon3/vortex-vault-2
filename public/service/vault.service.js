@@ -359,4 +359,4 @@ export class VaultService {
     }
 }
 
-// window.VaultService = VaultService;
+window.VaultService = VaultService;
