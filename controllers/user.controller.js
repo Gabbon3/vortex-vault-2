@@ -136,10 +136,10 @@ export class UserController {
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
         // -- invio una mail
-        const { text, html } = automated_emails.deleteAccount({
-            email,
-        });
-        Mailer.send(email, "Account Deletion Confirmation", text, html);
+        // const { text, html } = automated_emails.deleteAccount({
+        //     email,
+        // });
+        // Mailer.send(email, "Account Deletion Confirmation", text, html);
         // ---
         res.status(200).json({ message: "All data deleted successfully" });
     });

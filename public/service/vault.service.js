@@ -7,8 +7,7 @@ import msgpack from "../utils/msgpack.min.js";
 import { API } from "../utils/api.js";
 import { LocalStorage } from "../utils/local.js";
 import { VaultLocal } from "./vault.local.js";
-
-// window.VaultLocal = VaultLocal;
+import { UUID } from "../utils/uuid.js";
 
 export class VaultService {
     static master_key = null;
@@ -303,8 +302,10 @@ export class VaultService {
      */
     static compact_vaults(vaults = this.vaults) {
         return vaults.map(vault => {
-            const { id: I, secrets: S, createdAt: C, updatedAt: U } = vault;
-            return { I, S, C, U };
+            // non tengo conto dell'uuid, poiche posso tranquillamente ricrearlo
+            // const { id: I, secrets: S, createdAt: C, updatedAt: U } = vault;
+            const { secrets: S, createdAt: C, updatedAt: U } = vault;
+            return { S, C, U };
         });
     }
     /**
@@ -313,9 +314,35 @@ export class VaultService {
      */
     static decompact_vaults(compacted_vaults) {
         return compacted_vaults.map(vault => {
-            const { I: id, S: secrets, C: createdAt, U: updatedAt } = vault;
-            return { id, secrets, createdAt, updatedAt };
+            // non tengo conto dell'uuid, poiche posso tranquillamente ricrearlo
+            // const { I: id, S: secrets, C: createdAt, U: updatedAt } = vault;
+            const { S: secrets, C: createdAt, U: updatedAt } = vault;
+            return { secrets, createdAt, updatedAt };
         });
+    }
+    /**
+     * Importa le password da gsecurity
+     * @param {object} json 
+     * @returns {Array}
+     */
+    static import_from_gsecurity(json) {
+        let result = [];
+        for (const id in json) {
+            const j = json[id];
+            result.push({
+                id: UUID.v7(),
+                secrets: {
+                    'T': j.sito_web,
+                    'U': j.utente,
+                    'P': j.password,
+                    'O': '',
+                    'N': j.note,
+                },
+                'createdAt': new Date(j.data).toISOString(),
+                'updatedAt': new Date(j.data).toISOString(),
+            });
+        }
+        return result;
     }
     /**
      * Cifra tutti i vault 

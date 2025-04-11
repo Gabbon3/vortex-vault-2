@@ -318,4 +318,4 @@ export class Bytes {
     }
 }
 
-// window.Bytes = Bytes;
+window.Bytes = Bytes;
