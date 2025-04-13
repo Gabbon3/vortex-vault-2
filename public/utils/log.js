@@ -31,4 +31,4 @@ export class Log {
 
 document.addEventListener('DOMContentLoaded', Log.init());
 
-// window.Log = Log;
+window.Log = Log;
