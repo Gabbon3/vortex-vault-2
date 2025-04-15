@@ -1,6 +1,5 @@
 import level from 'level-rocksdb';
 import msgpack from '../../public/utils/msgpack.min.js';
-import { logger } from '../config/logger.js';
 
 /**
  * Classe per interagire con il database RocksDB utilizzando level-rocksdb.
@@ -27,7 +26,7 @@ export class RocksCRUD {
             await this.db.put(key, msgpack.encode(value));
             return true;
         } catch (err) {
-            logger.error(`Errore salvataggio nel database: ${err}`);
+            console.error(`Errore salvataggio nel database: ${err}`);
             return false;
         }
     }
@@ -46,7 +45,7 @@ export class RocksCRUD {
             if (err.notFound) {
                 return null;
             } else {
-                logger.error(`Errore durante il recupero dal database: ${err}`);
+                console.error(`Errore durante il recupero dal database: ${err}`);
                 return null;
             }
         }
@@ -63,7 +62,7 @@ export class RocksCRUD {
             await this.db.del(key);
             return true;
         } catch (err) {
-            logger.error(`Errore eliminazione valore: ${err}`);
+            console.error(`Errore eliminazione valore: ${err}`);
             return false;
         }
     }

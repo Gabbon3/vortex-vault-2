@@ -9,6 +9,13 @@ export class VortexNavbar extends HTMLElement {
         const path = window.location.pathname;
         // ---
         // <img src="./img/vortex_vault_logo.png" class="logo">
+        /**
+         * Chat rimossa:
+        ${path !== '/chat' ? `<a href="/chat"' title="Chat">
+            <span class="material-symbols-rounded">sms</span>
+            <i>Chat</i>
+        </a>` : ''}
+         */
         this.innerHTML = `
         ${path ? `<a class="open blue" data-target-open="win-settings" title="Tools">
             <span class="material-symbols-rounded">handyman</span>
@@ -35,10 +42,6 @@ export class VortexNavbar extends HTMLElement {
         ${path !== '/vault' ? `<a href="/vault"' title="Vault">
             <span class="material-symbols-rounded">encrypted</span>
             <i>Vault</i>
-        </a>` : ''}
-        ${path !== '/chat' ? `<a href="/chat"' title="Chat">
-            <span class="material-symbols-rounded">sms</span>
-            <i>Chat</i>
         </a>` : ''}
         
         ${path === '/signin' ? `<a class="open yellow" data-target-open="win-device-recovery" title="Device Recovery">

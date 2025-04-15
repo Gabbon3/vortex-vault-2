@@ -1,6 +1,5 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { Config } from './server_config.js';
 import { sequelize } from './config/db.js';
 import user_routes from './routes/user.routes.js';
 import token_routes from './routes/token.routes.js';
@@ -14,7 +13,6 @@ import lse_routes from './routes/lse.routes.js';
 import './models/associations.js';
 import { cors_middleware, csp_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
-import { logger } from './chat/config/logger.js';
 // import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
 import https from 'https';
@@ -90,7 +88,7 @@ try {
         console.log(`☑️ ${date.format('%H:%i:%s')}`);
     });
 } catch (error) {
-    logger.error('❌ Errore durante l\'avvio del server => ' + error);
+    console.error('❌ Errore durante l\'avvio del server => ' + error);
 }
 /**
  * AVVIO SERVER CHAT

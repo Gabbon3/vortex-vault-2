@@ -1,4 +1,3 @@
-import { logger } from "../config/logger.js";
 import { RocksCRUD } from "../utils/rocksCRUD.js";
 
 export class RocksManager {
@@ -52,7 +51,7 @@ export class RocksManager {
             if (destroy) await this.db.put(recipientCountID, 0);
             return recipient;
         } catch (error) {
-            logger.error(`Errore nel recupero dei messaggi per ${recipientID}: ${error}`);
+            console.error(`Errore nel recupero dei messaggi per ${recipientID}: ${error}`);
             return false;
         }
     }
@@ -87,7 +86,7 @@ export class RocksManager {
                 ws.sendE(element);
             }
         } catch (error) {
-            logger.error(`Errore nell'invio dei messaggi pendenti per ${recipientID}: ${error}`);
+            console.error(`Errore nell'invio dei messaggi pendenti per ${recipientID}: ${error}`);
         }
     };
 }

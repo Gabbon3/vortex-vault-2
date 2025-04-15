@@ -5,6 +5,9 @@ import { RefreshTokenService } from "../services/refreshToken.service.js";
 export class LSEController {
     constructor() {
         this.rt_service = new RefreshTokenService();
+        // Banalmente quando scade il cookie, l'utente sarà obbligato a usare la password
+        // in questo modo la lsk varierà ogni 30 giorni
+        this.cookieMaxAge = 30 * 24 * 60 * 60 * 1000; // 30 giorni
     }
     /**
      * Salva una nuova chiave pubblica per il dispositivo
@@ -16,7 +19,7 @@ export class LSEController {
         res.cookie('lsk_public_key', public_key_base64, {
             httpOnly: true,
             secure: true,
-            maxAge: 10 * 365 * 24 * 60 * 60, // 10 anni
+            maxAge: this.cookieMaxAge,
             sameSite: 'Strict',
             path: '/auth/lse',
         });
