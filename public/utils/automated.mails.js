@@ -3,10 +3,10 @@ import { Mailer } from "../../config/mail.js";
 
 const automated_emails = {
     /**
-   * Template wrapper base per email HTML
-   * @param {string} content HTML principale del messaggio
-   * @returns {string}
-   */
+     * Template wrapper base per email HTML
+     * @param {string} content HTML principale del messaggio
+     * @returns {string}
+     */
     htmlWrapper(content) {
         return `
 <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 40px;">
@@ -99,7 +99,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = htmlWrapper(htmlContent);
+        const html = automated_emails.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -125,7 +125,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = htmlWrapper(htmlContent);
+        const html = automated_emails.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -161,7 +161,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = htmlWrapper(htmlContent);
+        const html = automated_emails.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -189,7 +189,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = htmlWrapper(htmlContent);
+        const html = automated_emails.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -201,8 +201,8 @@ ${aphtml}`;
     deleteAccount: ({ email }) => {
         const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
 
-        const text = 
-`Hello ${email.split("@")[0]},
+        const text =
+            `Hello ${email.split("@")[0]},
 We wanted to inform you that your account has been successfully deleted.
 
 If this action was taken by you, no further action is required.
@@ -212,15 +212,15 @@ If you did not request account deletion, please contact our support team immedia
 The Vortex Vault team
 ${aptext}`;
 
-        const htmlContent = 
-`<h2 style="color: #c0392b;">Account successfully deleted</h2>
+        const htmlContent =
+            `<h2 style="color: #c0392b;">Account successfully deleted</h2>
 <p>We wanted to inform you that your account has been successfully deleted.</p>
 <p>If this action was taken by you, no further action is required.</p>
 <p>If you did not request this, contact our support team immediately to secure your account.</p>
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = htmlWrapper(htmlContent);
+        const html = automated_emails.htmlWrapper(htmlContent);
 
         return { text, html };
     },
