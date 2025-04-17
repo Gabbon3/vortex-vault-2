@@ -57,7 +57,9 @@ export class UserController {
         // ---
         const user_agent = req.get("user-agent");
         const ip_address = req.headers["x-forwarded-for"] || req.ip;
-        // ---
+        /**
+         * Servizio
+         */
         const { access_token, refresh_token, user, bypass_token } =
             await this.service.signin(
                 email,
@@ -227,14 +229,15 @@ export class UserController {
             0, // tentativi
             email,
         ];
-        const is_set = RamDB.set(request_id, db_data, 60);
+        const is_set = RamDB.set(request_id, db_data, 120);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
-        const body = automated_emails.otpCode({ email, code });
+        const { text, html } = automated_emails.otpCode({ email, code });
         const is_send = await Mailer.send(
             email,
             "Vortex Verification Code",
-            body
+            text,
+            html,
         );
         if (!is_send) throw new Error("Not able to send the email");
         res.status(201).json({ request_id });

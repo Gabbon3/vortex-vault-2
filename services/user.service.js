@@ -109,7 +109,7 @@ export class UserService {
         /**
          * Genero l'access token solo se il refresh token NON è REVOCATO
          */
-        const access_token = refresh_token.is_revoked ? null : JWT.genera_access_token({ uid: user.id, role: Roles.BASE });
+        const access_token = refresh_token.is_revoked ? null : JWT.genera_access_token({ uid: user.id, email: email, role: Roles.BASE });
         /**
          * APPROFONDIRE: da capire se generare il bypass anche con refresh non valido
          */
