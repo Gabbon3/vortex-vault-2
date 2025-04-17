@@ -85,7 +85,7 @@ try {
     // ---
     app.listen(3000, '0.0.0.0', () => {
         console.log(`☑️ Server`);
-        console.log(`☑️ ${date.format('%H:%i:%s')}`);
+        console.log(`☑️ ${date.format('%d %M %Y %H:%i:%s')}`);
     });
 } catch (error) {
     console.error('❌ Errore durante l\'avvio del server => ' + error);

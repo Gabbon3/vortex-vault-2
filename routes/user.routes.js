@@ -46,5 +46,7 @@ router.post('/clear-cookies', controller.clearCookies);
 router.post('/delete', verify_passkey(true), controller.delete);
 // -- MESSAGE AUTHENTICATION CODE VERIFICATION
 router.post('/vmac', controller.verify_message_authentication_code);
+// -- (DEV) restituisce un message autentication code
+router.get('/vmac/:email', controller.createMessageAuthenticationCode);
 
 export default router;

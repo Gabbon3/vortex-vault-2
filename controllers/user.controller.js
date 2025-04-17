@@ -12,6 +12,7 @@ import { Validator } from "../public/utils/validator.js";
 import { LSKService } from "../services/lsk.service.js";
 import { v7 as uuidv7, validate as uuidValidate } from "uuid";
 import automated_emails from "../public/utils/automated.mails.js";
+import { Config } from "../server_config.js";
 
 export class UserController {
     constructor() {
@@ -376,6 +377,18 @@ export class UserController {
         // ---
         const status = Mailer.verify_message_authentication_code(email, mac);
         res.status(200).json(status);
+    });
+    /**
+     * (DEV) genera e restituisce un message authentication code
+     */
+    createMessageAuthenticationCode = async_handler(async (req, res) => {
+        if (!Config.DEV) throw new CError('', 'Access denied.', 403);
+        // ---
+        const { email } = req.params;
+        if (!email) throw new CError('', 'Access denied.', 400);
+        // ---
+        const mac = Mailer.message_authentication_code(email);
+        res.status(200).json({ token: mac });
     });
     /**
      * Imposta nei cookie l'access e il refresh token

@@ -38,16 +38,22 @@ class SettingsComponent extends HTMLElement {
                     });
                     const { status, timestamp } = res;
                     // -- creo il report
+                    const icon = ['check', 'delete_history', 'warning', 'warning'][status - 1];
                     const type = ['success', 'warning', 'danger', 'danger'][status - 1];
-                    const comment = ['Valid', 'Valid but expired', 'Not valid', 'The token was not intended for you.'][status - 1];
+                    const title = ['Valid', 'Expired', 'Not valid', 'Not yours'][status - 1];
+                    const message = [
+                        '~', 
+                        'This token is valid but expired', 
+                        'This token does not come from us, be careful', 
+                        'This token is valid but was not generated for you, someone may have tried to use their (valid) one to cheat you, be careful'
+                    ][status - 1];
                     let report = `<div class="mt-2 alert ${type} monospace">
                     <div class="flex d-column gap-75">
-                        <strong title="Status" class="flex y-center gap-75"><span class="material-symbols-rounded">shield</span> <span>${comment}</span> </strong>
+                        <strong title="Status" class="flex y-center gap-75"><span class="material-symbols-rounded">${icon}</span> <span>${title}</span> </strong>
+                        <div title="Message" class="flex y-center gap-75"><span class="material-symbols-rounded">info</span> <span>${message}</span> </div>
                         <div title="Issued on" class="flex y-center gap-75"><span class="material-symbols-rounded">today</span> <span>${date.format('%d %M %Y at %H:%i', new Date(timestamp))}</span> </div>
-                        <div title="Original token" class="flex y-center gap-75"><span class="material-symbols-rounded">password</span> <span class="monospace work-break-all">${code.trim()}</span></div>
                     </div></div>`;
                     // ---
-                    form.reset();
                     document.getElementById('cmac-result').innerHTML = report;
                 });
             }
