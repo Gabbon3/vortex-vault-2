@@ -100,7 +100,7 @@ export class HtmlSecretsRender {
         Password
     </label>
     <div class="flex gap-50 mb-2">
-        <input spellcheck="false" name="P" type="password" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
+        <input spellcheck="false" name="P" type="text" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" autocomplete="off" required>
         <${btn} target="password-${HtmlSecretsRender.id}"></${btn}>
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
@@ -112,7 +112,7 @@ export class HtmlSecretsRender {
         OTP/TOTP
     </label>
     <div class="flex gap-50">
-        <input spellcheck="false" name="O" type="password" class="input-text mono protected" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
+        <input spellcheck="false" name="O" type="text" class="input-text mono protected" id="totp-${HtmlSecretsRender.id}" value="${vals.O ?? ''}" autocomplete="off">
         <${btn} target="totp-${HtmlSecretsRender.id}"></${btn}>
     </div>
     ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
@@ -274,7 +274,7 @@ export class HtmlSecretsRender {
         Card number
     </label>
     <div class="flex gap-50">
-        <input spellcheck="false" name="CN" type="password" inputmode="numeric" maxlength="19" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
+        <input spellcheck="false" name="CN" type="text" inputmode="numeric" maxlength="19" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
         <${btn} target="card-number-${HtmlSecretsRender.id}" callback="rmSpace"></${btn}>
     </div>
 </div>
@@ -285,7 +285,7 @@ export class HtmlSecretsRender {
         Pin
     </label>
     <div class="flex gap-50">
-        <input spellcheck="false" name="PI" type="password" inputmode="numeric" class="input-text mono protected" maxlength="10" id="card-pin-${HtmlSecretsRender.id}" value="${vals.PI ?? ''}" placeholder="1234" autocomplete="off">
+        <input spellcheck="false" name="PI" type="text" inputmode="numeric" class="input-text mono protected" maxlength="10" id="card-pin-${HtmlSecretsRender.id}" value="${vals.PI ?? ''}" placeholder="1234" autocomplete="off">
         <${btn} target="card-pin-${HtmlSecretsRender.id}"></${btn}>
     </div>
 </div>
@@ -433,7 +433,7 @@ export class HtmlSecretsRender {
         Password / Key
     </label>
     <div class="flex gap-50 mb-2">
-        <input spellcheck="false" name="K" type="password" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.K ?? ''}" placeholder="*****" autocomplete="off">
+        <input spellcheck="false" name="K" type="text" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.K ?? ''}" placeholder="*****" autocomplete="off">
         <${btn} target="password-${HtmlSecretsRender.id}"></${btn}>
     </div>
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>

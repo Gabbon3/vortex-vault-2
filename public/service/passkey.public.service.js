@@ -135,8 +135,8 @@ export class PasskeyService {
             ...options,
         };
         // ---
-        const passkey_token = await LocalStorage.get('passkey-token-expire');
-        const passkey_token_is_valid = passkey_token instanceof Date && passkey_token > new Date();
+        const passkey_token_expire_date = await LocalStorage.get('passkey-token-expire');
+        const passkey_token_is_valid = passkey_token_expire_date instanceof Date && passkey_token_expire_date > new Date();
         /**
          * se è presente un bypass token skippo questa parte
          * Se non si è già autenticato chiedo al client di firmare una challenge
