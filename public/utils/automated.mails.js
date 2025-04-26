@@ -33,7 +33,7 @@ const automated_emails = {
      */
     antiphishing_code: (email) => {
         const code = Mailer.message_authentication_code(email);
-        const html = `<p>Message Authentication Code: <strong>${code}</strong></p>`
+        const html = `<p>Message Authentication Code:<br><strong>${code}</strong></p>`
         const text = `Message Authentication Code: ${code}`;
         // ---
         return { text, html };
