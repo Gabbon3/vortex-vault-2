@@ -26,7 +26,7 @@ class SettingsComponent extends HTMLElement {
                  * CHECK MESSAGE AUTHENTICATION CODE
                  */
                 Form.register('form-cmac', async (form, elements) => {
-                    const code = elements['cmac-code'];
+                    const code = elements['tuamadre'];
                     if (!code.includes('.')) return Log.summon(1, "Invalid format");
                     // -- email
                     const email = await LocalStorage.get('email-utente');
@@ -276,13 +276,13 @@ class SettingsComponent extends HTMLElement {
                     attempts.
                 </p>
                 <form autocomplete="off" id="form-cmac">
-                    <label for="cmac-code">
+                    <label for="tuamadre-cmac">
                         <span class="material-symbols-rounded">password</span>
                         Message Authentication Code
                     </label>
                     <div class="flex gap-75">
-                        <input name="cmac-code" type="text" class="input-text mono" id="cmac-code" autocomplete="off" placeholder="**.**.******" required>
-                        <btn-paste target="cmac-code"></btn-paste>
+                        <input name="tuamadre" type="text" class="input-text mono" id="tuamadre-cmac" autocomplete="off" placeholder="**.**.******" required>
+                        <btn-paste target="tuamadre-cmac"></btn-paste>
                     </div>
                     <div class="flex gap-50">
                         <button type="submit" class="btn primary mt-2">
