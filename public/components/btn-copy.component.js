@@ -11,7 +11,7 @@ export class BtnCopy extends HTMLElement {
         const text = this.textContent;
         this.title = 'Copy';
         // -- html
-        this.innerHTML = `${text}<span class="material-symbols-rounded">content_copy</span>`;
+        this.innerHTML = `<span class="material-symbols-rounded">content_copy</span>${text}`;
         // ---
         this.target = target;
     }

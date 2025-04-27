@@ -27,7 +27,7 @@ class PasskeyListItem extends HTMLElement {
                 <i>${(await Cripto.hash(id, { encoding: 'base62' })).match(/.{1,16}/g)[0]}</i>
             </span>
             <div class="flex gap-50 y-center d-row">
-                <input type="text" class="input-text passkey-name" title="Passkey name" value="${name}">
+                <input type="text" class="input-text passkey-name select-all-onclick" title="Passkey name" value="${name}">
                 <button class="btn danger passkey-delete" title="Delete this passkey">
                     <span class="material-symbols-rounded">delete</span>
                 </button>

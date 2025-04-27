@@ -28,7 +28,7 @@
 <body class="theme-earth">
     <vortex-navbar></vortex-navbar>
     <main class="pagina">
-        <form id="accedi">
+        <form autocomplete="off" id="accedi">
             <h2 class="icon">
                 <img src="./img/vortex_vault_logo.png" class="logo">
                 Sign-in
@@ -39,7 +39,7 @@
                     <span class="material-symbols-rounded">person</span>
                     Email
                 </label>
-                <input type="email" class="input-text" id="email" name="email" autocomplete="off" required>
+                <input type="email" class="input-text" id="email" name="email" required>
                 <!-- --- -->
                 <label for="password">
                     <span class="material-symbols-rounded">key_vertical</span>
@@ -89,7 +89,7 @@
             </button>
         </div>
         <hr>
-        <form id="form-password-recovery">
+        <form autocomplete="off" id="form-password-recovery">
             <div class="isle bg-4 mb-2">
                 <!-- RECOVERY CODE -->
                 <label for="recovery-file">
@@ -155,7 +155,7 @@
             Recover with Email
         </h3>
         <div class=" slider-cont p-0" data-open="false" id="cont-email-recovery">
-            <form id="form-device-recovery-email">
+            <form autocomplete="off" id="form-device-recovery-email">
                 <!-- EMAIL -->
                 <div class="isle bg-4 mb-2">
                     <label for="recovery-device-email-email">

@@ -41,7 +41,7 @@ class DeviceListItem extends HTMLElement {
                 <i>${(await Cripto.hash(deviceId, { encoding: 'base62' })).match(/.{1,16}/g)[0]}</i>
             </span>
             <div class="flex gap-50 d-row">
-                <input type="text" class="input-text device-name" title="Device name" value="${device_name}">
+                <input type="text" class="input-text device-name select-all-onclick" title="Device name" value="${device_name}">
                 <button 
                     title="Revoke or not this device"
                     class="btn ${revoked === 'true' ? 'danger' : 'primary'} revoke-device"

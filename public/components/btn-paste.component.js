@@ -11,7 +11,7 @@ class BtnPaste extends HTMLElement {
         const text = this.textContent;
         this.title = 'Paste';
         // -- html
-        this.innerHTML = `${text}<span class="material-symbols-rounded">content_paste</span>`;
+        this.innerHTML = `<span class="material-symbols-rounded">content_paste</span>${text}`;
         // ---
         this.target = target;
     }

@@ -41,16 +41,6 @@ class BtnOtpCopy extends HTMLElement {
         this.startOtpUpdate();
     }
 
-    // check_animation() {
-    //     const current_icon = this.span.textContent;
-    //     if (current_icon === 'check') return;
-    //     // ---
-    //     this.span.textContent = 'check';
-    //     setTimeout(() => {
-    //         this.span.textContent = current_icon;
-    //     }, 1000);
-    // }
-
     /**
      * Avvia un intervallo che aggiorna il codice OTP sincronizzato ai 30 secondi
      */

@@ -130,7 +130,7 @@ class SettingsComponent extends HTMLElement {
                     </passkey-btn>
                 </div>
                 <hr>
-                <form class="isle bg-3 br-l" id="form-advanced-session-with-email">
+                <form autocomplete="off" class="isle bg-3 br-l" id="form-advanced-session-with-email">
                     <h4 class="icon">
                         <span class="material-symbols-rounded">mail</span>
                         With Email
@@ -160,7 +160,7 @@ class SettingsComponent extends HTMLElement {
                 Change Password
                 <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
             </h3>
-            <form class="isle bg-4 slider-cont slow" data-open="false" id="form-change-password">
+            <form autocomplete="off" class="isle bg-4 slider-cont slow" data-open="false" id="form-change-password">
                 <p class="mt-0 mb-2">
                     <strong>Before changing your password</strong>
                     you should know that you will have to manually restore a backup, 
@@ -210,7 +210,7 @@ class SettingsComponent extends HTMLElement {
                 <p class="mt-0 mb-2">
                     Generate a recovery key to help you recover your master password if you forget it.
                 </p>
-                <form id="form-new-recovery-code">
+                <form autocomplete="off" id="form-new-recovery-code">
                     <label for="password-recovery">
                         <span class="material-symbols-rounded">key_vertical</span>
                         Password
@@ -248,7 +248,7 @@ class SettingsComponent extends HTMLElement {
                 <p class="mt-0 mb-2">
                     Generates a single-use link shown via Qr code for quick Sign-in from another device.
                 </p>
-                <form id="form-fsi">
+                <form autocomplete="off" id="form-fsi">
                     <button type="submit" class="btn primary mt-2">
                         <span class="material-symbols-rounded">qr_code</span>
                         Create link
@@ -275,7 +275,7 @@ class SettingsComponent extends HTMLElement {
                     whether the emails actually come from us or are instead phishing 
                     attempts.
                 </p>
-                <form id="form-cmac">
+                <form autocomplete="off" id="form-cmac">
                     <label for="cmac-code">
                         <span class="material-symbols-rounded">password</span>
                         Message Authentication Code

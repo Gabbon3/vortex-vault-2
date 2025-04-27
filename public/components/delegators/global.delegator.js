@@ -27,6 +27,7 @@ export const GlobalDelegator = {
             this.handleCopyBtnClick,
             this.handlePasteBtnClick,
             this.handleCopySelfContentClick,
+            this.handleSelectAllOnClick,
             this.handleLogComponentClick,
             this.handleDeleteLocaleData,
         ];
@@ -222,6 +223,16 @@ export const GlobalDelegator = {
         }
         Windows.loader(false);
         return true;
+    },
+    /**
+     * Seleziona tutto il testo di un input/textarea
+     * @param {Event} e 
+     */
+    handleSelectAllOnClick(e) {
+        const element = e.target.closest(".select-all-onclick");
+        if (!element) return false;
+        // ---
+        element.select();
     },
     /**
      * Evento per gestire i click sui Log component
