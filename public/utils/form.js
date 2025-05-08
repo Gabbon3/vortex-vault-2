@@ -72,4 +72,4 @@ export class Form {
     }
 }
 
-// window.Form = Form;
+window.Form = Form;

@@ -13,6 +13,9 @@ import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";
 import { VaultDelegator } from "../components/delegators/vault.delegator.js";
 
+// oggetto usato per memorizzare i dati inseriti nel form di creazione vault
+const newVaultsInsertedData = {};
+
 document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     // ---
@@ -29,8 +32,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // -- aggiungo i listeners
         config.forEach(({ id, type, render, color, title }) => {
             document.getElementById(id).addEventListener('click', () => {
+                // -- recupero i vecchi valori
+                const oldValues = Form.get_data('form-create-vault');
+                newVaultsInsertedData[oldValues.ST] = oldValues;
+                // ---
                 document.getElementById('secrets-type').value = type;
-                document.getElementById('dinamic-secrets').innerHTML = render();
+                document.getElementById('dinamic-secrets').innerHTML = render(newVaultsInsertedData[type] ?? {});
                 document.getElementById('win-create-vault').setAttribute('class', 'window m pt show maincolor ' + color);
                 document.getElementById('create-vault-title').textContent = title;
                 document.getElementById('create-vault-icon').innerHTML = HtmlSecretsRender.get_html_icon(type);
@@ -318,11 +325,13 @@ export class VaultUI {
      * @param {Set} used_usernames 
      */
     static html_used_usernames(used_usernames = VaultService.used_usernames) {
+        const datalist = document.querySelector('#used-username');
+        if (!datalist) return;
         let options = '';
         for (const username of used_usernames) {
             options += `<option value="${username}"></option>`;
         }
-        document.querySelector('#used-username').innerHTML = options;
+        datalist.innerHTML = options;
     }
 }
 

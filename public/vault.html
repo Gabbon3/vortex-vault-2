@@ -122,12 +122,6 @@
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
-        <div class="alert warning mb-2">
-            <span class="icon material-symbols-rounded">priority_high</span>
-            <p>
-                Be careful, if you exit this screen you will lose the data written up to now.
-            </p>
-        </div>
         <!-- FORM -->
         <form autocomplete="off" id="form-create-vault">
             <input type="number" id="secrets-type" name="ST" class="none">
@@ -386,9 +380,9 @@
             <!-- length -->
             <div class="flex gap-50 y-center">
                 <label for="psw-gen-len"><monospace>Length</monospace></label>
-                <monospace id="psw-gen-length-indicator" class="fs-l last">12</monospace>
+                <monospace id="psw-gen-length-indicator" class="fs-l last">16</monospace>
             </div>
-            <input type="range" name="length" min="1" max="32" value="12" step="1" class="" id="psw-gen-len">
+            <input type="range" name="length" min="1" max="32" value="16" step="1" class="" id="psw-gen-len">
             <!-- types -->
             <div class="flex gap-50 d-row mb-2">
                 <div class="flex d-column fg-1">
