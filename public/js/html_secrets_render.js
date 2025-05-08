@@ -64,12 +64,12 @@ export class HtmlSecretsRender {
     }
     /**
      * HTML PER I VAULT
-     * @param {object} vals 
+     * @param {object} vals
      * @return {string} HTML
      */
     static vault(vals = {}) {
         HtmlSecretsRender.id++;
-        const update = vals.T !== undefined;
+        const update = vals.T !== undefined && vals.T !== '';
         const btn = `btn-${update ? 'copy' : 'paste'}`;
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">

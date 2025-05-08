@@ -68,7 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('dinamic-secrets').innerHTML = '';
             Log.summon(0, `${elements.T} saved.`);
             Windows.close('win-create-vault');
+            // -- elimino cache
             form.reset();
+            newVaultsInsertedData[elements.ST] = {};
+            // ---
             await VaultUI.init_db_dom();
         } else {
             Log.summon(2, `Error while saving ${elements.T}`);
