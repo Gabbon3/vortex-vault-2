@@ -9,7 +9,7 @@ import { RamDB } from "../config/ramdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
 import automated_emails from "../public/utils/automated.mails.js";
-import { PULSE } from "../protocols/PULSE.node.js";
+import { SHIV } from "../protocols/SHIV.node.js";
 
 /**
  * Middleware di autenticazione e autorizzazione basato su JWT e controllo d'integrità opzionale.
@@ -27,11 +27,11 @@ export const verifyAuth = (options = {}) => {
         // -- verifico che esista
         if (!jwt) return res.status(401).json({ error: "Access denied" });
         // ---
-        const pulse = new PULSE();
+        const shiv = new SHIV();
         // -- ottengo il kid
-        const kid = pulse.getKidFromJWT(jwt);
+        const kid = shiv.getKidFromJWT(jwt);
         // ---
-        const jwtSignKey = await pulse.getSignKey(kid, 'jwt-signing');
+        const jwtSignKey = await shiv.getSignKey(kid, 'jwt-signing');
         if (!jwtSignKey)
             return res.status(401).json({ error: "Access denied" });
         // -- verifico che l'access token sia valido
@@ -54,7 +54,7 @@ export const verifyAuth = (options = {}) => {
                 return res.status(403).json({ error: "Integrity not found" });
             // -- verifico l'integrity
             const { kid } = payload;
-            const verified = await pulse.verifyIntegrity(kid, integrity);
+            const verified = await shiv.verifyIntegrity(kid, integrity);
             // ---
             if (verified === -1)
                 return res.status(404).json({ error: "Secret not found" });
@@ -67,17 +67,17 @@ export const verifyAuth = (options = {}) => {
 };
 
 /**
- * Verifica un pulse privileged token
+ * Verifica un shiv privileged token
  * configura la proprietà req.ppt = payload del ppt
  */
-export const verifyPulsePrivilegedToken = async_handler(
+export const verifyShivPrivilegedToken = async_handler(
     async (req, res, next) => {
         const ppt = req.cookies.ppt;
         const jwt = req.cookies.jwt;
         if (!ppt || !jwt)
             return res.status(401).json({ error: "Access denied" });
         // ---
-        const pulse = new PULSE();
+        const shiv = new SHIV();
         // -- ottengo il kid
         let kid = null;
         try {
@@ -86,7 +86,7 @@ export const verifyPulsePrivilegedToken = async_handler(
             return res.status(401).json({ error: "Access denied" });
         }
         // ---
-        const pptSignKey = await pulse.getSignKey(kid, 'ppt-signing');
+        const pptSignKey = await shiv.getSignKey(kid, 'ppt-signing');
         if (!pptSignKey)
             return res.status(401).json({ error: "Access denied" });
         // -- verifico che il ppt sia valido

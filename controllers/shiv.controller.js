@@ -1,15 +1,15 @@
 import { async_handler } from "../helpers/asyncHandler.js";
-import { PulseService } from "../services/pulse.service.js";
-import { PULSE } from "../protocols/PULSE.node.js";
+import { ShivService } from "../services/shiv.service.js";
+import { SHIV } from "../protocols/SHIV.node.js";
 import { CError } from "../helpers/cError.js";
 
-export class PulseController {
+export class ShivController {
     constructor() {
-        this.service = new PulseService();
+        this.service = new ShivService();
     }
 
     /**
-     * Rilascia un Pulse Privileged Token
+     * Rilascia un Shiv Privileged Token
      */
     shivPrivilegedToken = async_handler(async (req, res) => {
         const spt = await this.service.createShivPrivilegedToken({ payload: req.user });
@@ -17,7 +17,7 @@ export class PulseController {
         res.cookie("ppt", spt, {
             httpOnly: true,
             secure: true,
-            maxAge: PULSE.pptLifetime * 1000,
+            maxAge: SHIV.pptLifetime * 1000,
             sameSite: "Strict",
             path: "/",
         });
@@ -56,7 +56,7 @@ export class PulseController {
         const { kid } = req.params;
         if (!kid) throw new CError("", "Session id not found", 400);
         // -- verifico che non sia la sessione corrente
-        const currentKid = await this.service.pulse.calculateKid(req.user.kid);
+        const currentKid = await this.service.shiv.calculateKid(req.user.kid);
         if (kid === currentKid) throw new CError("", "It is not possible to destroy the current session; instead, a signout must be performed", 400);
         // ---
         const deleted = await this.service.delete({ kid: kid, user_id: req.user.uid });

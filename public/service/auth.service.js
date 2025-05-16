@@ -13,7 +13,7 @@ import { PasskeyService } from "./passkey.public.service.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { CKE } from "../utils/cke.public.util.js";
-import { PULSE } from "../secure/PULSE.browser.js";
+import { SHIV } from "../secure/SHIV.browser.js";
 
 export class AuthService {
     /**
@@ -60,7 +60,7 @@ export class AuthService {
      */
     static async signin(email, password, passKey = null) {
         // -- genero la coppia di chiavi
-        const publicKeyHex = await PULSE.generateKeyPair();
+        const publicKeyHex = await SHIV.generateKeyPair();
         // ---
         const res = await API.fetch('/auth/signin', {
             method: 'POST',
@@ -75,7 +75,7 @@ export class AuthService {
         // ---
         const { publicKey: serverPublicKey } = res;
         // -- ottengo il segreto condiviso e lo cifro in localstorage con CKE
-        const sharedSecret = await PULSE.completeHandshake(serverPublicKey);
+        const sharedSecret = await SHIV.completeHandshake(serverPublicKey);
         if (!sharedSecret) return false;
         /**
          * Inizializzo CKE localmente

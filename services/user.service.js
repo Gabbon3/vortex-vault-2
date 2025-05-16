@@ -8,12 +8,12 @@ import { Mailer } from '../config/mail.js';
 import automated_emails from '../public/utils/automated.mails.js';
 import { RamDB } from '../config/ramdb.js';
 import { Op } from 'sequelize';
-import { PULSE } from '../protocols/PULSE.node.js';
+import { SHIV } from '../protocols/SHIV.node.js';
 import { AuthKeys } from '../models/authKeys.model.js';
 
 export class UserService {
     constructor() {
-        this.pulse = new PULSE();
+        this.shiv = new SHIV();
     }
     /**
      * Registra un utente sul db
@@ -79,9 +79,9 @@ export class UserService {
                 401
             );
         /**
-         * Stabilisco la sessione con PULSE
+         * Stabilisco la sessione con SHIV
          */
-        const { jwt, publicKey } = await this.pulse.generateSession({
+        const { jwt, publicKey } = await this.shiv.generateSession({
             request: request,
             publicKeyHex,
             userId: user.id,
@@ -103,7 +103,7 @@ export class UserService {
      * @param {string} guid
      */
     async signout(guid) {
-        const kid = await this.pulse.calculateKid(guid);
+        const kid = await this.shiv.calculateKid(guid);
         // ---
         return await AuthKeys.destroy({
             where: {

@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { UserController } from "../controllers/user.controller.js";
-import { verify_email_code, verify_password, verifyAuth, verifyPulsePrivilegedToken } from "../middlewares/authMiddleware.js";
+import { verify_email_code, verify_password, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
 import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
 import { Roles } from "../utils/roles.js";
@@ -23,7 +23,7 @@ router.post('/password', verifyAuth(), controller.change_password);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);
 // -- QUICK SIGN IN
-router.post('/quick-sign-in', verifyAuth(), verifyPulsePrivilegedToken, controller.quick_signin);
+router.post('/quick-sign-in', verifyAuth(), verifyShivPrivilegedToken, controller.quick_signin);
 router.get('/quick-sign-in/:id', controller.get_quick_signin);
 // -- EMAIL CODES
 router.post('/email-verification', controller.send_email_verification);
@@ -32,7 +32,7 @@ router.post('/email-verification-test', verify_email_code, controller.test_email
 router.post('/verify-account', verify_email_code, controller.verify_account);
 // -- PASSWORD RECOVERY
 router.post('/recovery', verify_email_code, controller.get_recovery);
-router.post('/new-recovery', verifyAuth(), verifyPulsePrivilegedToken, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
+router.post('/new-recovery', verifyAuth(), verifyShivPrivilegedToken, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // -- MFA (DEPRECATED)
 // router.post('/mfa', verify_email_code, controller.enable_mfa);
 // router.post('/mfa_test', verifyAuth(), verify_mfa_code, controller.test_2fa);

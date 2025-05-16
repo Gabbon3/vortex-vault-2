@@ -32,18 +32,6 @@ export const verify_passkey = (required = false) => {
         const { request_id, auth_data } = req.body;
 
         /**
-         * VERIFICA JWT PER BYPASS SUL CONTROLLO DELLA PASSKEY
-         */
-        const cookie_jwt = req.cookies.passkey_token ?? null;
-        if (required === false && cookie_jwt && !request_id) {
-            const payload = JWT.verify(cookie_jwt, 'passkey');
-            if (payload) {
-                req.user = { uid: payload.uid };
-                return next();
-            }
-        }
-
-        /**
          * CONTROLLO SULLA PASSKEY
          */
         if (!request_id || !auth_data) throw new CError("", "Invalid request", 422);
@@ -92,18 +80,6 @@ export const verify_passkey = (required = false) => {
             console.warn(error);
             throw new CError("", "Authentication failed", 401);
         }
-
-        /**
-         * Se i controlli passano, genero il JWT
-         */
-        const jwt = JWT.sign({ uid: passkey.user_id }, JWT.passkey_token_lifetime, 'passkey');
-        res.cookie('passkey_token', jwt, {
-            httpOnly: true,
-            secure: true,
-            maxAge: JWT.passkey_token_lifetime * 1000,
-            sameSite: 'Strict',
-            path: '/',
-        });
 
         // -- rimuovo la challenge dal DB
         RamDB.delete(`chl-${request_id}`);

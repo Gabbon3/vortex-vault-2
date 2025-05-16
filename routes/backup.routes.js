@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { BackupController } from "../controllers/backup.controller.js";
-import { verifyAuth, verifyPulsePrivilegedToken } from "../middlewares/authMiddleware.js";
+import { verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
 import { Roles } from "../utils/roles.js";
 // -- router
 const router = express.Router();
@@ -15,7 +15,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- middleware
-router.use(verifyAuth(), verifyPulsePrivilegedToken);
+router.use(verifyAuth(), verifyShivPrivilegedToken);
 // -- /backup
 router.post('/', express.raw({ type: 'application/octet-stream' }), controller.create);
 router.get('/', controller.get);

@@ -30,7 +30,7 @@ export class DeviceService {
      * @returns {Array<Object>} un array contenente la lista dei refresh token associati
      */
     static async get_all() {
-        const res = await API.fetch('/pulse/session', {
+        const res = await API.fetch('/shiv/session', {
             method: 'GET'
         });
         if (!res) return null;
@@ -42,7 +42,7 @@ export class DeviceService {
      * @param {string} newName 
      */
     static async update_device_name(kid, newName) {
-        const res = await API.fetch(`/pulse/session/${kid}/name`, {
+        const res = await API.fetch(`/shiv/session/${kid}/name`, {
             method: 'PATCH',
             body: { kid: kid, name: newName }
         });
@@ -55,7 +55,7 @@ export class DeviceService {
      * @returns {boolean}
      */
     static async delete(kid) {
-        const res = await API.fetch(`/pulse/session/${kid}`, {
+        const res = await API.fetch(`/shiv/session/${kid}`, {
             method: 'DELETE',
         });
         // ---
