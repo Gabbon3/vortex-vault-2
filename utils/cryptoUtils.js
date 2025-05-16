@@ -60,6 +60,25 @@ export class Cripto {
             hmac_buffer.toString(options.output_encoding) :
             new Uint8Array(hmac_buffer);
     }
+
+    /**
+     * Funzione di derivazione HKDF
+     * @param {BinaryLike} ikm - input key material
+     * @param {BinaryLike} salt - 
+     * @param {BinaryLike} additionalInfo - informazioni aggiuntive, non piu di 1024 bytes
+     * @param {*} keyLen 
+     * @returns {ArrayBuffer}
+     */
+    static HKDF(ikm, salt, additionalInfo, keyLen = 32) {
+        return crypto.hkdfSync(
+            'sha256',
+            ikm,
+            salt,
+            additionalInfo,
+            keyLen
+        );
+    }
+
     /**
      * Esegue hash con salt usando hmac
      * @param {string|crypto.BinaryLike} message 

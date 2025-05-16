@@ -1,5 +1,6 @@
 import { Windows } from "./windows.js";
 import { CError } from "./error.js";
+import { PULSE } from "../secure/PULSE.browser.js";
 
 export class API {
     static recent = {};
@@ -41,6 +42,11 @@ export class API {
                     // -- tipo di contenuto non gestito
                     console.warn("tipo di contenuto non gestito.");
                     return null;
+            }
+            // -- aggiungo l'header integrity se presente
+            const integrity = await PULSE.getIntegrity();
+            if (integrity) {
+                options.headers['X-Integrity'] = integrity;
             }
             // -- eseguo la chiamata fetch all'endpoint con le opzioni fornite
             const response = await fetch(endpoint, options);
@@ -101,4 +107,4 @@ export class API {
     }
 }
 
-// window.API = API;
+window.API = API;

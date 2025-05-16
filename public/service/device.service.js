@@ -30,7 +30,7 @@ export class DeviceService {
      * @returns {Array<Object>} un array contenente la lista dei refresh token associati
      */
     static async get_all() {
-        const res = await API.fetch('/auth/token/', {
+        const res = await API.fetch('/pulse/session', {
             method: 'GET'
         });
         if (!res) return null;
@@ -38,40 +38,25 @@ export class DeviceService {
     }
     /**
      * Rinomina un token
-     * @param {string} token_id 
-     * @param {string} device_name 
+     * @param {string} kid 
+     * @param {string} newName 
      */
-    static async update_device_name(token_id, device_name) {
-        const res = await API.fetch('/auth/token/rename', {
-            method: 'POST',
-            body: { token_id, device_name }
+    static async update_device_name(kid, newName) {
+        const res = await API.fetch(`/pulse/session/${kid}/name`, {
+            method: 'PATCH',
+            body: { kid: kid, name: newName }
         });
         if (!res) return null;
         return res;
     }
     /**
-     * Revoca o meno un dispositivo
-     * @param {string} token_id 
-     * @param {boolean} revoke 
-     */
-    static async revoke(token_id, revoke) {
-        const res = await API.fetch('/auth/token/revoke', {
-            method: 'POST',
-            body: { token_id, revoke }
-        });
-        // ---
-        if (!res) return false;
-        return true;
-    }
-    /**
      * Elimina un token
-     * @param {string} token_id 
+     * @param {string} kid 
      * @returns {boolean}
      */
-    static async delete(token_id) {
-        const res = await API.fetch(`/auth/token/delete`, {
-            method: 'POST',
-            body: { token_id }
+    static async delete(kid) {
+        const res = await API.fetch(`/pulse/session/${kid}`, {
+            method: 'DELETE',
         });
         // ---
         if (!res) return false;
@@ -79,20 +64,20 @@ export class DeviceService {
     }
     /**
      * Restituisce un device tramite id
-     * @param {string} token_id 
+     * @param {string} kid 
      * @returns {Object}
      */
-    static get_device(token_id) {
-        return this.devices[this.get_index(token_id)];
+    static get_device(kid) {
+        return this.devices[this.get_index(kid)];
     }
     /**
      * Restituisce l'index di un device
      * @param {Array<Object>} devices 
-     * @param {string} token_id 
+     * @param {string} kid 
      * @returns {string}
      */
-    static get_index(token_id, devices = this.devices) {
-        return devices.findIndex(device => device.id === token_id);
+    static get_index(kid, devices = this.devices) {
+        return devices.findIndex(device => device.kid === kid);
     }
 }
 

@@ -7,6 +7,7 @@ import { Log } from "../utils/log.js";
 import { Windows } from "../utils/windows.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
+    if (await AuthService.init()) console.log('SHIV ready');
     /**
      * Micro utility per l'accesso
      */
@@ -62,10 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Windows.loader(true);
         // -- accedo
-        if (await AuthService.signin(email, password, null, true)) {
-            form.reset();
-            // Log.summon(0, `Authenticated as ${email}`);
-            window.location.href = '/vault';
+        if (await AuthService.signin(email, password, null)) {
+            // form.reset();
+            Log.summon(0, `Authenticated as ${email}`);
+            // window.location.href = '/vault';
         } else {
             document.getElementById('recovery-email').value = email;
             document.getElementById('recovery-device-email-email').value = email;

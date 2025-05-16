@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 import { JWT } from "../utils/jwt.utils.js";
-import { RefreshTokenService } from "./refreshToken.service.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from '../models/user.js';
@@ -9,10 +8,12 @@ import { Mailer } from '../config/mail.js';
 import automated_emails from '../public/utils/automated.mails.js';
 import { RamDB } from '../config/ramdb.js';
 import { Op } from 'sequelize';
+import { PULSE } from '../protocols/PULSE.node.js';
+import { AuthKeys } from '../models/authKeys.model.js';
 
 export class UserService {
     constructor() {
-        this.refresh_token_service = new RefreshTokenService();
+        this.pulse = new PULSE();
     }
     /**
      * Registra un utente sul db
@@ -56,60 +57,36 @@ export class UserService {
         // ---
         return verified_domains.includes(email.split('@')[1]);
     }
+    
     /**
-     * Esegue l'accesso e restituisce:
-     *  - *Utente (modello sequelize)
-     *  - Access Token (stringa)
-     *  - *Refresh Token (la stringa del hash token originale (non hashata))
-     * Deve generare quelli marcati con *
-     * @param {string} email 
-     * @param {string} password 
-     * @param {string} user_agent 
-     * @param {string} ip_address
-     * @param {string} refresh_token_string
-     * @param {string} passKey
-     * @returns {{ access_token: string, refresh_token: string, user: User }} - access_token, user
+     * 
+     * @param {Request} request
+     * @param {string} email
+     * @param {string} publicKeyHex - chiave pubblica ECDH del client in esadecimale
+     * @returns {}
      */
-    async signin(email, password, user_agent, ip_address, refresh_token_string, passKey) {
+    async signin({ request, email, publicKeyHex }) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
-            where: { email }
+            where: { email },
         });
-        if (!user) throw new CError("AuthenticationError", "Invalid email or password", 401);
-        if (user.verified !== true) throw new CError("AuthenticationError", "Email is not verified", 401);
-
-        // -- verifico se la password è corretta
-        const password_is_correct = await this.verify_password(password, user.password);
-        if (!password_is_correct) throw new CError("AuthenticationError", "Invalid email or password", 401);
-
+        if (!user)
+            throw new CError("AuthenticationError", "Invalid email", 401);
+        if (user.verified !== true)
+            throw new CError(
+                "AuthenticationError",
+                "Email is not verified",
+                401
+            );
         /**
-         * Refresh Token
+         * Stabilisco la sessione con PULSE
          */
-        let refresh_token = null;
-        let createNewRefreshToken = true;
-        if (refresh_token_string) {
-            // -- hash del refresh token
-            const hash_current_token = this.refresh_token_service.get_token_digest(refresh_token_string);
-            refresh_token = await this.refresh_token_service.verify({ token_hash: hash_current_token }, user_agent);
-            
-            /**
-             * se False -> dispositivo bloccato
-             * se Null -> creerò un nuovo refresh token (inizialmente revocato se non è il primo dispositivo a connettersi all'account)
-             * se RefreshToken -> non ci sarà bisogno di creare nulla perchè è gia tutto in regola
-             */
-            if (refresh_token === false) throw new CError('', 'This device is locked', 403);
-            else if (refresh_token === null) createNewRefreshToken = true;
-            else createNewRefreshToken = false;
-        }
-
-        // -- creo il refresh token se richiesto
-        if (createNewRefreshToken) refresh_token = await this.createRefreshToken(user, user_agent, ip_address, email, passKey); 
-        // -- setto al refresh token la sua versione plain, per poterla restituire
-        else refresh_token.plain = refresh_token_string;
-        /**
-         * Genero l'access token solo se il refresh token NON è REVOCATO
-         */
-        const access_token = refresh_token.is_revoked ? null : JWT.genera_access_token({ uid: user.id, email: email, role: Roles.BASE });
+        const { jwt, publicKey } = await this.pulse.generateSession({
+            request: request,
+            publicKeyHex,
+            userId: user.id,
+            payload: { uid: user.id },
+        });
         /**
          * APPROFONDIRE: da capire se generare il bypass anche con refresh non valido
          */
@@ -118,8 +95,23 @@ export class UserService {
         /**
          * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
          */
-        return { access_token, refresh_token: refresh_token.plain, user, bypass_token };
+        return { uid: user.id, salt: user.salt, jwt, publicKey, bypass_token };
     }
+
+    /**
+     * Elimina dal db la auth key
+     * @param {string} guid
+     */
+    async signout(guid) {
+        const kid = await this.pulse.calculateKid(guid);
+        // ---
+        return await AuthKeys.destroy({
+            where: {
+                kid: kid,
+            },
+        });
+    }
+
     /**
      * Crea e restituisce un refresh token
      * invia una mail di nuovo accesso se il refresh token viene inizialmente bloccato

@@ -1,7 +1,6 @@
 import { async_handler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Bytes } from "../utils/bytes.js";
-import { RefreshTokenService } from "../services/refreshToken.service.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { JWT } from "../utils/jwt.utils.js";
@@ -9,16 +8,16 @@ import { MFAService } from "../services/mfa.service.js";
 import { RamDB } from "../config/ramdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
-import { LSKService } from "../services/lsk.service.js";
-import { v7 as uuidv7, validate as uuidValidate } from "uuid";
+import { v7 as uuidv7 } from "uuid";
 import automated_emails from "../public/utils/automated.mails.js";
 import { Config } from "../server_config.js";
+import { PulseService } from "../services/pulse.service.js";
+import { PULSE } from "../protocols/PULSE.node.js";
 
 export class UserController {
     constructor() {
         this.service = new UserService();
-        this.refresh_token_service = new RefreshTokenService();
-        this.cke_service = new LSKService();
+        this.pulseService = new PulseService();
     }
     /**
      * Registra utente
@@ -44,82 +43,60 @@ export class UserController {
      * @param {Response} res
      */
     signin = async_handler(async (req, res) => {
-        const { email, password, passKey } = req.body;
-        const refresh_token_cookie = req.cookies.refresh_token;
-        // ---
-        if (!email || !password) {
-            throw new CError(
-                "ValidationError",
-                "Email and password are required",
-                422
-            );
+        const { email, publicKey: publicKeyHex } = req.body;
+        // -- verifico se l'utente è già autenticato
+        if (req.cookies.jwt) {
+            // -- se si elimino dal db
+            const kid = this.pulseService.pulse.getKidFromJWT(req.cookies.jwt);
+            if (kid) await this.pulseService.delete({ kid }, true);
         }
-        // ---
-        const user_agent = req.get("user-agent");
-        const ip_address = req.headers["x-forwarded-for"] || req.ip;
         /**
          * Servizio
          */
-        const { access_token, refresh_token, user, bypass_token } =
-            await this.service.signin(
+        const { uid, salt, jwt, publicKey: serverPublicKey, bypass_token } =
+            await this.service.signin({
+                request: req,
                 email,
-                password,
-                user_agent,
-                ip_address,
-                refresh_token_cookie,
-                passKey
-            );
-        /**
-         * per continuare, verifico per sicurezza se il refresh token è stato generato correttamente
-         */
-        if (!refresh_token) {
-            this.deleteAllCookies(req, res);
-            throw new CError('', 'Unable to sign-in with this device.', 400);
-        }
-        // ---
-        this.set_token_cookies(res, {
-            access_token,
-            refresh_token,
-            uid: user.id,
-        });
-        // ---
-        if (!access_token) {
-            return res.status(403).json({
-                error: "This device is locked",
-                refresh_token,
+                publicKeyHex
             });
-        }
+        // ---
+        res.cookie("jwt", jwt, {
+            httpOnly: true,
+            secure: true,
+            maxAge: PULSE.jwtLifetime * 1000,
+            sameSite: "Strict",
+            path: "/",
+        });
+        res.cookie("uid", uid, {
+            httpOnly: true,
+            secure: true,
+            maxAge: PULSE.jwtLifetime * 1000,
+            sameSite: "Strict",
+            path: "/",
+        });
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
         RamDB.delete(`login-attempts-${email}`);
         // ---
         res.status(201).json({
-            access_token,
-            refresh_token,
-            salt: user.salt,
+            jwt,
+            publicKey: serverPublicKey,
+            uid,
+            salt,
             bypass_token,
-            uid: user.id,
         });
     });
     /**
      * Effettua la disconnessione eliminando i cookie e il refresh token
      */
     signout = async_handler(async (req, res) => {
-        const refresh_token = req.cookies.refresh_token;
-        // -- verifico se è valido
-        if (!this.refresh_token_service.validateRefreshToken(refresh_token))
-            throw new CError("", "Invalid refresh token", 400);
-        // -- hash refresh token
-        const token_hash =
-            this.refresh_token_service.get_token_digest(refresh_token);
-        // -- elimino il refresh token
-        await this.refresh_token_service.delete({
-            user_id: req.user.uid,
-            token_hash: token_hash,
-        });
-        // -- elimino i cookie
-        this.deleteAllCookies(req, res);
+        // -- elimino dal db
+        this.service.signout(req.user.kid);
         // ---
-        res.status(200).json({ message: "Disconnected" });
+        res.clearCookie('jwt');
+        res.clearCookie('uid');
+        res.clearCookie('cke');
+        // ---
+        res.status(201).json({ message: 'Bye' });
     });
     /**
      * Rimuove tutti i cookie del client
@@ -418,15 +395,6 @@ export class UserController {
                 maxAge: JWT.refresh_token_cookie_lifetime,
                 sameSite: "Strict",
                 path: "/auth",
-            });
-        }
-        if (cookies.uid) {
-            res.cookie("uid", cookies.uid, {
-                httpOnly: true,
-                secure: true,
-                maxAge: JWT.access_token_cookie_lifetime,
-                sameSite: "Strict",
-                path: "/auth/passkey",
             });
         }
     };

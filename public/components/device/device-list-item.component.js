@@ -42,12 +42,12 @@ class DeviceListItem extends HTMLElement {
             </span>
             <div class="flex gap-50 d-row">
                 <input type="text" class="input-text device-name select-all-onclick" title="Device name" value="${device_name}">
-                <button 
+                <!-- <button 
                     title="Revoke or not this device"
                     class="btn ${revoked === 'true' ? 'danger' : 'primary'} revoke-device"
                     ${current ? 'disabled' : ''}>
                     <span class="material-symbols-rounded">${revoked === 'true' ? 'close' : 'check'}</span>
-                </button>
+                </button> -->
                 <button class="btn danger device-delete" title="Delete this device" ${current ? 'disabled' : ''}>
                     <span class="material-symbols-rounded">delete</span>
                 </button>
@@ -59,7 +59,7 @@ class DeviceListItem extends HTMLElement {
         `;
         // -- EVENTI
         // -- pulsante revoca
-        this.querySelector('.revoke-device').addEventListener('click', this.toggle_revoked.bind(this));
+        // this.querySelector('.revoke-device').addEventListener('click', this.toggle_revoked.bind(this));
         // -- pulsante cancella
         this.querySelector('.device-delete').addEventListener('click', this.delete_device.bind(this));
         // -- rinomina del dispositivo

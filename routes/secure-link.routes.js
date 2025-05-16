@@ -1,5 +1,5 @@
 import express from "express";
-import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { verifyAuth } from "../middlewares/authMiddleware.js";
 import { SecureLinkController } from "../controllers/secure-link.controller.js";
 import rateLimit from "express-rate-limit";
 // -- router
@@ -15,7 +15,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- secure-link/
-router.post('/', verify_access_token(), controller.generate_secret);
+router.post('/', verifyAuth(), controller.generate_secret);
 router.post('/id', controller.generate_id);
 router.get('/:scope_id', controller.get_secret);
 

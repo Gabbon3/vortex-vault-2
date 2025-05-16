@@ -27,6 +27,8 @@ export class Config {
     // Origin
     static WSORIGIN = process.env.WSORIGIN;
     static HTTPROTOCOL = process.env.HTTPROTOCOL;
+    // SHIV
+    static SHIVPEPPER = Buffer.from(process.env.SHIVPEPPER, "hex");
     // Dev
     static DEV = process.env.DEV === 'true';
     // Numero di tentativi massimi per rate limiter -> email

@@ -16,11 +16,10 @@ export class DeviceUI {
         let html = '';
         for (const device of devices) {
             html += `<device-list-item 
-                id="${device.id}"
-                device-name="${device.device_name}"
-                user-agent-summary="${device.user_agent_summary}"
-                lua="${date.format("%j %M %Y at %H:%i", new Date(device.last_used_at))}"
-                revoked="${device.is_revoked}"
+                id="${device.kid}"
+                device-name="${device.device_name ?? 'New device *'}"
+                user-agent-summary="${device.device_info}"
+                lua="${date.format("%j %M %Y at %H:%i", new Date(device.last_seen_at))}"
                 current="${device.current ?? false}"
             ></device-list-item>`
         }

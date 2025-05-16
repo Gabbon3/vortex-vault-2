@@ -9,35 +9,96 @@ import { RamDB } from "../config/ramdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
 import automated_emails from "../public/utils/automated.mails.js";
+import { PULSE } from "../protocols/PULSE.node.js";
+
 /**
- * Middleware per la verifica del jwt e refresh 
- * dell'access token se scaduto
- * @param {number} required_role di default quello base
+ * Middleware di autenticazione e autorizzazione basato su JWT e controllo d'integrità opzionale.
+ * => req.user = payload { uid, role, kid }
+ * @function verifyAccessToken
+ * @param {Object} [options={}] - Opzioni per configurare il middleware.
+ * @param {number} [options.requiredRole=Roles.BASE] - Ruolo minimo richiesto per accedere alla rotta.
+ * @param {boolean} [options.checkIntegrity=true] - Se true, abilita la verifica dell'integrità tramite header 'X-Integrity'.
+ * @returns {Function} Express middleware async che valida l'access token e opzionalmente verifica l'integrità.
  */
-export const verify_access_token = (required_role = Roles.BASE) => (req, res, next) => {
-    const access_token = req.cookies.access_token;
-    // -- verifico che esista
-    if (!access_token) {
-        return res.status(401).json({ error: "Access denied" });
+export const verifyAuth = (options = {}) => {
+    const { requiredRole = Roles.BASE, checkIntegrity = true } = options;
+    return async (req, res, next) => {
+        const jwt = req.cookies.jwt;
+        // -- verifico che esista
+        if (!jwt) return res.status(401).json({ error: "Access denied" });
+        // ---
+        const pulse = new PULSE();
+        // -- ottengo il kid
+        const kid = pulse.getKidFromJWT(jwt);
+        // ---
+        const jwtSignKey = await pulse.getSignKey(kid, 'jwt-signing');
+        if (!jwtSignKey)
+            return res.status(401).json({ error: "Access denied" });
+        // -- verifico che l'access token sia valido
+        const payload = JWT.verify(jwt, jwtSignKey);
+        if (!payload) return res.status(401).json({ error: "Access denied" });
+        // -- se è tutto ok aggiungo il payload dell'utente alla request
+        req.user = payload;
+        // -- verifica se il payload è conforme
+        if (!req.user.uid)
+            return res.status(400).json({ error: "Sign-in again" });
+        // -- verifica del ruolo
+        if (req.user.role < requiredRole)
+            return res.status(403).json({ error: "Insufficient privileges" });
+        /**
+         * Verifico l'integrità della richiesta
+         */
+        if (checkIntegrity) {
+            const integrity = req.get("X-Integrity");
+            if (!integrity)
+                return res.status(403).json({ error: "Integrity not found" });
+            // -- verifico l'integrity
+            const { kid } = payload;
+            const verified = await pulse.verifyIntegrity(kid, integrity);
+            // ---
+            if (verified === -1)
+                return res.status(404).json({ error: "Secret not found" });
+            if (!verified)
+                return res.status(403).json({ error: "Integrity failed" });
+        }
+        // -- passo al prossimo middleware o controller
+        next();
+    };
+};
+
+/**
+ * Verifica un pulse privileged token
+ * configura la proprietà req.ppt = payload del ppt
+ */
+export const verifyPulsePrivilegedToken = async_handler(
+    async (req, res, next) => {
+        const ppt = req.cookies.ppt;
+        const jwt = req.cookies.jwt;
+        if (!ppt || !jwt)
+            return res.status(401).json({ error: "Access denied" });
+        // ---
+        const pulse = new PULSE();
+        // -- ottengo il kid
+        let kid = null;
+        try {
+            kid = JSON.parse(atob(jwt.split(".")[1])).kid;
+        } catch (error) {
+            return res.status(401).json({ error: "Access denied" });
+        }
+        // ---
+        const pptSignKey = await pulse.getSignKey(kid, 'ppt-signing');
+        if (!pptSignKey)
+            return res.status(401).json({ error: "Access denied" });
+        // -- verifico che il ppt sia valido
+        const payload = JWT.verify(ppt, pptSignKey);
+        if (!payload) return res.status(401).json({ error: "Access denied" });
+        // -- passo le informazioni
+        req.ppt = payload;
+        // -- passo al prossimo middleware o controller
+        next();
     }
-    // -- verifico che l'access token sia valido
-    const payload = JWT.verifica_access_token(access_token);
-    if (!payload) {
-        return res.status(401).json({ error: "Access denied" });
-    }
-    // -- se è tutto ok aggiungo il payload dell'utente alla request
-    req.user = payload;
-    // -- verifica se il payload è conforme
-    if (!req.user.uid) {
-        return res.status(400).json({ error: "Sign-in again." });
-    } 
-    // -- verifica del ruolo
-    if (req.user.role < required_role) {
-        return res.status(403).json({ error: "Insufficient privileges" });
-    }
-    // -- passo al prossimo middleware o controller
-    next();
-}
+);
+
 /**
  * Verifica la password di un utente
  */

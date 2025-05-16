@@ -19,6 +19,7 @@ const newVaultsInsertedData = {};
 document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     // ---
+    if (await AuthService.init()) console.log('SHIV ready');
     await VaultUI.init();
     const addButtonListeners = () => {
         const config = [

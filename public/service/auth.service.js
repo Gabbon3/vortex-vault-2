@@ -12,9 +12,30 @@ import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { PasskeyService } from "./passkey.public.service.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
-import { LSE } from "./lse.public.service.js";
+import { CKE } from "../utils/cke.public.util.js";
+import { PULSE } from "../secure/PULSE.browser.js";
 
 export class AuthService {
+    /**
+     * Inizializza la sessione calcolando la shared key
+     */
+    static async init() {
+        /**
+         * CKE
+         */
+        const sessionSharedSecret = SessionStorage.get('shared-secret');
+        const userIsLogged = LocalStorage.exist('shared-secret');
+        if (sessionSharedSecret || !userIsLogged) return true;
+        // ---
+        const ckeKey = await CKE.get();
+        if (!ckeKey) return false;
+        // ---
+        const sharedSecret = await LocalStorage.get('shared-secret', ckeKey);
+        if (!sharedSecret) return false;
+        // ---
+        SessionStorage.set('shared-secret', sharedSecret);
+        return true;
+    }
     /**
      * Attiva il protocollo LSE
      * @param {string} [bypass_token=null] 
@@ -37,40 +58,48 @@ export class AuthService {
      * @param {boolean} [activate_lse=false] true per abilitare il protocollo lse
      * @returns {boolean}
      */
-    static async signin(email, password, passKey = null, activate_lse = false) {
+    static async signin(email, password, passKey = null) {
+        // -- genero la coppia di chiavi
+        const publicKeyHex = await PULSE.generateKeyPair();
+        // ---
         const res = await API.fetch('/auth/signin', {
             method: 'POST',
-            body: { email, password, passKey },
+            body: {
+                email,
+                password,
+                passKey,
+                publicKey: publicKeyHex,
+            },
         });
         if (!res) return false;
+        // ---
+        const { publicKey: serverPublicKey } = res;
+        // -- ottengo il segreto condiviso e lo cifro in localstorage con CKE
+        const sharedSecret = await PULSE.completeHandshake(serverPublicKey);
+        if (!sharedSecret) return false;
+        /**
+         * Inizializzo CKE localmente
+         */
+        const ckeKey = await CKE.set();
+        if (!ckeKey) return false;
+        // -- cifro localmente lo shared secret con CKE
+        LocalStorage.set('shared-secret', sharedSecret, ckeKey);
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
-        // -- abilito se necessario il protocollo lse
-        // -- sfrutto il bypass token per bypassare il controllo della passkey
-        if (activate_lse === true) {
-            const lse_activated = await this.activate_lse(res.bypass_token);
-            if (!lse_activated) return false;
-        }
-        // -- Recupero la LSK tramite protocollo LSE
-        const lsk = await LSE.S(null, res.bypass_token);
-        if (!lsk) {
-            Log.summon(1, "Something went wrong.");
-            return false;
-        }
         // -- cifro le credenziali sul localstorage
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, master_key);
-        await LocalStorage.set('master-key', master_key, lsk);
-        await LocalStorage.set('salt', salt, lsk);
+        await LocalStorage.set('master-key', master_key, ckeKey);
+        await LocalStorage.set('salt', salt, ckeKey);
         // -- imposto quelle in chiaro sul session storage
-        SessionStorage.set('lsk', lsk);
+        SessionStorage.set('cke', ckeKey);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
         SessionStorage.set('uid', res.uid);
         SessionStorage.set('access-token', res.access_token);
         // --- imposto la scadenza dell'access token
-        await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
+        // await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
         // ---
         return true;
     }
@@ -153,8 +182,8 @@ export class AuthService {
      * @returns {boolean} false se: non ce la lsk, non ce l'email, non è andato a buon fine il cambio password
      */
     static async change_password(old_password, new_password) {
-        const lsk = SessionStorage.get('lsk'); // local storage key
-        if (!lsk) return false;
+        const ckeKey = SessionStorage.get('cke'); // local storage key
+        if (!ckeKey) return false;
         const email = await LocalStorage.get('email-utente');
         if (!email) {
             Log.summon(2, 'No email found');
@@ -170,7 +199,7 @@ export class AuthService {
         const key = await Cripto.argon2(new_password, salt);
         VaultService.master_key = key;
         // -- salvo la master key
-        await LocalStorage.set('master-key', key, lsk);
+        await LocalStorage.set('master-key', key, ckeKey);
         await SessionStorage.set('master-key', key);
         // -- creo e genero un backup per l'utente
         await BackupService.create_locally();
@@ -178,40 +207,16 @@ export class AuthService {
         return true;
     }
     /**
-     * Cerca di ottenere un nuovo access token
-     * @returns {boolean|object} restituisce un oggetto con degli auth data, false se non rigenerato
-     */
-    static async new_access_token() {
-        const res = await PasskeyService.authenticate({
-            endpoint: '/auth/token/refresh',
-            method: 'POST',
-        },
-            (response) => {
-                return {
-                    accessToken: response.access_token,
-                    uid: response.uid,
-                };
-            }
-        );
-        if (!res) return false;
-        // -- imposto l'access token
-        SessionStorage.set('uid', res.uid);
-        SessionStorage.set('access-token', res.accessToken);
-        // -- imposto la scadenza dell'access token
-        await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
-        return true;
-    }
-    /**
      * Imposta la chiave master dell'utente nel session storage
-     * @param {Uint8Array} lsk 
+     * @param {Uint8Array} ckeKey 
      */
-    static async config_session_vars(lsk) {
-        const master_key = await LocalStorage.get('master-key', lsk);
-        const salt = await LocalStorage.get('salt', lsk);
+    static async config_session_vars(ckeKey) {
+        const master_key = await LocalStorage.get('master-key', ckeKey);
+        const salt = await LocalStorage.get('salt', ckeKey);
         const email = await LocalStorage.get('email-utente');
         if (!master_key) return false;
         // ---
-        SessionStorage.set('lsk', lsk);
+        SessionStorage.set('cke', ckeKey);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
         SessionStorage.set('email', email);
@@ -265,7 +270,7 @@ export class AuthService {
         // -- pulisco l'url
         window.history.replaceState(null, '', window.location.origin + window.location.pathname);
         // -- eseguo l'accesso passando la passkey
-        return await AuthService.signin(email, password, id, true);
+        return await AuthService.signin(email, password, id);
     }
     /**
      * Genera un qr code da usare su un altro dispositivo per far condividere le credenziali
@@ -294,7 +299,7 @@ export class AuthService {
         const [email, password] = await SecureLink.get('rsi', id, key);
         if (!email || !password) return false;
         // -- eseguo l'accesso passando la passkey
-        return await AuthService.signin(email, password, id, true);
+        return await AuthService.signin(email, password, id);
     }
     /**
      * Controlla solo l'url
@@ -347,29 +352,20 @@ export class AuthService {
      * @returns {number} true è stato loggato e la sessione è stata attivata, 0 già loggato, -1 nuovo access token non ottenuto, -2 nessuna chiave restituita, false sessione non attivata
      */
     static async start_session() {
-        // -- verifico che ce bisogno di rigenerare l'access token
-        const access_token_expire = await LocalStorage.get('session-expire');
         const session_storage_init = SessionStorage.get('master-key') !== null;
         // -- con questa condizione capisco se ce bisogno di accedere o meno
-        const signin_need = !access_token_expire || Date.now() > access_token_expire.getTime() || !session_storage_init;
+        const signin_need = !session_storage_init;
         // -- nessuna necessita di accedere
         if (!signin_need) return 0;
-        // -- provo ad ottenere le informazioni per accedere (la chiave)
-        const auth_data = await this.new_access_token();
-        // -- se non è stato generato un nuovo access token fermo
-        // - l'utente dovrebbe accedere nuovamente
-        if (!auth_data) return -1;
-        // -- se non ce la chiave mi fermo
-        // if (!auth_data.public_key) return -2;
         // ---
-        const lsk = await LSE.S();
+        const ckeKey = await CKE.get();
         // -- verifico
-        if (!lsk) {
-            console.warn("LSK non ottenuta.");
+        if (!ckeKey) {
+            console.warn("CKE non ottenuta.");
             return false;
         }
         // -- imposto le variabili di sessione
-        const initialized = await this.config_session_vars(lsk);
+        const initialized = await this.config_session_vars(ckeKey);
         // ---
         return initialized;
     }
@@ -429,7 +425,7 @@ export class AuthService {
             console.warn(error);
             return null;
         }
-    } 
+    }
     /**
      * Recovery a device by using mfa
      * @param {string} email 

@@ -1,12 +1,11 @@
 import express from "express";
-import { LSKController } from "../controllers/lsk.controller.js";
-import { verify_access_token } from "../middlewares/authMiddleware.js";
+import { CKEController } from "../controllers/cke.controller.js";
+import { verifyAuth } from "../middlewares/authMiddleware.js";
 import rateLimit from "express-rate-limit";
-import { verify_passkey } from "../middlewares/passkey.middleware.js";
 // -- router
 const router = express.Router();
 // -- controller
-const controller = new LSKController();
+const controller = new CKEController();
 // -- middlewares
 // -- rate Limiter per le auth routes
 const limiter = rateLimit({
@@ -16,7 +15,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- auth/cke
-router.post('/', verify_access_token(), controller.generate);
-router.get('/', verify_passkey(), controller.get);
+router.post('/', verifyAuth(), controller.set);
+router.get('/', verifyAuth({ checkIntegrity: false }), controller.get);
 
 export default router;

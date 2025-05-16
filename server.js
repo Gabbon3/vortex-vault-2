@@ -2,14 +2,13 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { sequelize } from './config/db.js';
 import user_routes from './routes/user.routes.js';
-import token_routes from './routes/token.routes.js';
 import vault_routes from './routes/vault.routes.js';
-import cke_routes from './routes/lsk.routes.js';
 import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
-import lse_routes from './routes/lse.routes.js';
+import cke_routes from './routes/cke.routes.js';
+import pulse_routes from './routes/pulse.routes.js';
 import './models/associations.js';
 import { cors_middleware, csp_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
@@ -35,9 +34,8 @@ app.use(security_headers);
  * ROUTES
  */
 app.use('/auth', user_routes);
-app.use('/auth/cke', cke_routes);
-app.use('/auth/lse', lse_routes);
-app.use('/auth/token', token_routes);
+app.use('/cke', cke_routes);
+app.use('/pulse', pulse_routes);
 app.use('/auth/passkey', passkey_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);
@@ -93,4 +91,4 @@ try {
 /**
  * AVVIO SERVER CHAT
  */
-import './chat/websocket/websocket.server.js';
+// import './chat/websocket/websocket.server.js';

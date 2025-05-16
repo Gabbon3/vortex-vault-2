@@ -7,22 +7,7 @@ import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../../utils/windows.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    /**
-     * ENABLE 2FA AUTH
-     */
-    Form.register('form-new-mfa-secret', async (form, elements) => {
-        if (!elements.code || elements.code.length != 6) return Log.summon(1, "Invalid code");
-        if (!confirm(`Attention! The secret will be shown via QR CODE that you will need to scan.`)) return;
-        // ---
-        const { request_id, code } = elements;
-        // ---
-        Windows.loader(true);
-        if (await AuthUI.enable_mfa(request_id, code)) {
-            form.reset();
-        }
-        Windows.loader(false);
-    });
+document.addEventListener('DOMContentLoaded', async () => {
     /**
      * CAMBIO PASSWORD
      */

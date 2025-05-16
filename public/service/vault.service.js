@@ -12,7 +12,6 @@ import { UUID } from "../utils/uuid.js";
 export class VaultService {
     static master_key = null;
     static salt = null;
-    static lsk = null; // Local Storage Key
     static vaults = [];
     static used_usernames = new Set();
     // Tempo da rimuovere da Date.now() per ottenere i vault piu recenti
@@ -23,13 +22,12 @@ export class VaultService {
      */
     static async config_secrets() {
         // -- ottengo la scadenza dell'access token
-        const lsk = SessionStorage.get('lsk');
+        const ckeKey = SessionStorage.get('cke');
         const access_token_expire = await LocalStorage.get('session-expire');
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
-        if (lsk === null || (access_token_expire && access_token_expire < new Date())) return false; 
-        this.lsk = lsk;
-        this.master_key = await LocalStorage.get('master-key', lsk);
-        this.salt = await LocalStorage.get('salt', lsk);
+        if (ckeKey === null || (access_token_expire && access_token_expire < new Date())) return false;
+        this.master_key = await LocalStorage.get('master-key', ckeKey);
+        this.salt = await LocalStorage.get('salt', ckeKey);
         return this.master_key && this.salt ? true : false;
     }
     /**

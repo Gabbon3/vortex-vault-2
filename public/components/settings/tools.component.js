@@ -116,7 +116,7 @@ class SettingsComponent extends HTMLElement {
             <div class="isle bg-4 slider-cont slow" data-open="false" id="cont-sudo-session">
                 <p class="mt-0 mb-2">
                     Enable <strong>advanced session</strong> to perform critical operations.
-                    The session will only last 45 minutes for safety reasons. <br>
+                    The session will only last 10 minutes for safety reasons. <br>
                     All operations that require this session are marked with this symbol
                     <span class="material-symbols-rounded warning">vpn_key</span>
                 </p>
@@ -125,7 +125,7 @@ class SettingsComponent extends HTMLElement {
                         <span class="material-symbols-rounded">passkey</span>
                         With Passkey
                     </h4>
-                    <passkey-btn class="last" icon="security" endpoint="/auth/sudotoken" callback="sudosession">
+                    <passkey-btn class="last" icon="security" endpoint="/pulse/spt" callback="sudosession">
                         Activate
                     </passkey-btn>
                 </div>
