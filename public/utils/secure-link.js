@@ -12,7 +12,6 @@ export class SecureLink {
      * @param {string} [options.id] 
      * @param {string} [options.scope] *
      * @param {number} [options.ttl] * time to live
-     * @param {boolean} [options.passKey]
      */
     static async generate(options) {
         const key = options.key || Cripto.random_bytes(32);
@@ -26,7 +25,6 @@ export class SecureLink {
                 scope: options.scope ?? '',
                 ttl: options.ttl ?? 60 * 5,
                 data: Bytes.base64.encode(encrypted_data),
-                passKey: options.passKey ?? false,
             }
         });
         if (!res) return false;

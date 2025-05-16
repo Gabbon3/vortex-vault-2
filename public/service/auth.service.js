@@ -54,11 +54,10 @@ export class AuthService {
      * Esegue l'accesso
      * @param {string} email 
      * @param {string} password 
-     * @param {null} [passKey=null] 
      * @param {boolean} [activate_lse=false] true per abilitare il protocollo lse
      * @returns {boolean}
      */
-    static async signin(email, password, passKey = null) {
+    static async signin(email, password) {
         // -- genero la coppia di chiavi
         const publicKeyHex = await SHIV.generateKeyPair();
         // ---
@@ -67,7 +66,6 @@ export class AuthService {
             body: {
                 email,
                 password,
-                passKey,
                 publicKey: publicKeyHex,
             },
         });
@@ -271,7 +269,7 @@ export class AuthService {
         // -- pulisco l'url
         window.history.replaceState(null, '', window.location.origin + window.location.pathname);
         // -- eseguo l'accesso passando la passkey
-        return await AuthService.signin(email, password, id);
+        return await AuthService.signin(email, password);
     }
     /**
      * Genera un qr code da usare su un altro dispositivo per far condividere le credenziali

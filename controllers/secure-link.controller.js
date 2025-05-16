@@ -10,15 +10,12 @@ export class SecureLinkController {
      * cifrate nel RamDB
      */
     generate_secret = async_handler(async (req, res) => {
-        const { id: provided_id, scope, ttl, data, passKey } = req.body;
+        const { id: provided_id, scope, ttl, data } = req.body;
         // ---
         const id = provided_id ?? uuidv7();
         // -- imposto sul ramdb
-        const is_set = 
-            RamDB.set(`${scope}sl${id}`, data, ttl)
-            && passKey ? RamDB.set(`pk${id}`, true, 120) : true; // pk = pass key
+        const is_set = RamDB.set(`${scope}sl${id}`, data, ttl);
         if (!is_set) throw new Error("RamDB error");
-        console.log("SL - new item, scope: " + scope);
         // --
         res.status(201).json({ id });
     });
@@ -27,7 +24,6 @@ export class SecureLinkController {
      */
     generate_id = async_handler(async (req, res) => {
         const id = uuidv7();
-        console.log('SL - new id request: ' + id);
         // --
         res.status(201).json({ id });
     });
@@ -41,7 +37,6 @@ export class SecureLinkController {
         const data = RamDB.get(`${scope}sl${id}`); // sl = secure link
         if (!data) throw new CError("NotFoundError", "Not found", 404);
         RamDB.delete(`${scope}sl${id}`);
-        console.log("SL - get item, scope: " + scope);
         // --
         res.status(200).json({ data });
     });
