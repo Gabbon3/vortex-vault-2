@@ -169,18 +169,6 @@ export class UserController {
         res.status(201).json({ secret: Bytes.hex.encode(secret) });
     });
     /**
-     * Release sudo access token
-     * @param {Request} req
-     * @param {Response} res
-     */
-    start_sudo_session = async_handler(async (req, res) => {
-        const access_token = await this.service.generate_sudo_access_token(
-            req.user.uid
-        );
-        this.set_token_cookies(res, { access_token });
-        res.status(201).json({ access_token });
-    });
-    /**
      * Invia una mail con il codice di verifica
      * @param {Request} req
      * @param {Response} res

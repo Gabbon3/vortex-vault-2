@@ -114,7 +114,6 @@ export class PasskeyService {
      * @param {string} [options.endpoint] qualsiasi endpoint del server
      * @param {string} [options.method] POST, GET...
      * @param {object} [options.body], dati 
-     * @param {boolean} [options.passkey_need] se true viene forzato l'utilizzo della passkey
      * @param {Function} callback 
      * @returns {boolean}
      */
@@ -134,15 +133,11 @@ export class PasskeyService {
             method: 'POST',
             ...options,
         };
-        // ---
-        const passkey_token_expire_date = await LocalStorage.get('passkey-token-expire');
-        const passkey_token_is_valid = passkey_token_expire_date instanceof Date && passkey_token_expire_date > new Date();
         /**
          * se è presente un bypass token skippo questa parte
          * Se non si è già autenticato chiedo al client di firmare una challenge
-         * oppure se è richiesta la passkey
          */
-        if (bypass_token === false && (!passkey_token_is_valid || options.passkey_need === true)) {
+        if (bypass_token === false) {
             // -- ottengo gli auth data e la request id
             auth_data = await this.get_auth_data();
             if (!auth_data) return auth_data;
@@ -160,18 +155,11 @@ export class PasskeyService {
         const response = await API.fetch(opt.endpoint, {
             method: opt.method,
             body,
+            auth: 'psk',
         });
         // -- se ce stato un errore probabilmente è per la passkey
         // - quindi elimino dal localstorage la traccia di passkey token cosi alla prossima richiesta l'utente usa la passkey
-        if (!response) {
-            if (passkey_token_is_valid && !options.passkey_need && API.recent.status == 422) {
-                LocalStorage.remove('passkey-token-expire');
-                Log.summon(1, 'Try again');
-            }
-            return false;
-        }
-        // -- se ce stata una risposta e non è ancora stato abilitato il passkey token lo imposto
-        if ((!passkey_token_is_valid || options.passkey_need === true) && !bypass_token) await LocalStorage.set('passkey-token-expire', new Date(Date.now() + (10 * 60 * 1000)));
+        if (!response) return false;
         // -- passo alla callback la risposta
         return callback instanceof Function ? await callback(response) : true;
     }

@@ -186,7 +186,6 @@ export const GlobalDelegator = {
         const callback = btn.getAttribute("callback");
         const endpoint = btn.getAttribute("endpoint");
         const method = btn.getAttribute("method") ?? "POST";
-        const passkey_need = btn.getAttribute("passkey-need");
         /**
          * Fase preliminare
          */
@@ -203,7 +202,6 @@ export const GlobalDelegator = {
         const res = await PasskeyService.authenticate({
             endpoint,
             method,
-            passkey_need,
         });
         if (!res) {
             Windows.loader(false);

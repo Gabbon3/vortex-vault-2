@@ -4,7 +4,6 @@ import { UserController } from "../controllers/user.controller.js";
 import { verify_email_code, verify_password, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
 import { verify_passkey } from "../middlewares/passkey.middleware.js";
 import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
-import { Roles } from "../utils/roles.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -34,11 +33,6 @@ router.post('/verify-account', verify_email_code, controller.verify_account);
 router.post('/recovery', verify_email_code, controller.get_recovery);
 router.post('/new-recovery', verifyAuth(), verifyShivPrivilegedToken, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // -- MFA (DEPRECATED)
-// router.post('/mfa', verify_email_code, controller.enable_mfa);
-// router.post('/mfa_test', verifyAuth(), verify_mfa_code, controller.test_2fa);
-// -- GET SUDO TOKEN
-router.post('/sudotoken', verify_passkey(), controller.start_sudo_session);
-router.post('/sudotoken-email', verifyAuth(), verify_email_code, controller.start_sudo_session);
 // -- SIGN-OUT
 router.post('/signout', verifyAuth({ checkIntegrity: false }), controller.signout);
 router.post('/clear-cookies', controller.clearCookies);

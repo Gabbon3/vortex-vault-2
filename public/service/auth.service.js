@@ -166,10 +166,11 @@ export class AuthService {
      * @param {string} code 
      * @returns {boolean}
      */
-    static async enable_advanced_session(email, request_id, code) {
-        const res = await API.fetch('/auth/sudotoken-email', {
+    static async getShivPrivilegedToken(email, request_id, code) {
+        const res = await API.fetch('/shiv/spt', {
             method: 'POST',
-            body: { email, request_id, code }
+            body: { email, request_id, code },
+            auth: 'otp'
         });
         // ---
         if (!res) return false;

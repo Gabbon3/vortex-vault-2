@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Windows.loader(true);
         const email = await LocalStorage.get('email-utente');
-        const activated = await AuthService.enable_advanced_session(email, request_id, code);
+        const activated = await AuthService.getShivPrivilegedToken(email, request_id, code);
         if (activated) {
             Log.summon(0, 'Advanced session started');
             form.reset();

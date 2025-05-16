@@ -10,6 +10,7 @@ import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
 import automated_emails from "../public/utils/automated.mails.js";
 import { SHIV } from "../protocols/SHIV.node.js";
+import { verify_passkey } from "./passkey.middleware.js";
 
 /**
  * Middleware di autenticazione e autorizzazione basato su JWT e controllo d'integrità opzionale.
@@ -134,7 +135,7 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     if (tryes >= 3) {
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
-        const { text, html } = automated_emails.otpFailedAttempt({ 
+        const { text, html } = automated_emails.otpFailedAttempt({
             email,
             ip_address,
         });
@@ -183,3 +184,31 @@ export const verify_mfa_code = async_handler(async (req, res, next) => {
     if (!valid) throw new CError("AuthError", "Invalid code", 403);
     next();
 });
+
+const authStrategies = {
+    'psk': verify_passkey,
+    'otp': verify_email_code,
+    'psw': verify_password,
+}
+
+/**
+ * Middleware per selezionare in automatico l'autenticatore da usare
+ * @param {Array} allowedMethods - array dei metodi permessi -> psk (passkey), otp, psw (password)
+ * @returns {Function}
+ */
+export const authSelector = (allowedMethods = []) => {
+    return (req, res, next) => {
+        const method = req.headers['x-authentication-method'];
+
+        if (!method || !allowedMethods.includes(method)) {
+            return res.status(400).json({ error: 'Auth method not allowed' });
+        }
+
+        const middleware = authStrategies[method];
+        if (!middleware) {
+            return res.status(400).json({ error: 'Not valid auth method' });
+        }
+
+        return middleware(req, res, next);
+    };
+};
