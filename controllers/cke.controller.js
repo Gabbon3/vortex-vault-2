@@ -1,4 +1,4 @@
-import { async_handler } from "../helpers/asyncHandler.js";
+import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 
@@ -10,7 +10,7 @@ export class CKEController {
      * @param {Request} req
      * @param {Response} res
      */
-    set = async_handler(async (req, res) => {
+    set = asyncHandler(async (req, res) => {
         const oldMaterial = req.cookies.cke;
         const newMaterial = Cripto.random_bytes(32, 'hex');
         // ---
@@ -29,7 +29,7 @@ export class CKEController {
      * @param {Request} req
      * @param {Response} res
      */
-    get = async_handler(async (req, res) => {
+    get = asyncHandler(async (req, res) => {
         const material = req.cookies.cke;
         // --- id dell'utente
         if (!material) throw new CError("NotFoundError", "Material not found", 404);

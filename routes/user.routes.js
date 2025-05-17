@@ -1,8 +1,8 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { UserController } from "../controllers/user.controller.js";
-import { verify_email_code, verify_password, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
-import { verify_passkey } from "../middlewares/passkey.middleware.js";
+import { verifyEmailCode, verifyPassword, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
+import { verifyPasskey } from "../middlewares/passkey.middleware.js";
 import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
 // -- router
 const router = express.Router();
@@ -17,7 +17,7 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- AUTH ROUTES (USER)
 router.post('/registrati', controller.signup);
-router.post('/signin', emailRateLimiter, verify_password, controller.signin);
+router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
 router.post('/password', verifyAuth(), controller.change_password);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);
@@ -25,19 +25,19 @@ router.get('/search/:email', verifyAuth(), controller.search);
 router.post('/quick-sign-in', verifyAuth(), verifyShivPrivilegedToken, controller.quick_signin);
 router.get('/quick-sign-in/:id', controller.get_quick_signin);
 // -- EMAIL CODES
-router.post('/email-verification', controller.send_email_verification);
-router.post('/email-verification-test', verify_email_code, controller.test_email_auth);
+router.post('/email-verification', controller.sendEmailCode);
+router.post('/email-verification-test', verifyEmailCode, controller.test_email_auth);
 // -- ACCOUNT VERIFY
-router.post('/verify-account', verify_email_code, controller.verify_account);
+router.post('/verify-account', verifyEmailCode, controller.verify_account);
 // -- PASSWORD RECOVERY
-router.post('/recovery', verify_email_code, controller.get_recovery);
+router.post('/recovery', verifyEmailCode, controller.get_recovery);
 router.post('/new-recovery', verifyAuth(), verifyShivPrivilegedToken, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
 // -- MFA (DEPRECATED)
 // -- SIGN-OUT
 router.post('/signout', verifyAuth({ checkIntegrity: false }), controller.signout);
 router.post('/clear-cookies', controller.clearCookies);
 // -- DELETE
-router.post('/delete', verify_passkey(true), controller.delete);
+router.post('/delete', verifyPasskey(true), controller.delete);
 // -- MESSAGE AUTHENTICATION CODE VERIFICATION
 router.post('/vmac', controller.verify_message_authentication_code);
 // -- (DEV) restituisce un message autentication code

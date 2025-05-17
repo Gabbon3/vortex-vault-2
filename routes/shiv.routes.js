@@ -18,8 +18,8 @@ router.use(limiter);
  */
 router.get('/session', verifyAuth(), controller.getAllSession);
 router.patch('/session/:kid/name', verifyAuth(), controller.editDeviceName);
-router.delete('/session/:kid', verifyAuth(), controller.deleteSession);
-router.delete('/session', verifyAuth(), controller.deleteAllSession);
+router.delete('/session/:kid', verifyAuth(), verifyShivPrivilegedToken, controller.deleteSession);
+router.delete('/session', verifyAuth(), verifyShivPrivilegedToken, controller.deleteAllSession);
 // Genera SPT
 router.post('/spt', authSelector(['psk', 'otp']), controller.shivPrivilegedToken);
 

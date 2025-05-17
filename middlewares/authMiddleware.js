@@ -1,4 +1,4 @@
-import { async_handler } from "../helpers/asyncHandler.js";
+import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { UserService } from "../services/user.service.js";
 import { JWT } from "../utils/jwt.utils.js";
@@ -10,11 +10,11 @@ import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
 import automated_emails from "../public/utils/automated.mails.js";
 import { SHIV } from "../protocols/SHIV.node.js";
-import { verify_passkey } from "./passkey.middleware.js";
+import { verifyPasskey } from "./passkey.middleware.js";
 
 /**
  * Middleware di autenticazione e autorizzazione basato su JWT e controllo d'integrità opzionale.
- * => req.user = payload { uid, role, kid }
+ * => req.payload = payload { uid, role, kid }
  * @function verifyAccessToken
  * @param {Object} [options={}] - Opzioni per configurare il middleware.
  * @param {number} [options.requiredRole=Roles.BASE] - Ruolo minimo richiesto per accedere alla rotta.
@@ -24,7 +24,7 @@ import { verify_passkey } from "./passkey.middleware.js";
 export const verifyAuth = (options = {}) => {
     const { requiredRole = Roles.BASE, checkIntegrity = true } = options;
     return async (req, res, next) => {
-        const jwt = req.cookies.jwt;
+        const jwt = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
         // -- verifico che esista
         if (!jwt) return res.status(401).json({ error: "Access denied" });
         // ---
@@ -39,12 +39,12 @@ export const verifyAuth = (options = {}) => {
         const payload = JWT.verify(jwt, jwtSignKey);
         if (!payload) return res.status(401).json({ error: "Access denied" });
         // -- se è tutto ok aggiungo il payload dell'utente alla request
-        req.user = payload;
+        req.payload = payload;
         // -- verifica se il payload è conforme
-        if (!req.user.uid)
+        if (!req.payload.uid)
             return res.status(400).json({ error: "Sign-in again" });
         // -- verifica del ruolo
-        if (req.user.role < requiredRole)
+        if (req.payload.role < requiredRole)
             return res.status(403).json({ error: "Insufficient privileges" });
         /**
          * Verifico l'integrità della richiesta
@@ -71,21 +71,17 @@ export const verifyAuth = (options = {}) => {
  * Verifica un shiv privileged token
  * configura la proprietà req.ppt = payload del ppt
  */
-export const verifyShivPrivilegedToken = async_handler(
+export const verifyShivPrivilegedToken = asyncHandler(
     async (req, res, next) => {
+        if (!req.payload) throw new Error("Payload mancante, è necessario richiamare prima verifyAuth");
+        // ---
         const ppt = req.cookies.ppt;
-        const jwt = req.cookies.jwt;
         if (!ppt || !jwt)
             return res.status(401).json({ error: "Access denied" });
         // ---
         const shiv = new SHIV();
         // -- ottengo il kid
-        let kid = null;
-        try {
-            kid = JSON.parse(atob(jwt.split(".")[1])).kid;
-        } catch (error) {
-            return res.status(401).json({ error: "Access denied" });
-        }
+        let kid = req.payload.kid;
         // ---
         const pptSignKey = await shiv.getSignKey(kid, 'ppt-signing');
         if (!pptSignKey)
@@ -103,13 +99,13 @@ export const verifyShivPrivilegedToken = async_handler(
 /**
  * Verifica la password di un utente
  */
-export const verify_password = async_handler(async (req, res, next) => {
-    const from_token = req.user ? true : false;
+export const verifyPassword = asyncHandler(async (req, res, next) => {
+    const from_token = req.payload ? true : false;
     // -- ottengo un identificatore per l'utente
     if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 422);
     // -- ottengo le variabili
     const password = req.body.password;
-    const uid = from_token ? req.user.uid : req.body.email;
+    const uid = from_token ? req.payload.uid : req.body.email;
     // -- istanzio il servizio utente e recupero il segreto
     const service = new UserService();
     const user = from_token ? await service.find_by_id(uid) : await service.find_by_email(uid);
@@ -122,7 +118,7 @@ export const verify_password = async_handler(async (req, res, next) => {
 /**
  * Verifica il codice inviato per mail
  */
-export const verify_email_code = async_handler(async (req, res, next) => {
+export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const { request_id, code } = req.body;
     const record = RamDB.get(request_id);
     // -- se il codice è scaduto
@@ -130,7 +126,7 @@ export const verify_email_code = async_handler(async (req, res, next) => {
         throw new CError("TimeoutError", "Request expired", 404);
     }
     // -- recupero i dati
-    const [salted_hash, tryes, email] = record;
+    const { hash: salted_hash, tryes, email } = record;
     // -- verifico il numero di tentativi
     if (tryes >= 3) {
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
@@ -151,44 +147,26 @@ export const verify_email_code = async_handler(async (req, res, next) => {
     const valid = Cripto.verify_salting(code, salted_hash);
     if (!valid) {
         // -- aumento il numero di tentativi
-        RamDB.update(request_id, [salted_hash, tryes + 1]);
+        RamDB.update(request_id, { 
+            hash: salted_hash, 
+            tryes: tryes + 1,
+            email: email,
+        });
         // --
         throw new CError("AuthError", "Invalid code", 403);
     }
     // memorizzo l'utente che ha fatto la richiesta
-    req.user = { email };
+    req.payload = { email };
     // -- elimino la richiesta dal db
-    // RamDB.delete(request_id); // Decommenta se vuoi eliminare la richiesta
+    // RamDB.delete(request_id); // commentato per abilitare utilizzo multiplo del codice nella sua finestra temporale
     // -- se il codice è valido, passo al prossimo middleware
-    next();
-});
-/**
- * verifica il codice mfa
- */
-export const verify_mfa_code = async_handler(async (req, res, next) => {
-    const from_token = req.user ? true : false;
-    // -- ottengo un identificatore per l'utente
-    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 422);
-    // -- ottengo le variabili
-    const code = req.body.code;
-    const uid = from_token ? req.user.uid : req.body.email;
-    // -- istanzio il servizio utente e recupero il segreto
-    const service = new UserService();
-    const user = from_token ? await service.find_by_id(uid) : await service.find_by_email(uid);
-    // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
-    if (!user) throw new CError("ValidationError", "User not found", 404);
-    if (!user.mfa_secret) throw new CError("ValidationError", "Any secret to use", 404);
-    const secret = MFAService.decrypt(user.id, user.mfa_secret);
-    // -- verifico il codice
-    const valid = await TOTP.verify(code, secret);
-    if (!valid) throw new CError("AuthError", "Invalid code", 403);
     next();
 });
 
 const authStrategies = {
-    'psk': verify_passkey,
-    'otp': verify_email_code,
-    'psw': verify_password,
+    'psk': verifyPasskey,
+    'otp': verifyEmailCode,
+    'psw': verifyPassword,
 }
 
 /**

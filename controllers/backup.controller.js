@@ -1,6 +1,6 @@
 import { BackupService } from "../services/backup.service.js";
 import { CError } from "../helpers/cError.js";
-import { async_handler } from "../helpers/asyncHandler.js";
+import { asyncHandler } from "../helpers/asyncHandler.js";
 
 export class BackupController {
     constructor() {
@@ -11,15 +11,15 @@ export class BackupController {
      * @param {Request} req
      * @param {Response} res
      */
-    create = async_handler(async (req, res) => {
+    create = asyncHandler(async (req, res) => {
         const backup_bytes = req.body; // è in binario
         // ---
         if (!backup_bytes)
             throw new CError("ValidationError", "No backup", 422);
         // -- elimino il vecchio backup
-        await this.service.delete_all(req.user.uid);
+        await this.service.delete_all(req.payload.uid);
         // ---
-        const backup = await this.service.create(backup_bytes, req.user.uid);
+        const backup = await this.service.create(backup_bytes, req.payload.uid);
         // ---
         if (!backup) throw new CError("CreationError", "Error while saving new backup", 500);
         // ---
@@ -30,10 +30,10 @@ export class BackupController {
      * @param {Request} req
      * @param {Response} res
      */
-    get_id = async_handler(async (req, res) => {
+    get_id = asyncHandler(async (req, res) => {
         const { backup_id } = req.params;
         // ---
-        const backup = await this.service.get_id(backup_id, req.user.uid);
+        const backup = await this.service.get_id(backup_id, req.payload.uid);
         // ---
         if (!backup)
             throw new CError("NotFoundError", "Backup non trovato", 404);
@@ -44,8 +44,8 @@ export class BackupController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    get = async_handler(async (req, res) => {
-        const backups = await this.service.get(req.user.uid);
+    get = asyncHandler(async (req, res) => {
+        const backups = await this.service.get(req.payload.uid);
         res.status(200).json(backups);
     });
     /**
@@ -53,10 +53,10 @@ export class BackupController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    delete = async_handler(async (req, res) => {
+    delete = asyncHandler(async (req, res) => {
         const { backup_id } = req.params;
         // ---
-        const deleted = await this.service.delete(backup_id, req.user.uid);
+        const deleted = await this.service.delete(backup_id, req.payload.uid);
         if (!deleted) throw new CError("NotFoundError", "Backup non trovato", 404);
         res.sendStatus(200);
     });

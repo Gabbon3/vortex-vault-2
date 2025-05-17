@@ -1,4 +1,4 @@
-import { async_handler } from "../helpers/asyncHandler.js";
+import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Bytes } from "../utils/bytes.js";
 import { UserService } from "../services/user.service.js";
@@ -24,7 +24,7 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    signup = async_handler(async (req, res) => {
+    signup = asyncHandler(async (req, res) => {
         const { email, password } = req.body;
         if (!email || !password) {
             throw new CError(
@@ -42,7 +42,7 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    signin = async_handler(async (req, res) => {
+    signin = asyncHandler(async (req, res) => {
         const { email, publicKey: publicKeyHex } = req.body;
         // -- verifico se l'utente è già autenticato
         if (req.cookies.jwt) {
@@ -88,9 +88,9 @@ export class UserController {
     /**
      * Effettua la disconnessione eliminando i cookie e il refresh token
      */
-    signout = async_handler(async (req, res) => {
+    signout = asyncHandler(async (req, res) => {
         // -- elimino dal db
-        this.service.signout(req.user.kid);
+        this.service.signout(req.payload.kid);
         // ---
         res.clearCookie('jwt');
         res.clearCookie('uid');
@@ -101,7 +101,7 @@ export class UserController {
     /**
      * Rimuove tutti i cookie del client
      */
-    clearCookies = async_handler(async (req, res) => {
+    clearCookies = asyncHandler(async (req, res) => {
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
         // ---
@@ -110,8 +110,8 @@ export class UserController {
     /**
      * Elimina un account
      */
-    delete = async_handler(async (req, res) => {
-        const deletedCount = await this.service.delete_by_id(req.user.uid);
+    delete = asyncHandler(async (req, res) => {
+        const deletedCount = await this.service.delete_by_id(req.payload.uid);
         if (deletedCount === 0) throw new Error("Nessun utente eliminato");
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
@@ -138,7 +138,7 @@ export class UserController {
      * Restituisce una lista di utenti
      * cercati in like tramite l'email
      */
-    search = async_handler(async (req, res) => {
+    search = asyncHandler(async (req, res) => {
         const { email } = req.params;
         // -- ottengo la lista degli utenti
         const users = await this.service.search(email);
@@ -150,7 +150,7 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    enable_mfa = async_handler(async (req, res) => {
+    enable_mfa = asyncHandler(async (req, res) => {
         const { email } = req.body;
         // -- ottengo lo uid
         const { id } = await this.service.find_by_email(email);
@@ -173,7 +173,7 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    send_email_verification = async_handler(async (req, res) => {
+    sendEmailCode = asyncHandler(async (req, res) => {
         const email = req.body.email;
         if (!email || !Validator.email(email))
             throw new CError("ValidationError", "No email provided", 422);
@@ -189,11 +189,11 @@ export class UserController {
         // -- salvo nel ramdb
         const salted_hash = Cripto.salting(code);
         // memorizzo il codice hashato con salt con hmac
-        const db_data = [
-            salted_hash,
-            0, // tentativi
-            email,
-        ];
+        const db_data = {
+            hash: salted_hash,
+            tryes: 0,
+            email: email,
+        };
         const is_set = RamDB.set(request_id, db_data, 120);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
@@ -212,7 +212,7 @@ export class UserController {
      * sul ramdb per poterlo farlo accedere rapidamente da un dispositivo
      * autenticato A ad uno non autenticato B
      */
-    quick_signin = async_handler(async (req, res) => {
+    quick_signin = asyncHandler(async (req, res) => {
         const { credentials } = req.body;
         // ---
         const id = uuidv7();
@@ -226,7 +226,7 @@ export class UserController {
     /**
      * Restituisce le credenziali cifrate di un utente che ha richiesto l'accesso rapido
      */
-    get_quick_signin = async_handler(async (req, res) => {
+    get_quick_signin = asyncHandler(async (req, res) => {
         const { id } = req.params;
         const credentials = RamDB.get("fsi" + id);
         if (!credentials)
@@ -238,8 +238,8 @@ export class UserController {
     /**
      * Verifica un email
      */
-    verify_account = async_handler(async (req, res) => {
-        const { email } = req.user;
+    verify_account = asyncHandler(async (req, res) => {
+        const { email } = req.payload;
         if (!email) throw new CError("", "Email not found", 404);
         // ---
         const [affected] = await this.service.update_user_info(
@@ -253,7 +253,7 @@ export class UserController {
     /**
      * Just a test
      */
-    test_email_auth = async_handler(async (req, res) => {
+    test_email_auth = asyncHandler(async (req, res) => {
         res.status(200).json({ message: "Valid" });
     });
     /**
@@ -261,7 +261,7 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    test_2fa = async_handler(async (req, res) => {
+    test_2fa = asyncHandler(async (req, res) => {
         res.status(200).json({ message: "Valid" });
     });
     /**
@@ -269,7 +269,7 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    change_password = async_handler(async (req, res) => {
+    change_password = asyncHandler(async (req, res) => {
         const { old_password, new_password, email } = req.body;
         // ---
         if (!old_password || !new_password || !email)
@@ -280,7 +280,7 @@ export class UserController {
             );
         // ---
         const [affected] = await this.service.change_password(
-            req.user.uid,
+            req.payload.uid,
             old_password,
             new_password
         );
@@ -299,11 +299,11 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    set_recovery = async_handler(async (req, res) => {
+    set_recovery = asyncHandler(async (req, res) => {
         const recovery = req.body;
         // -- salvo sul db
         const [affected] = await this.service.update_user_info(
-            { id: req.user.uid },
+            { id: req.payload.uid },
             { recovery }
         );
         if (affected !== 1)
@@ -322,8 +322,8 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    get_recovery = async_handler(async (req, res) => {
-        const { email } = req.user;
+    get_recovery = asyncHandler(async (req, res) => {
+        const { email } = req.payload;
         // ---
         const user = await this.service.find_by_email(email);
         if (!user)
@@ -337,7 +337,7 @@ export class UserController {
     /**
      * Verifica la validità di un message authentication code
      */
-    verify_message_authentication_code = async_handler(async (req, res) => {
+    verify_message_authentication_code = asyncHandler(async (req, res) => {
         const { email, mac } = req.body; // mac = message_authentication_code
         // -- verifico che ci siano i dati
         if (!email)
@@ -349,7 +349,7 @@ export class UserController {
     /**
      * (DEV) genera e restituisce un message authentication code
      */
-    createMessageAuthenticationCode = async_handler(async (req, res) => {
+    createMessageAuthenticationCode = asyncHandler(async (req, res) => {
         if (!Config.DEV) throw new CError('', 'Access denied.', 403);
         // ---
         const { email } = req.params;

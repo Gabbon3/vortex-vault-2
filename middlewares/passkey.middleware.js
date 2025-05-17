@@ -1,4 +1,4 @@
-import { async_handler } from "../helpers/asyncHandler.js";
+import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { RamDB } from "../config/ramdb.js";
 import { Bytes } from "../utils/bytes.js";
@@ -10,13 +10,13 @@ import { Config } from "../server_config.js";
 
 /**
  * Funzione che verifica la passkey, con la possibilità di rendere la verifica obbligatoria.
- * Restituisce una funzione middleware asincrona per Express incapsulata con async_handler.
+ * Restituisce una funzione middleware asincrona per Express incapsulata con asyncHandler.
  * 
  * @param {boolean} required true per richiedere la verifica della passkey, false per bypassare con il token JWT
- * @returns {function} Middleware asincrono con gestione degli errori tramite async_handler
+ * @returns {function} Middleware asincrono con gestione degli errori tramite asyncHandler
  */
-export const verify_passkey = (required = false) => {
-    return async_handler(async (req, res, next) => {
+export const verifyPasskey = (required = false) => {
+    return asyncHandler(async (req, res, next) => {
         /**
          * Verifico se ce un bypass token
          */
@@ -24,7 +24,7 @@ export const verify_passkey = (required = false) => {
         if (bypass_token) {
             const payload = RamDB.get(`byp-${bypass_token}`);
             if (payload) {
-                req.user = { uid: payload.uid };
+                req.payload = { uid: payload.uid };
                 return next();
             }
         }
@@ -85,7 +85,7 @@ export const verify_passkey = (required = false) => {
         RamDB.delete(`chl-${request_id}`);
 
         // -- imposto l'utente nel request
-        req.user = { uid: passkey.user_id };
+        req.payload = { uid: passkey.user_id };
         next();
     });
 };

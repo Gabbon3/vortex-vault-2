@@ -1,9 +1,8 @@
 import express from "express";
 import { PasskeyController } from "../controllers/passkey.controller.js";
-import { verifyAuth, verifyShivPrivilegedToken, verify_email_code } from "../middlewares/authMiddleware.js";
-import { verify_passkey } from "../middlewares/passkey.middleware.js";
+import { verifyAuth, verifyShivPrivilegedToken, verifyEmailCode } from "../middlewares/authMiddleware.js";
+import { verifyPasskey } from "../middlewares/passkey.middleware.js";
 import rateLimit from "express-rate-limit";
-import { Roles } from "../utils/roles.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -18,7 +17,7 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- auth/passkey
 // -- START REGISTRATION
-router.post('/register-e', verify_email_code, controller.start_registration);
+router.post('/register-e', verifyEmailCode, controller.start_registration);
 router.post('/register-a', verifyAuth(), verifyShivPrivilegedToken, controller.start_registration);
 // -- COMPLETE REGISTRATION
 router.post('/register', controller.complete_registration);
@@ -29,8 +28,8 @@ router.get('/list', verifyAuth(), controller.list);
 router.post('/rename/:id', verifyAuth(), controller.rename);
 // -- DELETE
 router.delete('/:id', verifyAuth(), verifyShivPrivilegedToken, controller.delete);
-router.post('/test', verify_passkey(true), (req, res) => {
-    res.status(200).json({ message: "Hi user " + req.user.uid });
+router.post('/test', verifyPasskey(true), (req, res) => {
+    res.status(200).json({ message: "Hi user " + req.payload.uid });
 });
 
 export default router;

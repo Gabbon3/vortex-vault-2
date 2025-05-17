@@ -1,4 +1,4 @@
-import { async_handler } from "../helpers/asyncHandler.js";
+import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { RamDB } from "../config/ramdb.js";
 import { Config } from "../server_config.js";
@@ -7,7 +7,7 @@ import { Config } from "../server_config.js";
  * Rate Limiter per l'email
  * 5 tentativi ogni 15 minuti
  */
-export const emailRateLimiter = async_handler(async (req, res, next) => {
+export const emailRateLimiter = asyncHandler(async (req, res, next) => {
     const email = req.body.email?.toLowerCase();
     if (!email) throw new CError('', 'Email is required', 400);
     // ---
