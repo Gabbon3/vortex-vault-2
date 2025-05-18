@@ -2,10 +2,8 @@ import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { UserService } from "../services/user.service.js";
 import { JWT } from "../utils/jwt.utils.js";
-import { TOTP } from "../utils/totp.js";
-import { MFAService } from "../services/mfa.service.js";
 import { Roles } from "../utils/roles.js";
-import { RamDB } from "../config/ramdb.js";
+import { RedisDB } from "../config/redisdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
 import automated_emails from "../public/utils/automated.mails.js";
@@ -120,7 +118,7 @@ export const verifyPassword = asyncHandler(async (req, res, next) => {
  */
 export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const { request_id, code } = req.body;
-    const record = RamDB.get(request_id);
+    const record = await RedisDB.get(request_id);
     // -- se il codice è scaduto
     if (record === null) {
         throw new CError("TimeoutError", "Request expired", 404);
@@ -136,7 +134,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
             ip_address,
         });
         Mailer.send(email, "OTP Failed Attemp", text, html);
-        RamDB.delete(request_id);
+        await RedisDB.delete(request_id);
         throw new CError("", "Maximum attempts achieved", 429);
     }
     // -- se il codice non è valido
@@ -147,7 +145,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const valid = Cripto.verify_salting(code, salted_hash);
     if (!valid) {
         // -- aumento il numero di tentativi
-        RamDB.update(request_id, { 
+        await RedisDB.update(request_id, { 
             hash: salted_hash, 
             tryes: tryes + 1,
             email: email,
@@ -158,7 +156,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     // memorizzo l'utente che ha fatto la richiesta
     req.payload = { email };
     // -- elimino la richiesta dal db
-    // RamDB.delete(request_id); // commentato per abilitare utilizzo multiplo del codice nella sua finestra temporale
+    // await RedisDB.delete(request_id); // commentato per abilitare utilizzo multiplo del codice nella sua finestra temporale
     // -- se il codice è valido, passo al prossimo middleware
     next();
 });

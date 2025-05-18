@@ -23,6 +23,10 @@ export class Config {
     // Origin
     static WSORIGIN = process.env.WSORIGIN;
     static HTTPROTOCOL = process.env.HTTPROTOCOL;
+    // REDIS
+    static REDIS_HOST = process.env.REDIS_HOST;
+    static REDIS_PORT = process.env.REDIS_PORT;
+    static REDIS_URL = process.env.REDIS_URL;
     // SHIV
     static SHIVPEPPER = Buffer.from(process.env.SHIVPEPPER, "hex");
     // Dev

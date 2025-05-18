@@ -6,7 +6,7 @@ import { User } from '../models/user.js';
 import { Roles } from '../utils/roles.js';
 import { Mailer } from '../config/mail.js';
 import automated_emails from '../public/utils/automated.mails.js';
-import { RamDB } from '../config/ramdb.js';
+import { RedisDB } from '../config/redisdb.js';
 import { Op } from 'sequelize';
 import { SHIV } from '../protocols/SHIV.node.js';
 import { AuthKeys } from '../models/authKeys.model.js';
@@ -91,7 +91,7 @@ export class UserService {
          * APPROFONDIRE: da capire se generare il bypass anche con refresh non valido
          */
         const bypass_token = Cripto.bypass_token();
-        RamDB.set(`byp-${bypass_token}`, { uid: user.id }, 30);
+        await RedisDB.set(`byp-${bypass_token}`, { uid: user.id }, 30);
         /**
          * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
          */

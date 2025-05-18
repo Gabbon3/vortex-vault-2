@@ -34,7 +34,7 @@ export class SecureLink {
         };
     }
     /**
-     * Richiede un id utilizzabile nel RamDB
+     * Richiede un id utilizzabile nel RedisDB
      * @returns {string} id della risorsa
      */
     static async request_id() {

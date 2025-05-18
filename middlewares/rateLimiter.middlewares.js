@@ -1,6 +1,6 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { RamDB } from "../config/ramdb.js";
+import { RedisDB } from "../config/redisdb.js";
 import { Config } from "../server_config.js";
 
 /**
@@ -12,11 +12,11 @@ export const emailRateLimiter = asyncHandler(async (req, res, next) => {
     if (!email) throw new CError('', 'Email is required', 400);
     // ---
     const key = `login-attempts-${email}`;
-    const attempts = RamDB.get(key) || 0;
+    const attempts = await RedisDB.get(key) || 0;
     // ---
     if (attempts >= Config.TRLEMAIL) throw new CError('', 'Too many requests', 429);
     // -- aggiorno i tentativi
-    RamDB.set(key, attempts + 1, 15 * 60);
+    await RedisDB.set(key, attempts + 1, 15 * 60);
     // ---
     next();
 });

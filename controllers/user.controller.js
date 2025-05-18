@@ -5,7 +5,7 @@ import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { JWT } from "../utils/jwt.utils.js";
 import { MFAService } from "../services/mfa.service.js";
-import { RamDB } from "../config/ramdb.js";
+import { RedisDB } from "../config/redisdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
 import { v7 as uuidv7 } from "uuid";
@@ -75,7 +75,7 @@ export class UserController {
             path: "/",
         });
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
-        RamDB.delete(`login-attempts-${email}`);
+        await RedisDB.delete(`login-attempts-${email}`);
         // ---
         res.status(201).json({
             jwt,
@@ -180,7 +180,7 @@ export class UserController {
         const code = Cripto.random_mfa_code();
         const request_id = `ear-${email}`; // ear = email auth request
         // -- controllo che non sia gia stata fatta una richiesta
-        if (RamDB.get(request_id))
+        if (await RedisDB.get(request_id))
             throw new CError(
                 "RequestError",
                 "There's another active request, check or try again later",
@@ -194,7 +194,7 @@ export class UserController {
             tryes: 0,
             email: email,
         };
-        const is_set = RamDB.set(request_id, db_data, 120);
+        const is_set = await RedisDB.set(request_id, db_data, 120);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
         const { text, html } = automated_emails.otpCode({ email, code });
@@ -217,9 +217,9 @@ export class UserController {
         // ---
         const id = uuidv7();
         const is_set =
-            RamDB.set("fsi" + id, credentials, 150) && // fsi = fast sign-in
-            RamDB.set("passKey" + id, true, 150); // passKey = per saltare il controllo del refresh token
-        if (!is_set) throw new Error("RamDB error");
+            await RedisDB.set("fsi" + id, credentials, 150) && // fsi = fast sign-in
+            await RedisDB.set("passKey" + id, true, 150); // passKey = per saltare il controllo del refresh token
+        if (!is_set) throw new Error("RedisDB error");
         // ---
         res.status(201).json({ id });
     });
@@ -228,10 +228,10 @@ export class UserController {
      */
     get_quick_signin = asyncHandler(async (req, res) => {
         const { id } = req.params;
-        const credentials = RamDB.get("fsi" + id);
+        const credentials = await RedisDB.get("fsi" + id);
         if (!credentials)
             throw new CError("NotFoundError", "Credentials not found", 404);
-        RamDB.delete("fsi" + id);
+        await RedisDB.delete("fsi" + id);
         // ---
         res.status(200).json({ credentials });
     });

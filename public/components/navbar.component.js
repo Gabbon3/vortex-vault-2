@@ -15,6 +15,11 @@ export class VortexNavbar extends HTMLElement {
             <span class="material-symbols-rounded">sms</span>
             <i>Chat</i>
         </a>` : ''}
+         * Recupero dispositivo rimosso:
+        ${path === '/signin' ? `<a class="open yellow" data-target-open="win-device-recovery" title="Device Recovery">
+            <span class="material-symbols-rounded">mobile_friendly</span>
+            <i>Device Recovery</i>
+        </a>` : ''}
          */
         this.innerHTML = `
         ${path ? `<a class="open blue" data-target-open="win-settings" title="Tools">
@@ -43,11 +48,7 @@ export class VortexNavbar extends HTMLElement {
             <span class="material-symbols-rounded">encrypted</span>
             <i>Vault</i>
         </a>` : ''}
-        
-        ${path === '/signin' ? `<a class="open yellow" data-target-open="win-device-recovery" title="Device Recovery">
-            <span class="material-symbols-rounded">mobile_friendly</span>
-            <i>Device Recovery</i>
-        </a>` : ''}
+            
         ${path !== '/signin' ? `<a href="/signin"' title="Sign In" class="mint last">
             <span class="material-symbols-rounded">login</span>
             <i>Sign In</i>

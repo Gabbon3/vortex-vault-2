@@ -1,6 +1,6 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { RamDB } from "../config/ramdb.js";
+import { RedisDB } from "../config/redisdb.js";
 import { Bytes } from "../utils/bytes.js";
 import msgpack from "../public/utils/msgpack.min.js";
 import { Passkey } from "../models/passkey.model.js";
@@ -22,7 +22,7 @@ export const verifyPasskey = (required = false) => {
          */
         const { bypass_token } = req.body;
         if (bypass_token) {
-            const payload = RamDB.get(`byp-${bypass_token}`);
+            const payload = await RedisDB.get(`byp-${bypass_token}`);
             if (payload) {
                 req.payload = { uid: payload.uid };
                 return next();
@@ -40,7 +40,7 @@ export const verifyPasskey = (required = false) => {
         const credential = msgpack.decode(Bytes.base64.decode(auth_data));
 
         // -- recupero la challenge dal ramdb
-        const challenge = RamDB.get(`chl-${request_id}`);
+        const challenge = await RedisDB.get(`chl-${request_id}`);
         if (!challenge) throw new CError("", "Auth request expired", 400);
 
         // -- recupero la passkey
@@ -82,7 +82,7 @@ export const verifyPasskey = (required = false) => {
         }
 
         // -- rimuovo la challenge dal DB
-        RamDB.delete(`chl-${request_id}`);
+        await RedisDB.delete(`chl-${request_id}`);
 
         // -- imposto l'utente nel request
         req.payload = { uid: passkey.user_id };
