@@ -20,9 +20,9 @@ export const verifyPasskey = (required = false) => {
         /**
          * Verifico se ce un bypass token
          */
-        const { bypass_token } = req.body;
-        if (bypass_token) {
-            const payload = await RedisDB.get(`byp-${bypass_token}`);
+        const { bypassToken } = req.body;
+        if (bypassToken) {
+            const payload = await RedisDB.getdel(`byp-${bypassToken}`);
             if (payload) {
                 req.payload = { uid: payload.uid };
                 return next();

@@ -90,12 +90,12 @@ export class UserService {
         /**
          * APPROFONDIRE: da capire se generare il bypass anche con refresh non valido
          */
-        const bypass_token = Cripto.bypass_token();
-        await RedisDB.set(`byp-${bypass_token}`, { uid: user.id }, 30);
+        const bypassToken = Cripto.bypassToken();
+        await RedisDB.set(`byp-${bypassToken}`, { uid: user.id }, 60);
         /**
          * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
          */
-        return { uid: user.id, salt: user.salt, jwt, publicKey, bypass_token };
+        return { uid: user.id, salt: user.salt, jwt, publicKey, bypassToken };
     }
 
     /**

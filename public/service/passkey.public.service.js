@@ -114,10 +114,9 @@ export class PasskeyService {
      * @param {string} [options.endpoint] qualsiasi endpoint del server
      * @param {string} [options.method] POST, GET...
      * @param {object} [options.body], dati 
-     * @param {Function} callback 
      * @returns {boolean}
      */
-    static async authenticate(options, callback = null) {
+    static async authenticate(options) {
         if (!options.endpoint) return false;
         // -- verifico che il body non contenga le opzioni usate già dal service per far funzionare l'autenticazione
         if (options.body && (options.body.request_id || options.body.auth_data)) throw new Error("Invalid options properties, request_id & auth_data can't be used in this context");
@@ -127,7 +126,7 @@ export class PasskeyService {
         let auth_data = null;
         let request_id = null;
         let body = options.body ?? {};
-        const bypass_token = options.body?.bypass_token ? true : false;
+        const bypassToken = options.body?.bypassToken ? true : false;
         // -- definisco dei valori predefiniti delle options
         const opt = {
             method: 'POST',
@@ -137,7 +136,7 @@ export class PasskeyService {
          * se è presente un bypass token skippo questa parte
          * Se non si è già autenticato chiedo al client di firmare una challenge
          */
-        if (bypass_token === false) {
+        if (bypassToken === false) {
             // -- ottengo gli auth data e la request id
             auth_data = await this.get_auth_data();
             if (!auth_data) return auth_data;
@@ -161,7 +160,7 @@ export class PasskeyService {
         // - quindi elimino dal localstorage la traccia di passkey token cosi alla prossima richiesta l'utente usa la passkey
         if (!response) return false;
         // -- passo alla callback la risposta
-        return callback instanceof Function ? await callback(response) : true;
+        return response;
     }
     /**
      * Restituisce la lista delle passkeys dell'utente

@@ -64,9 +64,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(true);
         // -- accedo
         if (await AuthService.signin(email, password, null)) {
-            // form.reset();
+            form.reset();
             Log.summon(0, `Authenticated as ${email}`);
-            // window.location.href = '/vault';
+            setTimeout(() => {
+                window.location.href = '/vault';
+            }, 3000);
         } else {
             document.getElementById('recovery-email').value = email;
             document.getElementById('recovery-device-email-email').value = email;

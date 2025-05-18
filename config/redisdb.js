@@ -63,7 +63,7 @@ export class RedisDB {
      */
     static async getdel(key) {
         try {
-            const buffer = await redis.sendCommand(["GETDEL", key]);
+            const buffer = await redis.callBuffer("GETDEL", key);
             if (!buffer) return null;
             return msgpack.decode(Buffer.from(buffer));
         } catch (err) {

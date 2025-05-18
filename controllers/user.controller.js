@@ -53,7 +53,7 @@ export class UserController {
         /**
          * Servizio
          */
-        const { uid, salt, jwt, publicKey: serverPublicKey, bypass_token } =
+        const { uid, salt, jwt, publicKey: serverPublicKey, bypassToken } =
             await this.service.signin({
                 request: req,
                 email,
@@ -82,7 +82,7 @@ export class UserController {
             publicKey: serverPublicKey,
             uid,
             salt,
-            bypass_token,
+            bypassToken,
         });
     });
     /**

@@ -27,27 +27,13 @@ export class AuthService {
         const userIsLogged = LocalStorage.exist('shared-secret');
         if (sessionSharedSecret || !userIsLogged) return true;
         // ---
-        const ckeKey = await CKE.get();
-        if (!ckeKey) return false;
+        const keyBasic = await CKE.getBasic();
+        if (!keyBasic) return false;
         // ---
-        const sharedSecret = await LocalStorage.get('shared-secret', ckeKey);
+        const sharedSecret = await LocalStorage.get('shared-secret', keyBasic);
         if (!sharedSecret) return false;
         // ---
         SessionStorage.set('shared-secret', sharedSecret);
-        return true;
-    }
-    /**
-     * Attiva il protocollo LSE
-     * @param {string} [bypass_token=null] 
-     * @returns {boolean}
-     */
-    static async activate_lse(bypass_token = null) {
-        // -- setto una nuova chiave simmetrica locale
-        const lse_activated = await LSE.set(bypass_token);
-        if (!lse_activated) {
-            Log.summon(2, "Unable to set up new Local Storage Encryption Key, try again.");
-            return false;
-        }
         return true;
     }
     /**
@@ -71,33 +57,29 @@ export class AuthService {
         });
         if (!res) return false;
         // ---
-        const { publicKey: serverPublicKey } = res;
+        const { publicKey: serverPublicKey, bypassToken } = res;
         // -- ottengo il segreto condiviso e lo cifro in localstorage con CKE
         const sharedSecret = await SHIV.completeHandshake(serverPublicKey);
         if (!sharedSecret) return false;
         /**
          * Inizializzo CKE localmente
          */
-        const ckeKey = await CKE.set();
-        if (!ckeKey) return false;
-        // -- cifro localmente lo shared secret con CKE
-        LocalStorage.set('shared-secret', sharedSecret, ckeKey);
+        const { keyBasic, keyAdvanced } = await CKE.set(bypassToken);
+        if (!keyBasic || !keyAdvanced) return false;
+        // -- cifro localmente lo shared secret con la chiave basic
+        LocalStorage.set('shared-secret', sharedSecret, keyBasic);
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
         const master_key = await Cripto.argon2(password, salt);
         // -- cifro le credenziali sul localstorage
         await LocalStorage.set('email-utente', email);
         await LocalStorage.set('password-utente', password, master_key);
-        await LocalStorage.set('master-key', master_key, ckeKey);
-        await LocalStorage.set('salt', salt, ckeKey);
+        await LocalStorage.set('master-key', master_key, keyAdvanced);
+        await LocalStorage.set('salt', salt, keyAdvanced);
         // -- imposto quelle in chiaro sul session storage
-        SessionStorage.set('cke', ckeKey);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
         SessionStorage.set('uid', res.uid);
-        SessionStorage.set('access-token', res.access_token);
-        // --- imposto la scadenza dell'access token
-        // await LocalStorage.set('session-expire', new Date(Date.now() + 3600000));
         // ---
         return true;
     }
@@ -207,15 +189,15 @@ export class AuthService {
     }
     /**
      * Imposta la chiave master dell'utente nel session storage
-     * @param {Uint8Array} ckeKey 
+     * @param {Uint8Array} ckeKeyAdvanced 
      */
-    static async config_session_vars(ckeKey) {
-        const master_key = await LocalStorage.get('master-key', ckeKey);
-        const salt = await LocalStorage.get('salt', ckeKey);
+    static async config_session_vars(ckeKeyAdvanced) {
+        const master_key = await LocalStorage.get('master-key', ckeKeyAdvanced);
+        const salt = await LocalStorage.get('salt', ckeKeyAdvanced);
         const email = await LocalStorage.get('email-utente');
         if (!master_key) return false;
         // ---
-        SessionStorage.set('cke', ckeKey);
+        SessionStorage.set('cke', ckeKeyAdvanced);
         SessionStorage.set('master-key', master_key);
         SessionStorage.set('salt', salt);
         SessionStorage.set('email', email);
@@ -357,14 +339,14 @@ export class AuthService {
         // -- nessuna necessita di accedere
         if (!signin_need) return 0;
         // ---
-        const ckeKey = await CKE.get();
+        const ckeKeyAdvanced = await CKE.getAdvanced();
         // -- verifico
-        if (!ckeKey) {
+        if (!ckeKeyAdvanced) {
             console.warn("CKE non ottenuta.");
             return false;
         }
         // -- imposto le variabili di sessione
-        const initialized = await this.config_session_vars(ckeKey);
+        const initialized = await this.config_session_vars(ckeKeyAdvanced);
         // ---
         return initialized;
     }

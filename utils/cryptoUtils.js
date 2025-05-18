@@ -14,11 +14,11 @@ export class Cripto {
     }
     /**
      * Genera un bypass token, sul ram db è identificato come byp-{il token}
-     * @param {number} random_size 
+     * @param {number} [randomSize=32] 
      * @returns {string} in esadecimale
      */
-    static bypass_token(random_size = 16) {
-        return Date.now().toString(16) + this.random_bytes(random_size, 'hex');
+    static bypassToken(randomSize = 32) {
+        return this.random_bytes(randomSize, 'hex');
     }
     /**
      * Generate a high-entropy random number.
@@ -69,12 +69,12 @@ export class Cripto {
      * @param {*} keyLen 
      * @returns {ArrayBuffer}
      */
-    static HKDF(ikm, salt, additionalInfo, keyLen = 32) {
+    static HKDF(ikm, salt, additionalInfo = null, keyLen = 32) {
         return crypto.hkdfSync(
             'sha256',
             ikm,
             salt,
-            additionalInfo,
+            additionalInfo ?? new Uint8Array([0]),
             keyLen
         );
     }
