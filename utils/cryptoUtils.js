@@ -8,7 +8,7 @@ export class Cripto {
      * @param {string} [encoding] - Formato della chiave Uint8Array di default se no: 'hex', 'base64'
      * @returns {string} byte generati
      */
-    static random_bytes(size, encoding = null) {
+    randomBytes(size, encoding = null) {
         const bytes = crypto.randomBytes(size);
         return encoding ? bytes.toString(encoding) : new Uint8Array(bytes);
     }
@@ -17,25 +17,25 @@ export class Cripto {
      * @param {number} [randomSize=32] 
      * @returns {string} in esadecimale
      */
-    static bypassToken(randomSize = 32) {
-        return this.random_bytes(randomSize, 'hex');
+    bypassToken(randomSize = 32) {
+        return this.randomBytes(randomSize, 'hex');
     }
     /**
      * Generate a high-entropy random number.
      * A secure replacement for Math.random().
      * @returns {number} A number in the range [0, 1).
      */
-    static random_ratio() {
+    randomRatio() {
         const random_word = crypto.randomInt(0, 4294967296); // Generates a random integer from 0 to 2^32
         return random_word / 4294967296; // ~ 2 ** 32
     }
     /**
      * Genera un codice casuale a 6 cifre
      */
-    static random_mfa_code() {
+    randomMfaCode() {
         let code = '';
         for (let i = 0; i < 6; i++) {
-            code += '1234567890'[Math.floor(this.random_ratio() * 10)];
+            code += '1234567890'[Math.floor(this.randomRatio() * 10)];
         }
         return code;
     }
@@ -49,7 +49,7 @@ export class Cripto {
      * @param {string} [options.output_encoding='hex'] - Encoding per l'output HMAC, default 'hex'.
      * @returns {*} HMAC del messaggio in formato specificato.
      */
-    static hmac(message, key, options = {}) {
+    hmac(message, key, options = {}) {
         const key_buffer = options.key_encoding ? Buffer.from(key, options.key_encoding) : Buffer.from(key);
         // ---
         const hmac_buffer = crypto.createHmac(options.algo ?? 'sha256', key_buffer)
@@ -69,7 +69,7 @@ export class Cripto {
      * @param {*} keyLen 
      * @returns {ArrayBuffer}
      */
-    static HKDF(ikm, salt, additionalInfo = null, keyLen = 32) {
+    HKDF(ikm, salt, additionalInfo = null, keyLen = 32) {
         return crypto.hkdfSync(
             'sha256',
             ikm,
@@ -85,7 +85,7 @@ export class Cripto {
      * @param {*} key 
      * @param {*} options 
      */
-    static salting(message) {
+    hashWithSalt(message) {
         const salt = crypto.randomBytes(16);
         const hash = Buffer.from(this.hmac(message, salt));
         return new Uint8Array(Buffer.concat([salt, hash]));
@@ -96,7 +96,7 @@ export class Cripto {
      * @param {Uint8Array} salt_hash 
      * @returns {boolean}
      */
-    static verify_salting(message, salt_hash) {
+    verifyHashWithSalt(message, salt_hash) {
         const salt = salt_hash.subarray(0, 16);
         const hash = salt_hash.subarray(16);
         // ---
@@ -110,7 +110,7 @@ export class Cripto {
      * @param {string} mode "start": keeps the first N bytes, "end": keeps the last N bytes, "middle": keeps the center part, "smart": keeps start and end, drops the middle
      * @returns {Uint8Array}
      */
-    static truncateBuffer(buf, length, mode = "start") {
+    truncateBuffer(buf, length, mode = "start") {
         if (!(buf instanceof Uint8Array)) {
             throw new TypeError("Expected a Uint8Array");
         }
@@ -147,7 +147,7 @@ export class Cripto {
      * @param {string} [options.encoding='hex'] - Encoding per l'output hash, default 'hex'.
      * @returns {string} Hash del messaggio in formato specificato.
      */
-    static hash(message, options = {}) {
+    hash(message, options = {}) {
         const hash_buffer = crypto.createHash(options.algorithm ?? 'sha256')
             .update(message)
             .digest();

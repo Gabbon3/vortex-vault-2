@@ -1,7 +1,7 @@
 import { date } from "../../utils/dateUtils.js";
 import { Mailer } from "../../config/mail.js";
 
-const automated_emails = {
+const emailContents = {
     /**
      * Template wrapper base per email HTML
      * @param {string} content HTML principale del messaggio
@@ -44,14 +44,14 @@ const automated_emails = {
      * @returns 
      */
     otpCode: ({ email, code }) => {
-        const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
         // ---
         const text = `${code}\n${aptext}`;
         // ---
         const html = `<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 40px;">
   <div style="max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center;">
     <h2 style="color: #333;">Your verification code</h2>
-    <p style="font-family: monospace;font-size: 36px; font-weight: bold; margin: 30px 0; color: ${automated_emails.getRandomColor()};">${code}</p>
+    <p style="font-family: monospace;font-size: 36px; font-weight: bold; margin: 30px 0; color: ${emailContents.getRandomColor()};">${code}</p>
     <p style="color: #666; font-size: 16px;">
       Enter this code to complete the verification of your identity. The code is valid for the next 2 minutes.
     </p>
@@ -71,35 +71,34 @@ const automated_emails = {
      * @returns 
      */
     newSignIn: ({ email, user_agent, ip_address }) => {
-        const [browser, browser_version, os, os_version] = user_agent.split("-");
-        const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
-We noticed that a new device attempted to sign-in to your account. Below are the details:
+We noticed that a new device sign in to your account. Below are the details:
 
- - Device: ${os}
+ - Device: ${user_agent}
  - IP: ${ip_address}
  - Time: ${date.format("%d %M %Y at %H:%i")}
 
-If it wasn't you, you can still rest assured since that device is locked, but you need to change your password immediately as your vault could be at risk.
+If it wasn't you, delete that device from "Devices" section of app and change your password immediately.
 
 The Vortex Vault team
 ${aptext}`;
 
         const htmlContent =
             `<h2 style="color: #333;">New sign-in detected</h2>
-<p>We noticed that a new device attempted to sign in to your account. Below are the details:</p>
+<p>We noticed that a new device sign in to your account. Below are the details:</p>
 <ul style="padding-left: 20px; color: #444;">
-  <li><strong>Device:</strong> ${os}</li>
+  <li><strong>Device:</strong> ${user_agent}</li>
   <li><strong>IP:</strong> ${ip_address}</li>
   <li><strong>Time:</strong> ${date.format("%d %M %Y at %H:%i")}</li>
 </ul>
-<p>If it wasn't you, don't worry — the device has been blocked. Still, change your password immediately to secure your account.</p>
+<p>If it wasn't you, delete that device from "Devices" section of app and change your password immediately.</p>
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = automated_emails.htmlWrapper(htmlContent);
+        const html = emailContents.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -109,7 +108,7 @@ ${aphtml}`;
      * @returns 
      */
     newPasskeyAdded: (email) => {
-        const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split('@')[0]},
@@ -125,7 +124,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = automated_emails.htmlWrapper(htmlContent);
+        const html = emailContents.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -136,7 +135,7 @@ ${aphtml}`;
      * @returns
      */
     otpFailedAttempt: ({ email, ip_address }) => {
-        const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
@@ -161,7 +160,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = automated_emails.htmlWrapper(htmlContent);
+        const html = emailContents.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -171,7 +170,7 @@ ${aphtml}`;
      * @returns
      */
     changePassword: ({ email }) => {
-        const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
@@ -189,7 +188,7 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = automated_emails.htmlWrapper(htmlContent);
+        const html = emailContents.htmlWrapper(htmlContent);
 
         return { text, html };
     },
@@ -199,7 +198,7 @@ ${aphtml}`;
      * @returns
      */
     deleteAccount: ({ email }) => {
-        const { text: aptext, html: aphtml } = automated_emails.antiphishing_code(email);
+        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
@@ -220,10 +219,10 @@ ${aptext}`;
 <p style="color: #999;">The Vortex Vault team</p>
 ${aphtml}`;
 
-        const html = automated_emails.htmlWrapper(htmlContent);
+        const html = emailContents.htmlWrapper(htmlContent);
 
         return { text, html };
     },
 };
 
-export default automated_emails;
+export default emailContents;

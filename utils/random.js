@@ -7,7 +7,8 @@ export class RandomUtils {
      * @returns {BigInt}
      */
     static high_entropy(size) {
-        const random_bytes = Cripto.random_bytes(size);
+        const cripto = new Cripto();
+        const random_bytes = cripto.randomBytes(size);
         // ---
         let random_number = 0n;
         for (let i = 0n; i < size; i++) {

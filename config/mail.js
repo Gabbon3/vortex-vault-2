@@ -23,14 +23,15 @@ export class Mailer {
      * @returns {string} restituisce una stringa che identifica una email pronta da usare per il mac
      */
     static get_hash_email_identity(email, truncate = false, salt = null) {
+        const cripto = new Cripto();
         // --
         const emailBytes = new TextEncoder().encode(email);
         // -- preparo il contenuto da hashare
         const prepare = salt instanceof Uint8Array ? Bytes.merge([emailBytes, salt], 8) : emailBytes;
         // -- effettuo l'hash
-        const hash = Cripto.hash(prepare, { algorithm: 'sha256' });
+        const hash = cripto.hash(prepare, { algorithm: 'sha256' });
         // -- effettuo il troncamento se richiesto
-        const result = !truncate ? Bytes.base62.encode(hash) : Cripto.truncateBuffer(hash, 12, 'smart');
+        const result = !truncate ? Bytes.base62.encode(hash) : cripto.truncateBuffer(hash, 12, 'smart');
         // -- restituisco in base 62
         return Bytes.base62.encode(result);
     }
@@ -46,7 +47,8 @@ export class Mailer {
         timestamp = BaseConverter.to_string(timestamp, 62);
         // ---
         const payload = `${email}.${timestamp}`;
-        const signature = Cripto.hmac(payload, Config.FISH_KEY);
+        const cripto = new Cripto();
+        const signature = cripto.hmac(payload, Config.FISH_KEY);
         // ---
         const encoded_signature = Bytes.base62.encode(signature.subarray(0, 16), true);
         return `${payload}.${encoded_signature}`;
@@ -70,7 +72,8 @@ export class Mailer {
         const receiver = code_parts.slice(0, -2).join('.');
         const email_id = this.get_hash_email_identity(email, true, Config.FISH_SALT);
         // -- calcolo nuovamente la signature
-        const signature = Cripto.hmac(payload, Config.FISH_KEY);
+        const cripto = new Cripto();
+        const signature = cripto.hmac(payload, Config.FISH_KEY);
         // -- verifico le condizioni
         const valid_signature = Bytes.compare(signature.subarray(0, 16), encoded_signature);
         const valid_date = Date.now() < new Date(timestamp + (24 * 60 * 60 * 1000));

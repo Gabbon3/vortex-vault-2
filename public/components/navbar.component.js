@@ -27,7 +27,7 @@ export class VortexNavbar extends HTMLElement {
             <i>Tools</i>
         </a>` : ''}
         ${path === '/vault' ? `<a class="open purple" data-target-open="win-devices" title="Devices">
-            <span class="material-symbols-rounded">token</span>
+            <span class="material-symbols-rounded">devices</span>
             <i>Devices</i>
         </a>` : ''}
         ${path === '/vault' ? `<a class="open red" data-target-open="win-passkey" title="Passkey">

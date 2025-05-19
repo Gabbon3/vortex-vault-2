@@ -7,5 +7,5 @@ import { UAParser } from "ua-parser-js";
  */
 export const getUserAgentSummary = (req) => {
     const ua = UAParser(req.get("user-agent"));
-    return `${ua.browser.name ?? ""}-${ua.browser.major ?? ""}-${ua.os.name ?? ""}-${ua.os.version ?? ""}`;
+    return `${ua.os.name ?? ""} ${ua.os.version ?? ""} - ${ua.browser.name ?? ""} ${ua.browser.major ?? ""}`;
 }

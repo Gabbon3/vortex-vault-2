@@ -21,7 +21,7 @@ router.patch('/session/:kid/name', verifyAuth(), controller.editDeviceName);
 router.delete('/session/:kid', verifyAuth(), verifyShivPrivilegedToken, controller.deleteSession);
 router.delete('/session', verifyAuth(), verifyShivPrivilegedToken, controller.deleteAllSession);
 // Genera SPT
-router.post('/spt', authSelector(['psk', 'otp']), controller.shivPrivilegedToken);
+router.post('/spt', authSelector(['psk', 'otp']), verifyAuth(), controller.shivPrivilegedToken);
 
 // API DI TEST
 router.post('/spt-test', verifyShivPrivilegedToken, (req, res, next) => {

@@ -9,7 +9,7 @@ import { RedisDB } from "../config/redisdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../public/utils/validator.js";
 import { v7 as uuidv7 } from "uuid";
-import automated_emails from "../public/utils/automated.mails.js";
+import emailContents from "../public/utils/automated.mails.js";
 import { Config } from "../server_config.js";
 import { ShivService } from "../services/shiv.service.js";
 import { SHIV } from "../protocols/SHIV.node.js";
@@ -116,7 +116,7 @@ export class UserController {
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
         // -- invio una mail
-        // const { text, html } = automated_emails.deleteAccount({
+        // const { text, html } = emailContents.deleteAccount({
         //     email,
         // });
         // Mailer.send(email, "Account Deletion Confirmation", text, html);
@@ -177,7 +177,8 @@ export class UserController {
         const email = req.body.email;
         if (!email || !Validator.email(email))
             throw new CError("ValidationError", "No email provided", 422);
-        const code = Cripto.random_mfa_code();
+        const cripto = new Cripto();
+        const code = cripto.randomMfaCode();
         const request_id = `ear-${email}`; // ear = email auth request
         // -- controllo che non sia gia stata fatta una richiesta
         if (await RedisDB.get(request_id))
@@ -187,7 +188,7 @@ export class UserController {
                 400
             );
         // -- salvo nel ramdb
-        const salted_hash = Cripto.salting(code);
+        const salted_hash = cripto.hashWithSalt(code);
         // memorizzo il codice hashato con salt con hmac
         const db_data = {
             hash: salted_hash,
@@ -197,7 +198,7 @@ export class UserController {
         const is_set = await RedisDB.set(request_id, db_data, 120);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
-        const { text, html } = automated_emails.otpCode({ email, code });
+        const { text, html } = emailContents.otpCode({ email, code });
         const is_send = await Mailer.send(
             email,
             "Vortex Verification Code",
@@ -287,7 +288,7 @@ export class UserController {
         if (affected !== 1)
             throw new CError("ServerError", "Not able to change password", 500);
         // -- invio una mail
-        const { text, html } = automated_emails.changePassword({
+        const { text, html } = emailContents.changePassword({
             email,
         });
         Mailer.send(email, "Password Change Confirmation", text, html);

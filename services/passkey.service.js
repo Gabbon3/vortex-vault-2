@@ -2,7 +2,7 @@ import { CError } from "../helpers/cError.js";
 import { Passkey } from "../models/passkey.model.js";
 import { User } from "../models/user.js";
 import { Mailer } from "../config/mail.js";
-import automated_emails from "../public/utils/automated.mails.js";
+import emailContents from "../public/utils/automated.mails.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";
@@ -110,7 +110,7 @@ export class PasskeyService {
             attestation_format,
         });
         // -- invio la mail
-        const { text, html } = automated_emails.newPasskeyAdded(email);
+        const { text, html } = emailContents.newPasskeyAdded(email);
         Mailer.send(email, "New Passkey", text, html);
         await RedisDB.delete(`psk-chl-${email}`);
         // ---

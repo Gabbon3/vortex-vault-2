@@ -1,11 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { JWT } from "../utils/jwt.utils.js";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from '../models/user.js';
-import { Roles } from '../utils/roles.js';
 import { Mailer } from '../config/mail.js';
-import automated_emails from '../public/utils/automated.mails.js';
+import emailContents from '../public/utils/automated.mails.js';
 import { RedisDB } from '../config/redisdb.js';
 import { Op } from 'sequelize';
 import { SHIV } from '../protocols/SHIV.node.js';
@@ -31,7 +29,8 @@ export class UserService {
         });
         if (user_exist) throw new CError("UserExist", "This email is already in use", 409);
         // -- genero il salt di 16 byte
-        const salt = Cripto.random_bytes(16, 'hex');
+        const cripto = new Cripto();
+        const salt = cripto.randomBytes(16, 'hex');
         // -- creo un nuovo utente
         const password_hash = await this.hash_password(password);
         const user = new User({ email, password: password_hash, salt });
@@ -81,16 +80,32 @@ export class UserService {
         /**
          * Stabilisco la sessione con SHIV
          */
-        const { jwt, publicKey } = await this.shiv.generateSession({
+        const { jwt, publicKey, userAgentSummary } = await this.shiv.generateSession({
             request: request,
             publicKeyHex,
             userId: user.id,
             payload: { uid: user.id },
         });
         /**
-         * APPROFONDIRE: da capire se generare il bypass anche con refresh non valido
+         * Avviso l'utente via mail del nuovo login
          */
-        const bypassToken = Cripto.bypassToken();
+        const { text, html } = emailContents.newSignIn({
+            email,
+            user_agent: userAgentSummary,
+            ip_address: request.headers['x-forwarded-for'] || request.socket.remoteAddress,
+        });
+        // -- invio la mail
+        Mailer.send(
+            email, 
+            'New device Sign-In', 
+            text,
+            html
+        );
+        /**
+         * Genero un bypass token
+         */
+        const cripto = new Cripto();
+        const bypassToken = cripto.bypassToken();
         await RedisDB.set(`byp-${bypassToken}`, { uid: user.id }, 60);
         /**
          * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
@@ -111,50 +126,7 @@ export class UserService {
             },
         });
     }
-
-    /**
-     * Crea e restituisce un refresh token
-     * invia una mail di nuovo accesso se il refresh token viene inizialmente bloccato
-     * motivo: non è il primo refresh token associato all'utente
-     * @param {User} user - modello dello user
-     * @param {string} user_agent 
-     * @param {string} ip_address 
-     * @param {string} email 
-     * @param {string} passKey - stringa che se valida abilita a priori il refresh token -> viene creato un refresh valido
-     * @returns {RefreshToken} 
-     */
-    async createRefreshToken(user, user_agent, ip_address, email, passKey) {
-        // ottengo un Model di Refresh token dal suo servizio
-        const refresh_token = await this.refresh_token_service.create(user.id, user_agent, ip_address, passKey);
-        // -- avviso l'utente se un nuovo dispositivo accede
-        if (refresh_token.is_revoked) {
-            // -- ottengo il testo
-            const { text, html } = automated_emails.newSignIn({
-                email,
-                user_agent: refresh_token.user_agent_summary,
-                ip_address,
-            });
-            // -- invio la mail
-            await Mailer.send(
-                email, 
-                'New device Sign-In', 
-                text,
-                html
-            );
-        }
-        return refresh_token;
-    }
-    /**
-     * Generate an advanced access token
-     * @param {number} uid user id
-     */
-    async generate_sudo_access_token(uid) {
-        const sudo_access_token = JWT.genera_access_token(
-            { uid, role: Roles.SUDO }, 
-            JWT.sudo_token_lifetime
-        );
-        return sudo_access_token;
-    }
+    
     /**
      * Esegue il cambio password
      * @param {number} uid 

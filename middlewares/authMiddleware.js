@@ -6,7 +6,7 @@ import { Roles } from "../utils/roles.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
-import automated_emails from "../public/utils/automated.mails.js";
+import emailContents from "../public/utils/automated.mails.js";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { verifyPasskey } from "./passkey.middleware.js";
 
@@ -129,7 +129,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     if (tryes >= 3) {
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
-        const { text, html } = automated_emails.otpFailedAttempt({
+        const { text, html } = emailContents.otpFailedAttempt({
             email,
             ip_address,
         });
@@ -142,7 +142,8 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
         throw new Error();
     }
     // -- verifica il codice
-    const valid = Cripto.verify_salting(code, salted_hash);
+    const cripto = new Cripto();
+    const valid = cripto.verifyHashWithSalt(code, salted_hash);
     if (!valid) {
         // -- aumento il numero di tentativi
         await RedisDB.update(request_id, { 
@@ -162,7 +163,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
 });
 
 const authStrategies = {
-    'psk': verifyPasskey,
+    'psk': verifyPasskey(),
     'otp': verifyEmailCode,
     'psw': verifyPassword,
 }
