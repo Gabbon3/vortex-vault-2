@@ -5,7 +5,6 @@ import { Bytes } from "../utils/bytes.js";
 import msgpack from "../public/utils/msgpack.min.js";
 import { Passkey } from "../models/passkey.model.js";
 import { fido2 } from "../services/passkey.service.js";
-import { JWT } from "../utils/jwt.utils.js";
 import { Config } from "../server_config.js";
 
 /**

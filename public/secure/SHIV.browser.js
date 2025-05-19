@@ -1,8 +1,8 @@
 import { Cripto } from "./cripto.js";
-import { AES256GCM } from "./aesgcm.js";
 import { Bytes } from "../utils/bytes.js";
 import { ECDH } from "./ecdh.js";
 import { SessionStorage } from "../utils/session.js";
+import msgpack from "../utils/msgpack.min.js";
 
 /**
  * Session Handshake w/ Integrity Verification
@@ -19,20 +19,22 @@ export class SHIV {
     /**
      * Restituisce la stringa di integrità 
      * da associare alle fetch come header
+     * @param {{}} [body={}] - il body della request, in questo modo leghiamo l'integrity con il body, si possono intercettare modifiche al body
      * @returns {string} stringa esadecimale dell'integrità
      */
-    static async getIntegrity() {
+    static async getIntegrity(body = {}) {
         // -- ottengo la chiave dal session storage
         const sharedSecret = SessionStorage.get('shared-secret');
         // ---
         if (sharedSecret instanceof Uint8Array == false) return null;
         // -- genero un salt casuale
         const salt = Cripto.random_bytes(12);
+        const encodedBody = msgpack.encode(body);
+        const payload = Bytes.merge([salt, encodedBody], 8);
         // -- ottengo la chiave nuova
         const derivedKey = await this.deriveKey(sharedSecret, salt);
-        // -- genero la challenge
-        const challenge = Cripto.random_bytes(12);
-        const encrypted = await AES256GCM.encrypt(challenge, derivedKey);
+        // -- genero la firma
+        const encrypted = await Cripto.hmac(payload, derivedKey);
         const result = Bytes.merge([salt, encrypted], 8);
         return Bytes.base64.encode(result, true);
     }

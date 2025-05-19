@@ -299,22 +299,18 @@ export class Bytes {
         return merged_array;
     }
     /**
-     * Compara due Buffer verificando se sono uguali
+     * Compara due Buffer verificando se sono uguali, utilizza il metodo constant time compare per limitare timing attacks
      * @param {Array} a
      * @param {Array} b
      * @returns
      */
     static compare(a, b) {
-        if (a.length != b.length)
-            throw new Error("Invalid size a is different than b");
-        // ---
-        const L = a.length;
-        // ---
-        for (let i = 0; i < L; i++) {
-            if (a[i] !== b[i]) return false;
+        if (a.length !== b.length) return false;
+        let result = 0;
+        for (let i = 0; i < a.length; i++) {
+            result |= a[i] ^ b[i];
         }
-        // ---
-        return true;
+        return result === 0;
     }
 }
 

@@ -3,11 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { ECDH } from '../utils/ecdh.node.js';
 import { Bytes } from '../utils/bytes.js';
 import { Cripto } from "../utils/cryptoUtils.js";
-import { AES256GCM } from "../utils/aesgcm.js";
 import { AuthKeys } from "../models/authKeys.model.js";
 import { Config } from "../server_config.js";
 import { JWT } from '../utils/jwt.utils.js';
 import { getUserAgentSummary } from "../utils/useragent.util.js";
+import msgpack from '../public/utils/msgpack.min.js';
 
 /**
  * Session Handshake w/ Integrity Verification
@@ -53,29 +53,32 @@ export class SHIV {
     /**
      * Verifica l'header di integrità
      * @param {string} guid uuid della auth key, un uuid v4
+     * @param {{}} [body={}] - il body della request
      * @param {string} integrity - stringa in base64
      * @returns {number | boolean} false -> integrita non valida, -1 segreto non trovato
      */
-    async verifyIntegrity(guid, integrity) {
+    async verifyIntegrity(guid, body = {}, integrity) {
         const rawIntegrity = Bytes.base64.decode(integrity, true);
         // -- ottengo salt e lo separo dalla parte cifrata
         const salt = rawIntegrity.subarray(0, 12);
-        const encrypted = rawIntegrity.subarray(12);
+        const sign = rawIntegrity.subarray(12);
+        // -- codifico il body
+        const encodedBody = msgpack.encode(body);
+        const payload = Bytes.merge([salt, encodedBody], 8);
         // ---
         const sharedKey = await this.getSharedSecret(guid);
         if (!sharedKey) return -1;
         // -- provo con la finestra corrente e quelle adiacenti (-1, 0, +1)
         const shifts = [0, -1, 1];
         for (const shift of shifts) {
+            // -- derivo la chiave attuale usando il timewindow corrispettivo
             const derivedKey = this.deriveKey(sharedKey, salt, SHIV.timeWindow, shift);
-            try {
-                AES256GCM.decrypt(encrypted, derivedKey);
-                return true;
-            } catch (err) {
-                // continua con il prossimo shift
-            }
+            // -- calcolo la firma corrente
+            const currentSign = Cripto.hmac(payload, derivedKey);
+            // -- comparo le due firme per verificare se corrispondono
+            if (Bytes.compare(sign, currentSign)) return true;
         }
-        return false; // tutte le finestre fallite
+        return false; // --> tutte le finestre fallite
     }
 
     /**

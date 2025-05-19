@@ -53,7 +53,7 @@ export const verifyAuth = (options = {}) => {
                 return res.status(403).json({ error: "Integrity not found" });
             // -- verifico l'integrity
             const { kid } = payload;
-            const verified = await shiv.verifyIntegrity(kid, integrity);
+            const verified = await shiv.verifyIntegrity(kid, req.body ?? {}, integrity);
             // ---
             if (verified === -1)
                 return res.status(404).json({ error: "Secret not found" });
