@@ -35,7 +35,7 @@ export class CKEController {
             path: "/cke/get/advanced",
         });
         // -- calcolo e restituisco anche il materiale avanzato
-        const key = cripto.HKDF(
+        const key = await cripto.HKDF(
             Bytes.hex.decode(newMaterialAdvanced),
             Bytes.hex.decode(newMaterialBasic)
         );
@@ -73,7 +73,7 @@ export class CKEController {
         const advancedBytes = Bytes.hex.decode(materials.advanced);
         // -- calcolo la chiave
         const cripto = new Cripto();
-        const key = cripto.HKDF(advancedBytes, basicBytes);
+        const key = await cripto.HKDF(advancedBytes, basicBytes);
         // ---
         res.status(200).json({ key: Bytes.hex.encode(key) });
     });

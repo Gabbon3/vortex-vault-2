@@ -116,7 +116,7 @@ export class UserController {
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
         // -- invio una mail
-        // const { text, html } = emailContents.deleteAccount({
+        // const { text, html } = await emailContents.deleteAccount({
         //     email,
         // });
         // Mailer.send(email, "Account Deletion Confirmation", text, html);
@@ -188,7 +188,7 @@ export class UserController {
                 400
             );
         // -- salvo nel ramdb
-        const salted_hash = cripto.hashWithSalt(code);
+        const salted_hash = await cripto.hashWithSalt(code);
         // memorizzo il codice hashato con salt con hmac
         const db_data = {
             hash: salted_hash,
@@ -198,7 +198,7 @@ export class UserController {
         const is_set = await RedisDB.set(request_id, db_data, 120);
         if (!is_set) throw new Error("Not able to generate verification code");
         // ---
-        const { text, html } = emailContents.otpCode({ email, code });
+        const { text, html } = await emailContents.otpCode({ email, code });
         const is_send = await Mailer.send(
             email,
             "Vortex Verification Code",
@@ -288,7 +288,7 @@ export class UserController {
         if (affected !== 1)
             throw new CError("ServerError", "Not able to change password", 500);
         // -- invio una mail
-        const { text, html } = emailContents.changePassword({
+        const { text, html } = await emailContents.changePassword({
             email,
         });
         Mailer.send(email, "Password Change Confirmation", text, html);
@@ -344,7 +344,7 @@ export class UserController {
         if (!email)
             throw new CError("", "No email passed for verification", 422);
         // ---
-        const status = Mailer.verify_message_authentication_code(email, mac);
+        const status = await Mailer.verify_message_authentication_code(email, mac);
         res.status(200).json(status);
     });
     /**
@@ -356,7 +356,7 @@ export class UserController {
         const { email } = req.params;
         if (!email) throw new CError('', 'Access denied.', 400);
         // ---
-        const mac = Mailer.message_authentication_code(email);
+        const mac = await Mailer.message_authentication_code(email);
         res.status(200).json({ token: mac });
     });
     /**

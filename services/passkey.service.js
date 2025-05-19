@@ -110,7 +110,7 @@ export class PasskeyService {
             attestation_format,
         });
         // -- invio la mail
-        const { text, html } = emailContents.newPasskeyAdded(email);
+        const { text, html } = await emailContents.newPasskeyAdded(email);
         Mailer.send(email, "New Passkey", text, html);
         await RedisDB.delete(`psk-chl-${email}`);
         // ---

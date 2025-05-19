@@ -74,9 +74,9 @@ export class SHIV {
         const cripto = new Cripto();
         for (const shift of shifts) {
             // -- derivo la chiave attuale usando il timewindow corrispettivo
-            const derivedKey = this.deriveKey(sharedKey, salt, SHIV.timeWindow, shift);
+            const derivedKey = await this.deriveKey(sharedKey, salt, SHIV.timeWindow, shift);
             // -- calcolo la firma corrente
-            const currentSign = cripto.hmac(payload, derivedKey);
+            const currentSign = await cripto.hmac(payload, derivedKey);
             // -- comparo le due firme per verificare se corrispondono
             if (Bytes.compare(sign, currentSign)) return true;
         }
@@ -135,7 +135,7 @@ export class SHIV {
      */
     async calculateSignKey(sharedKey, scope = '') {
         const cripto = new Cripto();
-        return await cripto.HKDF(sharedKey, Config.SHIVPEPPER, new TextEncoder().encode(scope));
+        return await await cripto.HKDF(sharedKey, Config.SHIVPEPPER, new TextEncoder().encode(scope));
     }
 
     /**
@@ -160,7 +160,7 @@ export class SHIV {
      */
     async calculateKid(guid) {
         const cripto = new Cripto();
-        return await cripto.hmac(guid, Config.SHIVPEPPER, { output_encoding: 'hex' });
+        return await await cripto.hmac(guid, Config.SHIVPEPPER, { output_encoding: 'hex' });
     }
 
     /**
@@ -190,12 +190,12 @@ export class SHIV {
      * @param {number} [interval=60] intervallo di tempo in secondi, di default a 1 ora
      * @param {number} [shift=0] con 0 si intende l'intervallo corrente, con 1 il prossimo intervallo, con -1 il precedente
      */
-    deriveKey(sharedKey, salt, interval = SHIV.timeWindow, shift = 0) {
+    async deriveKey(sharedKey, salt, interval = SHIV.timeWindow, shift = 0) {
         const int = Math.floor(((Date.now() / 1000) + (shift * interval)) / interval);
         const windowIndex = new TextEncoder().encode(`${int}`);
         // ---
         const cripto = new Cripto();
-        return cripto.HKDF(sharedKey, salt, windowIndex);
+        return await cripto.HKDF(sharedKey, salt, windowIndex);
     }
 
     /**
@@ -214,7 +214,7 @@ export class SHIV {
         );
         // -- formalizzo
         const cripto = new Cripto();
-        const formatted = cripto.hash(sharedSecret);
+        const formatted = await cripto.hash(sharedSecret);
         // -- salvo in Ram
         await RedisDB.set(kid, formatted, SHIV.ramTimeout);
         // ---

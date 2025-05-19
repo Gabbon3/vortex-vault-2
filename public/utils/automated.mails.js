@@ -31,8 +31,8 @@ const emailContents = {
      * genera il testo e l'html che inserisce il codice anti phishing
      * @param {string} email 
      */
-    antiphishing_code: (email) => {
-        const code = Mailer.message_authentication_code(email);
+    antiphishing_code: async (email) => {
+        const code = await Mailer.message_authentication_code(email);
         const html = `<p>Message Authentication Code:<br><strong>${code}</strong></p>`
         const text = `Message Authentication Code: ${code}`;
         // ---
@@ -43,8 +43,8 @@ const emailContents = {
      * @param {object} options 
      * @returns 
      */
-    otpCode: ({ email, code }) => {
-        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
+    otpCode: async ({ email, code }) => {
+        const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
         // ---
         const text = `${code}\n${aptext}`;
         // ---
@@ -70,8 +70,8 @@ const emailContents = {
      * @param {object} options 
      * @returns 
      */
-    newSignIn: ({ email, user_agent, ip_address }) => {
-        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
+    newSignIn: async ({ email, user_agent, ip_address }) => {
+        const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
@@ -107,8 +107,8 @@ ${aphtml}`;
      * @param {string} email 
      * @returns 
      */
-    newPasskeyAdded: (email) => {
-        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
+    newPasskeyAdded: async (email) => {
+        const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split('@')[0]},
@@ -134,8 +134,8 @@ ${aphtml}`;
      * @param {object} options
      * @returns
      */
-    otpFailedAttempt: ({ email, ip_address }) => {
-        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
+    otpFailedAttempt: async ({ email, ip_address }) => {
+        const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
@@ -169,8 +169,8 @@ ${aphtml}`;
      * @param {object} options
      * @returns
      */
-    changePassword: ({ email }) => {
-        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
+    changePassword: async ({ email }) => {
+        const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},
@@ -197,8 +197,8 @@ ${aphtml}`;
      * @param {object} options
      * @returns
      */
-    deleteAccount: ({ email }) => {
-        const { text: aptext, html: aphtml } = emailContents.antiphishing_code(email);
+    deleteAccount: async ({ email }) => {
+        const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
 
         const text =
             `Hello ${email.split("@")[0]},

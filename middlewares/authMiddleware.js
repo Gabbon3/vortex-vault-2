@@ -129,7 +129,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     if (tryes >= 3) {
         const ip_address = req.headers['x-forwarded-for'] || req.ip;
         // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
-        const { text, html } = emailContents.otpFailedAttempt({
+        const { text, html } = await emailContents.otpFailedAttempt({
             email,
             ip_address,
         });
@@ -143,7 +143,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     }
     // -- verifica il codice
     const cripto = new Cripto();
-    const valid = cripto.verifyHashWithSalt(code, salted_hash);
+    const valid = await cripto.verifyHashWithSalt(code, salted_hash);
     if (!valid) {
         // -- aumento il numero di tentativi
         await RedisDB.update(request_id, { 

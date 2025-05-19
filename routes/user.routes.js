@@ -17,7 +17,7 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- AUTH ROUTES (USER)
 router.post('/registrati', controller.signup);
-router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
+router.post('/signin', verifyPassword, controller.signin);
 router.post('/password', verifyAuth(), controller.change_password);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);

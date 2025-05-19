@@ -89,7 +89,7 @@ export class UserService {
         /**
          * Avviso l'utente via mail del nuovo login
          */
-        const { text, html } = emailContents.newSignIn({
+        const { text, html } = await emailContents.newSignIn({
             email,
             user_agent: userAgentSummary,
             ip_address: request.headers['x-forwarded-for'] || request.socket.remoteAddress,
