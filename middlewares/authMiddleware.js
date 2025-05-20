@@ -74,7 +74,7 @@ export const verifyShivPrivilegedToken = asyncHandler(
         if (!req.payload) throw new Error("Payload mancante, è necessario richiamare prima verifyAuth");
         // ---
         const ppt = req.cookies.ppt;
-        if (!ppt || !jwt)
+        if (!ppt)
             return res.status(401).json({ error: "Access denied" });
         // ---
         const shiv = new SHIV();
