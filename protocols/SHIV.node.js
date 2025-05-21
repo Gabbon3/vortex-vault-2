@@ -54,7 +54,7 @@ export class SHIV {
     /**
      * Verifica l'header di integrità
      * @param {string} guid uuid della auth key, un uuid v4
-     * @param {{}} [body={}] - il body della request
+     * @param {{}|Uint8Array} [body={}] - il body della request
      * @param {string} integrity - stringa in base64
      * @returns {number | boolean} false -> integrita non valida, -1 segreto non trovato
      */
@@ -64,7 +64,7 @@ export class SHIV {
         const salt = rawIntegrity.subarray(0, 12);
         const sign = rawIntegrity.subarray(12);
         // -- codifico il body
-        const encodedBody = msgpack.encode(body);
+        const encodedBody = body instanceof Buffer || body instanceof Uint8Array ? new Uint8Array(body) : msgpack.encode(body);
         const payload = Bytes.merge([salt, encodedBody], 8);
         // ---
         const sharedKey = await this.getSharedSecret(guid);
