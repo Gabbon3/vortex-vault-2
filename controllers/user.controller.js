@@ -64,14 +64,14 @@ export class UserController {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.jwtLifetime * 1000,
-            sameSite: "Strict",
+            sameSite: "Lax",
             path: "/",
         });
         res.cookie("uid", uid, {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.jwtLifetime * 1000,
-            sameSite: "Strict",
+            sameSite: "Lax",
             path: "/",
         });
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
@@ -373,7 +373,7 @@ export class UserController {
                 httpOnly: true,
                 secure: true,
                 maxAge: JWT.access_token_cookie_lifetime,
-                sameSite: "Strict",
+                sameSite: "Lax",
                 path: "/", // disponibile per tutte le route
             });
         }
@@ -382,7 +382,7 @@ export class UserController {
                 httpOnly: true,
                 secure: true,
                 maxAge: JWT.refresh_token_cookie_lifetime,
-                sameSite: "Strict",
+                sameSite: "Lax",
                 path: "/auth",
             });
         }

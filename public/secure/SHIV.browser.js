@@ -29,7 +29,7 @@ export class SHIV {
         if (sharedSecret instanceof Uint8Array == false) return null;
         // -- genero un salt casuale
         const salt = Cripto.random_bytes(12);
-        const encodedBody = msgpack.encode(body);
+        const encodedBody = body instanceof Uint8Array ? body : msgpack.encode(body);
         const payload = Bytes.merge([salt, encodedBody], 8);
         // -- ottengo la chiave nuova
         const derivedKey = await this.deriveKey(sharedSecret, salt);

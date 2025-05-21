@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Windows.loader(true);
         // -- accedo
-        if (await AuthService.signin(email, password, null)) {
+        if (await AuthService.signin(email, password)) {
             form.reset();
             Log.summon(0, `Authenticated as ${email}`);
             setTimeout(() => {

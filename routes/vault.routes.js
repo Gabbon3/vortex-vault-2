@@ -16,7 +16,7 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- /vaults
 // -- routes that require sudo access token
-router.post('/restore', verifyAuth(), verifyShivPrivilegedToken, express.raw({ type: 'application/octet-stream' }), controller.restore);
+router.post('/restore', express.raw({ type: 'application/octet-stream' }), verifyAuth(), verifyShivPrivilegedToken, controller.restore);
 // -- routes that require simple access token
 router.use(verifyAuth());
 router.post('/create', controller.create);

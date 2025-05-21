@@ -18,7 +18,7 @@ export class ShivController {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.pptLifetime * 1000,
-            sameSite: "Strict",
+            sameSite: "Lax",
             path: "/",
         });
         // ---
