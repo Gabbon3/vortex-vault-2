@@ -135,18 +135,17 @@ export class Cripto {
      * Deriva una chiave crittografica da una password usando PBKDF2.
      * @param {string | Uint8Array} password - La password da usare per derivare la chiave.
      * @param {Uint8Array} salt - Il sale utilizzato nel processo di derivazione.
-     * @param {number} [iterations=16] - Il numero di iterazioni da eseguire.
-     * @param {number} [key_length=32] - La lunghezza della chiave derivata in byte.
-     * @param {string} [algo='SHA-256'] - L'algoritmo di hash da usare per PBKDF2 (default 'SHA-256').
+     * @param {number} [iterations=100000] - Il numero di iterazioni da eseguire.
+     * @param {number} [keyLength=32] - La lunghezza della chiave derivata in byte.
      * @returns {Promise<Uint8Array>} - La chiave derivata.
      */
-    static async derive_key(password, salt, iterations = 16, key_length = 32, algo = 'SHA-256') {
+    static async deriveKey(password, salt, iterations = 100000, keyLength = 32) {
         // -- converto la password in un Uint8Array
-        const password_buffer = password instanceof Uint8Array ? password : new TextEncoder().encode(password);
+        const passwordBuffer = password instanceof Uint8Array ? password : new TextEncoder().encode(password);
         // -- derivo la chiave con PBKDF2
-        const derived_key = await crypto.subtle.importKey(
+        const derivedKey = await crypto.subtle.importKey(
             'raw',
-            password_buffer,
+            passwordBuffer,
             { name: 'PBKDF2' },
             false,
             ['deriveKey']
@@ -157,26 +156,15 @@ export class Cripto {
                 name: 'PBKDF2',
                 salt: salt,
                 iterations: iterations,
-                hash: { name: algo },
+                hash: "SHA-256",
             },
-            derived_key,
-            { name: 'AES-GCM', length: key_length * 8 }, // AES key length in bits
+            derivedKey,
+            { name: 'AES-GCM', length: keyLength * 8 }, // AES key length in bits
             true,
             ['encrypt', 'decrypt']
         );
         // -- restituisco la chiave derivata come Uint8Array
         return new Uint8Array(await crypto.subtle.exportKey('raw', key));
-    }
-    /**
-     * Deriva una chiave crittografica da una password usando ARGON2.
-     * @param {string | Uint8Array} password - La password da usare per derivare la chiave.
-     * @param {Uint8Array} salt - Il sale utilizzato nel processo di derivazione.
-     */
-    static argon2(password, salt) {
-        // -- converto la password in un Uint8Array
-        const password_buffer = password instanceof Uint8Array ? password : new TextEncoder().encode(password);
-        // ---
-        return window.Argon2(password_buffer, salt);
     }
 
     /**

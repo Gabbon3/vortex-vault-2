@@ -262,7 +262,7 @@ export class VaultService {
             return null;
         }
         const export_salt = Cripto.random_bytes(16);
-        const export_key = await Cripto.argon2(custom_key ?? this.master_key, export_salt);
+        const export_key = await Cripto.deriveKey(custom_key ?? this.master_key, export_salt);
         // -- preparo il backup con il salt come primo elemento
         const backup = [export_salt];
         const compacted_vaults = this.compact_vaults();
@@ -287,7 +287,7 @@ export class VaultService {
         const backup = msgpack.decode(packed_backup);
         // -- ottengo il salt del backup cosi genero la chiave del backup
         const backup_salt = backup.shift();
-        const backup_key = await Cripto.argon2(custom_key ?? this.master_key, backup_salt);
+        const backup_key = await Cripto.deriveKey(custom_key ?? this.master_key, backup_salt);
         // -- decifro ogni vault
         for (let i = 0; i < backup.length; i++) {
             const decoded_vault = await this.decrypt(backup[i], backup_key);

@@ -1,7 +1,3 @@
-// MOTION ONE
-// import { animate, scroll } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm";
-// WASM
-import '../secure/rust.init.js';
 // Diagnostic
 import '../utils/diagnostic.js';
 // ---
