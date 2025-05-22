@@ -2,6 +2,7 @@ import { asyncHandler } from "../helpers/asyncHandler.js";
 import { ShivService } from "../services/shiv.service.js";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { CError } from "../helpers/cError.js";
+import { cookieUtils } from "../utils/cookie.utils.js";
 
 export class ShivController {
     constructor() {
@@ -14,7 +15,7 @@ export class ShivController {
     shivPrivilegedToken = asyncHandler(async (req, res) => {
         const spt = await this.service.createShivPrivilegedToken({ payload: req.payload });
         // -- imposto il cookie
-        res.cookie("ppt", spt, {
+        cookieUtils.setCookie(req, res, 'ppt', spt, {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.pptLifetime * 1000,

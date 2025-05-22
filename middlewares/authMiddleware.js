@@ -9,6 +9,7 @@ import { Mailer } from "../config/mail.js";
 import emailContents from "../public/utils/automated.mails.js";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { verifyPasskey } from "./passkey.middleware.js";
+import { cookieUtils } from "../utils/cookie.utils.js";
 
 /**
  * Middleware di autenticazione e autorizzazione basato su JWT e controllo d'integrità opzionale.
@@ -22,7 +23,7 @@ import { verifyPasskey } from "./passkey.middleware.js";
 export const verifyAuth = (options = {}) => {
     const { requiredRole = Roles.BASE, checkIntegrity = true } = options;
     return async (req, res, next) => {
-        const jwt = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+        const jwt = (cookieUtils.getCookie(req, 'jwt')) || req.headers.authorization?.split(" ")[1];
         // -- verifico che esista
         if (!jwt) return res.status(401).json({ error: "Access denied" });
         // ---
@@ -73,7 +74,7 @@ export const verifyShivPrivilegedToken = asyncHandler(
     async (req, res, next) => {
         if (!req.payload) throw new Error("Payload mancante, è necessario richiamare prima verifyAuth");
         // ---
-        const ppt = req.cookies.ppt;
+        const ppt = cookieUtils.getCookie(req, 'ppt');
         if (!ppt)
             return res.status(401).json({ error: "Access denied" });
         // ---

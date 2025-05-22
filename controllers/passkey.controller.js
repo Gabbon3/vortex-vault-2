@@ -3,6 +3,7 @@ import { CError } from "../helpers/cError.js";
 import msgpack from "../public/utils/msgpack.min.js";
 import { PasskeyService } from "../services/passkey.service.js";
 import { Bytes } from "../utils/bytes.js";
+import { cookieUtils } from "../utils/cookie.utils.js";
 
 export class PasskeyController {
     constructor() {
@@ -35,7 +36,7 @@ export class PasskeyController {
      * Genera delle opzioni di accesso (la challenge)
      */
     get_auth_options = asyncHandler(async (req, res) => {
-        const { uid } = req.cookies;
+        const uid = cookieUtils.getCookie(req, 'uid');
         // ---
         const { challenge, request_id, credentials_id } = await this.service.generate_auth_options(uid ?? null);
         // ---

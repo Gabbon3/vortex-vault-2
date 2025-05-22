@@ -1,6 +1,7 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { Bytes } from "../utils/bytes.js";
+import { cookieUtils } from "../utils/cookie.utils.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 
 export class CKEController {
@@ -13,21 +14,21 @@ export class CKEController {
      */
     set = asyncHandler(async (req, res) => {
         const old = {
-            basic: req.cookies["cke-basic"],
-            advanced: req.cookies["cke-advanced"],
+            basic: cookieUtils.getCookie(req, 'cke-basic'),
+            advanced: cookieUtils.getCookie(req, 'cke-advanced'),
         };
         const cripto = new Cripto();
         const newMaterialBasic = cripto.randomBytes(32, "hex");
         const newMaterialAdvanced = cripto.randomBytes(32, "hex");
         // ---
-        res.cookie("cke-basic", newMaterialBasic, {
+        cookieUtils.setCookie(req, res, 'cke-basic', newMaterialBasic, {
             httpOnly: true,
             secure: true,
             maxAge: CKEController.cookieLifetime,
             sameSite: "Lax",
             path: "/cke/get",
         });
-        res.cookie("cke-advanced", newMaterialAdvanced, {
+        cookieUtils.setCookie(req, res, 'cke-advanced', newMaterialAdvanced, {
             httpOnly: true,
             secure: true,
             maxAge: CKEController.cookieLifetime,
@@ -48,7 +49,7 @@ export class CKEController {
      * @param {Response} res
      */
     getBasic = asyncHandler(async (req, res) => {
-        const material = req.cookies['cke-basic'];
+        const material = cookieUtils.getCookie(req, 'cke-basic');
         // --- id dell'utente
         if (!material)
             throw new CError("NotFoundError", "Material not found", 404);
@@ -62,8 +63,8 @@ export class CKEController {
      */
     getAdvanced = asyncHandler(async (req, res) => {
         const materials = {
-            basic: req.cookies["cke-basic"],
-            advanced: req.cookies["cke-advanced"],
+            basic: cookieUtils.getCookie(req, 'cke-basic'),
+            advanced: cookieUtils.getCookie(req, 'cke-advanced'),
         };
         // --- id dell'utente
         if (!materials.basic || !materials.advanced)

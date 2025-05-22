@@ -13,6 +13,7 @@ import emailContents from "../public/utils/automated.mails.js";
 import { Config } from "../server_config.js";
 import { ShivService } from "../services/shiv.service.js";
 import { SHIV } from "../protocols/SHIV.node.js";
+import { cookieUtils } from "../utils/cookie.utils.js";
 
 export class UserController {
     constructor() {
@@ -45,9 +46,10 @@ export class UserController {
     signin = asyncHandler(async (req, res) => {
         const { email, publicKey: publicKeyHex } = req.body;
         // -- verifico se l'utente è già autenticato
-        if (req.cookies.jwt) {
+        const jwtCookie = cookieUtils.getCookie(req, 'jwt');
+        if (jwtCookie) {
             // -- se si elimino dal db
-            const kid = this.shivService.shiv.getKidFromJWT(req.cookies.jwt);
+            const kid = this.shivService.shiv.getKidFromJWT(jwtCookie);
             if (kid) await this.shivService.delete({ kid }, true);
         }
         /**
@@ -60,20 +62,20 @@ export class UserController {
                 publicKeyHex
             });
         // ---
-        res.cookie("jwt", jwt, {
+        cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.jwtLifetime * 1000,
             sameSite: "Lax",
             path: "/",
         });
-        res.cookie("uid", uid, {
+        cookieUtils.setCookie(req, res, 'uid', uid, {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.jwtLifetime * 1000,
             sameSite: "Lax",
             path: "/",
-        });
+        })
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
         await RedisDB.delete(`login-attempts-${email}`);
         // ---
@@ -359,32 +361,4 @@ export class UserController {
         const mac = await Mailer.message_authentication_code(email);
         res.status(200).json({ token: mac });
     });
-    /**
-     * Imposta nei cookie l'access e il refresh token
-     * @param {Response} res
-     * @param {Object} cookies
-     * @param {*} [cookies.access_token]
-     * @param {*} [cookies.refresh_token]
-     * @param {*} [cookies.cke]
-     */
-    set_token_cookies = (res, cookies) => {
-        if (cookies.access_token) {
-            res.cookie("access_token", cookies.access_token, {
-                httpOnly: true,
-                secure: true,
-                maxAge: JWT.access_token_cookie_lifetime,
-                sameSite: "Lax",
-                path: "/", // disponibile per tutte le route
-            });
-        }
-        if (cookies.refresh_token) {
-            res.cookie("refresh_token", cookies.refresh_token, {
-                httpOnly: true,
-                secure: true,
-                maxAge: JWT.refresh_token_cookie_lifetime,
-                sameSite: "Lax",
-                path: "/auth",
-            });
-        }
-    };
 }
