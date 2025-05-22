@@ -38,9 +38,6 @@ export class PasskeyBtn extends HTMLElement {
          */
         'sudosession': async () => {
             Log.summon(0, 'Advanced session started');
-            const expire = new Date(Date.now() + 45 * 60 * 1000);
-            await LocalStorage.set("session-expire", expire);
-            await LocalStorage.set("sudo-expire", expire);
         },
         /**
          * DELETE ACCOUNT

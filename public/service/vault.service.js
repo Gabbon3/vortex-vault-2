@@ -23,9 +23,8 @@ export class VaultService {
     static async config_secrets() {
         // -- ottengo la scadenza dell'access token
         const ckeKeyAdvanced = SessionStorage.get('cke-key-advanced');
-        const access_token_expire = await LocalStorage.get('session-expire');
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
-        if (ckeKeyAdvanced === null || (access_token_expire && access_token_expire < new Date())) return false;
+        if (ckeKeyAdvanced === null) return false;
         this.master_key = await LocalStorage.get('master-key', ckeKeyAdvanced);
         this.salt = await LocalStorage.get('salt', ckeKeyAdvanced);
         return this.master_key && this.salt ? true : false;

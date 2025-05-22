@@ -5,7 +5,6 @@ import msgpack from "./msgpack.min.js";
  * Raccolta di tutti gli elementi utilizzati nel localstorage:
  *  - lse-private-key-expire-date, data di scadenza della chiave privata del protocollo LSE
  *  - vault-update, data in cui il Vault è stato sincronizzato l'ultima volta
- *  - session-expire, data di scadenza della sessione (corrisponde alla scadenza access token)
  *  - lse-private-key, la chiave privata del protocollo lse
  *  - email-utente, ~
  *  - vaults, tutti i vaults, cifrati con master key
