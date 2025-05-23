@@ -111,11 +111,11 @@ export class Cripto {
      * @param {Uint8Array} salt_hash
      * @returns {boolean}
      */
-    verifyHashWithSalt(message, salt_hash) {
+    async verifyHashWithSalt(message, salt_hash) {
         const salt = salt_hash.subarray(0, 16);
         const hash = salt_hash.subarray(16);
         // ---
-        const new_hash = this.hmac(message, salt);
+        const new_hash = await this.hmac(message, salt);
         return Buffer.compare(hash, new_hash) === 0;
     }
     /**
