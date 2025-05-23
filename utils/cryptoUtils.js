@@ -100,9 +100,9 @@ export class Cripto {
      * @param {*} key
      * @param {*} options
      */
-    hashWithSalt(message) {
+    async hashWithSalt(message) {
         const salt = crypto.randomBytes(16);
-        const hash = Buffer.from(this.hmac(message, salt));
+        const hash = Buffer.from(await this.hmac(message, salt));
         return new Uint8Array(Buffer.concat([salt, hash]));
     }
     /**

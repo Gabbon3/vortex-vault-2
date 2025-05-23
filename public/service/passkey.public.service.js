@@ -1,7 +1,5 @@
 import { Bytes } from "../../utils/bytes.js";
 import { API } from "../utils/api.js";
-import { LocalStorage } from "../utils/local.js";
-import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 
 export class PasskeyService {

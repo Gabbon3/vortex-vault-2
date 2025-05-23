@@ -94,9 +94,9 @@ export class UserController {
         // -- elimino dal db
         this.service.signout(req.payload.kid);
         // ---
-        res.clearCookie('jwt');
-        res.clearCookie('uid');
-        res.clearCookie('cke');
+        cookieUtils.deleteCookie(req, res, 'jwt');
+        cookieUtils.deleteCookie(req, res, 'uid');
+        cookieUtils.deleteCookie(req, res, 'cke');
         // ---
         res.status(201).json({ message: 'Bye' });
     });
