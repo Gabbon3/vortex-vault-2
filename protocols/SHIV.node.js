@@ -7,7 +7,7 @@ import { AuthKeys } from "../models/authKeys.model.js";
 import { Config } from "../server_config.js";
 import { JWT } from '../utils/jwt.utils.js';
 import { getUserAgentSummary } from "../utils/useragent.util.js";
-import msgpack from '../public/utils/msgpack.min.js';
+import msgpack from '../docs/utils/msgpack.min.js';
 
 /**
  * Session Handshake w/ Integrity Verification

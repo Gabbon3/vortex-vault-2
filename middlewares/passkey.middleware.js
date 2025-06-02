@@ -2,7 +2,7 @@ import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Bytes } from "../utils/bytes.js";
-import msgpack from "../public/utils/msgpack.min.js";
+import msgpack from "../docs/utils/msgpack.min.js";
 import { Passkey } from "../models/passkey.model.js";
 import { fido2 } from "../services/passkey.service.js";
 import { Config } from "../server_config.js";

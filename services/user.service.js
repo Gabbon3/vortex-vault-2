@@ -3,7 +3,7 @@ import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from '../models/user.js';
 import { Mailer } from '../config/mail.js';
-import emailContents from '../public/utils/automated.mails.js';
+import emailContents from '../docs/utils/automated.mails.js';
 import { RedisDB } from '../config/redisdb.js';
 import { Op } from 'sequelize';
 import { SHIV } from '../protocols/SHIV.node.js';

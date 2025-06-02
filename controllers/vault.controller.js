@@ -1,6 +1,6 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import msgpack from "../public/utils/msgpack.min.js";
+import msgpack from "../docs/utils/msgpack.min.js";
 import { UserService } from "../services/user.service.js";
 import { VaultService } from "../services/vault.service.js";
 

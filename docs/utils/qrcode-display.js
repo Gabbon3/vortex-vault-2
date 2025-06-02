@@ -1,4 +1,4 @@
-import { qrcode } from "../utils/qrcode.js";
+import { qrcode } from "./qrcode.js";
 import { Windows } from "./windows.js";
 
 export class QrCodeDisplay {

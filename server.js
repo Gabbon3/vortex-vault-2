@@ -4,13 +4,13 @@ import { sequelize } from './config/db.js';
 import user_routes from './routes/user.routes.js';
 import vault_routes from './routes/vault.routes.js';
 import backup_routes from './routes/backup.routes.js';
-import static_routes from './routes/static.routes.js';
+// import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
 import cke_routes from './routes/cke.routes.js';
 import shiv_routes from './routes/shiv.routes.js';
 import './models/associations.js';
-import { cors_middleware, csp_middleware, security_headers } from './config/csp.js';
+import { cors_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
 // import { UID } from './utils/uid.js';
 // import { Mailer } from './config/mail.js';
@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 // ---
 app.use(cors_middleware);
-app.use(csp_middleware);
+// app.use(csp_middleware);
 app.use(security_headers);
 // --- memorizza nella request se è stata l'estensione o la web app a fare la richiesta
 app.use((req, res, next) => {
@@ -48,7 +48,7 @@ app.use('/secure-link', secure_link_routes);
 /**
  * Pubbliche
  */
-app.use('/', static_routes);
+// app.use('/', static_routes);
 
 /**
  * Middlewares per gli errori

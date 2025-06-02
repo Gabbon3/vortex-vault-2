@@ -2,7 +2,7 @@ import { CError } from "../helpers/cError.js";
 import { Passkey } from "../models/passkey.model.js";
 import { User } from "../models/user.js";
 import { Mailer } from "../config/mail.js";
-import emailContents from "../public/utils/automated.mails.js";
+import emailContents from "../docs/utils/automated.mails.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Fido2Lib } from "fido2-lib";
 import { Bytes } from "../utils/bytes.js";

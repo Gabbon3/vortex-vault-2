@@ -6,7 +6,7 @@ import { Roles } from "../utils/roles.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
-import emailContents from "../public/utils/automated.mails.js";
+import emailContents from "../docs/utils/automated.mails.js";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { verifyPasskey } from "./passkey.middleware.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
