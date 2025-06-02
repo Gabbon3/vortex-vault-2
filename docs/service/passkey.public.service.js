@@ -1,4 +1,4 @@
-import { Bytes } from "../../utils/bytes.js";
+import { Bytes } from "../utils/bytes.js";
 import { API } from "../utils/api.js";
 import msgpack from "../utils/msgpack.min.js";
 
