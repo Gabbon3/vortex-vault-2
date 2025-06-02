@@ -1,6 +1,7 @@
 import { Windows } from "./windows.js";
 import { CError } from "./error.js";
 import { SHIV } from "../secure/SHIV.browser.js";
+import { Config } from "../config.js";
 
 export class API {
     static recent = {};
