@@ -45,7 +45,7 @@ export const cors_middleware = (req, res, next) => {
 
     // 📦 Access-Control-Allow-Headers
     // -- specifica quali header personalizzati possono essere inviati
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-integrity');
     // ---
     if (req.method === 'OPTIONS') {
         return res.sendStatus(204);
