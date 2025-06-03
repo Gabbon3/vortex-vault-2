@@ -41,7 +41,7 @@ export const cors_middleware = (req, res, next) => {
 
     // 🔁 Access-Control-Allow-Methods
     // -- elenca i metodi HTTP permessi nelle richieste CORS
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 
     // 📦 Access-Control-Allow-Headers
     // -- specifica quali header personalizzati possono essere inviati
