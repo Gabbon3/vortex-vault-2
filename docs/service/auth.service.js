@@ -13,6 +13,7 @@ import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { CKE } from "../utils/cke.public.util.js";
 import { SHIV } from "../secure/SHIV.browser.js";
+import { Windows } from "../utils/windows.js";
 
 export class AuthService {
     /**
@@ -22,6 +23,7 @@ export class AuthService {
         /**
          * CKE
          */
+        Windows.loader(true, "SHIV is starting");
         const sessionSharedSecret = SessionStorage.get('shared-secret');
         const userIsLogged = LocalStorage.exist('shared-secret');
         if (sessionSharedSecret || !userIsLogged) return true;

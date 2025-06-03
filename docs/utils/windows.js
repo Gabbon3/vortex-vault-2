@@ -32,7 +32,7 @@ export class Windows {
         this.bc.setAttribute('data-target', target);
         this.bc.classList.add('show');
         // -- aggiungo il testo
-        this.bc.querySelector('info').textContent = text;
+        this.bc.querySelector('.info').textContent = text;
     }
     /**
      * Chiude una finestra nel document

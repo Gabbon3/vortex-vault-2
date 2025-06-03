@@ -245,8 +245,8 @@ export class VaultUI {
             DeviceUI.init();
             PasskeyUI.init();
             // ---
-            Windows.loader(false);
             if (timeout > 0) Log.summon(0, `Welcome back ${SessionStorage.get('email')}`);
+            Windows.loader(false);
         }, timeout);
     }
     /**

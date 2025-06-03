@@ -8,6 +8,7 @@ import { Windows } from "../utils/windows.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (await AuthService.init()) console.log('SHIV ready');
+    Windows.loader(false);
     /**
      * Micro utility per l'accesso
      */
