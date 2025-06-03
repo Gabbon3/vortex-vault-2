@@ -19,7 +19,6 @@ export class Windows {
     /**
      * Apre una finestra nel document
      * @param {string} target - id della finestra html
-     * @param {string} text - informazioni da aggiungere a display
      */
     static open(target, text = "") {
         // -- chiudo il precedente
@@ -31,8 +30,6 @@ export class Windows {
         div.classList.add('show');
         this.bc.setAttribute('data-target', target);
         this.bc.classList.add('show');
-        // -- aggiungo il testo
-        this.bc.querySelector('.info').textContent = text;
     }
     /**
      * Chiude una finestra nel document
@@ -46,10 +43,13 @@ export class Windows {
     /**
      * schermata di caricamento
      * @param {boolean} active
+     * @param {string} text - informazioni da aggiungere a display
      */
-    static loader(active) {
+    static loader(active, text) {
         if (active) {
             this.loaderElement.classList.add('show');
+            // -- aggiungo il testo
+            this.loaderElement.querySelector('.info').textContent = text;
         } else {
             this.loaderElement.classList.remove('show');
         }
