@@ -17,7 +17,7 @@ import { VaultDelegator } from "../components/delegators/vault.delegator.js";
 const newVaultsInsertedData = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (window.location.pathname !== '/vault') return;
+    if (window.location.pathname !== '/vortex-vault-2/vault.html') return;
     // ---
     if (await AuthService.init()) console.log('SHIV ready');
     await VaultUI.init();
