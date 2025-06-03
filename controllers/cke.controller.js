@@ -25,14 +25,14 @@ export class CKEController {
             httpOnly: true,
             secure: true,
             maxAge: CKEController.cookieLifetime,
-            SameSite: "None",
+            sameSite: "None",
             path: "/cke/get",
         });
         cookieUtils.setCookie(req, res, 'cke-advanced', newMaterialAdvanced, {
             httpOnly: true,
             secure: true,
             maxAge: CKEController.cookieLifetime,
-            SameSite: "None",
+            sameSite: "None",
             path: "/cke/get/advanced",
         });
         // -- calcolo e restituisco anche il materiale avanzato

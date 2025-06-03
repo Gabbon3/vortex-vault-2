@@ -21,13 +21,13 @@ export const cookieUtils = {
         const name = req.isExtension ? `ext-${baseName}` : baseName;
         return req.cookies[name];
     },
-     /**
-     * Elimina un cookie in modo sicuro
-     * @param {Request} req 
-     * @param {Response} res 
-     * @param {string} baseName 
-     * @param {{}} options
-     */
+    /**
+    * Elimina un cookie in modo sicuro
+    * @param {Request} req 
+    * @param {Response} res 
+    * @param {string} baseName 
+    * @param {{}} options
+    */
     deleteCookie(req, res, baseName, options = {}) {
         const name = req.isExtension ? `ext-${baseName}` : baseName;
         res.clearCookie(name, {

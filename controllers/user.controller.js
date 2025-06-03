@@ -66,14 +66,14 @@ export class UserController {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.jwtLifetime * 1000,
-            SameSite: "None",
+            sameSite: "None",
             path: "/",
         });
         cookieUtils.setCookie(req, res, 'uid', uid, {
             httpOnly: true,
             secure: true,
             maxAge: SHIV.jwtLifetime * 1000,
-            SameSite: "None",
+            sameSite: "None",
             path: "/",
         })
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
