@@ -21,6 +21,7 @@ export class API {
             options.headers = options.headers || {};
             type.content_type = type.content_type || 'json';
             type.return_type = type.return_type || 'json';
+            options.credentials = "include";
             const loader = options.loader === true;
             if (loader) Windows.loader(true);
             // -- imposto il metodo di autenticazione se presente
