@@ -17,7 +17,7 @@ class LogoutButton extends HTMLElement {
                 Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
                 Windows.loader(true);
                 setTimeout(() => {
-                    window.location.href = '/signin';
+                    window.location.href = '/vortex-vault-2/signin.html';
                 }, 3000);
             }
         });

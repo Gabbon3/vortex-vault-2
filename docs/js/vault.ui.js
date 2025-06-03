@@ -231,7 +231,7 @@ export class VaultUI {
             if (started !== true && started !== 0) {
                 Log.summon(2, "Authentication failed, you will be redirected to the sign-in page");
                 setTimeout(() => {
-                    window.location.href = '/signin';
+                    window.location.href = '/vortex-vault-2/signin.html';
                 }, 4000);
                 return false;
             }

@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Log.summon(0, "Everything is ready, welcome to Vortex Vault");
         setTimeout(() => {
-            window.location.href = '/signin';
+            window.location.href = '/vortex-vault-2/signin.html';
         }, 3000);
     });
 });

@@ -10,7 +10,7 @@ export class VortexNavbar extends HTMLElement {
         // <img src="./img/vortex_vault_logo.png" class="logo">
         /**
          * Chat rimossa:
-        ${path !== '/chat' ? `<a href="/chat"' title="Chat">
+        ${path !== '/chat' ? `<a href="/vortex-vault-2/chat.html"' title="Chat">
             <span class="material-symbols-rounded">sms</span>
             <i>Chat</i>
         </a>` : ''}
@@ -43,12 +43,12 @@ export class VortexNavbar extends HTMLElement {
             <i>Generator</i>
         </a>` : ''}
 
-        ${this.checkPath('/vault', false) ? `<a href="/vault"' title="Vault">
+        ${this.checkPath('/vault', false) ? `<a href="/vortex-vault-2/vault.html" title="Vault">
             <span class="material-symbols-rounded">encrypted</span>
             <i>Vault</i>
         </a>` : ''}
             
-        ${this.checkPath('/signin', false) ? `<a href="/signin"' title="Sign In" class="mint last">
+        ${this.checkPath('/signin', false) ? `<a href="/vortex-vault-2/signin.html" title="Sign In" class="mint last">
             <span class="material-symbols-rounded">login</span>
             <i>Sign In</i>
         </a>` : ''}
@@ -57,7 +57,7 @@ export class VortexNavbar extends HTMLElement {
             <span class="material-symbols-rounded">passkey</span>
             <i>Sign-in with Passkey</i>
         </a>` : ''}
-        ${this.checkPath('/signin', true) ? `<a href="/signup"' title="Sign Up" class="mint last">
+        ${this.checkPath('/signin', true) ? `<a href="/vortex-vault-2/signup.html" title="Sign Up" class="mint last">
             <span class="material-symbols-rounded">person_add</span>
             <i>Sign Up</i>
         </a>` : ''}
