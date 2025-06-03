@@ -239,11 +239,11 @@ export class VaultUI {
             timeout = 1000;
         }
         // -- se ci sono avvio il vault
-        setTimeout(() => {
+        setTimeout(async () => {
             // ---
-            this.init_db_dom();
-            DeviceUI.init();
-            PasskeyUI.init();
+            await this.init_db_dom();
+            await DeviceUI.init();
+            await PasskeyUI.init();
             // ---
             if (timeout > 0) Log.summon(0, `Welcome back ${SessionStorage.get('email')}`);
             Windows.loader(false);

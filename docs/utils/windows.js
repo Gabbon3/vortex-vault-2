@@ -20,7 +20,7 @@ export class Windows {
      * Apre una finestra nel document
      * @param {string} target - id della finestra html
      */
-    static open(target, text = "") {
+    static open(target) {
         // -- chiudo il precedente
         this.close(this.current);
         const div = document.getElementById(target);
