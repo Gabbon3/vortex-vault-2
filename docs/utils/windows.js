@@ -18,9 +18,10 @@ export class Windows {
     }
     /**
      * Apre una finestra nel document
-     * @param {String} target id della finestra html
+     * @param {string} target - id della finestra html
+     * @param {string} text - informazioni da aggiungere a display
      */
-    static open(target) {
+    static open(target, text = "") {
         // -- chiudo il precedente
         this.close(this.current);
         const div = document.getElementById(target);
@@ -30,6 +31,8 @@ export class Windows {
         div.classList.add('show');
         this.bc.setAttribute('data-target', target);
         this.bc.classList.add('show');
+        // -- aggiungo il testo
+        this.bc.querySelector('info').textContent = text;
     }
     /**
      * Chiude una finestra nel document
@@ -54,4 +57,4 @@ export class Windows {
 }
 
 document.addEventListener('DOMContentLoaded', Windows.init());
-// window.Windows = Windows;
+window.Windows = Windows;

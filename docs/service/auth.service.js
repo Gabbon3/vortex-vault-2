@@ -9,7 +9,6 @@ import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
-import { PasskeyService } from "./passkey.public.service.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { CKE } from "../utils/cke.public.util.js";

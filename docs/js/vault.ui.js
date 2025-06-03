@@ -218,6 +218,7 @@ export class VaultUI {
         /**
          * EVENT DELEGATIONS INIT
          */
+        Windows.loader(true, "Vault is starting");
         VaultDelegator.init();
         // ----
         // - controllo se è possibile usare il vault configurando i segreti
@@ -225,7 +226,6 @@ export class VaultUI {
         let timeout = 0;
         // -- se non ci sono provo ad avviare la sessione
         if (!configured) {
-            Windows.loader(true);
             const started = await AuthService.start_session();
             // --- se non viene avviata fermo e restituisco errore
             if (started !== true && started !== 0) {

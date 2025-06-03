@@ -607,6 +607,16 @@ passkey-list-item {
     opacity: 0;
     transition: opacity 0.15s ease, visibility 0.15s ease;
 
+    .info {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: $monospace;
+        color: var(--text-color-2);
+        text-align: center;
+    }
+
     .full {
         width: 100%;
         height: 100%;
@@ -616,9 +626,6 @@ passkey-list-item {
         opacity: 1;
         visibility: visible;
     }
-}
-
-#loader {
     svg {
         width: calc((15vw + 15vh) / 2);
         animation: ease-out loader infinite 2s;
