@@ -68,7 +68,7 @@ export class SHIV {
         // -- codifico le variabili del payload
         const encodedBody = body instanceof Buffer || body instanceof Uint8Array ? new Uint8Array(body) : msgpack.encode(body);
         const encodedMethod = new TextEncoder().encode(method.toLowerCase());
-        const encodedEndpoint = new TextEncoder().encode(endpoint.toLowerCase());
+        const encodedEndpoint = new TextEncoder().encode(this.normalizePath(endpoint));
         // ---
         const payload = Bytes.merge([salt, encodedBody, encodedMethod, encodedEndpoint], 8);
         // ---
@@ -86,6 +86,16 @@ export class SHIV {
             if (Bytes.compare(sign, currentSign)) return true;
         }
         return false; // --> tutte le finestre fallite
+    }
+
+    /**
+     * Normalizza un path, per evitare problemi di integrity nella firma
+     * @param {string} path 
+     * @returns {string}
+     */
+    normalizePath(path) {
+        // -- rimuove slash finale
+        return path.replace(/\/+$/, '').toLowerCase();
     }
 
     /**
