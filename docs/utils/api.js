@@ -10,6 +10,7 @@ export class API {
      * @param {string} endpoint - L'endpoint a cui fare la richiesta.
      * @param {Object} options - Le opzioni da utilizzare nella chiamata fetch.
      * @param {string} [options.auth] - metodo di autenticazoine: psk, otp, psw
+     * @param {string} [options.queryParams] - stringa che contiene i query params da aggiungere alla request
      * @param {boolean} [options.hide_log] - se true non mostra il log
      * @param {boolean} [options.loader] - se true attiva il loader e lo termina quando l'api risponde
      * @param {Object} type - Contiene i tipi di ritorno e contenuto: { return_type, content_type }. (json, form-data, bin)
@@ -33,6 +34,12 @@ export class API {
             const integrity = await SHIV.getIntegrity(options.body ?? {}, options.method, endpoint);
             if (integrity) {
                 options.headers['X-Integrity'] = integrity;
+            }
+            // IMPORTANTE: aggiungere queryParams DOPO la firma, per evitare mismatch di endpoint
+            // -- gestisco i query Params
+            if (options.queryParams) {
+                endpoint += `?${options.queryParams}`;
+                delete options.queryParams;
             }
             // -- gestisco il corpo della richiesta in base al tipo di contenuto
             switch (type.content_type) {

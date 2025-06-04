@@ -34,7 +34,7 @@ export class SHIV {
         // -- codifico le variabili del payload
         const encodedBody = body instanceof Uint8Array ? body : msgpack.encode(body);
         const encodedMethod = new TextEncoder().encode(method.toLowerCase());
-        const encodedEndpoint = new TextEncoder().encode(endpoint.toLowerCase());
+        const encodedEndpoint = new TextEncoder().encode(this.normalizeEndpoint(endpoint));
         // -- mergio tutto il payload
         const payload = Bytes.merge([salt, encodedBody, encodedMethod, encodedEndpoint], 8);
         // -- ottengo la chiave nuova
@@ -44,6 +44,17 @@ export class SHIV {
         const result = Bytes.merge([salt, encrypted], 8);
         return Bytes.base64.encode(result, true);
     }
+
+    /**
+     * Normalizza un path preparandolo alla firma di integrità
+     * rimuove slash finali e query params, forza lower case
+     * @param {string} path 
+     * @returns {string}
+     */
+    static normalizeEndpoint(endpoint) {
+        return endpoint.split('?')[0].replace(/\/+$/, '').toLowerCase();
+    }
+
     /**
      * Genera e imposta le chiavi da usare per l'handshake con il server
      * @returns {boolean}

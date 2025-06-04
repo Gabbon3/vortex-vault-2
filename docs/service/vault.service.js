@@ -111,11 +111,10 @@ export class VaultService {
      * @returns {Array<Object>} un array di oggetti vault
      */
     static async get(updated_after = null) {
-        let url = '/vaults';
-        if (updated_after) url += `?updated_after=${updated_after.toISOString()}`;
         // ---
-        const res = await API.fetch(url, {
+        const res = await API.fetch('/vaults', {
             method: 'GET',
+            queryParams: updated_after ? `updated_after=${updated_after.toISOString()}` : null,
         });
         if (!res) return null;
         // ---
