@@ -60,6 +60,7 @@ export class SHIV {
      * @returns {number | boolean} false -> integrita non valida, -1 segreto non trovato
      */
     async verifyIntegrity(guid, body = {}, method = "", endpoint = "", integrity) {
+        console.log("SHIV - " + method + " => " + endpoint);
         const rawIntegrity = Bytes.base64.decode(integrity, true);
         // -- ottengo salt e lo separo dalla parte cifrata
         const salt = rawIntegrity.subarray(0, 12);
