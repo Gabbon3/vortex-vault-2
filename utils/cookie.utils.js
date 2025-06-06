@@ -33,7 +33,7 @@ export const cookieUtils = {
         res.clearCookie(name, {
             httpOnly: true,
             secure: true,
-            sameSite: "None",
+            sameSite: "Lax",
             path: "/",
             ...options
         });
