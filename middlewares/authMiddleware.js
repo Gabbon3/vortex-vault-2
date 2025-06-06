@@ -25,7 +25,7 @@ export const verifyAuth = (options = {}) => {
     return async (req, res, next) => {
         const jwt = (cookieUtils.getCookie(req, 'jwt')) || req.headers.authorization?.split(" ")[1];
         // -- verifico che esista
-        if (!jwt) return res.status(401).json({ error: "Access denied" });
+        if (!jwt) return res.status(401).json({ error: "JWT not found" });
         // ---
         const shiv = new SHIV();
         // -- ottengo il kid
@@ -33,10 +33,10 @@ export const verifyAuth = (options = {}) => {
         // ---
         const jwtSignKey = await shiv.getSignKey(kid, 'jwt-signing');
         if (!jwtSignKey)
-            return res.status(401).json({ error: "Access denied" });
+            return res.status(401).json({ error: "JWT Key not found" });
         // -- verifico che l'access token sia valido
         const payload = JWT.verify(jwt, jwtSignKey);
-        if (!payload) return res.status(401).json({ error: "Access denied" });
+        if (!payload) return res.status(401).json({ error: "Invalid JWT sign" });
         // -- se è tutto ok aggiungo il payload dell'utente alla request
         req.payload = payload;
         // -- verifica se il payload è conforme
