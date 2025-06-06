@@ -58,8 +58,10 @@ export const verifyAuth = (options = {}) => {
             // ---
             if (verified === -1)
                 return res.status(404).json({ error: "Secret not found" });
-            if (!verified)
+            if (!verified) {
+                console.warn(`[!] Integrity Failed on\nbody: ${req.body instanceof Buffer ? 'buffer' : 'string' }\nmethod: ${req.method}\nendpoint: ${`${req.baseUrl}${req.path}`}`);
                 return res.status(403).json({ error: "Integrity failed" });
+            }
         }
         // -- passo al prossimo middleware o controller
         next();
