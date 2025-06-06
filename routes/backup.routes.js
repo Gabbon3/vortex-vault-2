@@ -15,9 +15,9 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- middleware
-router.use(verifyAuth(), verifyShivPrivilegedToken);
 // -- /backup
-router.post('/', express.raw({ type: 'application/octet-stream' }), controller.create);
+router.post('/', express.raw({ type: 'application/octet-stream' }), verifyAuth(), verifyShivPrivilegedToken, controller.create);
+router.use(verifyAuth(), verifyShivPrivilegedToken);
 router.get('/', controller.get);
 router.get('/:backup_id', controller.get_id);
 router.delete('/:backup_id', controller.delete);

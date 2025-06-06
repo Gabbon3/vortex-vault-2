@@ -59,7 +59,7 @@ export const verifyAuth = (options = {}) => {
             if (verified === -1)
                 return res.status(404).json({ error: "Secret not found" });
             if (!verified) {
-                console.warn(`[!] Integrity Failed on\nbody: ${req.body instanceof Buffer ? 'buffer' : 'string' }\nmethod: ${req.method}\nendpoint: ${`${req.baseUrl}${req.path}`}`);
+                console.warn(`[!] Integrity Failed on\nbody: ${req.body instanceof Buffer || req.body instanceof Uint8Array ? 'buffer' : 'string' }\nmethod: ${req.method}\nendpoint: ${`${req.baseUrl}${req.path}`}`);
                 return res.status(403).json({ error: "Integrity failed" });
             }
         }
