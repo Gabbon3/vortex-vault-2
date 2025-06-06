@@ -18,10 +18,10 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- middleware per servire i file statici
-router.use(express.static(path.join(__dirname, '..', 'public')));
+router.use(express.static(path.join(__dirname, '..', 'docs')));
 // --
 router.get('/:page', async (req, res) => {
-    const requested_file = path.join(__dirname, '..', 'public', `${req.params.page}.html`);
+    const requested_file = path.join(__dirname, '..', 'docs', `${req.params.page}.html`);
     try {
         // -- verifico se il file esiste
         await fs.access(requested_file, fs.constants.F_OK);
