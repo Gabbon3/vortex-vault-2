@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (quick_signin === true) {
         const session_started = await auth_success();
         if (session_started === true || session_started === 0) {
-            Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`, () => { window.location.href = '/vortex-vault-2/vault.html'; });
+            Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`, () => { window.location.href = '/vault'; });
             // setTimeout(() => {
-            //     window.location.href = '/vortex-vault-2/vault.html';
+            //     window.location.href = '/vault';
             // }, 3000);
         }
     }
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             form.reset();
             Log.summon(0, `Authenticated as ${email}`);
             setTimeout(() => {
-                window.location.href = '/vortex-vault-2/vault.html';
+                window.location.href = '/vault';
             }, 3000);
         } else {
             document.getElementById('recovery-email').value = email;
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Log.summon(0, `Welcome back ${name}`);
         Windows.loader(false);
         setTimeout(() => {
-            window.location.href = '/vortex-vault-2/vault.html';
+            window.location.href = '/vault';
         }, 3000);
     });
     /**
@@ -174,7 +174,7 @@ class RequestSignIn {
                 // ---
                 Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
                 setTimeout(() => {
-                    window.location.href = '/vortex-vault-2/vault.html';
+                    window.location.href = '/vault';
                 }, 3000);
             } else {
                 if (!confirm(`attention, a qr code will be shown for you to scan with an authenticated device, then you can close the qrcode window and re-click on "Sign-in with another device" to authenticate`)) {

@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", async () => {
      * Nessuna autenticazione per il web socket
      */
     Bus.addEventListener('ws-no-auth', (event) => {
-        Log.summon(1, 'Sign-in first', () => { window.location.href = '/vortex-vault-2/signin.html' });
+        Log.summon(1, 'Sign-in first', () => { window.location.href = '/signin' });
     });
 });
 

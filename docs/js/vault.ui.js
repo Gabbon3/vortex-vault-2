@@ -17,7 +17,7 @@ import { VaultDelegator } from "../components/delegators/vault.delegator.js";
 const newVaultsInsertedData = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (window.location.pathname !== '/vortex-vault-2/vault.html') return;
+    if (window.location.pathname !== '/vault') return;
     // ---
     if (await AuthService.init()) console.log('SHIV ready');
     await VaultUI.init();
@@ -231,7 +231,7 @@ export class VaultUI {
             if (started !== true && started !== 0) {
                 Log.summon(2, "Authentication failed, you will be redirected to the sign-in page");
                 setTimeout(() => {
-                    window.location.href = '/vortex-vault-2/signin.html';
+                    window.location.href = '/signin';
                 }, 4000);
                 return false;
             }

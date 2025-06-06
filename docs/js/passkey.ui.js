@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * PAGINA VAULT
      */
-    if (window.location.pathname !== '/vortex-vault-2/vault.html') return;
+    if (window.location.pathname !== '/vault') return;
     /**
      * NEW PASSKEY
      */

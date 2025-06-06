@@ -47,7 +47,7 @@ export class PasskeyBtn extends HTMLElement {
             sessionStorage.clear();
             Log.summon(0, "Your account has been deleted, you will be disconnected from this page in a moment.");
             setTimeout(() => {
-                window.location.href = '/vortex-vault-2/signin.html';
+                window.location.href = '/signin';
             }, 3000);
         },
         /**

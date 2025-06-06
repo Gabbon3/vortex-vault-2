@@ -268,7 +268,7 @@ export const GlobalDelegator = {
                 0,
                 "All data has been deleted, click here to sign in",
                 () => {
-                    window.location.href = "/vortex-vault-2/signin.html";
+                    window.location.href = "/signin";
                 }
             );
         }
