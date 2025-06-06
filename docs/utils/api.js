@@ -2,7 +2,6 @@ import { Windows } from "./windows.js";
 import { CError } from "./error.js";
 import { SHIV } from "../secure/SHIV.browser.js";
 import { Config } from "../config.js";
-import { Log } from "./log.js";
 
 export class API {
     static recent = {};
@@ -75,7 +74,6 @@ export class API {
                 };
                 console.warn(`errore nella fetch:`, error);
                 API.recent = error;
-                Log.summon(1, `${options.body ?? {}}, ${options.method}, ${endpoint}`);
                 if (options.hide_log !== true) CError.check(error); // -- lancio un errore se la risposta non è valida
                 if (loader) Windows.loader(false);
                 return null;
