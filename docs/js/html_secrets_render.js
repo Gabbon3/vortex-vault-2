@@ -126,7 +126,7 @@ export class HtmlSecretsRender {
     <div class="container-input-text">
         <textarea spellcheck="false" name="H" id="url-${HtmlSecretsRender.id}" rows="3">${vals.H ?? ''}</textarea>
     </div>
-    <p class="description">Split multiple urls by space or ,</p>
+    <p class="description mb-0">Split multiple urls by space or ,</p>
 </div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
