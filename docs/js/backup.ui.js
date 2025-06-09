@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#btn-restore-backup-server').addEventListener('click', async () => {
         if (!confirm('Are you sure you want to restore from the last backup?')) return;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Restoring all vault from server");
         if (await BackupService.restore_server()) {
             Log.summon(0, "Backup restored successfully");
         } else {
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Form.register('form-restore-backup-from-file', async (form, elements) => {
         const { key, backup_file } = elements;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Restoring all vault from your file");
         if (await BackupService.restore_locally(backup_file, key === ''? null : key)) {
             Log.summon(0, "Backup restored successfully");
             form.reset();

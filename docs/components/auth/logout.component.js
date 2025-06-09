@@ -15,7 +15,7 @@ class LogoutButton extends HTMLElement {
             const signed_out = await AuthService.signout();
             if (signed_out) {
                 Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
-                Windows.loader(true);
+                Windows.loader(true, "Redirect to signin page");
                 setTimeout(() => {
                     window.location.href = '/signin';
                 }, 3000);

@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     Form.register("form-create-vault", async (form, elements) => {
         if (!confirm(`Do you confirm that you want to protect ${elements.T}?`)) return;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Encrypting the new vault");
         const vault_id = await VaultService.create(elements);
         if (vault_id) {
             document.getElementById('dinamic-secrets').innerHTML = '';
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('#btn-sync-vault').addEventListener('click', async () => {
         if (!confirm('Do you confirm that you want to synchronize with the server?')) return;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Decrypting all vaults");
         await VaultService.syncronize(true);
         Windows.loader(false);
         VaultUI.html_vaults();
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const title = vault.secrets.T;
         if (!confirm(`Are you sure you want to delete permanently ${title}?`)) return;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Rip for " + vault.secrets.T);
         // ---
         if (await VaultService.delete(vault_id)) {
             Log.summon(0, `${title} deleted`);

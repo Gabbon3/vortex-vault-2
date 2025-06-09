@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!confirm('A locally backup will be made, the password of the backup will be the new password that you have chosen now, after the password is changed, you will have to restore from that backup your vault, do you confirm that you understand?')) return;
         if (!confirm('Really?')) return;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Changing your master password");
         if (await AuthService.change_password(elements.old_password, elements.new_password)) {
             Log.summon(0, "Password changed successfully");
             form.reset();

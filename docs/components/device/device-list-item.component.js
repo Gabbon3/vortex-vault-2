@@ -104,8 +104,8 @@ class DeviceListItem extends HTMLElement {
         const key = e.key;
         // ---
         if (key === 'Enter') {
-            Windows.loader(true);
             const deviceName = e.currentTarget.value;
+            Windows.loader(true, "Renaming into " + deviceName);
             const device = DeviceService.get_device(this.deviceId);
             if (confirm(`Are you sure you want to rename this device into "${deviceName}"?`)) {
                 await DeviceService.update_device_name(this.deviceId, deviceName);

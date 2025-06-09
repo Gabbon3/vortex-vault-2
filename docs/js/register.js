@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // -- controllo sulle password
         if (password !== password2) return Log.summon(1, 'Passwords doesn\'t match');;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Creating your new account, please wait");
         if (await AuthService.register(email, password)) {
             LocalStorage.set('email-utente', email);
             form.reset();

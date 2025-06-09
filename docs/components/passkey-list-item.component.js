@@ -60,7 +60,7 @@ class PasskeyListItem extends HTMLElement {
         const name = event.currentTarget.value;
         if (!confirm('Are you sure you want to rename this passkey into ' + name + '?')) return;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Renaming into " + name);
         const updated = await PasskeyService.rename(this.id, name);
         Windows.loader(false);
         if (!updated) return;

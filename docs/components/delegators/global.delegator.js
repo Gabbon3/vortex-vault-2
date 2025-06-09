@@ -180,7 +180,7 @@ export const GlobalDelegator = {
     async handlePasskeyBtnClick(e) {
         const btn = e.target.closest("passkey-btn");
         if (!btn) return false;
-        Windows.loader(true);
+        Windows.loader(true, "Passkey verification");
         // ---
         const pre_callback = btn.getAttribute("pre-callback");
         const callback = btn.getAttribute("callback");
