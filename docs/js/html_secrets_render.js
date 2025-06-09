@@ -126,7 +126,11 @@ export class HtmlSecretsRender {
     <div class="container-input-text">
         <textarea spellcheck="false" name="H" id="url-${HtmlSecretsRender.id}" rows="3">${vals.H ?? ''}</textarea>
     </div>
-    <p class="description mb-0">Split multiple urls by space or ,</p>
+    <p class="description mb-0">
+        Enter one or more URLs associated with this login.
+        You can separate multiple entries with commas or line breaks.
+        To use a regular expression, wrap the pattern like /example\.com/r.
+    </p>
 </div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
