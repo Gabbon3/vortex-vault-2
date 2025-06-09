@@ -129,7 +129,7 @@ export class HtmlSecretsRender {
     <p class="description mb-0">
         Enter one or more URLs associated with this login.
         You can separate multiple entries with commas or line breaks.
-        To use a regular expression, wrap the pattern like /example\.com/r.
+        To use a regular expression, wrap the pattern like /example\\.com/r.
     </p>
 </div>
 <!-- CUSTOM -->
