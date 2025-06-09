@@ -117,6 +117,17 @@ export class HtmlSecretsRender {
     </div>
     ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
 </div>
+<!-- URL -->
+<div class="isle bg-4 mb-2">
+    <label for="url-${HtmlSecretsRender.id}">
+        <span class="material-symbols-rounded">link</span>
+        URLs
+    </label>
+    <div class="container-input-text">
+        <textarea spellcheck="false" name="H" id="url-${HtmlSecretsRender.id}" rows="3">${vals.H ?? ''}</textarea>
+    </div>
+    <p class="description">Split multiple urls by space or ,</p>
+</div>
 <!-- CUSTOM -->
 <div class="custom-sections flex d-column emb" id="${update ? 'update-' : ''}custom-sections-vault">
     <!-- ... -->
