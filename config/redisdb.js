@@ -19,6 +19,25 @@ export class RedisDB {
             return false;
         }
     }
+
+    /**
+     * Tenta di creare una chiave solo se non esiste già, con TTL
+     * @param {string} key
+     * @param {*} value
+     * @param {number} ttl - in secondi
+     * @returns {boolean} true se creata, false se già esiste
+     */
+    static async setIfNotExists(key, value, ttl = 3600) {
+        try {
+            const buffer = msgpack.encode(value);
+            const result = await redis.set(key, buffer, "NX", "EX", ttl);
+            return result === "OK";
+        } catch (err) {
+            console.warn("RedisDB.setIfNotExists error:", err);
+            return false;
+        }
+    }
+
     /**
      * Verifica se un record esiste
      * @param {string} key

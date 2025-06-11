@@ -16,6 +16,7 @@ export class SHIV {
     static timeWindow = 120; // in secondi
     static jwtLifetime = 31 * 24 * 60 * 60; // in secondi
     static pptLifetime = 10 * 60; // in secondi
+    static replayTtl = 4 * 60; // in secondi
 
     /**
      * Avvia una sessione shiv, quindi calcola il segreto condiviso e lo salva sul db, genera il jwt
@@ -57,9 +58,10 @@ export class SHIV {
      * @param {{}|Uint8Array} [body={}] - il body della request
      * @param {string} method - metodo usato nella request (GET, POST...)
      * @param {string} integrity - stringa in base64
+     * @param {boolean} [verifyReplay=false] - 
      * @returns {number | boolean} false -> integrita non valida, -1 segreto non trovato
      */
-    async verifyIntegrity(guid, body = {}, method = "", endpoint = "", integrity) {
+    async verifyIntegrity(guid, body = {}, method = "", endpoint = "", integrity, verifyReplay = false) {
         const rawIntegrity = Bytes.base64.decode(integrity, true);
         // -- ottengo salt e lo separo dalla parte cifrata
         const salt = rawIntegrity.subarray(0, 12);
@@ -86,6 +88,22 @@ export class SHIV {
         }
         return false; // --> tutte le finestre fallite
     }
+
+    /**
+     * Verifica se su redis esiste già una entry con il salt usato per l'integrity
+     * @param {string} guid 
+     * @param {string} integrity 
+     * @returns {boolean} false se non è replay, true se è replay
+     */
+    async isReplay(guid, integrity) {
+        // -- 12 byte in base64 sono 16 caratteri
+        const salt = integrity.slice(0, 16);
+        const key = `${guid}${salt}`;
+        const created = await RedisDB.setIfNotExists(key, true, replayTtl);
+        // -- se non è stato creato, è replay
+        return !created;
+    }
+
 
     /**
      * Normalizza un path, per evitare problemi di integrity nella firma

@@ -12,44 +12,52 @@ import { verifyPasskey } from "./passkey.middleware.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
 
 /**
- * Middleware di autenticazione e autorizzazione basato su JWT e controllo d'integrità opzionale.
- * => req.payload = payload { uid, role, kid }
+ * Middleware di autenticazione e autorizzazione basato sui componenti SHIV: JWT e Integrity.
+ * => req.payload = payload { uid, kid }
  * @function verifyAccessToken
  * @param {Object} [options={}] - Opzioni per configurare il middleware.
- * @param {number} [options.requiredRole=Roles.BASE] - Ruolo minimo richiesto per accedere alla rotta.
  * @param {boolean} [options.checkIntegrity=true] - Se true, abilita la verifica dell'integrità tramite header 'X-Integrity'.
- * @returns {Function} Express middleware async che valida l'access token e opzionalmente verifica l'integrità.
+ * @param {boolean} [options.replayProtection=false] - Se true, effettua un controllo sul salt verificando che non sia già stato usato.
+ * @returns {Function}
  */
 export const verifyAuth = (options = {}) => {
-    const { requiredRole = Roles.BASE, checkIntegrity = true } = options;
+    const { checkIntegrity = true, replayProtection = false } = options;
+    if (replayProtection && !checkIntegrity) {
+        throw new Error("ReplayProtection requires checkIntegrity = true");
+    }
     return async (req, res, next) => {
-        const jwt = (cookieUtils.getCookie(req, 'jwt')) || req.headers.authorization?.split(" ")[1];
+        const jwt = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
         // -- verifico che esista
-        if (!jwt) return res.status(401).json({ error: "JWT not found" });
+        if (!jwt) return res.status(401).json({ error: "Access denied" });
         // ---
         const shiv = new SHIV();
-        // -- ottengo il kid
         const kid = shiv.getKidFromJWT(jwt);
         // ---
         const jwtSignKey = await shiv.getSignKey(kid, 'jwt-signing');
         if (!jwtSignKey)
-            return res.status(401).json({ error: "JWT Key not found" });
+            return res.status(401).json({ error: "Access denied" });
         // -- verifico che l'access token sia valido
-        const payload = JWT.verify(jwt, jwtSignKey);
-        if (!payload) return res.status(401).json({ error: "Invalid JWT sign" });
+        const jsonwebtoken = new JWT();
+        const payload = jsonwebtoken.verify(jwt, jwtSignKey);
+        if (!payload) return res.status(401).json({ error: "Access denied" });
         // -- se è tutto ok aggiungo il payload dell'utente alla request
         req.payload = payload;
         // -- verifica se il payload è conforme
         if (!req.payload.uid)
             return res.status(400).json({ error: "Sign-in again" });
-        // -- verifica del ruolo
-        if (req.payload.role < requiredRole)
-            return res.status(403).json({ error: "Insufficient privileges" });
+        /**
+         * Verifico il replay se richiesto
+         */
+        const integrity = req.get("X-Integrity");
+        if (replayProtection) {
+            const isReplay = await shiv.isReplay(kid, integrity);
+            if (isReplay)
+                return res.status(409).json({ error: "Replay attemp detected" });
+        }
         /**
          * Verifico l'integrità della richiesta
          */
         if (checkIntegrity) {
-            const integrity = req.get("X-Integrity");
             if (!integrity)
                 return res.status(403).json({ error: "Integrity not found" });
             // -- verifico l'integrity
@@ -58,10 +66,8 @@ export const verifyAuth = (options = {}) => {
             // ---
             if (verified === -1)
                 return res.status(404).json({ error: "Secret not found" });
-            if (!verified) {
-                console.warn(`[!] Integrity Failed on\nbody: ${req.body instanceof Buffer || req.body instanceof Uint8Array ? 'buffer' : 'string' }\nmethod: ${req.method}\nendpoint: ${`${req.baseUrl}${req.path}`}`);
+            if (!verified)
                 return res.status(403).json({ error: "Integrity failed" });
-            }
         }
         // -- passo al prossimo middleware o controller
         next();
