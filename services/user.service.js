@@ -52,6 +52,7 @@ export class UserService {
             'live.com',     // Microsoft
             'libero.it',    // Libero
             'tesisquare.com',// Tesisquare
+            'edu.itspiemonte.it',// ITS
         ];
         // ---
         return verified_domains.includes(email.split('@')[1]);
