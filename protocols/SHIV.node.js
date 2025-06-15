@@ -43,7 +43,8 @@ export class SHIV {
          */
         const jwtSignKey = await this.calculateSignKey(sharedSecret, 'jwt-signing');
         if (!jwtSignKey) return false;
-        const jwt = JWT.create({ ...payload, kid }, jwtLifetime, jwtSignKey);
+        const jsonwebtoken = new JWT();
+        const jwt = jsonwebtoken.create({ ...payload, kid }, jwtLifetime, jwtSignKey);
         // ---
         return {
             jwt: jwt,
@@ -58,10 +59,9 @@ export class SHIV {
      * @param {{}|Uint8Array} [body={}] - il body della request
      * @param {string} method - metodo usato nella request (GET, POST...)
      * @param {string} integrity - stringa in base64
-     * @param {boolean} [verifyReplay=false] - 
      * @returns {number | boolean} false -> integrita non valida, -1 segreto non trovato
      */
-    async verifyIntegrity(guid, body = {}, method = "", endpoint = "", integrity, verifyReplay = false) {
+    async verifyIntegrity(guid, body = {}, method = "", endpoint = "", integrity) {
         const rawIntegrity = Bytes.base64.decode(integrity, true);
         // -- ottengo salt e lo separo dalla parte cifrata
         const salt = rawIntegrity.subarray(0, 12);

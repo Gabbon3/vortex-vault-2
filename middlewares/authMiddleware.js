@@ -2,7 +2,7 @@ import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { UserService } from "../services/user.service.js";
 import { JWT } from "../utils/jwt.utils.js";
-import { Roles } from "../utils/roles.js";
+// import { Roles } from "../utils/roles.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
@@ -94,7 +94,8 @@ export const verifyShivPrivilegedToken = asyncHandler(
         if (!pptSignKey)
             return res.status(401).json({ error: "Access denied" });
         // -- verifico che il ppt sia valido
-        const payload = JWT.verify(ppt, pptSignKey);
+        const jsonwebtoken = new JWT();
+        const payload = jsonwebtoken.verify(ppt, pptSignKey);
         if (!payload) return res.status(401).json({ error: "Access denied" });
         // -- passo le informazioni
         req.ppt = payload;

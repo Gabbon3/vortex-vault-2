@@ -3,7 +3,6 @@ import { CError } from "../helpers/cError.js";
 import { Bytes } from "../utils/bytes.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
-import { JWT } from "../utils/jwt.utils.js";
 import { MFAService } from "../services/mfa.service.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Mailer } from "../config/mail.js";
