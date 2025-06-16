@@ -26,7 +26,7 @@ export const verifyAuth = (options = {}) => {
         throw new Error("ReplayProtection requires checkIntegrity = true");
     }
     return async (req, res, next) => {
-        const jwt = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+        const jwt = cookieUtils.getCookie(req, 'jwt') || req.headers.authorization?.split(" ")[1];
         // -- verifico che esista
         if (!jwt) return res.status(401).json({ error: "Access denied" });
         // ---
