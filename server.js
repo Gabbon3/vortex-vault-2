@@ -28,8 +28,13 @@ app.use(express.json());
 app.use(cookieParser());
 // ---
 app.use(cors_middleware);
-app.use(csp_middleware);
-app.use(security_headers);
+/**
+ * gestiti da cloudfare
+ */
+if (Config.DEV) {
+    app.use(csp_middleware);
+    app.use(security_headers);
+}
 // --- memorizza nella request se è stata l'estensione o la web app a fare la richiesta
 app.use((req, res, next) => {
     req.isExtension = req.headers["x-client-type"] === "extension";
