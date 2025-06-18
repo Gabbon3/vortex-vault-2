@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export class Config {
     // 
-    static PORT = process.env.PORT;
+    static PORT = process.env.PORT || 8080;
     // Database
     static DB_HOST = process.env.DB_HOST;
     static DB_NAME = process.env.DB_NAME;
