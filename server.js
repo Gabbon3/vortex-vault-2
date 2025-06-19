@@ -18,6 +18,8 @@ import https from 'https';
 import fs from 'fs';
 import { date } from './utils/dateUtils.js';
 import { Config } from './server_config.js';
+// -- Chron e Jobs
+import './jobs/jobs.js';
 /**
  * MIDDLEWARES
  * qui ci sono i middleware che verranno utilizzati in tutte le routes

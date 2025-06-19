@@ -45,19 +45,26 @@ export class VaultService {
          * disincronizzazione tra client e server
          */
         if (vault_update) selectFrom = new Date(Date.now() - (this.getDateDiff));
-        // ---
+        /**
+         * Provo ad ottenere i vault dal localstorage
+         */
+        this.vaults = await VaultLocal.get(this.master_key);
+        if (this.vaults.length === 0) {
+            console.log('[i] Sincronizzo completamente con il vault');
+            full = true;
+        }
+        /**
+         * VaultLocal.get restituisce [] anche nel caso in cui ce stato un errore crittografico
+         * in ogni caso se è vuoto effettuo una sincronizzazione completa con il server
+         */
         try {
-            this.vaults = await VaultLocal.get(this.master_key);
-            const n_local_vaults = this.vaults.length;
-            const n_db_vaults = await this.count();
-            // recupero tutti i vault se per esempio un vault è stato eliminato sul db
-            if (n_local_vaults > n_db_vaults) full = true;
-            // se ci sono dei vault nel localstorage recupero solo quelli nuovi
-            // recupero tutti i vault se full è true
             const vaults_from_db = await this.get(full ? null : selectFrom);
             if (vaults_from_db.length > 0) {
                 if (full) {
-                    await VaultLocal.save(vaults_from_db, this.master_key);
+                    await VaultLocal.save(
+                        vaults_from_db.filter((vault) => { return vault.deleted == false }), 
+                        this.master_key
+                    );
                     this.vaults = vaults_from_db;
                 } else {
                     this.vaults = await VaultLocal.sync_update(vaults_from_db, this.master_key)
@@ -72,7 +79,6 @@ export class VaultService {
             LocalStorage.remove('vaults');
             return false;
         }
-        this.load_used_usernames();
         return true;
     }
     /**
@@ -121,17 +127,6 @@ export class VaultService {
         if (res.length > 0) LocalStorage.set('vault-update', new Date());
         // ---
         return await this.decrypt_vaults(res) ? res : null;
-    }
-    /**
-     * Restituisce il numero totale di vault del db
-     * @returns {number}
-     */
-    static async count() {
-        const res = await API.fetch('/vaults/count', {
-            method: 'GET',
-        });
-        if (!res) return 0;
-        return res.count;
     }
     /**
      * Modifica un vault

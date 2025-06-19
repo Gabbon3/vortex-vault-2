@@ -18,6 +18,11 @@ export const Vault = sequelize.define(
             type: DataTypes.BLOB,
             allowNull: false
         },
+        deleted: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        }
     },
     {
         tableName: 'vault',

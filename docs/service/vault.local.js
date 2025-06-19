@@ -33,21 +33,35 @@ export class VaultLocal {
         return vaults.findIndex(vault => vault.id === vault_id);
     }
     /**
-     * Aggiorna tutti i vaults passati o li aggiunge se non esistono
+     * Aggiorna tutti i vaults passati o li aggiunge se non esistono.
+     * Rimuove quelli marcati come deleted.
      * @param {Array<Object>} vaults 
      * @param {Uint8Array} key 
      */
     static async sync_update(vaults, key) {
-        const local_vaults = await this.get(key);
+        let local_vaults = await this.get(key);
+
+        // -- costruisce una mappa locale per accesso rapido
+        const vaultMap = new Map(local_vaults.map(v => [v.id, v]));
+
         for (const vault of vaults) {
-            const index = this.get_index(local_vaults, vault.id);
-            index !== -1 ? local_vaults[index] = vault : local_vaults.push(vault);
+            if (vault.deleted) {
+                vaultMap.delete(vault.id); // rimuove se esiste
+            } else {
+                vaultMap.set(vault.id, vault); // aggiorna o aggiunge
+            }
         }
+
+        // -- ricostruisce l’array finale aggiornato
+        const updatedVaults = Array.from(vaultMap.values());
+
+        await this.save(updatedVaults, key);
+        // -- debug
+        console.log(`[sync_update] Total received: ${vaults.length}, Deleted: ${vaults.filter(v => v.deleted).length}`);
         // ---
-        await this.save(local_vaults, key);
-        // ---
-        return local_vaults;
+        return updatedVaults;
     }
+
     /**
      * Aggiorna il singolo vault
      * @param {Object} vault 

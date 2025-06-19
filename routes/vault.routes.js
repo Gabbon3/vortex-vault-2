@@ -20,7 +20,6 @@ router.post('/restore', express.raw({ type: 'application/octet-stream' }), verif
 // -- routes that require simple access token
 router.use(verifyAuth());
 router.post('/create', controller.create);
-router.get('/count', controller.count);
 router.get('/:vault_id', controller.get_id);
 router.get('/', controller.get);
 router.post('/update', controller.update);

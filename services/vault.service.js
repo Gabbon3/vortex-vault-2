@@ -43,6 +43,7 @@ export class VaultService {
      */
     async get(user_id, updated_after = null) {
         const where = { user_id };
+        // ---
         if (updated_after) {
             where.updated_at = {
                 [Op.gt]: updated_after.toISOString()
@@ -76,10 +77,12 @@ export class VaultService {
     async update(user_id, vault_id, secrets) {
         const [updated_rows] = await Vault.update(
             { secrets },
-            { where: {
-                id: vault_id,
-                user_id
-            } }
+            {
+                where: {
+                    id: vault_id,
+                    user_id
+                }
+            }
         );
         // -- se nessuna riga è stata aggiornata restituisco null
         if (updated_rows === 0) return null;
@@ -116,7 +119,7 @@ export class VaultService {
                     secrets: secrets_buffer,
                     createdAt: new Date(createdAt).toISOString(),
                     updatedAt: new Date(updatedAt).toISOString()
-                }, { 
+                }, {
                     transaction: t,
                     silent: true
                 });
@@ -137,11 +140,14 @@ export class VaultService {
      * @returns 
      */
     async delete(user_id, vault_id) {
-        return await Vault.destroy({
-            where: {
-                id: vault_id,
-                user_id
+        return await Vault.update(
+            { deleted: true },
+            {
+                where: {
+                    id: vault_id,
+                    user_id
+                }
             }
-        })
+        );
     }
 }

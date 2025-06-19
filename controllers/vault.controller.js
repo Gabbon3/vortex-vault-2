@@ -59,15 +59,6 @@ export class VaultController {
         res.status(200).json(vaults);
     });
     /**
-     * Conta il numero di 
-     * @param {Request} req 
-     * @param {Response} res 
-     */
-    count = asyncHandler(async (req, res) => {
-        const count = await this.service.count(req.payload.uid);
-        return res.status(200).json({ count });
-    });
-    /**
      * Aggiorna un vault
      * @param {Request} req 
      * @param {Response} res 
