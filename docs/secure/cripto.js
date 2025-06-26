@@ -48,6 +48,18 @@ export class Cripto {
     }
 
     /**
+     * Offusca la password dell'utente prima di inviarla al server
+     * in questo modo il server non sarà mai in grado di visualizzare la password degli utenti direttamente
+     * @param {string} password 
+     * @returns {string} stringa esadecimale
+     */
+    static async obfuscatePassword(password) {
+        const h1 = await this.hash(password, { algorithm: 'SHA-256' });
+        const h2 = await this.hash(h1, { algorithm: 'SHA-512' });
+        return await this.hash(h2, { algorithm: 'SHA-256', encoding: 'hex' });
+    }
+
+    /**
      * Genera un codice di recupero crittograficamente sicuro
      * @param {number} size 
      * @returns {string}
