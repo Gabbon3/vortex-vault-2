@@ -32,7 +32,7 @@ export class Cripto {
      * @param {string} [encoding=null] - Formato dell'output (optional: 'hex' o 'base64').
      * @returns {string|Uint8Array} - Byte generati nel formato specificato.
      */
-    static random_bytes(size, encoding = null) {
+    static randomBytes(size, encoding = null) {
         const bytes = crypto.getRandomValues(new Uint8Array(size));
         // -- se l'encoding è hex o base64, utilizzo la classe Bytes per la conversione
         return this.encoding(bytes, encoding);

@@ -14,7 +14,7 @@ export class SecureLink {
      * @param {number} [options.ttl] * time to live
      */
     static async generate(options) {
-        const key = options.key || Cripto.random_bytes(32);
+        const key = options.key || Cripto.randomBytes(32);
         const data = msgpack.encode(options.data);
         const encrypted_data = await AES256GCM.encrypt(data, key);
         // ---

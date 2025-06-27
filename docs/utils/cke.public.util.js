@@ -14,7 +14,7 @@ export class CKE {
     static async init(cookieMaterialHex) {
         const rawCookieMaterial = Bytes.hex.decode(cookieMaterialHex);
         // -- genero il materiale locale e lo memorizzo
-        const localMaterial = await Cripto.random_bytes(32);
+        const localMaterial = await Cripto.randomBytes(32);
         await LocalStorage.set("cke-localMaterial", localMaterial);
         // -- derivo il segreto
         const key = await this.deriveKey(rawCookieMaterial, localMaterial);
@@ -35,7 +35,7 @@ export class CKE {
         const basicBytes = Bytes.hex.decode(basic);
         const advancedBytes = Bytes.hex.decode(advanced);
         // -- genero il materiale locale
-        const localMaterial = Cripto.random_bytes(32);
+        const localMaterial = Cripto.randomBytes(32);
         LocalStorage.set("cke-localMaterial", localMaterial);
         // ---
         const keyBasic = await this.deriveKey(basicBytes, localMaterial);

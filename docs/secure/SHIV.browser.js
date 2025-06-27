@@ -30,7 +30,7 @@ export class SHIV {
         // ---
         if (sharedSecret instanceof Uint8Array == false) return null;
         // -- genero un salt casuale
-        const salt = Cripto.random_bytes(12);
+        const salt = Cripto.randomBytes(12);
         // -- codifico le variabili del payload
         const encodedBody = body instanceof Uint8Array ? body : msgpack.encode(body);
         const encodedMethod = new TextEncoder().encode(method.toLowerCase());

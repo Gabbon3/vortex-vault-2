@@ -176,7 +176,11 @@ export class AuthService {
         }
         const res = await API.fetch('/auth/password', {
             method: 'POST',
-            body: { old_password, new_password, email },
+            body: { 
+                old_password: await Cripto.obfuscatePassword(old_password), 
+                new_password: await Cripto.obfuscatePassword(new_password), 
+                email
+            },
         });
         if (!res) return false;
         // -- imposto la master key
@@ -262,7 +266,7 @@ export class AuthService {
      */
     static async request_signin() {
         // -- genero una chiave casuale e un id utilizzabile
-        const key = Cripto.random_bytes(32, 'base64url');
+        const key = Cripto.randomBytes(32, 'base64url');
         const id = await SecureLink.request_id();
         if (!id) return false;
         // ---

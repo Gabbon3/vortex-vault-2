@@ -214,34 +214,42 @@ export class VaultService {
     /**
      * Cifra un vault
      * @param {Object} vault 
-     * @param {Uint8Array} provided_salt 
+     * @param {Uint8Array} providedDEK 
      * @returns {Uint8Array}
      */
-    static async encrypt(vault, provided_salt = null, master_key = this.master_key) {
-        // -- derivo la chiave specifica del vault
-        const salt = provided_salt || Cripto.random_bytes(16);
-        const key = await Cripto.hmac(salt, master_key);
+    static async encrypt(vault, providedDEK = null, KEK = this.master_key) {
+        // -- genero una dek specifica per l'elemento
+        const DEK = providedDEK || Cripto.randomBytes(32);
+        const encryptedDEK = await AES256GCM.encrypt(DEK, KEK);
         // -- cifro il vault
-        const vault_bytes = msgpack.encode(vault);
-        const encrypted_vault = await AES256GCM.encrypt(vault_bytes, key);
+        const encodedVault = msgpack.encode(vault);
+        const encryptedVault = await AES256GCM.encrypt(encodedVault, DEK);
         // -- unisco il salt al vault cifrato
-        return Bytes.merge([salt, encrypted_vault], 8);
+        return msgpack.encode({
+            DEK: { // DEK Data Encryption Key: le info sulla chiave e la chiave cifrata
+                kek: 1, // Key Encryption Key version
+                algo: 'aesgcm',
+                dek: encryptedDEK
+            },
+            VLT: encryptedVault // VLT = Vault
+        });
     }
     /**
      * Decifra un vault
-     * @param {Uint8Array} encrypted_bytes 
+     * @param {Uint8Array} envelope 
      * @return {Object} - il vault decifrato
      */
-    static async decrypt(encrypted_bytes, master_key = this.master_key) {
-        // -- ottengo il salt e i dati cifrati
-        const salt = encrypted_bytes.subarray(0, 16);
-        const encrypted_vault = encrypted_bytes.subarray(16);
-        // -- derivo la chiave specifica del vault
-        const key = await Cripto.hmac(salt, master_key);
+    static async decrypt(envelope, KEK = this.master_key) {
+        const decodedEnvelope = msgpack.decode(envelope);
+        // -- ottengo la dek e i dati cifrati
+        const encryptedDEK = decodedEnvelope.DEK.dek;
+        const encryptedVault = decodedEnvelope.VLT;
+        // -- decifro la DEK con la KEK
+        const DEK = await AES256GCM.decrypt(encryptedDEK, KEK);
         // -- decifro i dati
-        const decrypted_vault = await AES256GCM.decrypt(encrypted_vault, key);
+        const decryptedVault = await AES256GCM.decrypt(encryptedVault, DEK);
         // -- decodifico i dati
-        return msgpack.decode(decrypted_vault);
+        return msgpack.decode(decryptedVault);
     }
     /**
      * Esporta i vaults cifrati
@@ -254,7 +262,7 @@ export class VaultService {
             console.warn("Any vault to export.");
             return null;
         }
-        const export_salt = Cripto.random_bytes(16);
+        const export_salt = Cripto.randomBytes(16);
         const export_key = await Cripto.deriveKey(custom_key ?? this.master_key, export_salt);
         // -- preparo il backup con il salt come primo elemento
         const backup = [export_salt];

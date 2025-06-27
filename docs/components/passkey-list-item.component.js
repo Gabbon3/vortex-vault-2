@@ -1,6 +1,5 @@
 import { Log } from "../utils/log.js";
 import { Windows } from "../utils/windows.js";
-import { Cripto } from "../secure/cripto.js";
 import { PasskeyService } from "../service/passkey.public.service.js";
 import { date } from "../utils/dateUtils.js";
 
@@ -24,7 +23,7 @@ class PasskeyListItem extends HTMLElement {
         this.innerHTML = `
             <span class="token-id">
                 <span class="material-symbols-rounded">fingerprint</span>
-                <i>${(await Cripto.hash(id, { encoding: 'base62' })).match(/.{1,16}/g)[0]}</i>
+                <i>${id}</i>
             </span>
             <div class="flex gap-50 y-center d-row">
                 <input type="text" class="input-text passkey-name select-all-onclick" title="Passkey name" value="${name}">
