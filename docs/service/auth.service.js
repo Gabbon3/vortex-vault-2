@@ -162,11 +162,11 @@ export class AuthService {
     }
     /**
      * Cambio password
-     * @param {string} old_password 
-     * @param {string} new_password 
+     * @param {string} currentPassword Key Encryption Key corrente
+     * @param {string} newPassword Nuova Key Encryption Key
      * @returns {boolean} false se: non ce la lsk, non ce l'email, non è andato a buon fine il cambio password
      */
-    static async change_password(old_password, new_password) {
+    static async change_password(currentPassword, newPassword) {
         const ckeKey = SessionStorage.get('cke'); // local storage key
         if (!ckeKey) return false;
         const email = await LocalStorage.get('email-utente');
@@ -174,22 +174,34 @@ export class AuthService {
             Log.summon(2, 'No email found');
             return false;
         }
+        // -- imposto la master key
+        const salt = await SessionStorage.get('salt');
+        // ---
+        const newKEK = await Cripto.deriveKey(newPassword, salt);
+        /**
+         * Ruoto Localmente
+         */
+        // const rotated = await VaultService.rotateKEK(currentKEK, newKEK);
+        // if (!rotated) return false;
+        /**
+         * Se ho ruotato allora
+         */
         const res = await API.fetch('/auth/password', {
             method: 'POST',
             body: { 
-                old_password: await Cripto.obfuscatePassword(old_password), 
-                new_password: await Cripto.obfuscatePassword(new_password), 
+                old_password: await Cripto.obfuscatePassword(currentPassword), 
+                new_password: await Cripto.obfuscatePassword(newPassword), 
                 email
             },
         });
         if (!res) return false;
-        // -- imposto la master key
-        const salt = await SessionStorage.get('salt');
-        const key = await Cripto.deriveKey(new_password, salt);
-        VaultService.master_key = key;
+        /**
+         * ----
+         */
+        VaultService.KEK = newKEK;
         // -- salvo la master key
-        await LocalStorage.set('master-key', key, ckeKey);
-        await SessionStorage.set('master-key', key);
+        await LocalStorage.set('master-key', newKEK, ckeKey);
+        await SessionStorage.set('master-key', newKEK);
         // -- creo e genero un backup per l'utente
         await BackupService.create_locally();
         // ---
@@ -230,7 +242,7 @@ export class AuthService {
      * @returns {string} url per accedere
      */
     static async request_quick_signin() {
-        const password = await LocalStorage.get('password-utente', VaultService.master_key);
+        const password = await LocalStorage.get('password-utente', VaultService.KEK);
         if (!password) return null;
         // ---
         const email = await LocalStorage.get('email-utente');

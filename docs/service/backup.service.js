@@ -13,7 +13,7 @@ export class BackupService {
      */
     static async create() {
         // -- ottengo il backup cifrato in byte
-        const packed_backup = await VaultService.export_vaults();
+        const packed_backup = await VaultService.exportVaults();
         if (!packed_backup) return false;
         // --
         const res = await API.fetch('/backup/', {
@@ -32,7 +32,7 @@ export class BackupService {
      */
     static async create_locally(custom_key = null) {
         if (custom_key !== null) custom_key = await Cripto.hash(custom_key);
-        const packed_backup = await VaultService.export_vaults(custom_key);
+        const packed_backup = await VaultService.exportVaults(custom_key);
         if (!packed_backup) return false;
         // ---
         FileUtils.download(`Passwords Backup - ${date.format('%d %M %Y')}`, 'bin', packed_backup, 'application/octet-stream');
@@ -63,7 +63,7 @@ export class BackupService {
         if (!backups) return false;
         // ---
         const backup = backups[0].bin;
-        const vaults = await VaultService.import_vaults(backup);
+        const vaults = await VaultService.importVaults(backup);
         // ---
         const restored = await VaultService.restore(vaults);
         // ---
@@ -84,7 +84,7 @@ export class BackupService {
         if (custom_key !== null) custom_key = await Cripto.hash(custom_key);
         let vaults = null;
         try {
-            vaults = await VaultService.import_vaults(backup, custom_key);
+            vaults = await VaultService.importVaults(backup, custom_key);
         } catch (e) {
             console.warn(e);
             return false;

@@ -10,7 +10,7 @@ import { VaultLocal } from "./vault.local.js";
 import { UUID } from "../utils/uuid.js";
 
 export class VaultService {
-    static master_key = null;
+    static KEK = null;
     static salt = null;
     static vaults = [];
     static used_usernames = new Set();
@@ -25,9 +25,9 @@ export class VaultService {
         const ckeKeyAdvanced = SessionStorage.get('cke-key-advanced');
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
         if (ckeKeyAdvanced === null) return false;
-        this.master_key = await LocalStorage.get('master-key', ckeKeyAdvanced);
+        this.KEK = await LocalStorage.get('master-key', ckeKeyAdvanced);
         this.salt = await LocalStorage.get('salt', ckeKeyAdvanced);
-        return this.master_key && this.salt ? true : false;
+        return this.KEK && this.salt ? true : false;
     }
     /**
      * Sincronizza e inizializza il Vault con il db
@@ -36,7 +36,7 @@ export class VaultService {
      */
     static async syncronize(full = false) {
         const configured = await this.config_secrets();
-        if (!configured || !this.master_key) return Log.summon(2, 'Any Crypto Key founded');
+        if (!configured || !this.KEK) return Log.summon(2, 'Any Crypto Key founded');
         const vault_update = await LocalStorage.get('vault-update') ?? null;
         let selectFrom = null;
         /**
@@ -48,7 +48,7 @@ export class VaultService {
         /**
          * Provo ad ottenere i vault dal localstorage
          */
-        this.vaults = await VaultLocal.get(this.master_key);
+        this.vaults = await VaultLocal.get(this.KEK);
         if (this.vaults.length === 0) {
             console.log('[i] Sincronizzo completamente con il vault');
             full = true;
@@ -62,16 +62,16 @@ export class VaultService {
             if (vaults_from_db.length > 0) {
                 if (full) {
                     await VaultLocal.save(
-                        vaults_from_db.filter((vault) => { return vault.deleted == false }), 
-                        this.master_key
+                        vaults_from_db.filter((vault) => { return vault.deleted == false }),
+                        this.KEK
                     );
                     this.vaults = vaults_from_db;
                 } else {
-                    this.vaults = await VaultLocal.sync_update(vaults_from_db, this.master_key)
+                    this.vaults = await VaultLocal.sync_update(vaults_from_db, this.KEK)
                 }
             } else {
                 // -- se eseguendo il sync totale non ci sono vault nel db allora azzero per sicurezza anche in locale
-                if (full) await VaultLocal.save([], this.master_key);
+                if (full) await VaultLocal.save([], this.KEK);
             }
         } catch (error) {
             console.warn('Sync Error - Vault => ', error);
@@ -150,11 +150,9 @@ export class VaultService {
     }
     /**
      * Reimposta tutti i vault sul db
-     * @param {string} mfa_code codice multifattore perchè un operazione sensibile
      * @returns {boolean}
      */
-    static async restore(vaults) {
-        await VaultLocal.save(vaults, this.master_key);
+    static async restore(vaults, saveLocally = true) {
         // -- cifro i vault
         for (const vault of vaults) {
             vault.secrets = await this.encrypt(vault.secrets);
@@ -169,6 +167,9 @@ export class VaultService {
             content_type: 'bin'
         });
         if (!res) return false;
+        // ---
+        if (saveLocally) await VaultLocal.save(vaults, this.KEK);
+        // ---
         return true;
     }
     /**
@@ -217,7 +218,7 @@ export class VaultService {
      * @param {Uint8Array} providedDEK 
      * @returns {Uint8Array}
      */
-    static async encrypt(vault, providedDEK = null, KEK = this.master_key) {
+    static async encrypt(vault, providedDEK = null, KEK = this.KEK) {
         // -- genero una dek specifica per l'elemento
         const DEK = providedDEK || Cripto.randomBytes(32);
         const encryptedDEK = await AES256GCM.encrypt(DEK, KEK);
@@ -239,16 +240,23 @@ export class VaultService {
      * @param {Uint8Array} envelope 
      * @return {Object} - il vault decifrato
      */
-    static async decrypt(envelope, KEK = this.master_key) {
+    static async decrypt(envelope, KEK = this.KEK) {
         const decodedEnvelope = msgpack.decode(envelope);
         // -- ottengo la dek e i dati cifrati
         const encryptedDEK = decodedEnvelope.DEK.dek;
+        // -- per il momento commentate perche non servono
+        // const algo = decodedEnvelope.DEK.algo;
+        // const kekVersion = decodedEnvelope.DEK.kek;
         const encryptedVault = decodedEnvelope.VLT;
         // -- decifro la DEK con la KEK
         const DEK = await AES256GCM.decrypt(encryptedDEK, KEK);
         // -- decifro i dati
         const decryptedVault = await AES256GCM.decrypt(encryptedVault, DEK);
         // -- decodifico i dati
+        // return {
+        //     DEK: { ...decodedEnvelope.DEK },
+        //     VLT: msgpack.decode(decryptedVault),
+        // };
         return msgpack.decode(decryptedVault);
     }
     /**
@@ -256,17 +264,17 @@ export class VaultService {
      * @param {Uint8Array} custom_key - Chiave personalizzata da usare al posto della master key
      * @returns {Promise<Uint8Array>} Backup cifrato e compresso
      */
-    static async export_vaults(custom_key = null) {
+    static async exportVaults(custom_key = null) {
         if (custom_key !== null && custom_key.length !== 32) throw new Error("Custom key must be of 32 bytes length");
         if (!this.vaults || this.vaults.length === 0) {
             console.warn("Any vault to export.");
             return null;
         }
         const export_salt = Cripto.randomBytes(16);
-        const export_key = await Cripto.deriveKey(custom_key ?? this.master_key, export_salt);
+        const export_key = await Cripto.deriveKey(custom_key ?? this.KEK, export_salt);
         // -- preparo il backup con il salt come primo elemento
         const backup = [export_salt];
-        const compacted_vaults = this.compact_vaults();
+        const compacted_vaults = this.compactVaults();
         // -- cifro ogni vault e lo aggiungo al backup
         for (const vault of compacted_vaults) {
             const encrypted_vault = await this.encrypt(vault, null, export_key);
@@ -281,14 +289,14 @@ export class VaultService {
      * @param {Uint8Array} custom_key 
      * @returns {Promise<Array<Object>>} i vaults
      */
-    static async import_vaults(packed_backup, custom_key = null) {
+    static async importVaults(packed_backup, custom_key = null) {
         if (custom_key !== null && custom_key.length !== 32) throw new Error("Custom key must be of 32 bytes length");
         // ---
         const vaults = [];
         const backup = msgpack.decode(packed_backup);
         // -- ottengo il salt del backup cosi genero la chiave del backup
         const backup_salt = backup.shift();
-        const backup_key = await Cripto.deriveKey(custom_key ?? this.master_key, backup_salt);
+        const backup_key = await Cripto.deriveKey(custom_key ?? this.KEK, backup_salt);
         // -- decifro ogni vault
         for (let i = 0; i < backup.length; i++) {
             const decoded_vault = await this.decrypt(backup[i], backup_key);
@@ -298,10 +306,30 @@ export class VaultService {
         return this.decompact_vaults(vaults);
     }
     /**
+     * Ricifra tutte le DEK con la nuova KEK
+     * @param {Uint8Array} currentKEK 
+     * @param {Uint8Array} newKEK 
+     * @returns {boolean}
+     */
+    static async rotateKEK(currentKEK, newKEK) {
+        try {
+            let exportedVaults = await this.exportVaults(currentKEK);
+            let importedVaults = await this.importVaults(exportedVaults, newKEK);
+            // ---
+            exportedVaults = null;
+            const restored = await this.restore(importedVaults, false);
+            importedVaults = null;
+            return restored;
+        } catch (error) {
+            console.warn('rotateKEK - ERROR : ', error);
+            return false;
+        }
+    }
+    /**
      * Compatta i vaults per renderli pronti all esportazione
      * @returns {Array<Object>} l'array dei vault compattati
      */
-    static compact_vaults(vaults = this.vaults) {
+    static compactVaults(vaults = this.vaults) {
         return vaults.map(vault => {
             // non tengo conto dell'uuid, poiche posso tranquillamente ricrearlo
             // const { id: I, secrets: S, createdAt: C, updatedAt: U } = vault;
