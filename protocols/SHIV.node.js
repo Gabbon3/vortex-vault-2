@@ -99,7 +99,7 @@ export class SHIV {
         // -- 12 byte in base64 sono 16 caratteri
         const salt = integrity.slice(0, 16);
         const key = `${guid}${salt}`;
-        const created = await RedisDB.setIfNotExists(key, true, replayTtl);
+        const created = await RedisDB.setIfNotExists(key, true, SHIV.replayTtl);
         // -- se non è stato creato, è replay
         return !created;
     }
