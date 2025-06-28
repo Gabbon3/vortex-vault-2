@@ -15,21 +15,14 @@ export class VaultController {
      * @param {Response} res 
      */
     create = asyncHandler(async (req, res) => {
-        const { secrets } = req.body; // è in base64
+        const { dek, secrets } = req.body; // è in base64
         // ---
-        if (!secrets) throw new CError("ValidationError", "No secrets", 422);
+        if (!secrets || !dek) throw new CError("ValidationError", "No secrets", 422);
         // -- riconverto da base 64 a bytes
+        const dek_bytes = Buffer.from(dek, 'base64');
         const secrets_bytes = Buffer.from(secrets, 'base64');
         // ---
-        const vault = await this.service.create(req.payload.uid, secrets_bytes);
-        // -- aggiorno l'ultimo update del vault dell'utente
-        this.user_service.update_user_info(
-            {
-                id: req.payload.uid
-            }, 
-            {
-                vault_update: new Date().toISOString() 
-            });
+        const vault = await this.service.create(req.payload.uid, secrets_bytes, dek_bytes);
         // ---
         res.status(201).json({ id: vault.id });
     });
@@ -64,11 +57,12 @@ export class VaultController {
      * @param {Response} res 
      */
     update = asyncHandler(async (req, res) => {
-        const { vault_id, secrets } = req.body;
+        const { vault_id, dek, secrets } = req.body;
         // -- riconverto da base 64 a bytes
-        const secrets_bytes = Buffer.from(secrets, 'base64');
+        const dekBytes = Buffer.from(dek, 'base64');
+        const secretsBytes = Buffer.from(secrets, 'base64');
         // ---
-        const vault = await this.service.update(req.payload.uid, vault_id, secrets_bytes);
+        const vault = await this.service.update(req.payload.uid, vault_id, secretsBytes, dekBytes);
         if (!vault) throw new CError("NotFoundError", "Vault non trovato", 404);
         res.status(200).json(vault);
     });

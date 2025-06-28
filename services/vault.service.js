@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import { Vault } from "../models/vault.js";
 import { sequelize } from "../config/db.js";
 
@@ -6,39 +6,41 @@ export class VaultService {
     static id_random_length = 8;
     /**
      * Crea un nuovo vault sul db
-     * @param {number} user_id 
-     * @param {Uint8Array} secrets 
+     * @param {number} user_id
+     * @param {Uint8Array} secrets
+     * @param {Uint8Array} dek
      * @returns {Vault}
      */
-    async create(user_id, secrets) {
+    async create(user_id, secrets, dek) {
         const vault = await Vault.create({
             user_id,
-            secrets
+            secrets,
+            dek,
         });
         // ---
         return vault ? vault : null;
     }
     /**
      * Restituisce un singolo vault tramite il suo id
-     * @param {number} user_id 
-     * @param {string} vault_id 
-     * @returns 
+     * @param {number} user_id
+     * @param {string} vault_id
+     * @returns
      */
     async get_id(user_id, vault_id) {
         return await Vault.findOne({
             where: {
                 id: vault_id,
-                user_id
+                user_id,
             },
             attributes: {
-                exclude: ['user_id']
-            }
-        })
+                exclude: ["user_id"],
+            },
+        });
     }
     /**
      * Restituisce tutti o alcuni vault in base alla data di ultima modifica
-     * @param {number} user_id 
-     * @param {Date} updated_after 
+     * @param {number} user_id
+     * @param {Date} updated_after
      * @returns {Array<Vault>}
      */
     async get(user_id, updated_after = null) {
@@ -46,42 +48,43 @@ export class VaultService {
         // ---
         if (updated_after) {
             where.updated_at = {
-                [Op.gt]: updated_after.toISOString()
-            }
+                [Op.gt]: updated_after.toISOString(),
+            };
         }
         // ---
         return await Vault.findAll({
             where,
             attributes: {
-                exclude: ['user_id']
-            }
+                exclude: ["user_id"],
+            },
         });
     }
     /**
      * Conta il numero di vaults totali
-     * @param {string} user_id 
+     * @param {string} user_id
      * @returns {Array<Vault>}
      */
     async count(user_id) {
         return await Vault.count({
-            where: { user_id }
+            where: { user_id },
         });
     }
     /**
      * Aggiorna un vault modificando le informazioni cifrate
-     * @param {number} user_id 
-     * @param {string} vault_id 
-     * @param {Uint8Array} secrets 
-     * @returns 
+     * @param {number} user_id
+     * @param {string} vault_id
+     * @param {Uint8Array} secrets
+     * @param {Uint8Array} dek
+     * @returns
      */
-    async update(user_id, vault_id, secrets) {
+    async update(user_id, vault_id, secrets, dek) {
         const [updated_rows] = await Vault.update(
-            { secrets },
+            { secrets, dek },
             {
                 where: {
                     id: vault_id,
-                    user_id
-                }
+                    user_id,
+                },
             }
         );
         // -- se nessuna riga è stata aggiornata restituisco null
@@ -93,7 +96,7 @@ export class VaultService {
      * Esegue il restore completo dei vault.
      * 1. Rimuove i vecchi vault per l'utente.
      * 2. Aggiunge i nuovi vault.
-     * 
+     *
      * @param {number} user_id - ID dell'utente
      * @param {Array} vaults - Array di oggetti vault con i segreti
      * @returns {Array} - Array degli ID dei vault creati
@@ -106,23 +109,28 @@ export class VaultService {
             // -- elimino i vecchi vault
             await Vault.destroy({
                 where: { user_id },
-                transaction: t
+                transaction: t,
             });
             // -- inserisco i nuovi vault
             for (const vault of vaults) {
-                const { secrets, createdAt, updatedAt } = vault;
+                const { secrets, dek, createdAt, updatedAt } = vault;
                 // ---
                 const secrets_buffer = Buffer.from(secrets);
+                const dek_buffer = Buffer.from(dek);
                 // ---
-                await Vault.create({
-                    user_id,
-                    secrets: secrets_buffer,
-                    createdAt: new Date(createdAt).toISOString(),
-                    updatedAt: new Date(updatedAt).toISOString()
-                }, {
-                    transaction: t,
-                    silent: true
-                });
+                await Vault.create(
+                    {
+                        user_id,
+                        secrets: secrets_buffer,
+                        dek: dek_buffer,
+                        createdAt: new Date(createdAt).toISOString(),
+                        updatedAt: new Date(updatedAt).toISOString(),
+                    },
+                    {
+                        transaction: t,
+                        silent: true,
+                    }
+                );
             }
             // -- committo la transazione
             await t.commit();
@@ -135,9 +143,9 @@ export class VaultService {
     }
     /**
      * Elimina un vault dal db
-     * @param {number} user_id 
-     * @param {string} vault_id 
-     * @returns 
+     * @param {number} user_id
+     * @param {string} vault_id
+     * @returns
      */
     async delete(user_id, vault_id) {
         return await Vault.update(
@@ -145,8 +153,8 @@ export class VaultService {
             {
                 where: {
                     id: vault_id,
-                    user_id
-                }
+                    user_id,
+                },
             }
         );
     }

@@ -18,7 +18,7 @@ router.use(limiter);
 // -- AUTH ROUTES (USER)
 router.post('/registrati', controller.signup);
 router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
-router.post('/password', verifyAuth(), controller.change_password);
+router.post('/password', verifyAuth({ replayProtection: true }), verifyShivPrivilegedToken, controller.changePassword);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);
 // -- QUICK SIGN IN

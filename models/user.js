@@ -18,11 +18,6 @@ export const User = sequelize.define(
             allowNull: false,
             comment: "16 byte HEX",
         },
-        vault_update: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: new Date(),
-        },
         recovery: { type: DataTypes.BLOB, allowNull: true, comment: "Dati cifrati insieme alla chiave pubblica ecdh" },
     },
     {

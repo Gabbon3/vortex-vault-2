@@ -166,35 +166,31 @@ export class AuthService {
      * @param {string} newPassword Nuova Key Encryption Key
      * @returns {boolean} false se: non ce la lsk, non ce l'email, non è andato a buon fine il cambio password
      */
-    static async change_password(currentPassword, newPassword) {
-        const ckeKey = SessionStorage.get('cke'); // local storage key
+    static async changePassword(newPassword) {
+        const ckeKey = SessionStorage.get("cke-key-advanced"); // local storage key
         if (!ckeKey) return false;
         const email = await LocalStorage.get('email-utente');
         if (!email) {
-            Log.summon(2, 'No email found');
+            Log.summon(2, 'No email found, sign in again');
             return false;
         }
-        // -- imposto la master key
         const salt = await SessionStorage.get('salt');
+        if (!salt) {
+            Log.summon(2, 'No salt, sign in again');
+            return false;
+        }
         // ---
-        const newKEK = await Cripto.deriveKey(newPassword, salt);
         /**
-         * Ruoto Localmente
+         * 
          */
-        // const rotated = await VaultService.rotateKEK(currentKEK, newKEK);
-        // if (!rotated) return false;
+        const newKEK = await VaultService.rotateKEK(email, newPassword, salt);
+        if (!newKEK) return false;
         /**
-         * Se ho ruotato allora
+         * Elimino tutte le sessioni SHIV associate tranne la corrente
          */
-        const res = await API.fetch('/auth/password', {
-            method: 'POST',
-            body: { 
-                old_password: await Cripto.obfuscatePassword(currentPassword), 
-                new_password: await Cripto.obfuscatePassword(newPassword), 
-                email
-            },
+        await API.fetch('/shiv/session', {
+            method: 'DELETE'
         });
-        if (!res) return false;
         /**
          * ----
          */
@@ -202,8 +198,9 @@ export class AuthService {
         // -- salvo la master key
         await LocalStorage.set('master-key', newKEK, ckeKey);
         await SessionStorage.set('master-key', newKEK);
+        // DEPRECATED: ruotando le KEK non ce piu bisogno di scaricare un backup locale
         // -- creo e genero un backup per l'utente
-        await BackupService.create_locally();
+        // await BackupService.create_locally();
         // ---
         return true;
     }

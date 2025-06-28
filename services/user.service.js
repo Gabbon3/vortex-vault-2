@@ -1,13 +1,15 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import { CError } from "../helpers/cError.js";
 import { Cripto } from "../utils/cryptoUtils.js";
-import { User } from '../models/user.js';
-import { Mailer } from '../config/mail.js';
-import emailContents from '../docs/utils/automated.mails.js';
-import { RedisDB } from '../config/redisdb.js';
-import { Op } from 'sequelize';
-import { SHIV } from '../protocols/SHIV.node.js';
-import { AuthKeys } from '../models/authKeys.model.js';
+import { User } from "../models/user.js";
+import { Mailer } from "../config/mail.js";
+import emailContents from "../docs/utils/automated.mails.js";
+import { RedisDB } from "../config/redisdb.js";
+import { Op } from "sequelize";
+import { SHIV } from "../protocols/SHIV.node.js";
+import { AuthKeys } from "../models/authKeys.model.js";
+import { Vault } from "../models/vault.js";
+import { sequelize } from "../config/db.js";
 
 export class UserService {
     constructor() {
@@ -15,51 +17,57 @@ export class UserService {
     }
     /**
      * Registra un utente sul db
-     * @param {string} email 
-     * @param {string} password 
+     * @param {string} email
+     * @param {string} password
      * @returns {string} id dell'utente appena inserito
      */
     async signup(email, password) {
         email = email.toLowerCase();
         // -- verifico che l'indirizzo email sia valido
-        if (!this.verify_email(email)) throw new CError("InvalidEmailDomain", "The email domain is not supported. Please use a well-known email provider like Gmail, iCloud, or Outlook.", 422);
+        if (!this.verify_email(email))
+            throw new CError(
+                "InvalidEmailDomain",
+                "The email domain is not supported. Please use a well-known email provider like Gmail, iCloud, or Outlook.",
+                422
+            );
         // -- verifico che l'email sia disponibile
         const user_exist = await User.findOne({
-            where: { email }
+            where: { email },
         });
-        if (user_exist) throw new CError("UserExist", "This email is already in use", 409);
+        if (user_exist)
+            throw new CError("UserExist", "This email is already in use", 409);
         // -- genero il salt di 16 byte
         const cripto = new Cripto();
-        const salt = cripto.randomBytes(16, 'hex');
+        const salt = cripto.randomBytes(16, "hex");
         // -- creo un nuovo utente
-        const password_hash = await this.hash_password(password);
+        const password_hash = await this.hashPassword(password);
         const user = new User({ email, password: password_hash, salt });
         // ---
         return await user.save();
     }
     /**
      * Utility per verificare l'email dell'utente
-     * @param {string} email 
+     * @param {string} email
      * @returns {boolean}
      */
     verify_email(email) {
         const verified_domains = [
-            'gmail.com',    // Google
-            'icloud.com',   // Apple
-            'outlook.com',  // Microsoft
-            'hotmail.com',  // Microsoft (più vecchio, ma ancora usato)
-            'yahoo.com',    // Yahoo
-            'live.com',     // Microsoft
-            'libero.it',    // Libero
-            'tesisquare.com',// Tesisquare
-            'edu.itspiemonte.it',// ITS
+            "gmail.com", // Google
+            "icloud.com", // Apple
+            "outlook.com", // Microsoft
+            "hotmail.com", // Microsoft (più vecchio, ma ancora usato)
+            "yahoo.com", // Yahoo
+            "live.com", // Microsoft
+            "libero.it", // Libero
+            "tesisquare.com", // Tesisquare
+            "edu.itspiemonte.it", // ITS
         ];
         // ---
-        return verified_domains.includes(email.split('@')[1]);
+        return verified_domains.includes(email.split("@")[1]);
     }
-    
+
     /**
-     * 
+     *
      * @param {Request} request
      * @param {string} email
      * @param {string} publicKeyHex - chiave pubblica ECDH del client in esadecimale
@@ -81,27 +89,25 @@ export class UserService {
         /**
          * Stabilisco la sessione con SHIV
          */
-        const { jwt, publicKey, userAgentSummary } = await this.shiv.generateSession({
-            request: request,
-            publicKeyHex,
-            userId: user.id,
-            payload: { uid: user.id },
-        });
+        const { jwt, publicKey, userAgentSummary } =
+            await this.shiv.generateSession({
+                request: request,
+                publicKeyHex,
+                userId: user.id,
+                payload: { uid: user.id },
+            });
         /**
          * Avviso l'utente via mail del nuovo login
          */
         const { text, html } = await emailContents.newSignIn({
             email,
             user_agent: userAgentSummary,
-            ip_address: request.headers['x-forwarded-for'] || request.socket.remoteAddress,
+            ip_address:
+                request.headers["x-forwarded-for"] ||
+                request.socket.remoteAddress,
         });
         // -- invio la mail
-        Mailer.send(
-            email, 
-            'New device Sign-In', 
-            text,
-            html
-        );
+        Mailer.send(email, "New device Sign-In", text, html);
         /**
          * Genero un bypass token
          */
@@ -127,70 +133,99 @@ export class UserService {
             },
         });
     }
-    
+
     /**
      * Esegue il cambio password
-     * @param {number} uid 
-     * @param {string} old_password 
-     * @param {string} password 
+     * @param {number} uid
+     * @param {string} newPassword
+     * @param {Array} DEKs array di tutte le DEK
      */
-    async change_password(uid, old_password, password) {
+    async changePassword(uid, newPassword, DEKs) {
         // -- verifico se la vecchia password è corretta
-        // -- cerco se l'utente esiste
-        const user = await this.find_by_id(uid);
-        // -- cerco se la password è corretta
-        const password_is_correct = await this.verify_password(old_password, user.password);
-        if (!password_is_correct) throw new CError("AuthenticationError", "Password is not valid", 401);
+        // -- avvio una transazione
+        const t = await sequelize.transaction();
         // ---
-        const password_hash = await this.hash_password(password);
-        return this.update_user_info({ id: uid }, { password: password_hash });
+        try {
+            const newPasswordHash = await this.hashPassword(newPassword);
+            // -- aggiorno la password
+            await User.update({
+                password: newPasswordHash
+            }, {
+                where: { 
+                    id: uid 
+                },
+                transaction: t
+            })
+            // -- aggiorno tutti i DEKs
+            for (const DEK of DEKs) {
+                const { id, dek } = DEK;
+                // ---
+                const dekBuffer = Buffer.from(dek);
+                // ---
+                await Vault.update(
+                    { dek: dekBuffer },
+                    {
+                        where: { user_id: uid, id: id },
+                        transaction: t,
+                        silent: true,
+                    }
+                );
+            }
+            // -- committo la transazione
+            await t.commit();
+            return true;
+        } catch (error) {
+            await t.rollback();
+            console.warn(error);
+            return false;
+        }
     }
     /**
      * Restituisce un utente tramite il suo id
-     * @param {number} id 
+     * @param {number} id
      * @returns {Object}
      */
     async find_by_id(id) {
         return await User.findOne({
             where: { id },
-        })
+        });
     }
     /**
      * Elimina un utente e tutti i dati associati
-     * @param {number} id 
+     * @param {number} id
      * @returns {Object}
      */
     async delete_by_id(id) {
         return await User.destroy({
-            where: { id }
-        })
+            where: { id },
+        });
     }
     /**
      * Restituisce un utente tramite la sua email
-     * @param {string} email 
-     * @returns 
+     * @param {string} email
+     * @returns
      */
     async find_by_email(email) {
         return await User.findOne({
             where: { email },
-        })
+        });
     }
     /**
      * Restituisce tutti gli utenti
      * ricercando in like sugli utenti %email%
-     * @param {string} email 
-     * @param {number} limit 
+     * @param {string} email
+     * @param {number} limit
      * @returns {Array}
      */
     async search(email, limit = 25) {
         return await User.findAll({
-            attributes: ['id', 'email'],
+            attributes: ["id", "email"],
             where: {
                 email: {
-                    [Op.like]: `%${email}%` // Works in PostgreSQL
-                }
+                    [Op.like]: `%${email}%`, // Works in PostgreSQL
+                },
             },
-            limit: limit
+            limit: limit,
         });
     }
     /**
@@ -202,26 +237,23 @@ export class UserService {
     async update_user_info({ id, email }, updated_info) {
         const where = id ? { id } : { email };
         // ---
-        return await User.update(
-            updated_info,
-            { where }
-        );
+        return await User.update(updated_info, { where });
     }
     /**
      * Esegue l'hash della password utilizzando bcrypt
-     * @param {string} password 
+     * @param {string} password
      * @returns {string}
      */
-    async hash_password(password) {
-        return await bcrypt.hash(password, 10);
+    async hashPassword(password) {
+        return await bcrypt.hash(password, 12);
     }
     /**
      * Verifica se una password corrisponde ad un hash usando bcrypt
-     * @param {string} password 
-     * @param {string} password_hash 
+     * @param {string} password
+     * @param {string} password_hash
      * @returns {boolean}
      */
-    async verify_password(password, password_hash) {
+    async verifyPassword(password, password_hash) {
         return await bcrypt.compare(password, password_hash);
     }
 }

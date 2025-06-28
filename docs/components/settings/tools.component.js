@@ -168,11 +168,6 @@ class SettingsComponent extends HTMLElement {
                     you will have to go to the backup section and restore the 
                     backup from the file you just downloaded.
                 </p>
-                <label for="old-password">
-                    <span class="material-symbols-rounded">key_vertical</span>
-                    Old Password
-                </label>
-                <input name="old_password" type="password" class="input-text mono" id="old-password" autocomplete="off" required>
                 <hr>
                 <label for="new-password">
                     <span class="material-symbols-rounded">key_vertical</span>

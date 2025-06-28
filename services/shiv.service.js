@@ -89,19 +89,39 @@ export class ShivService {
 
     /**
      * Elimina tutte le sessioni tranne la corrente
-     * @param {Object} conditions * condizioni per WHERE id = ...
+     * @param {Object} conditions 
+     * @param {string} [conditions.kid] opzionale, se specificato verranno eliminate tutte le sessioni tranne quella corrente
+     * @param {string} [conditions.user_id] obbligatorio, indica lo user id associato alla sessione
      * @returns {number} numero di record eliminati
      */
     async deleteAll(conditions) {
+        if (!conditions.user_id) throw new Error('User ID è obbligatorio');
         // -- se presente il guid della sessione viene calcolato il kid
-        conditions.kid = await this.shiv.calculateKid(conditions.kid);
+        let kidCondition = null;
+        if (conditions.kid) {
+            const pepedKid = await this.shiv.calculateKid(conditions.kid);
+            kidCondition = { [Op.not]: pepedKid }
+        }
+        /**
+         * Ottengo tutti i kid delle sessioni 
+         * cosi mi assicuro di eliminarli anche su Redis
+         */
+        const kidModels = await AuthKeys.findAll({
+            where: { user_id: conditions.user_id },
+            attributes: { include: ['kid'] },
+        });
+        // -- Elimino su redis tutti i riferimenti
+        for (const kidModel of kidModels) {
+            RedisDB.delete(kidModel.kid);
+        }
+        /**
+         * Elimino sul DB
+         */
         // ---
         return await AuthKeys.destroy({
             where: {
                 user_id: conditions.user_id,
-                kid: {
-                    [Op.not]: conditions.kid
-                }
+                kid: kidCondition
             }
         });
     }

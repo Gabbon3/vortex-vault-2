@@ -13,6 +13,7 @@ import { Config } from "../server_config.js";
 import { ShivService } from "../services/shiv.service.js";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
+import msgpack from "../docs/utils/msgpack.min.js";
 
 export class UserController {
     constructor() {
@@ -271,22 +272,24 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      */
-    change_password = asyncHandler(async (req, res) => {
-        const { old_password, new_password, email } = req.body;
+    changePassword = asyncHandler(async (req, res) => {
+        const { newPassword, email, DEKs: encodedDEKs } = req.body;
         // ---
-        if (!old_password || !new_password || !email)
+        if (!newPassword || !email || !encodedDEKs)
             throw new CError(
                 "",
                 "Missing data needed to make password change",
                 422
             );
         // ---
-        const [affected] = await this.service.change_password(
+        const DEKs = msgpack.decode(Bytes.base64.decode(encodedDEKs));
+        // ---
+        const changed = await this.service.changePassword(
             req.payload.uid,
-            old_password,
-            new_password
+            newPassword,
+            DEKs,
         );
-        if (affected !== 1)
+        if (!changed)
             throw new CError("ServerError", "Not able to change password", 500);
         // -- invio una mail
         const { text, html } = await emailContents.changePassword({

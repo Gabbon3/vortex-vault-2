@@ -15,7 +15,7 @@ import msgpack from '../docs/utils/msgpack.min.js';
 export class SHIV {
     static timeWindow = 120; // in secondi
     static jwtLifetime = 31 * 24 * 60 * 60; // in secondi
-    static pptLifetime = 10 * 60; // in secondi
+    static pptLifetime = 15 * 60; // in secondi
     static replayTtl = 4 * 60; // in secondi
 
     /**
