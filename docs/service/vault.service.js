@@ -334,7 +334,7 @@ export class VaultService {
             vaults.push(VLT);
         }
         // -- decompatto i vaults
-        return this.decompact_vaults(vaults);
+        return this.decompactVaults(vaults);
     }
     /**
      * Ricifra tutte le DEK con la nuova KEK
@@ -409,7 +409,7 @@ export class VaultService {
      * Decompatta i vaults per renderli nuovamente utilizzabili
      * @param {Array<Object>} compacted_vaults
      */
-    static decompact_vaults(compacted_vaults) {
+    static decompactVaults(compacted_vaults) {
         return compacted_vaults.map((vault) => {
             // non tengo conto dell'uuid, poiche posso tranquillamente ricrearlo
             // const { I: id, S: secrets, C: createdAt, U: updatedAt } = vault;
