@@ -8,14 +8,12 @@ export class VaultService {
      * Crea un nuovo vault sul db
      * @param {number} user_id
      * @param {Uint8Array} secrets
-     * @param {Uint8Array} dek
      * @returns {Vault}
      */
-    async create(user_id, secrets, dek) {
+    async create(user_id, secrets) {
         const vault = await Vault.create({
             user_id,
             secrets,
-            dek,
         });
         // ---
         return vault ? vault : null;
@@ -113,16 +111,14 @@ export class VaultService {
             });
             // -- inserisco i nuovi vault
             for (const vault of vaults) {
-                const { secrets, dek, createdAt, updatedAt } = vault;
+                const { secrets, createdAt, updatedAt } = vault;
                 // ---
                 const secrets_buffer = Buffer.from(secrets);
-                const dek_buffer = Buffer.from(dek);
                 // ---
                 await Vault.create(
                     {
                         user_id,
                         secrets: secrets_buffer,
-                        dek: dek_buffer,
                         createdAt: new Date(createdAt).toISOString(),
                         updatedAt: new Date(updatedAt).toISOString(),
                     },

@@ -26,16 +26,18 @@ export class UserController {
      * @param {Response} res
      */
     signup = asyncHandler(async (req, res) => {
-        const { email, password } = req.body;
-        if (!email || !password) {
+        const { email, password, dek: encodedDek, salt } = req.body;
+        if (!email || !password || !encodedDek) {
             throw new CError(
                 "ValidationError",
                 "Email and password are required",
                 422
             );
         }
+        // -- decodifico
+        const dek = Buffer.from(encodedDek, 'base64');
         // ---
-        const user = await this.service.signup(email, password);
+        const user = await this.service.signup(email, password, dek, salt);
         res.status(201).json({ message: "User registered", id: user.id });
     });
     /**
@@ -55,7 +57,7 @@ export class UserController {
         /**
          * Servizio
          */
-        const { uid, salt, jwt, publicKey: serverPublicKey, bypassToken } =
+        const { uid, salt, dek, jwt, publicKey: serverPublicKey, bypassToken } =
             await this.service.signin({
                 request: req,
                 email,
@@ -84,6 +86,7 @@ export class UserController {
             publicKey: serverPublicKey,
             uid,
             salt,
+            dek: dek.toString('base64'),
             bypassToken,
         });
     });
@@ -273,21 +276,21 @@ export class UserController {
      * @param {Response} res
      */
     changePassword = asyncHandler(async (req, res) => {
-        const { newPassword, email, DEKs: encodedDEKs } = req.body;
+        const { newPassword, email, dek: encodedDek } = req.body;
         // ---
-        if (!newPassword || !email || !encodedDEKs)
+        if (!newPassword || !email || !encodedDek)
             throw new CError(
                 "",
                 "Missing data needed to make password change",
                 422
             );
         // ---
-        const DEKs = msgpack.decode(Bytes.base64.decode(encodedDEKs));
+        const DEK = Buffer.from(encodedDek, 'base64');
         // ---
         const changed = await this.service.changePassword(
             req.payload.uid,
             newPassword,
-            DEKs,
+            DEK,
         );
         if (!changed)
             throw new CError("ServerError", "Not able to change password", 500);
@@ -298,46 +301,6 @@ export class UserController {
         Mailer.send(email, "Password Change Confirmation", text, html);
         // ---
         res.status(200).json({ message: "Password changed!" });
-    });
-    /**
-     * Imposta le informazioni di recupero password
-     * @param {Request} req
-     * @param {Response} res
-     */
-    set_recovery = asyncHandler(async (req, res) => {
-        const recovery = req.body;
-        // -- salvo sul db
-        const [affected] = await this.service.update_user_info(
-            { id: req.payload.uid },
-            { recovery }
-        );
-        if (affected !== 1)
-            throw new CError(
-                "ServerError",
-                "Not able to set recovery informations",
-                500
-            );
-        // ---
-        res.status(200).json({
-            message: "Recovery access enabled successfully",
-        });
-    });
-    /**
-     * Restituisce le informazioni di recupero password
-     * @param {Request} req
-     * @param {Response} res
-     */
-    get_recovery = asyncHandler(async (req, res) => {
-        const { email } = req.payload;
-        // ---
-        const user = await this.service.find_by_email(email);
-        if (!user)
-            throw new CError(
-                "ValidationError",
-                "Email provided does not exist",
-                404
-            );
-        res.status(200).json({ recovery: user.recovery });
     });
     /**
      * Verifica la validità di un message authentication code

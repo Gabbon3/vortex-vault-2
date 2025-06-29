@@ -19,9 +19,11 @@ export class UserService {
      * Registra un utente sul db
      * @param {string} email
      * @param {string} password
+     * @param {Uint8Array} DEK - la DEK cifrata con la KEK
+     * @param {Uint8Array} salt - il salt casuale dell'utente
      * @returns {string} id dell'utente appena inserito
      */
-    async signup(email, password) {
+    async signup(email, password, DEK, salt) {
         email = email.toLowerCase();
         // -- verifico che l'indirizzo email sia valido
         if (!this.verify_email(email))
@@ -36,12 +38,14 @@ export class UserService {
         });
         if (user_exist)
             throw new CError("UserExist", "This email is already in use", 409);
-        // -- genero il salt di 16 byte
-        const cripto = new Cripto();
-        const salt = cripto.randomBytes(16, "hex");
         // -- creo un nuovo utente
-        const password_hash = await this.hashPassword(password);
-        const user = new User({ email, password: password_hash, salt });
+        const passwordHash = await this.hashPassword(password);
+        const user = new User({ 
+            email, 
+            password: passwordHash, 
+            salt: salt,
+            dek: DEK
+        });
         // ---
         return await user.save();
     }
@@ -117,7 +121,7 @@ export class UserService {
         /**
          * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
          */
-        return { uid: user.id, salt: user.salt, jwt, publicKey, bypassToken };
+        return { uid: user.id, salt: user.salt, dek: user.dek, jwt, publicKey, bypassToken };
     }
 
     /**
@@ -138,47 +142,17 @@ export class UserService {
      * Esegue il cambio password
      * @param {number} uid
      * @param {string} newPassword
-     * @param {Array} DEKs array di tutte le DEK
+     * @param {Array} dek la dek cifrata con la nuova kek
      */
-    async changePassword(uid, newPassword, DEKs) {
-        // -- verifico se la vecchia password è corretta
-        // -- avvio una transazione
-        const t = await sequelize.transaction();
-        // ---
-        try {
-            const newPasswordHash = await this.hashPassword(newPassword);
-            // -- aggiorno la password
-            await User.update({
-                password: newPasswordHash
-            }, {
-                where: { 
-                    id: uid 
-                },
-                transaction: t
-            })
-            // -- aggiorno tutti i DEKs
-            for (const DEK of DEKs) {
-                const { id, dek } = DEK;
-                // ---
-                const dekBuffer = Buffer.from(dek);
-                // ---
-                await Vault.update(
-                    { dek: dekBuffer },
-                    {
-                        where: { user_id: uid, id: id },
-                        transaction: t,
-                        silent: true,
-                    }
-                );
-            }
-            // -- committo la transazione
-            await t.commit();
-            return true;
-        } catch (error) {
-            await t.rollback();
-            console.warn(error);
-            return false;
-        }
+    async changePassword(uid, newPassword, dek) {
+        const newPasswordHash = await this.hashPassword(newPassword);
+        // -- aggiorno la password
+        return await User.update({
+            password: newPasswordHash,
+            dek: dek,
+        }, {
+            where: { id: uid },
+        });
     }
     /**
      * Restituisce un utente tramite il suo id

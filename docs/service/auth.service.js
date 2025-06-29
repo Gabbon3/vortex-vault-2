@@ -59,7 +59,7 @@ export class AuthService {
         });
         if (!res) return false;
         // ---
-        const { publicKey: serverPublicKey, bypassToken } = res;
+        const { dek: encodedDek, publicKey: serverPublicKey, bypassToken } = res;
         // -- ottengo il segreto condiviso e lo cifro in localstorage con CKE
         const sharedSecret = await SHIV.completeHandshake(serverPublicKey);
         if (!sharedSecret) return false;
@@ -72,14 +72,19 @@ export class AuthService {
         LocalStorage.set('shared-secret', sharedSecret, keyBasic);
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
-        const master_key = await Cripto.deriveKey(password, salt);
+        const KEK = await Cripto.deriveKey(password, salt);
+        // ---
+        const encryptedDEK = Bytes.base64.decode(encodedDek);
+        const DEK = await AES256GCM.decrypt(encryptedDEK, KEK);
         // -- cifro le credenziali sul localstorage
         await LocalStorage.set('email-utente', email);
-        await LocalStorage.set('password-utente', password, master_key);
-        await LocalStorage.set('master-key', master_key, keyAdvanced);
+        await LocalStorage.set('password-utente', password, KEK);
+        await LocalStorage.set('master-key', KEK, keyAdvanced);
+        await LocalStorage.set('DEK', DEK, keyAdvanced);
         await LocalStorage.set('salt', salt, keyAdvanced);
         // -- imposto quelle in chiaro sul session storage
-        SessionStorage.set('master-key', master_key);
+        SessionStorage.set('master-key', KEK);
+        SessionStorage.set('DEK', DEK);
         SessionStorage.set('salt', salt);
         SessionStorage.set('uid', res.uid);
         // ---
@@ -92,11 +97,22 @@ export class AuthService {
      * @returns {boolean}
      */
     static async register(email, password) {
+        // -- creo la DEK dell'utente
+        const DEK = Cripto.randomBytes(32);
+        const salt = Cripto.randomBytes(16);
+        const KEK = await Cripto.deriveKey(password, salt);
+        const encryptedDEK = await AES256GCM.encrypt(DEK, KEK);
+        // ---
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
-        const res = await API.fetch('/auth/registrati', {
+        const res = await API.fetch('/auth/signup', {
             method: 'POST',
-            body: { email, password: obfuscatedPassword },
+            body: { 
+                email, 
+                password: obfuscatedPassword,
+                dek: Bytes.base64.encode(encryptedDEK),
+                salt: Bytes.hex.encode(salt)
+            },
         });
         if (!res) return false;
         // -- cifro le credenziali sul localstorage
@@ -194,13 +210,6 @@ export class AuthService {
         /**
          * ----
          */
-        VaultService.KEK = newKEK;
-        // -- salvo la master key
-        await LocalStorage.set('master-key', newKEK, ckeKey);
-        await SessionStorage.set('master-key', newKEK);
-        // DEPRECATED: ruotando le KEK non ce piu bisogno di scaricare un backup locale
-        // -- creo e genero un backup per l'utente
-        // await BackupService.create_locally();
         // ---
         return true;
     }
@@ -208,14 +217,16 @@ export class AuthService {
      * Imposta la chiave master dell'utente nel session storage
      * @param {Uint8Array} ckeKeyAdvanced 
      */
-    static async config_session_vars(ckeKeyAdvanced) {
-        const master_key = await LocalStorage.get('master-key', ckeKeyAdvanced);
+    static async configSessionVariables(ckeKeyAdvanced) {
+        const KEK = await LocalStorage.get('master-key', ckeKeyAdvanced);
+        const DEK = await LocalStorage.get('DEK', ckeKeyAdvanced);
         const salt = await LocalStorage.get('salt', ckeKeyAdvanced);
         const email = await LocalStorage.get('email-utente');
-        if (!master_key) return false;
+        if (!KEK || !DEK) return false;
         // ---
         SessionStorage.set('cke', ckeKeyAdvanced);
-        SessionStorage.set('master-key', master_key);
+        SessionStorage.set('master-key', KEK);
+        SessionStorage.set('DEK', DEK);
         SessionStorage.set('salt', salt);
         SessionStorage.set('email', email);
         // ---
@@ -363,7 +374,7 @@ export class AuthService {
             return false;
         }
         // -- imposto le variabili di sessione
-        const initialized = await this.config_session_vars(ckeKeyAdvanced);
+        const initialized = await this.configSessionVariables(ckeKeyAdvanced);
         // ---
         return initialized;
     }

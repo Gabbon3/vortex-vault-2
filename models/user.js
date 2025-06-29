@@ -13,12 +13,16 @@ export const User = sequelize.define(
         email: { type: DataTypes.STRING, allowNull: false, unique: true },
         verified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
         password: { type: DataTypes.STRING, allowNull: false },
+        dek: {
+            type: DataTypes.BLOB,
+            allowNull: false,
+            defaultValue: new Uint8Array([0]),
+        },
         salt: {
             type: DataTypes.STRING(32),
             allowNull: false,
             comment: "16 byte HEX",
         },
-        recovery: { type: DataTypes.BLOB, allowNull: true, comment: "Dati cifrati insieme alla chiave pubblica ecdh" },
     },
     {
         tableName: "user",

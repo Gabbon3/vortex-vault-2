@@ -18,11 +18,6 @@ export const Vault = sequelize.define(
             type: DataTypes.BLOB,
             allowNull: false
         },
-        dek: {
-            type: DataTypes.BLOB,
-            allowNull: false,
-            defaultValue: new Uint8Array([0]),
-        },
         deleted: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

@@ -222,7 +222,7 @@ export class VaultUI {
         VaultDelegator.init();
         // ----
         // - controllo se è possibile usare il vault configurando i segreti
-        const configured = await VaultService.config_secrets();
+        const configured = await VaultService.configSecrets();
         let timeout = 0;
         // -- se non ci sono provo ad avviare la sessione
         if (!configured) {

@@ -15,14 +15,13 @@ export class VaultController {
      * @param {Response} res 
      */
     create = asyncHandler(async (req, res) => {
-        const { dek, secrets } = req.body; // è in base64
+        const { secrets } = req.body; // è in base64
         // ---
-        if (!secrets || !dek) throw new CError("ValidationError", "No secrets", 422);
+        if (!secrets) throw new CError("ValidationError", "No secrets", 422);
         // -- riconverto da base 64 a bytes
-        const dek_bytes = Buffer.from(dek, 'base64');
         const secrets_bytes = Buffer.from(secrets, 'base64');
         // ---
-        const vault = await this.service.create(req.payload.uid, secrets_bytes, dek_bytes);
+        const vault = await this.service.create(req.payload.uid, secrets_bytes);
         // ---
         res.status(201).json({ id: vault.id });
     });

@@ -54,7 +54,7 @@ export class LocalStorage {
             let value = crypto_key instanceof Uint8Array ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
             return msgpack.decode(value);
         } catch (error) {
-            console.warn('[!] LocalStorage - get', error);
+            console.warn('[!] LocalStorage - get (' + key + ')', error);
             return null;
         }
     }

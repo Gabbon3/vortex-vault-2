@@ -16,7 +16,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- AUTH ROUTES (USER)
-router.post('/registrati', controller.signup);
+router.post('/signup', controller.signup);
 router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
 router.post('/password', verifyAuth({ replayProtection: true }), verifyShivPrivilegedToken, controller.changePassword);
 // -- SEARCH
@@ -29,10 +29,6 @@ router.post('/email-verification', controller.sendEmailCode);
 router.post('/email-verification-test', verifyEmailCode, controller.test_email_auth);
 // -- ACCOUNT VERIFY
 router.post('/verify-account', verifyEmailCode, controller.verify_account);
-// -- PASSWORD RECOVERY
-router.post('/recovery', verifyEmailCode, controller.get_recovery);
-router.post('/new-recovery', verifyAuth(), verifyShivPrivilegedToken, express.raw({ type: 'application/octet-stream' }), controller.set_recovery);
-// -- MFA (DEPRECATED)
 // -- SIGN-OUT
 router.post('/signout', verifyAuth({ checkIntegrity: false }), controller.signout);
 router.post('/clear-cookies', controller.clearCookies);
