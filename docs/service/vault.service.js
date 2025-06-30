@@ -183,7 +183,7 @@ export class VaultService {
         );
         if (!res) return false;
         // ---
-        if (saveLocally) await VaultLocal.save(vaults, this.KEK);
+        if (saveLocally) await VaultLocal.save(vaults, this.DEK);
         // ---
         return true;
     }

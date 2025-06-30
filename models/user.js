@@ -16,7 +16,6 @@ export const User = sequelize.define(
         dek: {
             type: DataTypes.BLOB,
             allowNull: false,
-            defaultValue: new Uint8Array([0]),
         },
         salt: {
             type: DataTypes.STRING(32),
