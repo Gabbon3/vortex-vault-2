@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { vault_id } = elements;
         delete elements.vault_id;
         // ---
-        Windows.loader(true);
+        Windows.loader(true, `Updating ${elements.T}`);
         // ---
         const updated = await VaultService.update(vault_id, elements);
         if (updated) {
