@@ -56,12 +56,11 @@ export class VaultController {
      * @param {Response} res 
      */
     update = asyncHandler(async (req, res) => {
-        const { vault_id, dek, secrets } = req.body;
+        const { vault_id, secrets } = req.body;
         // -- riconverto da base 64 a bytes
-        const dekBytes = Buffer.from(dek, 'base64');
         const secretsBytes = Buffer.from(secrets, 'base64');
         // ---
-        const vault = await this.service.update(req.payload.uid, vault_id, secretsBytes, dekBytes);
+        const vault = await this.service.update(req.payload.uid, vault_id, secretsBytes);
         if (!vault) throw new CError("NotFoundError", "Vault non trovato", 404);
         res.status(200).json(vault);
     });

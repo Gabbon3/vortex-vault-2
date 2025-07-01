@@ -72,12 +72,11 @@ export class VaultService {
      * @param {number} user_id
      * @param {string} vault_id
      * @param {Uint8Array} secrets
-     * @param {Uint8Array} dek
      * @returns
      */
-    async update(user_id, vault_id, secrets, dek) {
+    async update(user_id, vault_id, secrets) {
         const [updated_rows] = await Vault.update(
-            { secrets, dek },
+            { secrets },
             {
                 where: {
                     id: vault_id,
