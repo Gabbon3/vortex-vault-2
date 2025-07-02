@@ -9,13 +9,9 @@ import { sequelize } from "../config/db.js";
 export const AuthKeys = sequelize.define(
     "AuthKeys",
     {
-        kid: {
-            type: DataTypes.STRING(64),
+        id: {
+            type: DataTypes.UUID,
             primaryKey: true,
-        },
-        secret: {
-            type: DataTypes.STRING(64), // oppure BLOB(32) se binario
-            allowNull: false,
         },
         user_id: {
             type: DataTypes.UUID,

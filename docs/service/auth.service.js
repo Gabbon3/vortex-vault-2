@@ -14,6 +14,7 @@ import msgpack from "../utils/msgpack.min.js";
 import { CKE } from "../utils/cke.public.util.js";
 import { SHIV } from "../secure/SHIV.browser.js";
 import { Windows } from "../utils/windows.js";
+import { DPoP } from "../secure/DPoP.client.js";
 
 export class AuthService {
     /**
@@ -46,7 +47,8 @@ export class AuthService {
      */
     static async signin(email, password) {
         // -- genero la coppia di chiavi
-        const publicKeyHex = await SHIV.generateKeyPair();
+        // const publicKeyHex = await SHIV.generateKeyPair();
+        const publicKeyHex = await DPoP.generateKeyPair();
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
         const res = await API.fetch('/auth/signin', {

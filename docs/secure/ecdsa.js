@@ -1,126 +1,143 @@
 /**
- * Classe per implementare l'algoritmo ECDSA (Elliptic Curve Digital Signature Algorithm) utilizzando la Web Crypto API.
+ * Class implementing ECDSA (Elliptic Curve Digital Signature Algorithm) using Web Crypto API.
  */
 export class ECDSA {
     /**
-     * Genera una coppia di chiavi per la firma ECDSA.
-     * 
-     * @returns {Promise<{public_key: Uint8Array, private_key: CryptoKey}>} La chiave pubblica in formato Uint8Array e la chiave privata in formato CryptoKey.
+     * Supported elliptic curves for ECDSA.
+     * @static
+     * @readonly
      */
-    static async generate_keys() {
-        // Genera la coppia di chiavi ECDSA usando la curva P-256
-        const key_pair = await window.crypto.subtle.generateKey(
+    static curves = {
+        P256: "P-256",
+        P384: "P-384",
+        P521: "P-521"
+    };
+
+    /**
+     * Generates an ECDSA key pair.
+     * 
+     * @param {string} [curve=ECDSA.curves.P256] - The elliptic curve to use (default: P-256)
+     * @param {boolean} [exportable=false] - Whether the keys should be exportable (default: false)
+     * @returns {Promise<{publicKey: Uint8Array, privateKey: CryptoKey}>} The public key as Uint8Array and private key as CryptoKey
+     */
+    async generateKeyPair(curve = ECDSA.curves.P256, exportable = false) {
+        // Validate the curve
+        if (!Object.values(ECDSA.curves).includes(curve)) {
+            throw new Error(`Unsupported curve. Supported curves are: ${Object.values(ECDSA.curves).join(', ')}`);
+        }
+
+        // Generate the ECDSA key pair
+        const keyPair = await window.crypto.subtle.generateKey(
             {
                 name: "ECDSA",
-                namedCurve: "P-256", // Puoi usare P-384 o P-521, ma P-256 è il più comune
+                namedCurve: curve,
             },
-            true, // La chiave è esportabile
+            exportable, // Keys are not exportable by default
             ["sign", "verify"]
         );
 
-        // Esporta la chiave pubblica in formato SPKI
-        const exported_public_key = await window.crypto.subtle.exportKey("spki", key_pair.publicKey);
+        // Export the public key in SPKI format
+        const exportedPublicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
 
-        // Restituisce la chiave pubblica come Uint8Array e la chiave privata come CryptoKey
         return {
-            public_key: new Uint8Array(exported_public_key),
-            private_key: key_pair.privateKey,
+            publicKey: new Uint8Array(exportedPublicKey),
+            privateKey: keyPair.privateKey,
         };
     }
 
     /**
-     * Importa una chiave pubblica ECDSA da un array di byte in formato SPKI.
+     * Imports a public key from SPKI format.
      * 
-     * @param {Uint8Array} public_key - La chiave pubblica in formato Uint8Array.
-     * @returns {Promise<CryptoKey>} La chiave pubblica importata come CryptoKey.
+     * @param {Uint8Array} publicKeyBytes - The public key in Uint8Array format
+     * @param {string} [curve=ECDSA.curves.P256] - The elliptic curve used (default: P-256)
+     * @param {boolean} [exportable=false] - Whether the key should be exportable (default: false)
+     * @returns {Promise<CryptoKey>} The imported public key as CryptoKey
      */
-    static async import_public_key(public_key) {
-        // Importa la chiave pubblica ricevuta in formato SPKI
+    async importPublicKey(publicKeyBytes, curve = ECDSA.curves.P256, exportable = false) {
         return window.crypto.subtle.importKey(
-            "spki", // Formato della chiave
-            public_key, // La chiave pubblica in formato Uint8Array
+            "spki",
+            publicKeyBytes,
             {
                 name: "ECDSA",
-                namedCurve: "P-256", // La curva deve essere la stessa
+                namedCurve: curve,
             },
-            true, // La chiave è esportabile
-            ["verify"] // La chiave è usata solo per la verifica
+            exportable,
+            ["verify"]
         );
     }
 
     /**
-     * Firma un messaggio utilizzando la chiave privata ECDSA.
+     * Signs a message using a private key.
      * 
-     * @param {CryptoKey} private_key - La chiave privata in formato CryptoKey.
-     * @param {Uint8Array} message - Il messaggio da firmare come Uint8Array.
-     * @returns {Promise<Uint8Array>} La firma digitale del messaggio.
+     * @param {CryptoKey} privateKey - The private key as CryptoKey
+     * @param {Uint8Array} message - The message to sign as Uint8Array
+     * @param {string} [hashAlgorithm="SHA-256"] - The hash algorithm to use (default: SHA-256)
+     * @returns {Promise<Uint8Array>} The signature as Uint8Array
      */
-    static async sign_message(private_key, message) {
-        // Firma il messaggio con la chiave privata
+    async sign(privateKey, message, hashAlgorithm = "SHA-256") {
         const signature = await window.crypto.subtle.sign(
             {
                 name: "ECDSA",
-                hash: { name: "SHA-256" },  // L'algoritmo di hashing usato per la firma
+                hash: { name: hashAlgorithm },
             },
-            private_key,  // La chiave privata usata per firmare
-            message  // Il messaggio da firmare
+            privateKey,
+            message
         );
 
-        // Restituisce la firma come Uint8Array
         return new Uint8Array(signature);
     }
 
     /**
-     * Verifica la firma di un messaggio utilizzando la chiave pubblica ECDSA.
+     * Verifies a signature against a message using a public key.
      * 
-     * @param {CryptoKey} public_key - La chiave pubblica in formato CryptoKey.
-     * @param {Uint8Array} signature - La firma del messaggio da verificare.
-     * @param {Uint8Array} message - Il messaggio originale da verificare.
-     * @returns {Promise<boolean>} True se la firma è valida, altrimenti false.
+     * @param {CryptoKey} publicKey - The public key as CryptoKey
+     * @param {Uint8Array} signature - The signature to verify as Uint8Array
+     * @param {Uint8Array} message - The original message as Uint8Array
+     * @param {string} [hashAlgorithm="SHA-256"] - The hash algorithm used (default: SHA-256)
+     * @returns {Promise<boolean>} True if the signature is valid, false otherwise
      */
-    static async verify_signature(public_key, signature, message) {
-        // Verifica la firma con la chiave pubblica
-        const isValid = await window.crypto.subtle.verify(
+    async verify(publicKey, signature, message, hashAlgorithm = "SHA-256") {
+        return window.crypto.subtle.verify(
             {
                 name: "ECDSA",
-                hash: { name: "SHA-256" },  // L'algoritmo di hashing usato per la verifica
+                hash: { name: hashAlgorithm },
             },
-            public_key,  // La chiave pubblica usata per verificare
-            signature,  // La firma da verificare
-            message  // Il messaggio firmato
+            publicKey,
+            signature,
+            message
         );
-
-        // Restituisce true se la firma è valida, altrimenti false
-        return isValid;
     }
 
     /**
-     * Esporta una chiave privata in formato PKCS#8.
+     * Exports a private key in PKCS#8 format (only if key was created as exportable).
      * 
-     * @param {CryptoKey} private_key - La chiave privata in formato CryptoKey.
-     * @returns {Promise<Uint8Array>} La chiave privata esportata come Uint8Array.
+     * @param {CryptoKey} privateKey - The private key to export
+     * @returns {Promise<Uint8Array>} The exported private key as Uint8Array
+     * @throws {Error} If the key is not exportable
      */
-    static async export_private_key(private_key) {
-        const exported_private_key = await window.crypto.subtle.exportKey("pkcs8", private_key);
-        return new Uint8Array(exported_private_key);
+    async exportPrivateKey(privateKey) {
+        const exportedPrivateKey = await window.crypto.subtle.exportKey("pkcs8", privateKey);
+        return new Uint8Array(exportedPrivateKey);
     }
 
     /**
-     * Converte una chiave privata in formato Uint8Array in un CryptoKey per uso con ECDSA.
+     * Imports a private key from PKCS#8 format.
      * 
-     * @param {Uint8Array} private_key_bytes - La chiave privata in formato Uint8Array.
-     * @returns {Promise<CryptoKey>} La chiave privata importata come CryptoKey.
+     * @param {Uint8Array} privateKeyBytes - The private key in Uint8Array format
+     * @param {string} [curve=ECDSA.curves.P256] - The elliptic curve used (default: P-256)
+     * @param {boolean} [exportable=false] - Whether the imported key should be exportable (default: false)
+     * @returns {Promise<CryptoKey>} The imported private key as CryptoKey
      */
-    static async import_private_key(private_key_bytes) {
+    async importPrivateKey(privateKeyBytes, curve = ECDSA.curves.P256, exportable = false) {
         return window.crypto.subtle.importKey(
-            "pkcs8", // Tipo di chiave
-            private_key_bytes, // Chiave privata come Uint8Array
+            "pkcs8",
+            privateKeyBytes,
             {
                 name: "ECDSA",
-                namedCurve: "P-256", // La curva deve corrispondere a quella utilizzata per la generazione
+                namedCurve: curve,
             },
-            true, // La chiave è esportabile
-            ["sign"] // Operazioni consentite (solo firma)
+            exportable,
+            ["sign"]
         );
     }
 }
