@@ -14,6 +14,7 @@ import { ShivService } from "../services/shiv.service.js";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
 import msgpack from "../docs/utils/msgpack.min.js";
+import { DPoP } from "../protocols/DPoP.server.js";
 
 export class UserController {
     constructor() {
@@ -60,14 +61,14 @@ export class UserController {
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
-            maxAge: SHIV.jwtLifetime * 1000,
+            maxAge: DPoP.jwtLifetime * 1000,
             sameSite: "Lax",
             path: "/",
         });
         cookieUtils.setCookie(req, res, 'uid', uid, {
             httpOnly: true,
             secure: true,
-            maxAge: SHIV.jwtLifetime * 1000,
+            maxAge: DPoP.jwtLifetime * 1000,
             sameSite: "Lax",
             path: "/",
         })
@@ -76,7 +77,6 @@ export class UserController {
         // ---
         res.status(201).json({
             jwt,
-            publicKey: serverPublicKey,
             uid,
             salt,
             dek: dek.toString('base64'),

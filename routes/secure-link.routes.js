@@ -2,6 +2,7 @@ import express from "express";
 import { verifyAuth } from "../middlewares/authMiddleware.js";
 import { SecureLinkController } from "../controllers/secure-link.controller.js";
 import rateLimit from "express-rate-limit";
+import { dpopAuthMiddleware } from "../middlewares/dpop.middlewares.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -15,7 +16,7 @@ const limiter = rateLimit({
 });
 router.use(limiter);
 // -- secure-link/
-router.post('/', verifyAuth(), controller.generate_secret);
+router.post('/', dpopAuthMiddleware, controller.generate_secret);
 router.post('/id', controller.generate_id);
 router.get('/:scope_id', controller.get_secret);
 

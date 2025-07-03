@@ -4,6 +4,7 @@ import { UserController } from "../controllers/user.controller.js";
 import { verifyEmailCode, verifyPassword, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
 import { verifyPasskey } from "../middlewares/passkey.middleware.js";
 import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
+import { dpopAuthMiddleware } from "../middlewares/dpop.middlewares.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -20,9 +21,9 @@ router.post('/signup', controller.signup);
 router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
 router.post('/password', verifyAuth({ replayProtection: true }), verifyShivPrivilegedToken, controller.changePassword);
 // -- SEARCH
-router.get('/search/:email', verifyAuth(), controller.search);
+router.get('/search/:email', dpopAuthMiddleware, controller.search);
 // -- QUICK SIGN IN
-router.post('/quick-sign-in', verifyAuth(), verifyShivPrivilegedToken, controller.quick_signin);
+router.post('/quick-sign-in', dpopAuthMiddleware, verifyShivPrivilegedToken, controller.quick_signin);
 router.get('/quick-sign-in/:id', controller.get_quick_signin);
 // -- EMAIL CODES
 router.post('/email-verification', controller.sendEmailCode);
@@ -40,7 +41,7 @@ router.post('/vmac', controller.verify_message_authentication_code);
 router.get('/vmac/:email', controller.createMessageAuthenticationCode);
 // API DI TEST
 // test per vedere se l'access token va
-router.post('/test', verifyAuth(), (req, res, next) => {
+router.post('/test', dpopAuthMiddleware, (req, res, next) => {
     res.status(200).json({ message: "Lesgo" });
 });
 

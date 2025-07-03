@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { VaultController } from "../controllers/vault.controller.js";
-import { verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
+import { dpopAuthMiddleware } from "../middlewares/dpop.middlewares.js";
 // import { Roles } from "../utils/roles.js";
 // -- router
 const router = express.Router();
@@ -16,9 +16,9 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- /vaults
 // -- routes that require sudo access token
-router.post('/restore', express.raw({ type: 'application/octet-stream' }), verifyAuth(), verifyShivPrivilegedToken, controller.restore);
+router.post('/restore', express.raw({ type: 'application/octet-stream' }), dpopAuthMiddleware, controller.restore);
 // -- routes that require simple access token
-router.use(verifyAuth());
+router.use(dpopAuthMiddleware);
 router.post('/create', controller.create);
 router.get('/:vault_id', controller.get_id);
 router.get('/', controller.get);

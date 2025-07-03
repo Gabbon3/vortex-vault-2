@@ -2,6 +2,7 @@ import { Windows } from "./windows.js";
 import { CError } from "./error.js";
 import { SHIV } from "../secure/SHIV.browser.js";
 import { Config } from "../config.js";
+import { DPoP } from "../secure/DPoP.client.js";
 
 export class API {
     static recent = {};
@@ -30,10 +31,17 @@ export class API {
                 options.headers['x-authentication-method'] = options.auth;
                 delete options.auth;
             }
-            // -- aggiungo l'header integrity se presente
-            const integrity = await SHIV.getIntegrity(options.body ?? {}, options.method, endpoint);
-            if (integrity) {
-                options.headers['X-Integrity'] = integrity;
+            /**
+             * Aggiungo l'header authorization
+             */
+            if (DPoP.isInit) {
+                const DPoPProof = await DPoP.createProof(
+                    'default',
+                    'default',
+                    options.method,
+                    `${Config.origin}${endpoint}`
+                );
+                options.headers['authorization'] = `DPoP ${DPoPProof}`;
             }
             // IMPORTANTE: aggiungere queryParams DOPO la firma, per evitare mismatch di endpoint
             // -- gestisco i query Params

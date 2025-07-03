@@ -5,14 +5,12 @@ import { LocalStorage } from "../utils/local.js";
 import { API } from "../utils/api.js";
 import { AES256GCM } from "../secure/aesgcm.js";
 import { ECDH } from "../secure/ecdh.js";
-import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Log } from "../utils/log.js";
 import msgpack from "../utils/msgpack.min.js";
 import { CKE } from "../utils/cke.public.util.js";
-import { SHIV } from "../secure/SHIV.browser.js";
 import { Windows } from "../utils/windows.js";
 import { DPoP } from "../secure/DPoP.client.js";
 import { ECDSA } from "../secure/ecdsa.js";
@@ -25,18 +23,19 @@ export class AuthService {
         /**
          * CKE
          */
-        Windows.loader(true, "SHIV is starting");
-        const sessionSharedSecret = SessionStorage.get('shared-secret');
-        const userIsLogged = LocalStorage.exist('shared-secret');
-        if (sessionSharedSecret || !userIsLogged) return true;
+        Windows.loader(true, "DPoP is starting");
         // ---
         const keyBasic = await CKE.getBasic();
         if (!keyBasic) return false;
         // ---
-        const sharedSecret = await LocalStorage.get('shared-secret', keyBasic);
-        if (!sharedSecret) return false;
+        const rawPrivateKey = await LocalStorage.get('dpop-private-key', keyBasic);
+        const rawPublicKey = await LocalStorage.get('dpop-public-key', keyBasic);
+        await DPoP.initRaw({ 
+            privateKey: rawPrivateKey, 
+            publicKey: rawPublicKey 
+        });
+        if (!rawPrivateKey) return false;
         // ---
-        SessionStorage.set('shared-secret', sharedSecret);
         return true;
     }
     /**
@@ -51,7 +50,7 @@ export class AuthService {
         // -- genero la coppia di chiavi
         // const publicKeyHex = await SHIV.generateKeyPair();
         const ecdsa = new ECDSA();
-        const DPoPKeyPair = await ecdsa.generateKeyPair();
+        const DPoPKeyPair = await ecdsa.generateKeyPair('P-256', true);
         const jwkPublicKey = await ecdsa.exportPublicKeyToJWK(DPoPKeyPair.publicKey);
         // ---
         const res = await API.fetch('/auth/signin', {
@@ -64,17 +63,21 @@ export class AuthService {
         });
         if (!res) return false;
         // ---
-        const { dek: encodedDek, publicKey: serverPublicKey, bypassToken } = res;
-        // -- ottengo il segreto condiviso e lo cifro in localstorage con CKE
-        const sharedSecret = await SHIV.completeHandshake(serverPublicKey);
-        if (!sharedSecret) return false;
+        const { dek: encodedDek, bypassToken } = res;
         /**
          * Inizializzo CKE localmente
          */
         const { keyBasic, keyAdvanced } = await CKE.set(bypassToken);
         if (!keyBasic || !keyAdvanced) return false;
-        // -- cifro localmente lo shared secret con la chiave basic
-        LocalStorage.set('shared-secret', sharedSecret, keyBasic);
+        /**
+         * Inizializzo DPoP
+         */
+        DPoP.init(DPoPKeyPair);
+        // salvo e cifro le chiavi localmente
+        const rawPrivateKey = await ecdsa.exportPrivateKey(DPoPKeyPair.privateKey)
+        const rawPublicKey = await ecdsa.exportPublicKey(DPoPKeyPair.publicKey)
+        LocalStorage.set('dpop-private-key', rawPrivateKey, keyBasic);
+        LocalStorage.set('dpop-public-key', rawPublicKey, keyBasic);
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
         const KEK = await Cripto.deriveKey(password, salt);

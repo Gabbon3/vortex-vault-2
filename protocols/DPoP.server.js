@@ -1,13 +1,14 @@
 import { createHash } from 'node:crypto';
 import { promisify } from 'node:util';
 import jwt from 'jsonwebtoken';
-import { ECDSA } from './ecdsa.js';
+import { ECDSA } from '../utils/ecdsa.js';
 
 /**
  * Implementazione server DPoP con ECDSA
  * Utilizza la classe ECDSA fornita per tutte le operazioni crittografiche
  */
 export class DPoP {
+    static jwtLifetime = 14 * 24 * 60 * 60; // in secondi
     /**
      * @param {Object} options - Configurazione DPoP
      * @param {string} options.issuer - Issuer del server
@@ -122,7 +123,7 @@ export class DPoP {
         return this.jwtSign(tokenPayload, this.privateKey, {
             issuer: this.issuer,
             algorithm: this.jwtAlg,
-            expiresIn: '7d',
+            expiresIn: '14d',
             ...options
         });
     }
@@ -144,60 +145,6 @@ export class DPoP {
         }
 
         return payload;
-    }
-
-    /**
-     * Middleware Express per la verifica DPoP
-     */
-    get middleware() {
-        return async (req, res, next) => {
-            try {
-                // 1. Estrai token DPoP
-                const dpopToken = req.headers['dpop'];
-                if (!dpopToken) {
-                    return res.status(401).json({ 
-                        error: 'dpop_token_required',
-                        error_description: 'DPoP token is required in Authorization header'
-                    });
-                }
-
-                // 2. Verifica token DPoP
-                const result = await this.verify(
-                    dpopToken,
-                    req.method,
-                    `${req.protocol}://${req.get('host')}${req.originalUrl.split('?')[0]}`
-                );
-
-                if (!result.isValid) {
-                    return res.status(401).json({ 
-                        error: result.error,
-                        error_description: 'Invalid DPoP proof'
-                    });
-                }
-
-                // 3. Verifica access token se presente
-                const authHeader = req.headers['authorization'];
-                if (authHeader && authHeader.startsWith('DPoP ')) {
-                    const accessToken = authHeader.substring(5);
-                    await this.verifyAccessToken(accessToken, result.thumbprint);
-                }
-
-                // 4. Aggiungi dati DPoP alla request
-                req.dpop = {
-                    jwk: result.jwk,
-                    payload: result.payload,
-                    thumbprint: result.thumbprint
-                };
-
-                next();
-            } catch (error) {
-                console.error('DPoP verification error:', error);
-                res.status(401).json({ 
-                    error: 'invalid_dpop_proof',
-                    error_description: error.message
-                });
-            }
-        };
     }
 
     // === Metodi privati ===

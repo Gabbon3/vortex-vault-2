@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { ShivController } from "../controllers/shiv.controller.js";
-import { authSelector, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
+import { dpopAuthMiddleware } from "../middlewares/dpop.middlewares.js";
 // -- router
 const router = express.Router();
 // -- controller
@@ -16,16 +16,9 @@ router.use(limiter);
 /**
  * /shiv/*
  */
-router.get('/session', verifyAuth(), controller.getAllSession);
-router.patch('/session/:kid/name', verifyAuth(), controller.editDeviceName);
-router.delete('/session/:kid', verifyAuth(), verifyShivPrivilegedToken, controller.deleteSession);
-router.delete('/session', verifyAuth(), verifyShivPrivilegedToken, controller.deleteAllSession);
-// Genera SPT
-router.post('/spt', authSelector(['psk', 'otp']), verifyAuth(), controller.shivPrivilegedToken);
-
-// API DI TEST
-router.post('/spt-test', verifyShivPrivilegedToken, (req, res, next) => {
-    res.status(200).json(req.ppt);
-});
+router.get('/session', dpopAuthMiddleware, controller.getAllSession);
+router.patch('/session/:kid/name', dpopAuthMiddleware, controller.editDeviceName);
+router.delete('/session/:kid', dpopAuthMiddleware, controller.deleteSession);
+router.delete('/session', dpopAuthMiddleware, controller.deleteAllSession);
 
 export default router;

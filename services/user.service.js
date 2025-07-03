@@ -43,9 +43,9 @@ export class UserService {
             throw new CError("UserExist", "This email is already in use", 409);
         // -- creo un nuovo utente
         const passwordHash = await this.hashPassword(password);
-        const user = new User({ 
-            email, 
-            password: passwordHash, 
+        const user = new User({
+            email,
+            password: passwordHash,
             salt: salt,
             dek: DEK
         });
@@ -79,7 +79,7 @@ export class UserService {
      * @param {Object} params.request - Request HTTP
      * @param {string} params.email - Email dell'utente
      * @param {Object} [params.jwkPublicKey] - Chiave pubblica JWK per DPoP (opzionale)
-     * @returns {Promise<AuthResponse>}
+     * @returns {Promise<{uid: string, salt: string, dek: Buffer, jwt: string, bypassToken: string}>}
      */
     async signin({ request, email, jwkPublicKey }) {
         // 1. Verifica esistenza utente
@@ -87,7 +87,7 @@ export class UserService {
         if (!user) {
             throw new CError("AuthenticationError", "Invalid email", 401);
         }
-        
+
         if (user.verified !== true) {
             throw new CError("AuthenticationError", "Email is not verified", 401);
         }
@@ -97,26 +97,22 @@ export class UserService {
         const ipAddress = request.headers["x-forwarded-for"] || request.socket.remoteAddress;
 
         // 3. Genera token DPoP se fornita la chiave pubblica
-        let jwt;
-        if (jwkPublicKey) {
-            // Calcola thumbprint della chiave client
-            const thumbprint = this.dpop._computeJwkThumbprint(jwkPublicKey);
-            
-            // Genera access token con binding
-            jwt = await this.dpop.createAccessToken(
-                {
-                    sub: user.id,
-                    email: user.email
-                },
-                thumbprint,
-                {
-                    expiresIn: '1h'
-                }
-            );
+        // -- calcola thumbprint della chiave client
+        const thumbprint = this.dpop._computeJwkThumbprint(jwkPublicKey);
+        // -- genera access token con binding
+        const jwt = await this.dpop.createAccessToken(
+            {
+                sub: user.id,
+                email: user.email
+            },
+            thumbprint,
+            {
+                expiresIn: '14d'
+            }
+        );
 
-            // TODO: Salva la chiave pubblica associata all'utente
-            // await this._storeClientPublicKey(user.id, jwkPublicKey);
-        }
+        // TODO: Salva la chiave pubblica associata all'utente
+        // await this._storeClientPublicKey(user.id, jwkPublicKey);
 
         // 4. Notifica login via email
         const { text, html } = await emailContents.newSignIn({
@@ -132,12 +128,12 @@ export class UserService {
         await RedisDB.set(`byp-${bypassToken}`, { uid: user.id }, 60);
 
         // 6. Restituisci response
-        return { 
-            uid: user.id, 
-            salt: user.salt, 
-            dek: user.dek, 
+        return {
+            uid: user.id,
+            salt: user.salt,
+            dek: user.dek,
             jwt,
-            bypassToken 
+            bypassToken
         };
     }
 

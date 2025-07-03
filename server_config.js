@@ -1,3 +1,4 @@
+import { createPrivateKey, createPublicKey } from 'crypto';
 import 'dotenv/config';
 
 export class Config {
@@ -34,5 +35,12 @@ export class Config {
     // Numero di tentativi massimi per rate limiter -> email
     static TRLEMAIL = 5; // TRL = Tentativi Rate Limiter per Email
     // DPoP
-    static DPOP_PRIVATE_KEY = process.env.DPOP_PRIVATE_KEY;
+    static DPOP_PRIVATE_KEY = createPrivateKey({
+        key: process.env.DPOP_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        format: 'pem'
+    });
+    static DPOP_PUBLIC_KEY = createPublicKey({
+        key: process.env.DPOP_PUBLIC_KEY.replace(/\\n/g, '\n'),
+        format: 'pem'
+    });
 }
