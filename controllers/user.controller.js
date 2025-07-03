@@ -46,22 +46,15 @@ export class UserController {
      * @param {Response} res
      */
     signin = asyncHandler(async (req, res) => {
-        const { email, publicKey: publicKeyHex } = req.body;
-        // -- verifico se l'utente è già autenticato
-        const jwtCookie = cookieUtils.getCookie(req, 'jwt');
-        if (jwtCookie) {
-            // -- se si elimino dal db
-            const kid = this.shivService.shiv.getKidFromJWT(jwtCookie);
-            if (kid) await this.shivService.delete({ kid }, true);
-        }
+        const { email, jwkPublicKey } = req.body;
         /**
          * Servizio
          */
-        const { uid, salt, dek, jwt, publicKey: serverPublicKey, bypassToken } =
+        const { uid, salt, dek, jwt, bypassToken } =
             await this.service.signin({
                 request: req,
                 email,
-                publicKeyHex
+                jwkPublicKey
             });
         // ---
         cookieUtils.setCookie(req, res, 'jwt', jwt, {

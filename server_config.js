@@ -33,4 +33,6 @@ export class Config {
     static DEV = process.env.DEV === 'true';
     // Numero di tentativi massimi per rate limiter -> email
     static TRLEMAIL = 5; // TRL = Tentativi Rate Limiter per Email
+    // DPoP
+    static DPOP_PRIVATE_KEY = process.env.DPOP_PRIVATE_KEY;
 }

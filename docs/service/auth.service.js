@@ -15,6 +15,7 @@ import { CKE } from "../utils/cke.public.util.js";
 import { SHIV } from "../secure/SHIV.browser.js";
 import { Windows } from "../utils/windows.js";
 import { DPoP } from "../secure/DPoP.client.js";
+import { ECDSA } from "../secure/ecdsa.js";
 
 export class AuthService {
     /**
@@ -46,17 +47,19 @@ export class AuthService {
      * @returns {boolean}
      */
     static async signin(email, password) {
+        const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // -- genero la coppia di chiavi
         // const publicKeyHex = await SHIV.generateKeyPair();
-        const publicKeyHex = await DPoP.generateKeyPair();
-        const obfuscatedPassword = await Cripto.obfuscatePassword(password);
+        const ecdsa = new ECDSA();
+        const DPoPKeyPair = await ecdsa.generateKeyPair();
+        const jwkPublicKey = await ecdsa.exportPublicKeyToJWK(DPoPKeyPair.publicKey);
         // ---
         const res = await API.fetch('/auth/signin', {
             method: 'POST',
             body: {
                 email,
                 password: obfuscatedPassword,
-                publicKey: publicKeyHex,
+                jwkPublicKey: jwkPublicKey,
             },
         });
         if (!res) return false;

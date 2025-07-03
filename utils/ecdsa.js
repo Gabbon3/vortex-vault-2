@@ -69,6 +69,18 @@ export class ECDSA {
     }
 
     /**
+     * Importa una chiave pubblica da formato JWK
+     * @param {object} jwk - La chiave pubblica in formato JWK
+     * @returns {Promise<KeyObject>} La chiave pubblica KeyObject
+     */
+    async importPublicKeyFromJWK(jwk) {
+        return createPublicKey({
+            key: jwk,
+            format: 'jwk'
+        });
+    }
+
+    /**
      * Signs a message using a private key asynchronously.
      * 
      * @param {Buffer|Uint8Array|string|KeyObject} privateKey - The private key

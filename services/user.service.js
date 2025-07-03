@@ -8,12 +8,15 @@ import { RedisDB } from "../config/redisdb.js";
 import { Op } from "sequelize";
 import { SHIV } from "../protocols/SHIV.node.js";
 import { AuthKeys } from "../models/authKeys.model.js";
-import { Vault } from "../models/vault.js";
-import { sequelize } from "../config/db.js";
+import { DPoP } from "../protocols/DPoP.server.js";
+import { Config } from "../server_config.js";
 
 export class UserService {
     constructor() {
         this.shiv = new SHIV();
+        this.dpop = new DPoP({
+            privateKey: Config.DPOP_PRIVATE_KEY,
+        });
     }
     /**
      * Registra un utente sul db
@@ -71,57 +74,71 @@ export class UserService {
     }
 
     /**
-     *
-     * @param {Request} request
-     * @param {string} email
-     * @param {string} publicKeyHex - chiave pubblica ECDH del client in esadecimale
-     * @returns {}
+     * Esegue il login e genera token DPoP
+     * @param {Object} params
+     * @param {Object} params.request - Request HTTP
+     * @param {string} params.email - Email dell'utente
+     * @param {Object} [params.jwkPublicKey] - Chiave pubblica JWK per DPoP (opzionale)
+     * @returns {Promise<AuthResponse>}
      */
-    async signin({ request, email, publicKeyHex }) {
-        // -- cerco se l'utente esiste
-        const user = await User.findOne({
-            where: { email },
-        });
-        if (!user)
+    async signin({ request, email, jwkPublicKey }) {
+        // 1. Verifica esistenza utente
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
             throw new CError("AuthenticationError", "Invalid email", 401);
-        if (user.verified !== true)
-            throw new CError(
-                "AuthenticationError",
-                "Email is not verified",
-                401
+        }
+        
+        if (user.verified !== true) {
+            throw new CError("AuthenticationError", "Email is not verified", 401);
+        }
+
+        // 2. Preparazione dati per token
+        const userAgentSummary = request.headers['user-agent'];
+        const ipAddress = request.headers["x-forwarded-for"] || request.socket.remoteAddress;
+
+        // 3. Genera token DPoP se fornita la chiave pubblica
+        let jwt;
+        if (jwkPublicKey) {
+            // Calcola thumbprint della chiave client
+            const thumbprint = this.dpop._computeJwkThumbprint(jwkPublicKey);
+            
+            // Genera access token con binding
+            jwt = await this.dpop.createAccessToken(
+                {
+                    sub: user.id,
+                    email: user.email
+                },
+                thumbprint,
+                {
+                    expiresIn: '1h'
+                }
             );
-        /**
-         * Stabilisco la sessione con SHIV
-         */
-        const { jwt, publicKey, userAgentSummary } =
-            await this.shiv.generateSession({
-                request: request,
-                publicKeyHex,
-                userId: user.id,
-                payload: { uid: user.id },
-            });
-        /**
-         * Avviso l'utente via mail del nuovo login
-         */
+
+            // TODO: Salva la chiave pubblica associata all'utente
+            // await this._storeClientPublicKey(user.id, jwkPublicKey);
+        }
+
+        // 4. Notifica login via email
         const { text, html } = await emailContents.newSignIn({
             email,
             user_agent: userAgentSummary,
-            ip_address:
-                request.headers["x-forwarded-for"] ||
-                request.socket.remoteAddress,
+            ip_address: ipAddress,
         });
-        // -- invio la mail
         Mailer.send(email, "New device Sign-In", text, html);
-        /**
-         * Genero un bypass token
-         */
+
+        // 5. Genera bypass token
         const cripto = new Cripto();
         const bypassToken = cripto.bypassToken();
         await RedisDB.set(`byp-${bypassToken}`, { uid: user.id }, 60);
-        /**
-         * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
-         */
-        return { uid: user.id, salt: user.salt, dek: user.dek, jwt, publicKey, bypassToken };
+
+        // 6. Restituisci response
+        return { 
+            uid: user.id, 
+            salt: user.salt, 
+            dek: user.dek, 
+            jwt,
+            bypassToken 
+        };
     }
 
     /**

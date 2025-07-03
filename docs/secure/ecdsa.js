@@ -18,7 +18,7 @@ export class ECDSA {
      * 
      * @param {string} [curve=ECDSA.curves.P256] - The elliptic curve to use (default: P-256)
      * @param {boolean} [exportable=false] - Whether the keys should be exportable (default: false)
-     * @returns {Promise<{publicKey: Uint8Array, privateKey: CryptoKey}>} The public key as Uint8Array and private key as CryptoKey
+     * @returns {Promise<{publicKey: CryptoKey, privateKey: CryptoKey}>} The public key as Uint8Array and private key as CryptoKey
      */
     async generateKeyPair(curve = ECDSA.curves.P256, exportable = false) {
         // Validate the curve
@@ -36,11 +36,8 @@ export class ECDSA {
             ["sign", "verify"]
         );
 
-        // Export the public key in SPKI format
-        const exportedPublicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
-
         return {
-            publicKey: new Uint8Array(exportedPublicKey),
+            publicKey: keyPair.publicKey,
             privateKey: keyPair.privateKey,
         };
     }
@@ -64,6 +61,29 @@ export class ECDSA {
             exportable,
             ["verify"]
         );
+    }
+
+    /**
+     * Esporta una chiave pubblica in formato JWK (JSON Web Key)
+     * @param {CryptoKey} publicKey - La chiave pubblica CryptoKey
+     * @returns {Promise<object>} La chiave pubblica in formato JWK
+     */
+    async exportPublicKeyToJWK(publicKey) {
+        const jwk = await window.crypto.subtle.exportKey("jwk", publicKey);
+        // aggiungo alg in base alla curva (DPoP richiede ES256/ES384/ES512)
+        switch (jwk.crv) {
+            case "P-256":
+                jwk.alg = "ES256";
+                break;
+            case "P-384":
+                jwk.alg = "ES384";
+                break;
+            case "P-521":
+                jwk.alg = "ES512";
+                break;
+        }
+        
+        return jwk;
     }
 
     /**
@@ -121,6 +141,18 @@ export class ECDSA {
     }
 
     /**
+     * Exports a public key in SPKI format (only if key was created as exportable).
+     * 
+     * @param {CryptoKey} publicKey - The public key to export
+     * @returns {Promise<Uint8Array>} The exported public key as Uint8Array
+     * @throws {Error} If the key is not exportable
+     */
+    async exportPublicKey(publicKey) {
+        const exportedPublicKey = await window.crypto.subtle.exportKey("spki", publicKey);
+        return new Uint8Array(exportedPublicKey);
+    }
+
+    /**
      * Imports a private key from PKCS#8 format.
      * 
      * @param {Uint8Array} privateKeyBytes - The private key in Uint8Array format
@@ -141,3 +173,5 @@ export class ECDSA {
         );
     }
 }
+
+window.ECDSA = new ECDSA();
