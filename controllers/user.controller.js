@@ -109,7 +109,7 @@ export class UserController {
      * Elimina un account
      */
     delete = asyncHandler(async (req, res) => {
-        const deletedCount = await this.service.delete_by_id(req.payload.uid);
+        const deletedCount = await this.service.delete_by_id(req.payload.sub);
         if (deletedCount === 0) throw new Error("Nessun utente eliminato");
         // -- elimino i cookie
         this.deleteAllCookies(req, res);
@@ -281,7 +281,7 @@ export class UserController {
         const DEK = Buffer.from(encodedDek, 'base64');
         // ---
         const changed = await this.service.changePassword(
-            req.payload.uid,
+            req.payload.sub,
             newPassword,
             DEK,
         );

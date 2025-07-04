@@ -190,4 +190,53 @@ export class ECDSA {
             type: 'pkcs8'
         });
     }
+
+    /**
+     * Converte una firma ECDSA raw (r||s) in DER encoding
+     * @param {Buffer | Uint8Array} rawSignature - firma raw (64 byte per P-256)
+     * @returns {Buffer} firma in formato DER
+     */
+    rawToDer(rawSignature) {
+        if (rawSignature.length % 2 !== 0) {
+            throw new Error('Invalid raw signature length');
+        }
+        const len = rawSignature.length / 2;
+        let r = rawSignature.slice(0, len);
+        let s = rawSignature.slice(len);
+
+        // Funzione helper per rimuovere zeri iniziali inutili e gestire il bit di segno
+        function toDERInteger(buf) {
+            // Rimuove zeri iniziali
+            while (buf.length > 1 && buf[0] === 0x00 && (buf[1] & 0x80) === 0) {
+                buf = buf.slice(1);
+            }
+            // Se il primo bit è 1, aggiunge uno 0x00 davanti per indicare intero positivo
+            if (buf[0] & 0x80) {
+                buf = Buffer.concat([Buffer.from([0x00]), buf]);
+            }
+            return buf;
+        }
+
+        r = toDERInteger(r);
+        s = toDERInteger(s);
+
+        const rLen = r.length;
+        const sLen = s.length;
+
+        // Costruisci struttura DER: 0x30 + length + 0x02 + rLen + r + 0x02 + sLen + s
+        const totalLength = 2 + rLen + 2 + sLen;
+        const der = Buffer.alloc(2 + totalLength);
+        let offset = 0;
+        der[offset++] = 0x30; // SEQUENCE
+        der[offset++] = totalLength;
+        der[offset++] = 0x02; // INTEGER r
+        der[offset++] = rLen;
+        r.copy(der, offset);
+        offset += rLen;
+        der[offset++] = 0x02; // INTEGER s
+        der[offset++] = sLen;
+        s.copy(der, offset);
+
+        return der;
+    }
 }

@@ -17,9 +17,9 @@ export class BackupController {
         if (!backup_bytes)
             throw new CError("ValidationError", "No backup", 422);
         // -- elimino il vecchio backup
-        await this.service.delete_all(req.payload.uid);
+        await this.service.delete_all(req.payload.sub);
         // ---
-        const backup = await this.service.create(backup_bytes, req.payload.uid);
+        const backup = await this.service.create(backup_bytes, req.payload.sub);
         // ---
         if (!backup) throw new CError("CreationError", "Error while saving new backup", 500);
         // ---
@@ -33,7 +33,7 @@ export class BackupController {
     get_id = asyncHandler(async (req, res) => {
         const { backup_id } = req.params;
         // ---
-        const backup = await this.service.get_id(backup_id, req.payload.uid);
+        const backup = await this.service.get_id(backup_id, req.payload.sub);
         // ---
         if (!backup)
             throw new CError("NotFoundError", "Backup non trovato", 404);
@@ -45,7 +45,7 @@ export class BackupController {
      * @param {Response} res 
      */
     get = asyncHandler(async (req, res) => {
-        const backups = await this.service.get(req.payload.uid);
+        const backups = await this.service.get(req.payload.sub);
         res.status(200).json(backups);
     });
     /**
@@ -56,7 +56,7 @@ export class BackupController {
     delete = asyncHandler(async (req, res) => {
         const { backup_id } = req.params;
         // ---
-        const deleted = await this.service.delete(backup_id, req.payload.uid);
+        const deleted = await this.service.delete(backup_id, req.payload.sub);
         if (!deleted) throw new CError("NotFoundError", "Backup non trovato", 404);
         res.sendStatus(200);
     });

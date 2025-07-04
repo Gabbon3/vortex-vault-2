@@ -1,3 +1,4 @@
+import { Bytes } from "../utils/bytes.js";
 import { Cripto } from "./cripto.js";
 import { ECDSA } from "./ecdsa.js";
 

@@ -50,7 +50,7 @@ export class PasskeyController {
      * Restituisce la lista di tutte le passkey
      */
     list = asyncHandler(async (req, res) => {
-        const passkeys = await this.service.list(req.payload.uid);
+        const passkeys = await this.service.list(req.payload.sub);
         // ---
         res.status(200).json(passkeys);
     });
@@ -71,7 +71,7 @@ export class PasskeyController {
     delete = asyncHandler(async (req, res) => {
         const { id } = req.params;
         // ---
-        const deleted = await this.service.delete(id, req.payload.uid);
+        const deleted = await this.service.delete(id, req.payload.sub);
         if (!deleted) {
             throw new CError('', 'Passkey not found.', 404);
         }

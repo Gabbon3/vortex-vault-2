@@ -46,7 +46,7 @@ export class ShivController {
         const { name } = req.body;
         if (!name || name.length > 20) throw new CError("", "Invalid name", 422);
         // ---
-        const [affectedCount] = await this.service.update({ kid: kid, user_id: req.payload.uid }, { device_name: name });
+        const [affectedCount] = await this.service.update({ kid: kid, user_id: req.payload.sub }, { device_name: name });
         res.status(200).json({ count: affectedCount });
     });
 
@@ -60,7 +60,7 @@ export class ShivController {
         const currentKid = await this.service.shiv.calculateKid(req.payload.kid);
         if (kid === currentKid) throw new CError("", "It is not possible to destroy the current session; instead, a signout must be performed", 400);
         // ---
-        const deleted = await this.service.delete({ kid: kid, user_id: req.payload.uid });
+        const deleted = await this.service.delete({ kid: kid, user_id: req.payload.sub });
         res.status(200).json({ count: deleted });
     });
 
@@ -68,7 +68,7 @@ export class ShivController {
      * Elimina tutte le sessioni tranne la corrente
      */
     deleteAllSession = asyncHandler(async (req, res) => {
-        const deleted = await this.service.deleteAll({ kid: req.payload.kid, user_id: req.payload.uid });
+        const deleted = await this.service.deleteAll({ kid: req.payload.kid, user_id: req.payload.sub });
         res.status(200).json({ count: deleted });
     });
 }

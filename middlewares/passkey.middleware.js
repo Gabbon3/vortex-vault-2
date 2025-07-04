@@ -23,7 +23,7 @@ export const verifyPasskey = (required = false) => {
         if (bypassToken) {
             const payload = await RedisDB.getdel(`byp-${bypassToken}`);
             if (payload) {
-                req.payload = { uid: payload.uid };
+                req.payload = { uid: payload.sub };
                 return next();
             }
         }

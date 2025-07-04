@@ -18,13 +18,13 @@ export class ShivService {
      * @returns {string} - un token formato da un payload che include uid utente + additional info
      */
     async createShivPrivilegedToken({ payload, additional, lifetime = SHIV.pptLifetime } = {}) {
-        if (!payload.uid || !payload.kid) throw new Error("Il payload non è conforme, deve avere uid e kid");
+        if (!payload.sub || !payload.kid) throw new Error("Il payload non è conforme, deve avere uid e kid");
         // -- ottengo la chiave
         const signKey = await this.shiv.getSignKey(payload.kid, 'ppt-signing');
         if (!signKey) throw new CError("", "No key founded", 400);
         // ---
         const jsonwebtoken = new JWT();
-        const ppt = jsonwebtoken.create({ uid: payload.uid, ...additional }, lifetime, signKey);
+        const ppt = jsonwebtoken.create({ uid: payload.sub, ...additional }, lifetime, signKey);
         return ppt;
     }
 

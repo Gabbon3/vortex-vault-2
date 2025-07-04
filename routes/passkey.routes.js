@@ -30,7 +30,7 @@ router.post('/rename/:id', dpopAuthMiddleware, controller.rename);
 // -- DELETE
 router.delete('/:id', dpopAuthMiddleware, verifyShivPrivilegedToken, controller.delete);
 router.post('/test', verifyPasskey(true), (req, res) => {
-    res.status(200).json({ message: "Hi user " + req.payload.uid });
+    res.status(200).json({ message: "Hi user " + req.payload.sub });
 });
 
 export default router;

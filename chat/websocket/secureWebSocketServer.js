@@ -144,7 +144,7 @@ export class SecureWebSocketServer {
         // -- valido il web socket
         ws.connectionVerified = true;
         // -- memorizzo quale utente è connesso a questo web socket
-        ws.userUUID = payload.uid;
+        ws.userUUID = payload.sub;
         // -- sposto il web socket sui client verificati rimuovendolo da quelli in pending
         SecureWebSocketServer.pendingConnections.delete(ws.uuid);
         SecureWebSocketServer.clients.set(ws.uuid, ws);

@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { promisify } from 'node:util';
 import jwt from 'jsonwebtoken';
 import { ECDSA } from '../utils/ecdsa.js';
+import { Config } from '../server_config.js';
 
 /**
  * Implementazione server DPoP con ECDSA
@@ -13,15 +14,12 @@ export class DPoP {
      * @param {Object} options - Configurazione DPoP
      * @param {string} options.issuer - Issuer del server
      * @param {string|Buffer} options.privateKey - Chiave privata ECDSA (PEM o Buffer)
+     * @param {string|Buffer} options.publicKey - Chiave pubblica ECDSA (PEM o Buffer)
      * @param {string} [options.curve] - Curva ellittica (default: 'P-256')
      * @param {Object} options.keyStorage - Adapter per lo storage delle chiavi
      * @param {number} [options.maxClockSkew=30] - Skew temporale massimo in secondi
      */
     constructor(options = {}) {
-        if (!options.privateKey) {
-            throw new Error('DPoP: privateKey is required in constructor');
-        }
-
         this.issuer = options.issuer || 'urn:example:issuer';
         this.curve = options.curve || 'P-256';
         this.maxClockSkew = options.maxClockSkew || 30;
@@ -29,10 +27,11 @@ export class DPoP {
 
         // Inizializza ECDSA helper
         this.ecdsa = new ECDSA();
-        
+
         // Carica la chiave privata
-        this.privateKey = options.privateKey;
-        
+        this.privateKey = options.privateKey || Config.DPOP_PRIVATE_KEY;
+        this.publicKey = options.publicKey || Config.DPOP_PUBLIC_KEY;
+
         // Configura algoritmi
         this.jwtAlg = this._getJwtAlgorithmForCurve(this.curve);
         this.jwtSign = promisify(jwt.sign);
@@ -79,13 +78,14 @@ export class DPoP {
 
             // 6. Verifica firma
             const signingInput = `${header}.${payload}`;
-            const sigBytes = this._base64UrlDecode(signature, true);
+            const rawSig = this._base64UrlDecode(signature, true);
+            const sigBytes = this.ecdsa.rawToDer(Buffer.from(rawSig));
 
             const isValid = await this.ecdsa.verify(
                 publicKey,
                 sigBytes,
-                Buffer.from(signingInput),
-                decodedHeader.alg.toLowerCase() // Node.js usa nomi in lowercase
+                new TextEncoder().encode(signingInput),
+                'sha256'
             );
 
             if (!isValid) {
@@ -93,7 +93,7 @@ export class DPoP {
             }
 
             // 7. Calcola thumbprint della chiave
-            const thumbprint = this._computeJwkThumbprint(decodedHeader.jwk);
+            const thumbprint = this.computeJwkThumbprint(decodedHeader.jwk);
 
             return {
                 isValid: true,
@@ -135,7 +135,7 @@ export class DPoP {
      * @returns {Promise<Object>} Payload del token verificato
      */
     async verifyAccessToken(accessToken, dpopThumbprint) {
-        const payload = await this.jwtVerify(accessToken, this.privateKey, {
+        const payload = await this.jwtVerify(accessToken, this.publicKey, {
             issuer: this.issuer,
             algorithms: [this.jwtAlg]
         });
@@ -147,6 +147,26 @@ export class DPoP {
         return payload;
     }
 
+    /**
+     * Calcola l'hash della chiave pubblica
+     * @param {Object} jwk 
+     * @returns {string} base64 dell hash della chiave pubblica jwk
+     */
+    async computeJwkThumbprint(jwk) {
+        // RFC 7638 - JSON senza spazi e con ordine alfabetico
+        const sorted = {
+            crv: jwk.crv,
+            kty: jwk.kty,
+            x: jwk.x,
+            y: jwk.y
+        };
+        // ---
+        const json = JSON.stringify(sorted);
+        return createHash('sha256')
+            .update(json)
+            .digest('base64url');
+    }
+
     // === Metodi privati ===
 
     _getJwtAlgorithmForCurve(curve) {
@@ -155,11 +175,11 @@ export class DPoP {
             'P-384': 'ES384',
             'P-521': 'ES512'
         };
-        
+
         if (!mapping[curve]) {
             throw new Error(`Unsupported curve: ${curve}`);
         }
-        
+
         return mapping[curve];
     }
 
@@ -175,9 +195,9 @@ export class DPoP {
         }
 
         // Verifica timestamp
-        if (payload.iat && Math.abs(payload.iat - currentTime) > this.maxClockSkew) {
-            return { isValid: false, error: 'invalid_timestamp' };
-        }
+        // if (payload.iat && Math.abs(payload.iat - currentTime) > this.maxClockSkew) {
+        //     return { isValid: false, error: 'invalid_timestamp' };
+        // }
 
         // Verifica scadenza
         if (payload.exp && payload.exp < currentTime) {
@@ -191,7 +211,7 @@ export class DPoP {
         try {
             const u = new URL(url);
             u.hash = '';
-            u.searchParams.sort();
+            u.search = ''; // Rimuove interamente i search params
             return u.toString();
         } catch (error) {
             throw new Error(`Invalid URL: ${url}`);
@@ -208,22 +228,7 @@ export class DPoP {
         const buffer = Buffer.from(padded
             .replace(/-/g, '+')
             .replace(/_/g, '/'), 'base64');
-        
-        return asBuffer ? buffer : JSON.parse(buffer.toString());
-    }
 
-    _computeJwkThumbprint(jwk) {
-        // RFC 7638 - JSON senza spazi e con ordine alfabetico
-        const sorted = {
-            crv: jwk.crv,
-            kty: jwk.kty,
-            x: jwk.x,
-            y: jwk.y
-        };
-        
-        const json = JSON.stringify(sorted);
-        return createHash('sha256')
-            .update(json)
-            .digest('base64url');
+        return asBuffer ? buffer : JSON.parse(buffer.toString());
     }
 }

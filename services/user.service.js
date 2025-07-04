@@ -98,7 +98,7 @@ export class UserService {
 
         // 3. Genera token DPoP se fornita la chiave pubblica
         // -- calcola thumbprint della chiave client
-        const thumbprint = this.dpop._computeJwkThumbprint(jwkPublicKey);
+        const thumbprint = this.dpop.computeJwkThumbprint(jwkPublicKey);
         // -- genera access token con binding
         const jwt = await this.dpop.createAccessToken(
             {

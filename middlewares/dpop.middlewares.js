@@ -21,9 +21,7 @@ export const dpopAuthMiddleware = async (req, res, next) => {
         }
         const dpopProofToken = authHeader.substring(5);
 
-        const dpop = new DPoP({
-            privateKey: Config.DPOP_PRIVATE_KEY
-        });
+        const dpop = new DPoP();
 
         // 2. Verifica proof token DPoP
         const proofResult = await dpop.verify(
@@ -43,12 +41,14 @@ export const dpopAuthMiddleware = async (req, res, next) => {
         }
 
         // 4. Verifica JWT di sessione con binding (cnf.jkt) che deve corrispondere alla thumbprint del proof token
-        const accessTokenValid = await dpop.verifyAccessToken(jwtToken, proofResult.thumbprint);
-        if (!accessTokenValid) {
+        const accessTokenPayload = await dpop.verifyAccessToken(jwtToken, proofResult.thumbprint);
+        if (!accessTokenPayload) {
             return res.status(401).json({ success: false, error: 'Session JWT is invalid or does not bind to the DPoP proof key' });
         }
 
         // 5. Tutte le verifiche sono andate a buon fine, inserisco dati utili nella richiesta
+        req.payload = accessTokenPayload;
+        req.state = {};
         req.state.dpop = {
             jwk: proofResult.jwk,
             payload: proofResult.payload,

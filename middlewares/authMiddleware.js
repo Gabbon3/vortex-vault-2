@@ -43,7 +43,7 @@ export const verifyAuth = (options = {}) => {
         // -- se è tutto ok aggiungo il payload dell'utente alla request
         req.payload = payload;
         // -- verifica se il payload è conforme
-        if (!req.payload.uid)
+        if (!req.payload.sub)
             return res.status(400).json({ error: "Sign-in again" });
         /**
          * Verifico il replay se richiesto
@@ -113,7 +113,7 @@ export const verifyPassword = asyncHandler(async (req, res, next) => {
     if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 422);
     // -- ottengo le variabili
     const password = req.body.password;
-    const uid = from_token ? req.payload.uid : req.body.email;
+    const uid = from_token ? req.payload.sub : req.body.email;
     // -- istanzio il servizio utente e recupero il segreto
     const service = new UserService();
     const user = from_token ? await service.find_by_id(uid) : await service.find_by_email(uid);

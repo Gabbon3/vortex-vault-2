@@ -21,7 +21,7 @@ export class VaultController {
         // -- riconverto da base 64 a bytes
         const secrets_bytes = Buffer.from(secrets, 'base64');
         // ---
-        const vault = await this.service.create(req.payload.uid, secrets_bytes);
+        const vault = await this.service.create(req.payload.sub, secrets_bytes);
         // ---
         res.status(201).json({ id: vault.id });
     });
@@ -33,7 +33,7 @@ export class VaultController {
     get_id = asyncHandler(async (req, res) => {
         const { vault_id } = req.params;
         // ---
-        const vault = await this.service.get_id(req.payload.uid, vault_id);
+        const vault = await this.service.get_id(req.payload.sub, vault_id);
         // ---
         if (!vault) throw new CError("NotFoundError", "Vault non trovato", 404);
         res.status(200).json(vault);
@@ -47,7 +47,7 @@ export class VaultController {
         let updated_after = req.query.updated_after ?? null;
         if (updated_after) updated_after = new Date(updated_after);
         // ---
-        const vaults = await this.service.get(req.payload.uid, updated_after);
+        const vaults = await this.service.get(req.payload.sub, updated_after);
         res.status(200).json(vaults);
     });
     /**
@@ -60,7 +60,7 @@ export class VaultController {
         // -- riconverto da base 64 a bytes
         const secretsBytes = Buffer.from(secrets, 'base64');
         // ---
-        const vault = await this.service.update(req.payload.uid, vault_id, secretsBytes);
+        const vault = await this.service.update(req.payload.sub, vault_id, secretsBytes);
         if (!vault) throw new CError("NotFoundError", "Vault non trovato", 404);
         res.status(200).json(vault);
     });
@@ -74,7 +74,7 @@ export class VaultController {
         const packed_vaults = req.body;
         const vaults = msgpack.decode(packed_vaults);
         // ---
-        const restored = await this.service.restore(req.payload.uid, vaults);
+        const restored = await this.service.restore(req.payload.sub, vaults);
         if (!restored) throw new CError("RestoreFailed", "Error during restore of vaults", 500);
         // ---
         res.status(201).json({ message: "Vaults restored" });
@@ -87,7 +87,7 @@ export class VaultController {
     delete = asyncHandler(async (req, res) => {
         const { vault_id } = req.params;
         // ---
-        const deleted = await this.service.delete(req.payload.uid, vault_id);
+        const deleted = await this.service.delete(req.payload.sub, vault_id);
         if (!deleted) throw new CError("NotFoundError", "Vault non trovato", 404);
         res.sendStatus(200);
     });
