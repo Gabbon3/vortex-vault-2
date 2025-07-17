@@ -152,7 +152,7 @@ export const VaultDelegator = {
         // ---
         if (!isActive) {
             const regex = /"([^"]+)":\s*("[^"]*"|[^,}\]]+)/g;
-            const highlighted = jsonString.replace(regex,
+            const highlighted = rawJson.replace(regex,
                 '"<span class="env-key">$1</span>": <span class="env-value">$2</span>'
             );
             outputElement.innerHTML = highlighted;
