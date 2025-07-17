@@ -670,14 +670,12 @@ input[type="password"] {
     font-family: $monospace !important;
 }
 
-.formatted-env {
-    display: flex;
-    gap: 5px;
-    flex-direction: column;
-    
+.formatted-json {
+    font-family: $monospace !important;
+    line-height: 1.5;
     span {
-        transition: 0.05s;
         font-family: $monospace !important;
+        transition: 0.05s;
         word-wrap: break-word;
         padding: 3px;
         border-radius: 3px;
@@ -688,11 +686,11 @@ input[type="password"] {
         }
     }
 
-    .env-key {
+    .key {
         color: var(--yellow);
     }
 
-    .env-value {
+    .value {
         color: var(--olivegreen);
     }
 }

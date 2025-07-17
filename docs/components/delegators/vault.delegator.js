@@ -151,9 +151,9 @@ export const VaultDelegator = {
         outputElement.style.display = isActive ? 'none' : '';
         // ---
         if (!isActive) {
-            const regex = /"([^"]+)":\s*("[^"]*"|[^,}\]]+)/g;
+            const regex = /"([^"\\]*(?:\\.[^"\\]*)*)"\s*:\s*("[^"\\]*(?:\\.[^"\\]*)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null)/g;
             const highlighted = rawJson.replace(regex,
-                '"<span class="env-key">$1</span>": <span class="env-value">$2</span>'
+                '<span class="key">$1</span>: <span class="value">$2</span>'
             );
             outputElement.innerHTML = highlighted;
         }

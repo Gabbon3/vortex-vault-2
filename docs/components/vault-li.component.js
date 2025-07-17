@@ -44,7 +44,7 @@ class VaultLi extends HTMLElement {
                 icon = 'key_vertical';
                 break;
             case '4':
-                icon = 'instant_mix';
+                icon = 'data_object';
                 break;
             case '5':
                 icon = 'lan';

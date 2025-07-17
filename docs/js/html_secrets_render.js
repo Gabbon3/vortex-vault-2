@@ -14,7 +14,7 @@ export class HtmlSecretsRender {
         if (secret_type === 0) icon = 'key_vertical';
         else if (secret_type === 1) icon = 'sticky_note_2';
         else if (secret_type === 2) icon = 'credit_card';
-        else if (secret_type === 4) icon = 'instant_mix';
+        else if (secret_type === 4) icon = 'data_object';
         else if (secret_type === 5) icon = 'vpn_lock_2';
         if (icon) return `<span class="material-symbols-rounded">${icon}</span>`;
         // ---
@@ -364,7 +364,7 @@ export class HtmlSecretsRender {
     <div class="container-input-text">
         <textarea spellcheck="false" class="monospace" name="R" id="raw-json-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>
     </div>
-    ${update ? `<div id="formatted-json-update" class="isle bg-1 formatted-json" style="display: none"></div>` : ''}
+    ${update ? `<pre id="formatted-json-update" class="isle bg-1 formatted-json" style="display: none"></pre>` : ''}
     <div class="flex gap-50 mt-2">
         ${update ? `<button type="button" class="btn primary export-to-json" data-target="raw-json-${HtmlSecretsRender.id}" title="Export as .json"><span class="material-symbols-rounded">download</span></button>` : ''}
         ${update ? `<btn-copy target="raw-json-${HtmlSecretsRender.id}"></btn-copy>` : ''}
