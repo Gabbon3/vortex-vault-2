@@ -21,7 +21,7 @@ export const VaultDelegator = {
         const handlers = [
             this.handleVaultLiClick,
             this.handleOrdinamentoClick,
-            this.handleEnvExportClick,
+            this.handleJsonExportClick,
             this.handleJsonFormatClick,
         ];
         for (const handler of handlers) {
@@ -113,8 +113,8 @@ export const VaultDelegator = {
      * @param {Event} e
      * @returns {boolean}
      */
-    handleEnvExportClick(e) {
-        const btn = e.target.closest(".export-to-env");
+    handleJsonExportClick(e) {
+        const btn = e.target.closest(".export-to-json");
         if (!btn) return false;
         // ---
         const target = btn.dataset.target;
@@ -126,7 +126,7 @@ export const VaultDelegator = {
             return false;
         }
         // ---
-        FileUtils.download("_", "env", rawEnv, "text/plain");
+        FileUtils.download("_", "json", rawEnv, "text/plain");
         return true;
     },
     /**
