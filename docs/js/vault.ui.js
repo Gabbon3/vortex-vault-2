@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             { id: 'btn-add-note', type: 1, render: HtmlSecretsRender.note, color: 'lightblue', title: "New Note" },
             { id: 'btn-add-card', type: 2, render: HtmlSecretsRender.credit_card, color: 'yellow', title: "New Card" },
             { id: 'btn-add-asimmetric', type: 3, render: HtmlSecretsRender.public_key, color: 'purple', title: "New Asymmetric keys" },
-            { id: 'btn-add-env', type: 4, render: HtmlSecretsRender.env, color: 'red', title: "New Enviroments" },
+            { id: 'btn-add-json', type: 4, render: HtmlSecretsRender.json, color: 'red', title: "New JSON" },
             { id: 'btn-add-connection', type: 5, render: HtmlSecretsRender.connection, color: 'peach', title: "New Connection" },
         ];
         // -- aggiungo i listeners

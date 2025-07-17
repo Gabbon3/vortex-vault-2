@@ -22,7 +22,7 @@ export const VaultDelegator = {
             this.handleVaultLiClick,
             this.handleOrdinamentoClick,
             this.handleEnvExportClick,
-            this.handleEnvFormatClick,
+            this.handleJsonFormatClick,
         ];
         for (const handler of handlers) {
             if (handler.call(this, e)) break;
@@ -76,9 +76,8 @@ export const VaultDelegator = {
         for (const secret in vault.secrets) {
             if (secret.length === 1 || secret.length === 2) continue;
             // ---
-            custom_container.innerHTML += `<custom-vault-section input-id="${`ucs-${i}`}" section-name="${secret}" input-value="${
-                vault.secrets[secret]
-            }" paste="false"></custom-vault-section>`;
+            custom_container.innerHTML += `<custom-vault-section input-id="${`ucs-${i}`}" section-name="${secret}" input-value="${vault.secrets[secret]
+                }" paste="false"></custom-vault-section>`;
             i++;
         }
         return true;
@@ -135,8 +134,8 @@ export const VaultDelegator = {
      * @param {Event} e
      * @returns {boolean}
      */
-    handleEnvFormatClick(e) {
-        const btn = e.target.closest(".format-env-textarea");
+    handleJsonFormatClick(e) {
+        const btn = e.target.closest(".format-json-textarea");
         if (!btn) return false;
         // ---
         const input = btn.dataset.input;
@@ -144,7 +143,7 @@ export const VaultDelegator = {
         // ---
         const inputElement = document.getElementById(input);
         const outputElement = document.getElementById(output);
-        const rawEnv = inputElement.value || inputElement.textContent;
+        const rawJson = inputElement.value || inputElement.textContent;
         // ---
         const isActive = inputElement.style.display === "none";
         // -- tramite lo slider apro un container e chiudo l'altro
@@ -152,28 +151,11 @@ export const VaultDelegator = {
         outputElement.style.display = isActive ? 'none' : '';
         // ---
         if (!isActive) {
-            const lines = rawEnv.split("\n");
-            const html = lines
-                .map((line) => {
-                    // Ignora righe vuote e commenti
-                    const trimmed = line.trim();
-                    if (!trimmed || trimmed.startsWith("#")) {
-                        return ""; // oppure: return `<div class="env-comment">#${trimmed}</div>`;
-                    }
-
-                    const [key, ...rest] = trimmed.split("=");
-                    const value = rest.join("=");
-
-                    if (!key || value === undefined) return "";
-
-                    return `<div>
-            <span class="env-key copy-content">${key}</span>
-            =
-            <span class="env-value copy-content">${value}</span>
-        </div>`;
-                })
-                .join("");
-            outputElement.innerHTML = html;
+            const regex = /"([^"]+)":\s*("[^"]*"|[^,}\]]+)/g;
+            const highlighted = jsonString.replace(regex,
+                '"<span class="env-key">$1</span>": <span class="env-value">$2</span>'
+            );
+            outputElement.innerHTML = highlighted;
         }
         return true;
     },

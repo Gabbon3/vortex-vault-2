@@ -35,7 +35,7 @@ export class HtmlSecretsRender {
         if (secret_type === 1) return this.note(vals);
         if (secret_type === 2) return this.credit_card(vals);
         if (secret_type === 3) return this.public_key(vals);
-        if (secret_type === 4) return this.env(vals);
+        if (secret_type === 4) return this.json(vals);
         if (secret_type === 5) return this.connection(vals);
         return false;
     }
@@ -60,7 +60,7 @@ export class HtmlSecretsRender {
      * @returns 
      */
     static get_secret_type_name(st) {
-        return ['login', 'note', 'creditcard', 'publickeys', 'env', 'connection'][st];
+        return ['login', 'note', 'creditcard', 'publickeys', 'json', 'connection'][st];
     }
     /**
      * HTML PER I VAULT
@@ -341,11 +341,11 @@ export class HtmlSecretsRender {
     }
 
     /**
-     * HTML PER LE ENVIROMENTS
+     * HTML PER I JSON
      * @param {object} vals 
      * @return {string} HTML
      */
-    static env(vals = {}) {
+    static json(vals = {}) {
         HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         return `<div class="isle bg-4 mb-2">
@@ -357,19 +357,19 @@ export class HtmlSecretsRender {
 </div>
 <!-- RAW ENV -->
 <div class="isle bg-4">
-    <label for="raw-env-${HtmlSecretsRender.id}">
+    <label for="raw-json-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">lock</span>
         Enviroments
     </label>
     <div class="container-input-text">
-        <textarea spellcheck="false" class="monospace" name="R" id="raw-env-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>
+        <textarea spellcheck="false" class="monospace" name="R" id="raw-json-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>
     </div>
-    ${update ? `<div id="formatted-env-update" class="isle bg-1 formatted-env" style="display: none"></div>` : ''}
+    ${update ? `<div id="formatted-json-update" class="isle bg-1 formatted-json" style="display: none"></div>` : ''}
     <div class="flex gap-50 mt-2">
-        ${update ? `<button type="button" class="btn primary export-to-env" data-target="raw-env-${HtmlSecretsRender.id}" title="Export as .env"><span class="material-symbols-rounded">download</span></button>` : ''}
-        ${update ? `<btn-copy target="raw-env-${HtmlSecretsRender.id}"></btn-copy>` : ''}
-        ${update ? `<button type="button" class="btn primary format-env-textarea last" data-input="raw-env-${HtmlSecretsRender.id}" data-output="formatted-env-update" title="Toggle beautify"><span class="material-symbols-rounded">brush</span> Toggle beautify</button>` : ''}
-        ${!update ? `<btn-paste target="raw-env-${HtmlSecretsRender.id}"></btn-paste>` : ''}
+        ${update ? `<button type="button" class="btn primary export-to-json" data-target="raw-json-${HtmlSecretsRender.id}" title="Export as .json"><span class="material-symbols-rounded">download</span></button>` : ''}
+        ${update ? `<btn-copy target="raw-json-${HtmlSecretsRender.id}"></btn-copy>` : ''}
+        ${update ? `<button type="button" class="btn primary format-json-textarea last" data-input="raw-json-${HtmlSecretsRender.id}" data-output="formatted-json-update" title="Toggle beautify"><span class="material-symbols-rounded">brush</span> Toggle beautify</button>` : ''}
+        ${!update ? `<btn-paste target="raw-json-${HtmlSecretsRender.id}"></btn-paste>` : ''}
     </div>
 </div>
 <!-- CUSTOM -->
