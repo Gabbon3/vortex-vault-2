@@ -56,12 +56,11 @@ export class SHIV {
     /**
      * Verifica l'header di integrità
      * @param {string} guid uuid della auth key, un uuid v4
-     * @param {{}|Uint8Array} [body={}] - il body della request
      * @param {string} method - metodo usato nella request (GET, POST...)
      * @param {string} integrity - stringa in base64
      * @returns {number | boolean} false -> integrita non valida, -1 segreto non trovato
      */
-    async verifyIntegrity(guid, body = {}, method = "", endpoint = "", integrity) {
+    async verifyIntegrity(guid, method = "", endpoint = "", integrity) {
         const rawIntegrity = Bytes.base64.decode(integrity, true);
         // -- ottengo salt e lo separo dalla parte cifrata
         const salt = rawIntegrity.subarray(0, 12);

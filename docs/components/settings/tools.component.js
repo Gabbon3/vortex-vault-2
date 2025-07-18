@@ -8,7 +8,6 @@ class SettingsComponent extends HTMLElement {
     static default_sections = [
         'advanced-session',
         'change-password',
-        'recovery-file',
         'quick-sign-in',
         'message-authentication-code',
         'app-theme',
@@ -187,45 +186,6 @@ class SettingsComponent extends HTMLElement {
                     </button>
                 </div>
             </form>
-        </div>
-            `;
-        }
-        // File di recupero
-        if (sections['recovery-file']) {
-            html += `
-            <!-- RECOVERY CODE -->
-        <hr>
-        <div class="maincolor purple">
-            <h3 class="icon slider" slider="cont-rec-code">
-                <span class="material-symbols-rounded">lock_reset</span>
-                Recovery Key
-                <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
-            </h3>
-            <div class="isle bg-4 slider-cont" data-open="false" id="cont-rec-code">
-                <p class="mt-0 mb-2">
-                    Generate a recovery key to help you recover your master password if you forget it.
-                </p>
-                <form autocomplete="off" id="form-new-recovery-code">
-                    <label for="password-recovery">
-                        <span class="material-symbols-rounded">key_vertical</span>
-                        Password
-                    </label>
-                    <div class="flex gap-50">
-                        <input name="password" type="password" class="input-text mono" id="password-recovery" autocomplete="off" required>
-                        <btn-paste target="password-recovery"></btn-paste>
-                    </div>
-                    <p class="description">
-                        You need to enter your password to perform this operation.
-                    </p>
-                    <!-- --- -->
-                    <div class="flex-gap-50 mt-2">
-                        <button type="submit" class="btn primary">
-                            <span class="material-symbols-rounded">security</span>
-                            Generate Recovery Key File
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
             `;
         }

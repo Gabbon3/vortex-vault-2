@@ -379,33 +379,6 @@ export class AuthService {
         return initialized;
     }
     /**
-     * Genera una opzione di recupero 
-     * @param {string} master_password 
-     * @returns {Uint8Array} la chiave privata in formato grezzo
-     */
-    static async set_up_recovery_method(master_password) {
-        // genero due coppie di chiavi
-        const ks1 = await ECDH.generate_keys(LSE.curve);
-        const ks2 = await ECDH.generate_keys(LSE.curve);
-        const private_keys = ks1.private_key;
-        const public_keys = ks2.public_key;
-        // ---
-        const simmetric = await ECDH.derive_shared_secret(private_keys[0], public_keys[0]);
-        const encrypted_password = await AES256GCM.encrypt(new TextEncoder().encode(master_password), simmetric);
-        // ---
-        const result_bytes = msgpack.encode([encrypted_password, public_keys[1]]);
-        // ---
-        const res = await API.fetch('/auth/new-recovery', {
-            method: 'POST',
-            body: result_bytes,
-        }, {
-            content_type: 'bin'
-        });
-        // ---
-        if (!res) return false;
-        return private_keys[1];
-    }
-    /**
      * Restituisce la password dell'utente se il codice è corretto
      * @param {string} email
      * @param {Uint8Array} private_key 

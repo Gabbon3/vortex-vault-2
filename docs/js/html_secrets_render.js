@@ -324,7 +324,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- IBAN -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 ${update ? 'mb-2' : ''}">
     <label for="iban-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">account_balance</span>
         IBAN
@@ -355,11 +355,11 @@ export class HtmlSecretsRender {
     </label>
     <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
-<!-- RAW ENV -->
+<!-- RAW JSON -->
 <div class="isle bg-4">
     <label for="raw-json-${HtmlSecretsRender.id}">
-        <span class="material-symbols-rounded">lock</span>
-        Enviroments
+        <span class="material-symbols-rounded">data_object</span>
+        Json
     </label>
     <div class="container-input-text">
         <textarea spellcheck="false" class="monospace" name="R" id="raw-json-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>

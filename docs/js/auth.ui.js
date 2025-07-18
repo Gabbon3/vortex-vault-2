@@ -25,28 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(false);
     });
     /**
-     * GENERATE RECOVERY CODE
-     */
-    Form.register('form-new-recovery-code', async (form, elements) => {
-        const { password } = elements;
-        // -- verifico la password dell'utente
-        if (!(await AuthService.verify_master_password(password))) {
-            Log.summon(2, "Password isn't correct");
-            return;
-        }
-        // ---
-        Windows.loader(true);
-        // ---
-        const private_key = await AuthService.set_up_recovery_method(password);
-        // ---
-        if (private_key) {
-            Log.summon(0, "Recovery key generated successfully");
-            FileUtils.download('Recovery Key', 'pem', Bytes.base64.encode(private_key));
-            form.reset();
-        }
-        Windows.loader(false);
-    });
-    /**
      * SESSIONE AVANZATA VIA MAIL
      */
     Form.register('form-advanced-session-with-email', async (form, elements) => {
