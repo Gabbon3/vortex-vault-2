@@ -66,11 +66,10 @@ export class SHIV {
         const salt = rawIntegrity.subarray(0, 12);
         const sign = rawIntegrity.subarray(12);
         // -- codifico le variabili del payload
-        const encodedBody = body instanceof Buffer || body instanceof Uint8Array ? new Uint8Array(body) : msgpack.encode(body);
         const encodedMethod = new TextEncoder().encode(method.toLowerCase());
         const encodedEndpoint = new TextEncoder().encode(this.normalizePath(endpoint));
         // ---
-        const payload = Bytes.merge([salt, encodedBody, encodedMethod, encodedEndpoint], 8);
+        const payload = Bytes.merge([salt, encodedMethod, encodedEndpoint], 8);
         // ---
         const sharedKey = await this.getSharedSecret(guid);
         if (!sharedKey) return -1;
