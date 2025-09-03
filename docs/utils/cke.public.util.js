@@ -79,8 +79,11 @@ export class CKE {
             return null;
         }
         // ---
-        const res = await PasskeyService.authenticate({
-            endpoint: "/cke/get/advanced",
+        // const res = await PasskeyService.authenticate({
+        //     endpoint: "/cke/get/advanced",
+        // });
+        const res = await API.fetch("/cke/get/advanced", {
+            method: "GET"
         });
         if (!res) return null;
         // -- decodifico il materiale
