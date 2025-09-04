@@ -36,8 +36,6 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     const saved_email = await LocalStorage.get('email-utente');
     // ---
-    document.getElementById('recovery-email').value = saved_email;
-    document.getElementById('recovery-device-email-email').value = saved_email;
     document.getElementById('email').value = saved_email;
     // -- REQUEST SIGN-IN
     if (saved_email && !quick_signin && AuthService.check_signin_request_url()) {

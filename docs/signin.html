@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-in</title>
+    <title>Accesso</title>
     
     <!-- Favicon generico -->
     <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
@@ -32,7 +32,7 @@
         <form autocomplete="off" id="accedi">
             <h2 class="icon">
                 <img src="./img/vortex_vault_logo.png" class="logo">
-                Sign-in
+                Accesso
             </h2>
             <!-- --- -->
             <div class="isle bg-3">
@@ -48,12 +48,9 @@
                 </label>
                 <input type="password" class="input-text mb-2 monospace protected" id="password" name="password" autocomplete="current-password" required>
                 <btn-hide-show-protect-input target="accedi" title="Show or Hide password"></btn-hide-show-protect-input>
-                <p class="description">
-                    Forgot your password? <a class="open" data-target-open="win-password-recovery">Recover here</a> <br>
-                </p>
                 <button type="submit" class="btn primary w-100 mt-2">
                     <span class="material-symbols-rounded">login</span>
-                    Sign-in
+                    Accedi
                 </button>
             </div>
             <!-- --- -->
@@ -62,7 +59,7 @@
             <div class="flex gap-50 d-column mt-2">
                 <button type="button" class="btn secondary" id="btn-request-sign-in">
                     <span class="material-symbols-rounded">id_card</span>
-                    Sign-in with another device
+                    Accedi tramite un'altro dispositivo
                 </button>
             </div>
         </form>
@@ -76,54 +73,6 @@
         help="true"
         message-authentication-code="true">
     </settings-vault>
-    <!--
-        PASSWORD DIMENTICATA
-    -->
-    <div class="window m maincolor purple" id="win-password-recovery">
-        <div class="flex y-center">
-            <h2 class="icon">
-                <span class="material-symbols-rounded">lock_reset</span>
-                Password Recovery
-            </h2>
-            <button class="btn t close l last" data-target-close="win-password-recovery">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </div>
-        <hr>
-        <form autocomplete="off" id="form-password-recovery">
-            <div class="isle bg-4 mb-2">
-                <!-- RECOVERY CODE -->
-                <label for="recovery-file">
-                    <span class="material-symbols-rounded">password</span>
-                    Recovery Key
-                </label>
-                <input type="file" class="input-text" name="file" id="recovery-file" accept=".pem,.txt,.key" required>
-                <p class="description mb-0">
-                    .pem file is required
-                </p>
-                <hr>
-                <!-- EMAIL -->
-                <label for="recovery-email">
-                    <span class="material-symbols-rounded">person</span>
-                    Email
-                </label>
-                <input type="email" class="input-text mb-2" id="recovery-email" name="email" autocomplete="off" required>
-                <email-verify-btn email-id="recovery-email" target-id="recovery-password-code"></email-verify-btn>
-            </div>
-            <!-- --- -->
-            <div class="isle bg-4">
-                <mfa-input input-id="recovery-password-code"></mfa-input>
-                <p class="description mb-0">
-                    Identity verification is required to recover your password
-                </p>
-                </div>
-            <!-- --- -->
-            <button type="submit" class="btn primary mt-2 w-100">
-                <span class="material-symbols-rounded">lock_reset</span>
-                Recover master password now
-            </button>
-        </form>
-    </div>
     <!--
         DEVICE RECOVERY
     -->

@@ -27,7 +27,7 @@ export class VortexNavbar extends HTMLElement {
         </a>` : ''}
         ${this.checkPath('/vault', true) ? `<a class="open purple" data-target-open="win-devices" title="Devices">
             <span class="material-symbols-rounded">devices</span>
-            <i>Devices</i>
+            <i>Dispositivi</i>
         </a>` : ''}
         ${this.checkPath('/vault', true) ? `<a class="open red" data-target-open="win-passkey" title="Passkey">
             <span class="material-symbols-rounded">passkey</span>
@@ -40,7 +40,7 @@ export class VortexNavbar extends HTMLElement {
 
         ${this.checkPath('/vault', true) ? `<a class="open olivegreen" data-target-open="win-psw-generator" title="Password Generator">
             <span class="material-symbols-rounded">key_vertical</span>
-            <i>Generator</i>
+            <i>Generatore</i>
         </a>` : ''}
 
         ${this.checkPath('/vault', false) ? `<a href="${this.getPath('vault')}" title="Vault">
@@ -50,16 +50,16 @@ export class VortexNavbar extends HTMLElement {
             
         ${this.checkPath('/signin', false) ? `<a href="${this.getPath('signin')}" title="Sign In" class="mint last">
             <span class="material-symbols-rounded">login</span>
-            <i>Sign In</i>
+            <i>Accedi</i>
         </a>` : ''}
 
         ${this.checkPath('/signin', true) ? `<a title="Sign-in with Passkey" id="signin-passkey" class="red">
             <span class="material-symbols-rounded">passkey</span>
-            <i>Sign-in with Passkey</i>
+            <i>Accedi con Passkey</i>
         </a>` : ''}
         ${this.checkPath('/signin', true) ? `<a href="${this.getPath('signup')}" title="Sign Up" class="mint last">
             <span class="material-symbols-rounded">person_add</span>
-            <i>Sign Up</i>
+            <i>Registrati</i>
         </a>` : ''}
         `;
     }

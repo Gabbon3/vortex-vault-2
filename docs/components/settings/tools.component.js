@@ -110,29 +110,29 @@ class SettingsComponent extends HTMLElement {
         <div class="maincolor lightblue">
             <h3 class="icon slider" slider="cont-sudo-session">
                 <span class="material-symbols-rounded warning">vpn_key</span>
-                Advanced Session
+                Sessione Avanzata
             </h3>
             <div class="isle bg-4 slider-cont slow" data-open="false" id="cont-sudo-session">
                 <p class="mt-0 mb-2">
-                    Enable <strong>advanced session</strong> to perform critical operations.
-                    The session will only last 10 minutes for safety reasons. <br>
-                    All operations that require this session are marked with this symbol
-                    <span class="material-symbols-rounded warning">vpn_key</span>
+                    Attiva la <strong>sessione avanzata</strong> per eseguire operazioni critiche.
+                    La sessione sarà valida solo per 10 minuti per motivi di sicurezza. <br>
+                    Tutte le operazioni che richiedono questa sessione sono contrassegnate con il
+                    seguente simbolo <span class="material-symbols-rounded warning">vpn_key</span>
                 </p>
                 <div class="isle bg-3 flex d-row br-l">
                     <h4 class="icon m-0">
                         <span class="material-symbols-rounded">passkey</span>
-                        With Passkey
+                        Usa Passkey
                     </h4>
                     <passkey-btn class="last" icon="security" endpoint="/shiv/spt" callback="sudosession">
-                        Activate
+                        Attiva
                     </passkey-btn>
                 </div>
                 <hr>
                 <form autocomplete="off" class="isle bg-3 br-l" id="form-advanced-session-with-email">
                     <h4 class="icon">
                         <span class="material-symbols-rounded">mail</span>
-                        With Email
+                        Usa Email
                     </h4>
                     <hr>
                     <mfa-input class="mb-2" input-id="advanced-session-code"></mfa-input>    
@@ -141,7 +141,7 @@ class SettingsComponent extends HTMLElement {
                     <!-- --- -->
                     <button type="submit" class="btn primary">
                         <span class="material-symbols-rounded">security</span>
-                        Activate
+                        Attiva
                     </button>
                 </form>
             </div>
@@ -156,33 +156,33 @@ class SettingsComponent extends HTMLElement {
         <div class="maincolor red">
             <h3 class="icon slider" slider="form-change-password">
                 <span class="material-symbols-rounded">key</span>
-                Change Password
-                <span class="material-symbols-rounded warning" title="Sudo Session Required">vpn_key</span>
+                Cambia Password
+                <span class="material-symbols-rounded warning">vpn_key</span>
             </h3>
             <form autocomplete="off" class="isle bg-4 slider-cont slow" data-open="false" id="form-change-password">
                 <p class="mt-0 mb-2">
-                    <strong>Before changing your password</strong>
-                    you should know that you will have to manually restore a backup, 
-                    which will be generated locally after the change, 
-                    you will have to go to the backup section and restore the 
-                    backup from the file you just downloaded.
+                    <strong>Prima di cambiare la tua password</strong>
+                    devi sapere che dovrai effettuare il restore di un backup manualmente, 
+                    che verrà generato e scaricato al seguito del cambio della password, 
+                    dovrai quindi raggiungere la sezione backup dal menu in 
+                    alto ed effettuare il restore manualmente.
                 </p>
                 <hr>
                 <label for="new-password">
                     <span class="material-symbols-rounded">key_vertical</span>
-                    New Password
+                    Nuova Password
                 </label>
                 <input name="new_password" type="password" class="input-text mono" id="new-password" autocomplete="off" required>
                 <label for="new-password-2">
                     <span class="material-symbols-rounded">key_vertical</span>
-                    Repeat new Password
+                    Ripeti la nuova Password
                 </label>
                 <input name="new_password_2" type="password" class="input-text mono" id="new-password-2" autocomplete="off" required>
                 <!-- --- -->
                 <div class="flex-gap-50 mt-2">
                     <button type="submit" class="btn primary">
                         <span class="material-symbols-rounded">sync</span>
-                        Change Password
+                        Conferma la modifica
                     </button>
                 </div>
             </form>
@@ -197,16 +197,16 @@ class SettingsComponent extends HTMLElement {
         <div class="maincolor yellow">
             <h3 class="icon slider" slider="cont-qsi">
                 <span class="material-symbols-rounded">id_card</span>
-                Quick Sign-in
+                Accesso Rapido
             </h3>
             <div class="isle bg-4 slider-cont" data-open="false" id="cont-qsi">
                 <p class="mt-0 mb-2">
-                    Generates a single-use link shown via Qr code for quick Sign-in from another device.
+                    Genera un link monouso mostrato tramite Qr code per accedere rapidamente da un'altro dispositivo
                 </p>
                 <form autocomplete="off" id="form-fsi">
                     <button type="submit" class="btn primary mt-2">
                         <span class="material-symbols-rounded">qr_code</span>
-                        Create link
+                        Genera
                     </button>
                 </form>
             </div>
@@ -263,11 +263,11 @@ class SettingsComponent extends HTMLElement {
         <div class="maincolor blue">
             <h3 class="icon slider" slider="cont-theme">
                 <span class="material-symbols-rounded">palette</span>
-                Theme
+                Tema App
             </h3>
             <div class="isle bg-4 slider-cont fast" data-open="false" id="cont-theme">
                 <p class="m-0 mb-2">
-                    Change the color scheme.
+                    Seleziona e cambia il tema dell'app.
                 </p>
                 <select id="theme-selector" class="input-text monospace">
                     <option disabled>Dark Theme</option>

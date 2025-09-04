@@ -42,7 +42,7 @@
             <div class="isle bg-3 br-l">
                 <label for="search-vault">
                     <span class="material-symbols-rounded">search</span>
-                    Search
+                    Ricerca
                 </label>
                 <div class="flex gap-75">
                     <input type="text" class="input-text mono" id="search-vault" autocomplete="off" placeholder="..." required>
@@ -56,7 +56,7 @@
                     <!-- Sync -->
                     <button class="btn primary" id="btn-sync-vault" title="Syncronize with Server">
                         <span class="material-symbols-rounded">sync_alt</span>
-                        <span class="text">Syncronize</span>
+                        <span class="text">Sincronizza</span>
                     </button>
                     <!-- Order Buttons -->
                     <button class="btn secondary order-vaults last" order="az" active="false" title="Order by title">
@@ -86,14 +86,14 @@
                     </button>
                     <button class="btn yellow open fg-1" id="btn-add-card" data-target-open="win-create-vault" title="Create new Credit Card">
                         <span class="material-symbols-rounded">credit_card</span>
-                        Card
+                        Carte
                     </button>
                     <button class="btn purple open fg-1" id="btn-add-asimmetric" data-target-open="win-create-vault" title="Save new Asymmetric key pair">
                         <div class="flex">
                             <span class="material-symbols-rounded trans rotate _180">key_vertical</span>
                             <span class="material-symbols-rounded" style="margin-left: -10px;">key_vertical</span>
                         </div>
-                        Keys
+                        Chiavi
                     </button>
                     <button class="btn red open fg-1" id="btn-add-json" data-target-open="win-create-vault" title="Create new Json">
                         <span class="material-symbols-rounded">data_object</span>
@@ -101,7 +101,7 @@
                     </button>
                     <button class="btn peach open fg-1" id="btn-add-connection" data-target-open="win-create-vault" title="Create new Connection">
                         <span class="material-symbols-rounded">lan</span>
-                        Connection
+                        Connessione
                     </button>
                 </div>
             </div>
@@ -133,11 +133,11 @@
             <div class="flex gap-50">
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">add</span>
-                    Create
+                    Crea
                 </button>
                 <button type="button" class="btn secondary" id="add-custom-section-new-vault">
                     <span class="material-symbols-rounded">variable_add</span>
-                    Custom section
+                    Custom
                 </button>
             </div>
         </form>
@@ -180,15 +180,15 @@
             <div class="flex gap-50">
                 <button type="submit" class="btn primary">
                     <span class="material-symbols-rounded">edit</span>
-                    Save changes
+                    Salva
                 </button>
                 <button type="button" class="btn secondary" id="add-custom-section-update-vault">
                     <span class="material-symbols-rounded">variable_add</span>
-                    Custom section
+                    Custom
                 </button>
                 <button type="button" vault-id="" id="btn-delete-vault" class="btn danger last">
                     <span class="material-symbols-rounded">delete_forever</span>
-                    Delete
+                    Elimina
                 </button>
             </div>
         </form>
@@ -209,13 +209,13 @@
         </div>
         <hr>
         <p>
-            Below there's the list of all passkeys associated with your account. <br>
-            Edit the name by clicking on it and then pressing enter.
+            A seguire la lista di tutte le Passkey associate al tuo account. <br>
+            Modifica il nome cliccandoci sopra e poi premendo invio.
         </p>
         <div class="flex gap-50 mb-2">
             <button class="btn primary" id="btn-new-passkey" title="New passkey">
                 <span class="material-symbols-rounded">add</span>
-                New Passkey
+                Nuova Passkey
             </button>
             <button class="btn primary" id="btn-list-passkey" title="Syncronize">
                 <span class="material-symbols-rounded">sync_alt</span>
@@ -239,7 +239,7 @@
         <div class="flex y-center">
             <h2 class="icon mb-0">
                 <span class="material-symbols-rounded">devices</span>
-                Devices
+                Dispositivi
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </h2>
             <button class="btn t close l last" data-target-close="win-devices">
@@ -248,9 +248,9 @@
         </div>
         <hr>
         <p>
-            In this section you can control the access of devices connected to your account. <br>
-            The <colored>highlighted</colored> device represents the current one. <br>
-            Edit the name by clicking on it and then pressing enter.
+            In questa sezione puoi controllare e gestire tutti i dispositivi connessi al tuo account. <br>
+            Il dispositivo <colored>evidenziato</colored> rappresenta quello attuale che stai utilizzando. <br>
+            Modifica il nome cliccandoci sopra e poi premendo invio.
         </p>
         <div class="flex gap-50 mb-2">
             <btn-sync-device class="btn primary" title="Syncronize"></btn-sync-device>
@@ -281,16 +281,16 @@
             </h3>
             <hr>
             <p>
-                You can save only one backup at time on server
+                Puoi salvare solo un backup alla volta sul server
             </p>
             <div class="flex gap-50">
                 <button class="btn primary fg-1" id="btn-create-backup">
                     <span class="material-symbols-rounded">add</span>
-                    Generate
+                    Genera
                 </button>
                 <button class="btn warning fg-1" id="btn-restore-backup-server">
                     <span class="material-symbols-rounded">settings_backup_restore</span>
-                    Restore
+                    Ripristina
                 </button>
             </div>
         </div>
@@ -298,56 +298,56 @@
         <form autocomplete="off" class="isle bg-4 mb-2" id="form-create-backup-locally">
             <h3 class="icon">
                 <span class="material-symbols-rounded">download</span>
-                Download
+                Scarica
             </h3>
             <hr>
             <label for="backup-custom-password">
                 <span class="material-symbols-rounded">key_vertical</span>
-                Custom password
+                Password Custom
             </label>
             <input type="password" name="key" id="backup-custom-password" class="input-text monospace mb-2 protected" autocomplete="off">
             <label for="backup-custom-password-2">
                 <span class="material-symbols-rounded">key_vertical</span>
-                Repeat custom password
+                Ripeti la Password Custom
             </label>
             <input type="password" name="key_r" id="backup-custom-password-2" class="input-text monospace mb-2 protected" autocomplete="off">
             <btn-hide-show-protect-input target="form-create-backup-locally"></btn-hide-show-protect-input>
             <p class="description">
-                Leave blank if you want to use the default master key.
+                Lascia vuoto per utilizzare la tua chiave crittografica predefinita.
             </p>
             <button type="submit" class="btn primary">
                 <span class="material-symbols-rounded">download</span>
-                Generate & Download
+                Genera e Scarica
             </button>
         </form>
         <form autocomplete="off" id="form-restore-backup-from-file" class="isle bg-4">
             <h3 class="icon">
                 <span class="material-symbols-rounded">devices</span>
-                Restore locally
+                Ripristino Locale
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </h3>
             <hr>
             <label for="backup-file">
                 <span class="material-symbols-rounded">draft</span>
-                Backup file
+                File di backup
             </label>
             <input type="file" id="backup-file" name="backup_file" class="input-text" accept=".bin" required>
             <p class="description">
-                .bin file
+                File binari (.bin)
             </p>
             <!-- --- -->
             <label for="backup-custom-password-restore">
                 <span class="material-symbols-rounded">key_vertical</span>
-                Custom password
+                Password custom
             </label>
             <input type="password" name="key" id="backup-custom-password-restore" class="input-text monospace mb-2 protected" autocomplete="off">
             <btn-hide-show-protect-input target="form-restore-backup-from-file"></btn-hide-show-protect-input>
             <p class="description">
-                Leave blank if you had not used a custom password for backup.
+                Lascia vuoto per utilizzare la tua chiave crittografica predefinita.
             </p>
             <button class="btn warning" id="btn-restore-backup-locally">
                 <span class="material-symbols-rounded">settings_backup_restore</span>
-                Restore
+                Ripristina
             </button>
         </form>
     </div>
@@ -356,7 +356,7 @@
         <div class="flex y-center">
             <h2 class="icon mb-0">
                 <span class="material-symbols-rounded">key_vertical</span>
-                Generator
+                Generatore
             </h2>
             <button class="btn t close l last" data-target-close="win-psw-generator">
                 <span class="material-symbols-rounded">close</span>
@@ -369,8 +369,8 @@
         <!-- actions -->
         <div class="flex gap-50 d-row y-center">
             <div class="flex gap-50">
-                <btn-copy target="psw-generator-tester">Copy</btn-copy>
-                <btn-paste target="psw-generator-tester">Paste</btn-paste>
+                <btn-copy target="psw-generator-tester">Copia</btn-copy>
+                <btn-paste target="psw-generator-tester">Incolla</btn-paste>
                 <button class="btn t CA del-val" data-target-del="psw-generator-tester" title="Cancel">
                     <span class="material-symbols-rounded">backspace</span>
                 </button>
@@ -380,7 +380,7 @@
         <form autocomplete="off" id="form-psw-gen">
             <!-- length -->
             <div class="flex gap-50 y-center">
-                <label for="psw-gen-len"><monospace>Length</monospace></label>
+                <label for="psw-gen-len"><monospace>Lunghezza</monospace></label>
                 <monospace id="psw-gen-length-indicator" class="fs-l last">16</monospace>
             </div>
             <input type="range" name="length" min="1" max="32" value="16" step="1" class="" id="psw-gen-len">
@@ -422,7 +422,7 @@
             <!-- submit -->
             <button type="submit" class="btn primary w-100">
                 <span class="material-symbols-rounded">sync</span>
-                Generate
+                Genera
             </button>
         </form>
     </div>
@@ -439,7 +439,7 @@
         <div class="flex y-center">
             <h2 class="icon mb-0">
                 <span class="material-symbols-rounded color danger">delete_forever</span>
-                Delete Account
+                Elimina Account
             </h2>
             <button class="btn t close l last" data-target-close="win-delete-account">
                 <span class="material-symbols-rounded">close</span>
@@ -447,7 +447,7 @@
         </div>
         <hr>
         <p>
-            All data associated with your account will be permanently deleted, so it will no longer be accessible.
+            Tutti i dati associati al tuo account verranno eliminati definitivamente e non saranno più accessibili.
         </p>
         <passkey-btn 
             b-class="danger" 
@@ -455,7 +455,7 @@
             pre-callback="deleteaccount" 
             callback="deleteaccount" 
             force-auth="true">
-            Authenticate & delete your account
+            Autenticati e conferma l'eliminazione dell'account
         </passkey-btn>
     </div>
     <!-- FOOTER -->

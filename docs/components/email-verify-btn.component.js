@@ -19,7 +19,7 @@ class EmailVerifyBtn extends HTMLElement {
         const icon = this.getAttribute('icon') ?? 'send';
         const target_id = this.getAttribute('target-id');
         const email_id = this.getAttribute('email-id') ?? null;
-        const text_content = this.getAttribute('text-content') ?? 'Send code';
+        const text_content = this.getAttribute('text-content') ?? 'Invia codice';
         const request_id_input = 'ear' + EmailVerifyBtn.counter; // email auth request
         const button_id = 'earbtn' + EmailVerifyBtn.counter;
         EmailVerifyBtn.counter++;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-up</title>
+    <title>Registrati</title>
     
     <!-- Favicon generico -->
     <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
@@ -32,7 +32,7 @@
         <form autocomplete="off" id="registrati">
             <h2 class="icon">
                 <img src="./img/vortex_vault_logo.png" class="logo">
-                Sign-up
+                Registrati
             </h2>
             <!-- EMAIL -->
             <div class="isle bg-3 mb-2">
@@ -42,8 +42,8 @@
                 </label>
                 <input type="email" class="input-text" id="email" name="email" autocomplete="off" required>
                 <p class="description m-0 mt-2">
-                    We only support popular email providers like Gmail, iCloud, Yahoo, or Microsoft accounts.
-                    This helps ensure the security and legitimacy of accounts, reducing the risk of spam and fraudulent activity.
+                    Supportiamo solamente provider di email conosciuti come gmail, outlook, icloud. Questo per
+                    prevenire azioni fraudolente da bot o entità malintenzionate.
                 </p>
             </div>
             <!-- PASSWORD -->
@@ -56,30 +56,29 @@
                 <!-- --- -->
                 <label for="password2">
                     <span class="material-symbols-rounded">key_vertical</span>
-                    Repeat password
+                    Ripeti password
                 </label>
                 <input type="password" class="input-text monospace protected mb-2" id="password2" name="password2" required>
                 <btn-hide-show-protect-input target="registrati" title="Show or Hide password"></btn-hide-show-protect-input>
                 <p class="description m-0 mt-2">
-                    <strong>Warning</strong>: the password you choose is crucial for access to Vortex Vault. 
-                    If you lose it and have not set up recovery methods, neither we nor you will ever 
-                    be able to access your account again. Make sure you choose a secure 
-                    password and securely save your recovery information to avoid any inconvenience in the future.
+                    <strong>Attenzione</strong>: la password che scegli è cruciale per accedere a Vortex Vault.
+                    Se la perdi o la dimentichi, noi non possiamo aiutarti a recuperarla o a riaccedere ai tuoi dati
+                    poiché solo tu tramite quella password sei in grado di leggere e accedere fisicamente ai tuoi dati.
                 </p>
             </div>
             <!-- --- -->
             <button class="btn primary w-100">
                 <span class="material-symbols-rounded">person_add</span>
-                Sign-up
+                Registrati
             </button>
             <p class="description">
-                To complete registration, you must verify your e-mail and create new passkey.
+                Per completare la registrazione, dovrai verificare la tua email e successivamente potrai creare la tua prima passkey.
             </p>
             <hr>
             <div class="flex gap-50 d-column">
                 <button type="button" class="btn peach w-100 open" data-target-open="win-email-verify">
                     <span class="material-symbols-rounded">passkey</span>
-                    Verify email & Create your first Passkey
+                    Verifica Email e crea la Passkey
                 </button>
             </div>
         </form>
@@ -98,7 +97,7 @@
             <div class="flex y-center">
                 <h3 class="icon">
                     <span class="material-symbols-rounded">passkey</span>
-                    Verify email & Create your first Passkey
+                    Verifica l'email e crea la tua prima passkey
                 </h3>
                 <button class="btn t close l last" data-target-close="win-email-verify">
                     <span class="material-symbols-rounded">close</span>
@@ -106,9 +105,9 @@
             </div>
             <hr>
             <p>
-                Verify your email to set up your first passkey.
-                You will need it to use the app.
-                Receive a 6-digit code and enter it in the field below to verify your email and create your first passkey.
+                Verifica la tua email e crea la tua prima passkey,
+                ti sarà utile per utilizzare l'app.
+                Riceverai un codice a 6 cifre tramite email che dovrai inserire nell input qui sotto, controlla gli spam anche.
             </p>
             <form autocomplete="off" id="setup-passkey">
                 <!-- --- -->
@@ -127,7 +126,7 @@
                 <!-- SUBMIT -->
                 <button type="submit" class="btn primary mt-2 w-100">
                     <span class="material-symbols-rounded">check</span>
-                    Verify & Create new Passkey
+                    Verifica e Crea
                 </button>
             </form>
         </div>
