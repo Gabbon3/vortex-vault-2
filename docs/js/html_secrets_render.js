@@ -35,7 +35,7 @@ export class HtmlSecretsRender {
         if (secret_type === 1) return this.note(vals);
         if (secret_type === 2) return this.credit_card(vals);
         if (secret_type === 3) return this.public_key(vals);
-        if (secret_type === 4) return this.json(vals);
+        // if (secret_type === 4) return this.json(vals);
         if (secret_type === 5) return this.connection(vals);
         return false;
     }
@@ -50,7 +50,7 @@ export class HtmlSecretsRender {
         if (secret_type === 1) return "lightblue";
         if (secret_type === 2) return "yellow";
         if (secret_type === 3) return "purple";
-        if (secret_type === 4) return "red";
+        // if (secret_type === 4) return "red";
         if (secret_type === 5) return "peach";
         return null;
     }
@@ -60,7 +60,14 @@ export class HtmlSecretsRender {
      * @returns 
      */
     static get_secret_type_name(st) {
-        return ['login', 'note', 'creditcard', 'publickeys', 'json', 'connection'][st];
+        return [
+            'accesso', 
+            'note', 
+            'carta', 
+            'chiavepubblica', 
+            '', // rimosso json
+            'connessione'
+        ][st];
     }
     /**
      * HTML PER I VAULT
@@ -74,7 +81,7 @@ export class HtmlSecretsRender {
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
-        Title
+        Titolo
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
@@ -85,7 +92,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="username-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
-        Username
+        Nome utente o Email
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="U" type="text" class="input-text mono" ${!update ? 'list="used-username"' : ''} id="username-${HtmlSecretsRender.id}" value="${vals.U ?? ''}" autocomplete="off">
@@ -127,9 +134,9 @@ export class HtmlSecretsRender {
         <textarea spellcheck="false" name="H" id="url-${HtmlSecretsRender.id}" rows="3">${vals.H ?? ''}</textarea>
     </div>
     <p class="description mb-0">
-        Enter one or more URLs associated with this login.
-        You can separate multiple entries with commas or line breaks.
-        To use a regular expression, wrap the pattern like /example\\.com/r.
+        Inserisci uno o piu URL associati a questo accesso.
+        Utilizza virgole oppure vai a capo per definirne più di uno.
+        Per le Regex utilizza pattern come /example\\.com/r.
     </p>
 </div>
 <!-- CUSTOM -->
@@ -160,7 +167,7 @@ export class HtmlSecretsRender {
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
-        Title
+        Titolo
     </label>
     <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
@@ -191,7 +198,7 @@ export class HtmlSecretsRender {
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
-        Title
+        Titolo
     </label>
     <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
@@ -199,7 +206,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="key-type-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">category</span>
-        Key type
+        Tipo di chiave
     </label>
     <select name="KT" id="key-type-${HtmlSecretsRender.id}" class="input-text" required>
         <option value="RSA" ${vals.KT === 'RSA' ? 'selected' : ''}>RSA</option>
@@ -212,7 +219,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="private-key-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">key</span>
-        Private Key
+        Chiave Privata
     </label>
     <div class="container-input-text mono">
         <textarea spellcheck="false" name="R" type="text" id="private-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PRIVATE KEY-----" autocomplete="off" required>${vals.R ?? ''}</textarea>
@@ -226,7 +233,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="public-key-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">public</span>
-        Public Key
+        Chiave Pubblica
     </label>
     <div class="container-input-text">
         <textarea spellcheck="false" name="P" type="text" id="public-key-${HtmlSecretsRender.id}" class="monospace" rows="4" placeholder="-----BEGIN PUBLIC KEY-----" autocomplete="off" required>${vals.P ?? ''}</textarea>
@@ -264,7 +271,7 @@ export class HtmlSecretsRender {
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
-        Title
+        Titolo
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required placeholder="My Bank">
@@ -275,7 +282,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="name-surname-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
-        Name
+        Nome e Cognome
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="NC" type="text" class="input-text mono" id="name-surname-${HtmlSecretsRender.id}" value="${vals.NC ?? ''}" autocomplete="off" placeholder="John Doe">
@@ -286,7 +293,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="card-number-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">credit_card</span>
-        Card number
+        Numero Carta
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="CN" type="text" inputmode="numeric" maxlength="19" class="input-text mono protected" id="card-number-${HtmlSecretsRender.id}" value="${vals.CN ?? ''}" autocomplete="off" required placeholder="0000 0000 0000 0000">
@@ -310,7 +317,7 @@ export class HtmlSecretsRender {
     <div class="fg-1">
         <label for="expire-date-${HtmlSecretsRender.id}">
             <span class="material-symbols-rounded">calendar_today</span>
-            Expiry date
+            Data di scadenza
         </label>
         <input spellcheck="false" name="ED" type="text" class="input-text mono" id="expire-date-${HtmlSecretsRender.id}" value="${vals.ED ?? ''}" autocomplete="off" maxlength="8" placeholder="00/00" required>
     </div>
@@ -340,43 +347,6 @@ export class HtmlSecretsRender {
 </div>`;
     }
 
-    /**
-     * HTML PER I JSON
-     * @param {object} vals 
-     * @return {string} HTML
-     */
-    static json(vals = {}) {
-        HtmlSecretsRender.id++;
-        const update = vals.T !== undefined;
-        return `<div class="isle bg-4 mb-2">
-    <label for="titolo-${HtmlSecretsRender.id}">
-        <span class="material-symbols-rounded">tag</span>
-        Title
-    </label>
-    <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
-</div>
-<!-- RAW JSON -->
-<div class="isle bg-4">
-    <label for="raw-json-${HtmlSecretsRender.id}">
-        <span class="material-symbols-rounded">data_object</span>
-        Json
-    </label>
-    <div class="container-input-text">
-        <textarea spellcheck="false" class="monospace" name="R" id="raw-json-${HtmlSecretsRender.id}" rows="16">${vals.R ?? ''}</textarea>
-    </div>
-    ${update ? `<pre id="formatted-json-update" class="isle bg-1 formatted-json" style="display: none"></pre>` : ''}
-    <div class="flex gap-50 mt-2">
-        ${update ? `<button type="button" class="btn primary export-to-json" data-target="raw-json-${HtmlSecretsRender.id}" title="Export as .json"><span class="material-symbols-rounded">download</span></button>` : ''}
-        ${update ? `<btn-copy target="raw-json-${HtmlSecretsRender.id}"></btn-copy>` : ''}
-        ${update ? `<button type="button" class="btn primary format-json-textarea last" data-input="raw-json-${HtmlSecretsRender.id}" data-output="formatted-json-update" title="Toggle beautify"><span class="material-symbols-rounded">brush</span> Toggle beautify</button>` : ''}
-        ${!update ? `<btn-paste target="raw-json-${HtmlSecretsRender.id}"></btn-paste>` : ''}
-    </div>
-</div>
-<!-- CUSTOM -->
-<div class="custom-sections flex d-column emt mb-2" id="${update ? 'update-' : ''}custom-sections-vault">
-    <!-- ... -->
-</div>`
-    }
     /*
     {
       T: "PostgreSQL - Prod",   // Titolo (nome connessione)
@@ -401,7 +371,7 @@ export class HtmlSecretsRender {
         return `<div class="isle bg-4 mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
-        Title
+        Titolo
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" placeholder="PostgreSQL - Prod" autocomplete="off" required>
@@ -412,7 +382,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="hostname-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">link</span>
-        Hostname
+        Host
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="H" type="text" class="input-text mono" id="hostname-${HtmlSecretsRender.id}" value="${vals.H ?? ''}" placeholder="prod.db.internal" autocomplete="off">
@@ -423,7 +393,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="port-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">door_front</span>
-        Port
+        Porta
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="P" inputmode="numeric" class="input-text mono" id="port-${HtmlSecretsRender.id}" value="${vals.P ?? ''}" placeholder="5432" autocomplete="off">
@@ -445,7 +415,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="password-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">key_vertical</span>
-        Password / Key
+        Password / Chiave
     </label>
     <div class="flex gap-50 mb-2">
         <input spellcheck="false" name="K" type="text" class="input-text mono protected" id="password-${HtmlSecretsRender.id}" value="${vals.K ?? ''}" placeholder="*****" autocomplete="off">
@@ -457,7 +427,7 @@ export class HtmlSecretsRender {
 <div class="isle bg-4 mb-2">
     <label for="service-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">settings</span>
-        Service
+        Servizio
     </label>
     <div class="flex gap-50">
         <input spellcheck="false" name="S" type="text" class="input-text mono" id="service-${HtmlSecretsRender.id}" value="${vals.S ?? ''}" autocomplete="off" placeholder="pg, mysql, sftp, wireguard">
@@ -528,7 +498,7 @@ export class HtmlSecretsRender {
         // -- se è un login e la password non è sicura
         // - # indica una categoria
         // -- in questo caso la categoria di password non sicure
-        if (vals.strength_value && vals.strength_value < 60) context.push(`#danger`);
+        if (vals.strength_value && vals.strength_value < 60) context.push(`#pericolo`);
         // -- se è presente un codice otp
         // -- in questo caso tutti i login che hanno un totp
         if (vals.secrets.O) context.push(`#totp`);

@@ -221,19 +221,18 @@ class SettingsComponent extends HTMLElement {
         <div class="maincolor olivegreen">
             <h3 class="icon slider" slider="cont-cmac">
                 <span class="material-symbols-rounded">mark_email_read</span>
-                Check Message Authentication Code
+                Controllo dei MACs
             </h3>
             <div class="isle bg-4 slider-cont maincolor olivegreen" id="cont-cmac">
                 <p class="m-0 mb-3">
-                    Here you can check the validity of the message authentication codes 
-                    in the emails you receive from us, which is useful for verifying 
-                    whether the emails actually come from us or are instead phishing 
-                    attempts.
+                    Qui puoi controllare la validità dei MACs (Message Authentication Codes)
+                    presenti nelle email che ricevi da noi, è utile per verificare se la mail 
+                    proviene effettivamente da noi o è invece un tentativo di phishing.
                 </p>
                 <form autocomplete="off" id="form-cmac">
                     <label for="tuamadre-cmac">
                         <span class="material-symbols-rounded">password</span>
-                        Message Authentication Code
+                        Codice MAC
                     </label>
                     <div class="flex gap-75">
                         <input name="tuamadre" type="text" class="input-text mono" id="tuamadre-cmac" autocomplete="off" placeholder="**.**.******" required>
@@ -242,11 +241,11 @@ class SettingsComponent extends HTMLElement {
                     <div class="flex gap-50">
                         <button type="submit" class="btn primary mt-2">
                             <span class="material-symbols-rounded">check</span>
-                            Check
+                            Controlla
                         </button>
                         <button type="reset" class="btn secondary CA mt-2">
                             <span class="material-symbols-rounded">close</span>
-                            Reset
+                            Cancella
                         </button>
                     </div>
                 </form>
@@ -315,7 +314,7 @@ class SettingsComponent extends HTMLElement {
                 sections['delete-account']
                     ? `<button class="btn danger open" data-target-open="win-delete-account">
                 <span class="material-symbols-rounded">delete_forever</span>
-                Delete Account
+                Elimina Account
             </button>`
                     : ""
             }

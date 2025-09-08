@@ -23,12 +23,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     await VaultUI.init();
     const addButtonListeners = () => {
         const config = [
-            { id: 'btn-add-vault', type: 0, render: HtmlSecretsRender.vault, color: 'orange', title: "New Login" },
-            { id: 'btn-add-note', type: 1, render: HtmlSecretsRender.note, color: 'lightblue', title: "New Note" },
-            { id: 'btn-add-card', type: 2, render: HtmlSecretsRender.credit_card, color: 'yellow', title: "New Card" },
-            { id: 'btn-add-asimmetric', type: 3, render: HtmlSecretsRender.public_key, color: 'purple', title: "New Asymmetric keys" },
-            { id: 'btn-add-json', type: 4, render: HtmlSecretsRender.json, color: 'red', title: "New JSON" },
-            { id: 'btn-add-connection', type: 5, render: HtmlSecretsRender.connection, color: 'peach', title: "New Connection" },
+            { id: 'btn-add-vault', type: 0, render: HtmlSecretsRender.vault, color: 'orange', title: "Nuovo Accesso" },
+            { id: 'btn-add-note', type: 1, render: HtmlSecretsRender.note, color: 'lightblue', title: "Nuova Nota" },
+            { id: 'btn-add-card', type: 2, render: HtmlSecretsRender.credit_card, color: 'yellow', title: "Nuova Carta" },
+            { id: 'btn-add-asimmetric', type: 3, render: HtmlSecretsRender.public_key, color: 'purple', title: "Nuove Chiavi Pubbliche" },
+            // rimosso json ce spazio per un nuovo tipo
+            { id: 'btn-add-connection', type: 5, render: HtmlSecretsRender.connection, color: 'peach', title: "Nuova Connessione" },
         ];
         // -- aggiungo i listeners
         config.forEach(({ id, type, render, color, title }) => {
