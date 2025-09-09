@@ -277,7 +277,7 @@ export class AuthService {
             data: [email, password]
         });
         // ---
-        return Bytes.base62.encode(msgpack.encode([id, key]));
+        return Bytes.base32.encode(new TextEncoder().encode(`${id}_${key}`));
     }
     /**
      * Restituisce le credenziali utente
