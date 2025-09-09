@@ -41,9 +41,9 @@ class SettingsComponent extends HTMLElement {
                     const type = ['success', 'warning', 'danger', 'danger'][status - 1];
                     const title = ['Valid', 'Expired', 'Not valid', 'Not yours'][status - 1];
                     const message = [
-                        '~', 
-                        'This token is valid but expired', 
-                        'This token does not come from us, be careful', 
+                        '~',
+                        'This token is valid but expired',
+                        'This token does not come from us, be careful',
                         'This token is valid but was not generated for you, someone may have tried to use their (valid) one to cheat you, be careful'
                     ][status - 1];
                     let report = `<div class="mt-2 alert ${type} monospace">
@@ -209,6 +209,16 @@ class SettingsComponent extends HTMLElement {
                         Genera
                     </button>
                 </form>
+                <hr>
+                <p class="mt-0 mb-2">
+                    Genera invece un codice monouso per accedere velocemente all'estensione di Chrome
+                </p>
+                <form autocomplete="off" id="form-ext-sign-in">
+                    <button type="submit" class="btn primary mt-2">
+                        <span class="material-symbols-rounded">password</span>
+                        Genera
+                    </button>
+                </form>
             </div>
         </div>
             `;
@@ -310,13 +320,12 @@ class SettingsComponent extends HTMLElement {
         html += `<hr>
         <!-- ---- -->
         <div class="flex gap-50">
-            ${
-                sections['delete-account']
-                    ? `<button class="btn danger open" data-target-open="win-delete-account">
+            ${sections['delete-account']
+                ? `<button class="btn danger open" data-target-open="win-delete-account">
                 <span class="material-symbols-rounded">delete_forever</span>
                 Elimina Account
             </button>`
-                    : ""
+                : ""
             }
             <logout-btn class="btn warning ${sections['delete-account'] ? 'last' : ''}"></logout-btn>
         </div>`;

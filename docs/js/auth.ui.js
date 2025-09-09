@@ -52,6 +52,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             Log.summon(2, "Invalid password");
         }
     });
+    /**
+     * EXTENSION QUICK SIGN-IN
+     */
+    Form.register('form-ext-sign-in', async (form, elements) => {
+        const token = await AuthService.requestExtensionTokenSignIn();
+        if (token) {
+            navigator.clipboard.writeText(token);
+            Log.summon(0, "Il token è stato correttamente generato e copiato sulla tua clipboard");
+            form.reset();
+        } else if (token === null) {
+            Log.summon(2, "Qualcosa è andato storto");
+        }
+    });
 });
 
 class AuthUI {

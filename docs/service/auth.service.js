@@ -257,12 +257,27 @@ export class AuthService {
         const { id, key } = await SecureLink.generate({
             scope: 'qsi',
             ttl: 60 * 3,
-            data: [email, password],
-            passKey: true,
+            data: [email, password]
         });
         // -- compongo l'url
         const url = `${window.location.protocol}//${window.location.host}/signin?action=qsi&id=${id}&key=${key}`;
         return url;
+    }
+    /**
+     * Genera un token per accedere velocemente all'estensione di chrome
+     */
+    static async requestExtensionTokenSignIn() {
+        const password = await LocalStorage.get('password-utente', VaultService.KEK);
+        if (!password) return null;
+        // ---
+        const email = await LocalStorage.get('email-utente');
+        const { id, key } = await SecureLink.generate({
+            scope: 'ext-signin',
+            ttl: 60 * 3,
+            data: [email, password]
+        });
+        // ---
+        return Bytes.base62.encode(msgpack.encode([id, key]));
     }
     /**
      * Restituisce le credenziali utente
