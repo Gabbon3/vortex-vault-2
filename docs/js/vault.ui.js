@@ -179,9 +179,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     
     Form.register('form-psw-gen', (form, elements) => {
-        const { length, az, AZ, _09, _$ } = elements;
+        const { length, az, AZ, _09, _$, mode } = elements;
         try {
-            const password = ptg.generate(length, az, AZ, _09, _$);
+            const password = mode ? ptg.generatePassphrase(length, az, AZ, _09, _$) : ptg.generate(length, az, AZ, _09, _$);
             const test = ptg.test(password).average;
             psw_gen_test.innerHTML = ptg.colorize_text(password);
             document.getElementById('psw-gen-str-bar').setAttribute('value', test);

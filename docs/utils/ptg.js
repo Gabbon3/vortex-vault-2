@@ -1,4 +1,5 @@
 import { Cripto } from "../secure/cripto.js";
+import { vocabolario } from "./vocabolario.js";
 
 // password tester gabbone
 export class ptg {
@@ -7,7 +8,7 @@ export class ptg {
         az: "qwertyuiopasdfghjklzxcvbnm",
         AZ: "QWERTYUIOPASDFGHJKLZXCVBNM",
         _09: "1234567890",
-        _$: "!?+*#@$%&",
+        _$: "!?+*#@$%&-",
     };
     static regex = {
         az: /[a-z]/,
@@ -64,6 +65,34 @@ export class ptg {
         }
         // ---
         return password;
+    }
+    /**
+     * Genera una password frase
+     * @param {Object} options opzioni di configurazione della password
+     * @param {boolean} [options.len=4] - numero di parole da usare
+     * @param {boolean} [options.az=true]
+     * @param {boolean} [options.AZ=true]
+     * @param {boolean} [options._09=true]
+     * @param {boolean} [options._$=true]
+     */
+    static generatePassphrase(len = 4, az = true, AZ = false, _09 = false, _$ = false) {
+        let password = new Array(len);
+        const dimensioneVocabolario = vocabolario.length;
+        // --
+        for (let i = 0; i < len; i++) {
+            let parola = vocabolario[Math.floor((Cripto.random_ratio() * dimensioneVocabolario))];
+            // Aggiungo la lettera maiuscola
+            if (AZ) {
+                parola = parola.charAt(0).toUpperCase() + parola.slice(1);
+            }
+            // Aggiungo il numero
+            if (_09) {
+                parola += Math.floor(Cripto.random_ratio() * 100);
+            }
+            password[i] = parola;
+        }
+        const carattereSpecialeCasuale = this.chars._$[Math.floor((Cripto.random_ratio() * this.chars._$.length))];
+        return _$ ? password.join(carattereSpecialeCasuale) : password.join('');
     }
     /**
      * Restituisce quali tipi di caratteri sono presenti in una password
