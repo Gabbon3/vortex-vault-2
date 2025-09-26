@@ -7,7 +7,7 @@ class BtnSyncDevice extends HTMLElement {
     }
 
     render() {
-        this.innerHTML = `<span class="material-symbols-rounded">sync_alt</span>Syncronize`;
+        this.innerHTML = `<span class="material-symbols-rounded">sync_alt</span>Sincronizza`;
         this.addEventListener('click', async () => {
             Windows.loader(true);
             await DeviceUI.init();

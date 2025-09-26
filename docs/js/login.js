@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(true);
         const session_started = await AuthService.start_session();
         if (session_started !== true) {
-            if (session_started === 0) Log.summon(3, `You are already signed in as ${name}`);
+            if (session_started === 0) Log.summon(3, `Hai gia effettiato l'accesso come ${name}`);
             Windows.loader(false);
             return;
         }
@@ -118,13 +118,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const password = await AuthService.master_password_recovery(email, private_key, request_id, code);
         // ---
         if (password) {
-            Log.summon(0, 'Your master password has been decrypted.');
+            Log.summon(0, 'La tua master password è stata decrittata.');
             navigator.clipboard.writeText(password);
             document.getElementById('password').value = password;
             form.reset();
             Windows.close('win-password-recovery');
         } else {
-            Log.summon(2, 'Decryption failed');
+            Log.summon(2, 'Decrittazione fallita');
         }
         Windows.loader(false);
     });

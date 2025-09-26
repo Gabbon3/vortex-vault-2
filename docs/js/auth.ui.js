@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     Form.register('form-change-password', async (form, elements) => {
         // -- check if new passwords corresponds
-        if (elements.new_password !== elements.new_password_2) return Log.summon(1, 'New Password doesn\'t match');
+        if (elements.new_password !== elements.new_password_2) return Log.summon(1, 'Le password non corrispondono');
         // ---
-        if (!confirm('Confirm that you want to change the password? All active sessions except this one will be deleted?')) return;
+        if (!confirm('Sei sicuro di voler cambiare la password? Dovrai effettuare l\'accesso da capo su ogni altro dispositivo connesso a questo account?')) return;
         // ---
-        Windows.loader(true, "Changing your master password");
+        Windows.loader(true, "Sto modificando la password creando un backup");
         if (await AuthService.changePassword(elements.new_password)) {
-            Log.summon(0, "Password changed successfully");
+            Log.summon(0, "Password cambiata con successo");
             form.reset();
         }
         Windows.loader(false);
@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     Form.register('form-advanced-session-with-email', async (form, elements) => {
         const { request_id, code } = elements;
-        if (!code || code.length!== 6) return Log.summon(1, "Invalid code");
+        if (!code || code.length!== 6) return Log.summon(1, "Codice non valido");
         // ---
         Windows.loader(true);
         const email = await LocalStorage.get('email-utente');
         const activated = await AuthService.getShivPrivilegedToken(email, request_id, code);
         if (activated) {
-            Log.summon(0, 'Advanced session started');
+            Log.summon(0, 'Sessione avanzata iniziata');
             form.reset();
         }
         Windows.loader(false);
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             AuthUI.show_quick_signin(url);
             form.reset();
         } else if (url === null) {
-            Log.summon(2, "Invalid password");
+            Log.summon(2, "Password non valida");
         }
     });
     /**
@@ -78,33 +78,6 @@ class AuthUI {
         });
         // -- copio negli appunti il link
         navigator.clipboard.writeText(url);
-        Log.summon(0, 'Link copied into your clipboard');
-    }
-    /**
-     * Abilita MFA e lo mostra nell'html
-     * @param {string} email_code password dell'utente
-     * @returns {boolean}
-     */
-    static async enable_mfa(request_id, email_code) {
-        const email = await LocalStorage.get('email-utente');
-        const secret = await AuthService.enable_mfa(email, request_id, email_code);
-        if (!secret) return false;
-        const base32_secret = Bytes.base32.encode(Bytes.hex.decode(secret));
-        // -- copio negli appunti il segreto
-        navigator.clipboard.writeText(base32_secret);
-        Log.summon(3, 'Secret copied into your clipboard');
-        // ---
-        const app_name = 'Vortex Vault';
-        // ---
-        const uri = `otpauth://totp/${app_name}:${email}?secret=${base32_secret}&issuer=${app_name}`;
-        QrCodeDisplay.generate({
-            data: uri,
-            timeout: 20000,
-            callback: () => {
-                Log.summon(1, "Pay attention! The Qr Code will be hidden in 20 seconds");
-            }
-        });
-        // ---
-        return true;
+        Log.summon(0, 'Link copiato nella tua clipboard');
     }
 }

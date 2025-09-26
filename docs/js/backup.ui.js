@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // ---
         Windows.loader(true);
         if (await BackupService.create()) {
-            Log.summon(0, "Backup created & saved successfully");
+            Log.summon(0, "Backup creato e scaricato con successo");
         } else {
-            Log.summon(1, "Error creating & saving backup");
+            Log.summon(1, "Errore durante la creazione del backup");
         }
         Windows.loader(false);
     });
@@ -20,13 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * RESTORE
      */
     document.querySelector('#btn-restore-backup-server').addEventListener('click', async () => {
-        if (!confirm('Are you sure you want to restore from the last backup?')) return;
+        if (!confirm('Sei sicuro di voler ripristinare tutti i dati dal vecchio backup? Tutti i dati attuali verranno sovrascritti?')) return;
         // ---
-        Windows.loader(true, "Restoring all vault from server");
+        Windows.loader(true, "Sto decrittografando e ripristinando i dati");
         if (await BackupService.restore_server()) {
-            Log.summon(0, "Backup restored successfully");
+            Log.summon(0, "Backup ripristinato con successo");
         } else {
-            Log.summon(1, "Error restoring backup");
+            Log.summon(1, "Errore durante il ripristino del backup");
         }
         Windows.loader(false);
     });
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Form.register('form-create-backup-locally', async (form, elements) => {
         const { key, key_r } = elements;
         // ---
-        if (key !== key_r) return Log.summon(1, "Custom passwords do not match");
+        if (key !== key_r) return Log.summon(1, "La password personalizzata non coincide");
         // ---
         await BackupService.create_locally(key === '' ? null : key);
         form.reset();
@@ -47,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     Form.register('form-restore-backup-from-file', async (form, elements) => {
         const { key, backup_file } = elements;
         // ---
-        Windows.loader(true, "Restoring all vault from your file");
+        Windows.loader(true, "Sto decrittografando e ripristinando tutti i dati dal tuo file");
         if (await BackupService.restore_locally(backup_file, key === ''? null : key)) {
-            Log.summon(0, "Backup restored successfully");
+            Log.summon(0, "Backup ripristinato con successo");
             form.reset();
         } else {
-            Log.summon(1, "Error restoring backup");
+            Log.summon(1, "Errore durante il ripristino del backup");
         }
         Windows.loader(false);
     });

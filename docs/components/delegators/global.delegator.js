@@ -3,7 +3,6 @@ import { BtnCopy } from "../btn-copy.component.js";
 import { Windows } from "../../utils/windows.js";
 import { PasskeyBtn } from "../passkey-btn.component.js";
 import { Log } from "../../utils/log.js";
-import { API } from "../../utils/api.js";
 import { AuthService } from "../../service/auth.service.js";
 
 export const GlobalDelegator = {
@@ -180,7 +179,7 @@ export const GlobalDelegator = {
     async handlePasskeyBtnClick(e) {
         const btn = e.target.closest("passkey-btn");
         if (!btn) return false;
-        Windows.loader(true, "Passkey verification");
+        Windows.loader(true, "Verifica della Passkey");
         // ---
         const pre_callback = btn.getAttribute("pre-callback");
         const callback = btn.getAttribute("callback");

@@ -10,12 +10,12 @@ class LogoutButton extends HTMLElement {
     render() {
         this.innerHTML = `<span class="material-symbols-rounded">logout</span>Sign-out`;
         this.addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to sign out?')) return;
+            if (!confirm('Confermi di voler effettuare la disconnessione?')) return;
             // ---
             const signed_out = await AuthService.signout();
             if (signed_out) {
-                Log.summon(0, 'Disconnected successfully, you will be redirected to sign-in page');
-                Windows.loader(true, "Redirect to signin page");
+                Log.summon(0, 'Disconnesso con successo, verrai reindirizzato alla pagina di accesso');
+                Windows.loader(true, "Reindirizzamento alla pagina di accesso");
                 setTimeout(() => {
                     window.location.href = '/signin';
                 }, 3000);

@@ -59,26 +59,26 @@ class PasskeyListItem extends HTMLElement {
         const name = event.currentTarget.value;
         if (!confirm('Are you sure you want to rename this passkey into ' + name + '?')) return;
         // ---
-        Windows.loader(true, "Renaming into " + name);
+        Windows.loader(true, "Sto rinominando in " + name);
         const updated = await PasskeyService.rename(this.id, name);
         Windows.loader(false);
         if (!updated) return;
         this.querySelector('.passkey-name').value = name;
-        Log.summon(0, "Passkey renamed in " + name);
+        Log.summon(0, "Passkey rinominata in " + name);
     }
     /**
      * Delete a device from 
      * @returns 
      */
     async delete_passkey() {
-        if (!confirm('Are you sure you want to delete this passkey?')) return;
+        if (!confirm('Sei sicuro di voler eliminare questa passkey?')) return;
         // ---
         Windows.loader(true);
         const deleted = await PasskeyService.delete(this.id);
         Windows.loader(false);
         if (!deleted) return;
         this.remove();
-        Log.summon(0, "Device deleted successfully");
+        Log.summon(0, "Passkey eliminata con successo");
     }
 }
 

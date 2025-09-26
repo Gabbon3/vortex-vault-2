@@ -86,16 +86,16 @@ class DeviceListItem extends HTMLElement {
      * @returns 
      */
     async delete_device() {
-        if (!confirm('Are you sure you want to delete this device?')) return;
+        if (!confirm('Sei sicuro di voler rimuovere questo dispositivo?')) return;
         // ---
         const token_id = this.getAttribute('id');
         // ---
-        Windows.loader(true);
+        Windows.loader(true, "Sto rimuovendo questo dispositivo, attendi");
         const deleted = await DeviceService.delete(token_id);
         Windows.loader(false);
         if (!deleted) return;
         this.remove();
-        Log.summon(0, "Device deleted successfully");
+        Log.summon(0, "Dispositivo rimosso con successo");
     }
     /**
      * @param {Event} e 
@@ -105,9 +105,9 @@ class DeviceListItem extends HTMLElement {
         // ---
         if (key === 'Enter') {
             const deviceName = e.currentTarget.value;
-            Windows.loader(true, "Renaming into " + deviceName);
+            Windows.loader(true, "Sto rinominando in " + deviceName);
             const device = DeviceService.get_device(this.deviceId);
-            if (confirm(`Are you sure you want to rename this device into "${deviceName}"?`)) {
+            if (confirm(`Sei sicuro di voler rinominare questo dispositivo in "${deviceName}"?`)) {
                 await DeviceService.update_device_name(this.deviceId, deviceName);
                 device.device_name = deviceName;
             } else {
