@@ -1,7 +1,16 @@
 vortex-navbar {
+    flex-wrap: wrap;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    padding: 5px;
+    border-radius: $br-m;
+    background-color: var(--bg-3);
+    box-shadow: 0 0 0 1px var(--bg-5);
+    position: fixed;
+    top: 7px;
+    left: 7px;
+    width: calc(100% - 14px);
+    z-index: 5;
 
     .last {
         margin-left: auto;
@@ -50,23 +59,24 @@ vortex-navbar {
     }
 }
 
-vortex-navbar {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    border-radius: $br-m;
-    background-color: var(--bg-3);
-    box-shadow: 0 0 0 1px var(--bg-5);
+.btn.menu {
+    display: none;
     position: fixed;
-    top: 7px;
-    left: 7px;
-    width: calc(100% - 14px);
-    z-index: 5;
+    bottom: 10px;
+    right: 10px;
+    z-index: 2050;
+    background-color: var(--bg-2);
+    border: 2px solid var(--bg-5);
+    box-shadow: 0 0 2px 0px var(--bg-4);
+    border-radius: 50%;
+    padding: 10px;
 
-    .logo {
-        height: 30px;
-        padding: 0 10px;
-        margin-left: auto;
+    img {
+        height: 35px;
+    }
+
+    &:hover {
+        background-color: var(--bg-3);
     }
 }
 

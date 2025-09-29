@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         const updated = await VaultService.update(vault_id, elements);
         if (updated) {
-            Log.summon(0, `${elements.T} edited`);
+            Log.summon(0, `${elements.T} modificato`);
             Windows.close('win-update-vault');
             form.reset();
             await VaultUI.init_db_dom();
@@ -133,9 +133,9 @@ document.addEventListener('DOMContentLoaded', async () => {
      * SYNCRONIZE VAULT
      */
     document.querySelector('#btn-sync-vault').addEventListener('click', async () => {
-        if (!confirm('Do you confirm that you want to synchronize with the server?')) return;
+        if (!confirm('Confermi di voler sincronizzare tutto?')) return;
         // ---
-        Windows.loader(true, "Decrypting all vaults");
+        Windows.loader(true, "Sto decifrando tutti i vault");
         await VaultService.syncronize(true);
         Windows.loader(false);
         VaultUI.html_vaults();
@@ -147,16 +147,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const vault_id = e.currentTarget.getAttribute('vault-id');
         const vault = VaultService.get_vault(vault_id);
         const title = vault.secrets.T;
-        if (!confirm(`Are you sure you want to delete permanently ${title}?`)) return;
+        if (!confirm(`Sei sicuro di voler eliminare in maniera permanente ${title}?`)) return;
         // ---
         Windows.loader(true, "Rip for " + vault.secrets.T);
         // ---
         if (await VaultService.delete(vault_id)) {
-            Log.summon(0, `${title} deleted`);
+            Log.summon(0, `${title} eliminato`);
             Windows.close('win-update-vault');
             VaultUI.init_db_dom();
         } else {
-            Log.summon(2, `Error while deleting ${title}`);
+            Log.summon(2, `Errore durante l'eliminazione di ${title}`);
         }
         Windows.loader(false);
     });
@@ -186,7 +186,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             psw_gen_test.innerHTML = ptg.colorize_text(password);
             document.getElementById('psw-gen-str-bar').setAttribute('value', test);
         } catch (error) {
-            Log.summon(3, "Error while generating new password");
+            console.warn(error);
+            Log.summon(3, "Errore durante la generazione della password");
         }
     });
     /**
@@ -218,7 +219,7 @@ export class VaultUI {
         /**
          * EVENT DELEGATIONS INIT
          */
-        Windows.loader(true, "Vault is starting");
+        Windows.loader(true, "Sto decifrando i dati");
         VaultDelegator.init();
         // ----
         // - controllo se è possibile usare il vault configurando i segreti
@@ -229,7 +230,7 @@ export class VaultUI {
             const started = await AuthService.start_session();
             // --- se non viene avviata fermo e restituisco errore
             if (started !== true && started !== 0) {
-                Log.summon(2, "Authentication failed, you will be redirected to the sign-in page");
+                Log.summon(2, "Autenticazione fallita, verrai reindirizzato alla pagina di accesso.");
                 setTimeout(() => {
                     window.location.href = '/signin';
                 }, 4000);
@@ -245,7 +246,7 @@ export class VaultUI {
             await DeviceUI.init();
             await PasskeyUI.init();
             // ---
-            if (timeout > 0) Log.summon(0, `Welcome back ${SessionStorage.get('email')}`);
+            if (timeout > 0) Log.summon(0, `Bentornato ${SessionStorage.get('email').split('@')[0]}`);
             Windows.loader(false);
         }, timeout);
     }

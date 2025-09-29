@@ -37,7 +37,7 @@ export class PasskeyBtn extends HTMLElement {
          * AVVIO ADVANCED SESSION
          */
         'sudosession': async () => {
-            Log.summon(0, 'Advanced session started');
+            Log.summon(0, 'Sessione avanzata avviata con successo');
         },
         /**
          * DELETE ACCOUNT
@@ -45,7 +45,7 @@ export class PasskeyBtn extends HTMLElement {
         'deleteaccount': async () => {
             localStorage.clear();
             sessionStorage.clear();
-            Log.summon(0, "Your account has been deleted, you will be disconnected from this page in a moment.");
+            Log.summon(0, "Il tuo account è stato eliminato, verrai disconnesso a breve.");
             setTimeout(() => {
                 window.location.href = '/signin';
             }, 3000);
@@ -54,7 +54,7 @@ export class PasskeyBtn extends HTMLElement {
          * PASSKEY TEST
          */
         'passkeytest': async () => {
-            Log.summon(0, "Passkey test performed successfully");
+            Log.summon(0, "Test con passkey eseguito con successo");
         }
     };
 }

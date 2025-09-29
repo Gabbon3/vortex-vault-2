@@ -44,6 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.currentTarget.classList.remove('show');
     });
     /**
+     * Pulsante Menu
+     */
+    document.querySelector('button.menu').addEventListener('click', (e) => {
+        document.querySelector('vortex-navbar').classList.toggle('show');
+    });
+    /**
      * SLIDERS
      */
     Sliders.init();

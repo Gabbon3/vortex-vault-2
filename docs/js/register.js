@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             form.reset();
             // Log.summon(1, "Almost done! now, to verify your email and create your first passkey, click on the \"Verify email & Create your first Passkey\" button.");
             document.getElementById('verify-email-email').value = email;
-            Log.summon(0, 'Almost done! Now, you need to verify your email and create your first passkey.');
+            Log.summon(0, 'Quasi fatto! Ora devi verificare la tua email e creare la tua prima passkey.');
             Windows.open('win-email-verify');
         }
         Windows.loader(false);
@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         Windows.loader(false);
         if (!email_verification) return;
         // ---
-        Log.summon(0, "Email verified successfully");
+        Log.summon(0, "Email verificata con successo");
         // -- registro la passkey
         const passkey_registered = await PasskeyService.activate_new_passkey(email, request_id, code);
         if (!passkey_registered) return Log.summon(1, 'Try again');
         // ---
-        Log.summon(0, "Everything is ready, welcome to Vortex Vault");
+        Log.summon(0, "Tutto è pronto! Benvenuto/a in Vortex Vault");
         setTimeout(() => {
             window.location.href = '/signin';
         }, 3000);

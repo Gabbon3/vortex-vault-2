@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (quick_signin === true) {
         const session_started = await auth_success();
         if (session_started === true || session_started === 0) {
-            Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`, () => { window.location.href = '/vault'; });
+            Log.summon(0, `Ciao ${(await LocalStorage.get('email-utente')).split('@')[0]}`, () => { window.location.href = '/vault'; });
             // setTimeout(() => {
             //     window.location.href = '/vault';
             // }, 3000);
@@ -44,14 +44,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             // -- verifico se ci sono richieste di autenticazione
             const res = await AuthService.check_signin_request();
             if (res) {
-                Log.summon(0, "Authentication request accepted");
+                Log.summon(0, "Richiesta di autenticazione accettata");
             } else if (res === null) {
-                Log.summon(2, "Something is missing here");
+                Log.summon(2, "Qualcosa è andato storto, riprova");
             }
             // ---
-            Log.summon(3, `Access saved as ${saved_email}`);
+            Log.summon(3, `Accesso salvato come ${saved_email}`);
         } else {
-            Log.summon(1, "Authentication failed");
+            Log.summon(1, "Autenticazione fallita");
         }
     }
     /**
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // -- accedo
         if (await AuthService.signin(email, password)) {
             form.reset();
-            Log.summon(0, `Authenticated as ${email}`);
+            Log.summon(0, `Bentornato ${email.split('@')[0]}`);
             setTimeout(() => {
                 window.location.href = '/vault';
             }, 3000);
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         // ---
-        Log.summon(0, `Welcome back ${name}`);
+        Log.summon(0, `Bentornato ${name.split('@')[0]}`);
         Windows.loader(false);
         setTimeout(() => {
             window.location.href = '/vault';
@@ -170,7 +170,7 @@ class RequestSignIn {
                 const session_started = await AuthService.start_session();
                 if (session_started !== true && session_started !== 0) return false;
                 // ---
-                Log.summon(0, `Hi ${await LocalStorage.get('email-utente')}`);
+                Log.summon(0, `Ciao ${(await LocalStorage.get('email-utente')).split('@')[0]}`);
                 setTimeout(() => {
                     window.location.href = '/vault';
                 }, 3000);

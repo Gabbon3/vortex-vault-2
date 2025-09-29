@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", async () => {
      */
     document.getElementById('btn-new-passkey').addEventListener("click", async () => {
         const email = await LocalStorage.get('email-utente');
-        if (!email) return Log.summon(1, 'No email found');
+        if (!email) return Log.summon(1, 'Nessuna email trovata');
         // ---
         const passkey_added = await PasskeyService.activate_new_passkey(email);
-        if (passkey_added) Log.summon(0, 'New passkey added to your account');
+        if (passkey_added) Log.summon(0, 'Nuova passkey aggiunta con successo');
     });
     /**
      * SYNC LIST

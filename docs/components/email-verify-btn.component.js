@@ -60,7 +60,7 @@ class EmailVerifyBtn extends HTMLElement {
             this.button.disabled = false;
             return;
         }
-        Log.summon(0, "Email sent, check your inbox");
+        Log.summon(0, "Email inviata, controlla la tua casella di posta.");
         // ---
         const { request_id } = res;
         this.request_id_input.value = request_id;

@@ -7,7 +7,6 @@ export class VortexNavbar extends HTMLElement {
     
     connectedCallback() {
         // ---
-        // <img src="./img/vortex_vault_logo.png" class="logo">
         /**
          * Chat rimossa:
         ${path !== '/chat' ? `<a href="/chat"' title="Chat">

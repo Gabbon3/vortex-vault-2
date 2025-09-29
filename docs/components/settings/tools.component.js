@@ -91,7 +91,7 @@ class SettingsComponent extends HTMLElement {
      */
     render(sections = this.sections) {
         let html = `
-        <div class="window m pl" id="win-settings">
+        <div class="window m" id="win-settings">
         <div class="flex y-center maincolor blue">
             <h2 class="icon mb-0">
                 <span class="material-symbols-rounded">handyman</span>

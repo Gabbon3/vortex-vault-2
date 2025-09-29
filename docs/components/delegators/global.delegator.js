@@ -210,7 +210,7 @@ export const GlobalDelegator = {
          * Fase finale
          */
         if (!callback) {
-            Log.summon(0, "Operation performed successfully");
+            Log.summon(0, "Operazione completata con successo");
             Windows.loader(false);
             return true;
         }

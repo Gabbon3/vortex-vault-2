@@ -76,23 +76,20 @@ export class ptg {
      * @param {boolean} [options._$=true]
      */
     static generatePassphrase(len = 4, az = true, AZ = false, _09 = false, _$ = false) {
-        let password = new Array(len);
+        let password = "";
         const dimensioneVocabolario = vocabolario.length;
         // --
         for (let i = 0; i < len; i++) {
             let parola = vocabolario[Math.floor((Cripto.random_ratio() * dimensioneVocabolario))];
-            // Aggiungo la lettera maiuscola
-            if (AZ) {
-                parola = parola.charAt(0).toUpperCase() + parola.slice(1);
-            }
-            // Aggiungo il numero
-            if (_09) {
-                parola += Math.floor(Cripto.random_ratio() * 100);
-            }
-            password[i] = parola;
+            password += AZ ? (parola.charAt(0).toUpperCase() + parola.slice(1)) : parola;
         }
-        const carattereSpecialeCasuale = this.chars._$[Math.floor((Cripto.random_ratio() * this.chars._$.length))];
-        return _$ ? password.join(carattereSpecialeCasuale) : password.join('');
+        if (_09) {
+            password += Math.floor(Cripto.random_ratio() * 100);
+        }
+        if (_$) {
+            password += this.chars._$[Math.floor((Cripto.random_ratio() * this.chars._$.length))]; 
+        }
+        return password;
     }
     /**
      * Restituisce quali tipi di caratteri sono presenti in una password

@@ -78,7 +78,7 @@ class DeviceListItem extends HTMLElement {
         const done = await DeviceService.revoke(token_id, !revoked);
         if (!done) return;
         // ---
-        Log.summon(0, `${device_name} ${revoked ? 'un' : ''} revoked`);
+        Log.summon(0, `${device_name} ${revoked ? 's' : ''}bloccato`);
         this.setAttribute('revoked', revoked ? 'false' : 'true');
     }
     /**
