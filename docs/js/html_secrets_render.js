@@ -78,7 +78,7 @@ export class HtmlSecretsRender {
         HtmlSecretsRender.id++;
         const update = vals.T !== undefined && vals.T !== '';
         const btn = `btn-${update ? 'copy' : 'paste'}`;
-        return `<div class="isle bg-4 mb-2">
+        return `<div class="isle bg-4 br-l mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Titolo
@@ -89,7 +89,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- USERNAME -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="username-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
         Nome utente o Email
@@ -101,7 +101,7 @@ export class HtmlSecretsRender {
     ${!update ? '<datalist id="used-username"></datalist>' : ''}
 </div>
 <!-- PASSWORD -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="password-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">key_vertical</span>
         Password
@@ -113,7 +113,7 @@ export class HtmlSecretsRender {
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
 </div>
 <!-- OTP/TOTP -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="totp-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">phonelink_lock</span>
         OTP/TOTP
@@ -125,7 +125,7 @@ export class HtmlSecretsRender {
     ${update ? `<div class="mt-2"><otp-copy-button class="btn primary mt-2" secret="${vals.O}"></otp-copy-button></div>` : ''}
 </div>
 <!-- URL -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="url-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">link</span>
         URLs
@@ -144,7 +144,7 @@ export class HtmlSecretsRender {
     <!-- ... -->
 </div>
 <!-- NOTE -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
@@ -164,7 +164,7 @@ export class HtmlSecretsRender {
     static note(vals = {}) {
         HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
-        return `<div class="isle bg-4 mb-2">
+        return `<div class="isle bg-4 br-l mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Titolo
@@ -172,7 +172,7 @@ export class HtmlSecretsRender {
     <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
 <!-- NOTE -->
-<div class="isle bg-4">
+<div class="isle bg-4 br-l">
     <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
@@ -195,7 +195,7 @@ export class HtmlSecretsRender {
     static public_key(vals = {}) {
         HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
-        return `<div class="isle bg-4 mb-2">
+        return `<div class="isle bg-4 br-l mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Titolo
@@ -203,7 +203,7 @@ export class HtmlSecretsRender {
     <input spellcheck="false" name="T" type="text" class="input-text mono" id="titolo-${HtmlSecretsRender.id}" value="${vals.T ?? ''}" autocomplete="off" required>
 </div>
 <!-- TIPO DI CHIAVE == KT -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="key-type-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">category</span>
         Tipo di chiave
@@ -216,7 +216,7 @@ export class HtmlSecretsRender {
     </select>
 </div>
 <!-- CHIAVE PRIVATA = R -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="private-key-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">key</span>
         Chiave Privata
@@ -230,7 +230,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- CHIAVE PUBBLICA = P -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="public-key-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">public</span>
         Chiave Pubblica
@@ -248,7 +248,7 @@ export class HtmlSecretsRender {
     <!-- ... -->
 </div>
 <!-- NOTE -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
@@ -268,7 +268,7 @@ export class HtmlSecretsRender {
         HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         const btn = `btn-${update ? 'copy' : 'paste'}`;
-        return `<div class="isle bg-4 mb-2">
+        return `<div class="isle bg-4 br-l mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Titolo
@@ -279,7 +279,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- NOME E COGNOME -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="name-surname-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
         Nome e Cognome
@@ -290,7 +290,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- NUMERO CARTA -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="card-number-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">credit_card</span>
         Numero Carta
@@ -301,7 +301,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- PIN DELLA CARTA -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="card-pin-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">password</span>
         Pin
@@ -312,7 +312,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- DATA SCADENZA & CVV -->
-<div class="flex d-row gap-50 isle bg-4 mb-2">
+<div class="flex d-row gap-50 isle bg-4 br-l mb-2">
     <!-- DATA SCADENZA -->
     <div class="fg-1">
         <label for="expire-date-${HtmlSecretsRender.id}">
@@ -331,7 +331,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- IBAN -->
-<div class="isle bg-4 ${update ? 'mb-2' : ''}">
+<div class="isle bg-4 br-l ${update ? 'mb-2' : ''}">
     <label for="iban-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">account_balance</span>
         IBAN
@@ -368,7 +368,7 @@ export class HtmlSecretsRender {
         HtmlSecretsRender.id++;
         const update = vals.T !== undefined;
         const btn = `btn-${update ? 'copy' : 'paste'}`;
-        return `<div class="isle bg-4 mb-2">
+        return `<div class="isle bg-4 br-l mb-2">
     <label for="titolo-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">tag</span>
         Titolo
@@ -379,7 +379,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- HOSTNAME -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="hostname-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">link</span>
         Host
@@ -390,7 +390,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- PORT -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="port-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">door_front</span>
         Porta
@@ -401,7 +401,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- USERNAME -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="username-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">person</span>
         Username
@@ -412,7 +412,7 @@ export class HtmlSecretsRender {
     </div>
 </div>
 <!-- PASSWORD -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="password-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">key_vertical</span>
         Password / Chiave
@@ -424,7 +424,7 @@ export class HtmlSecretsRender {
     <password-strength-bar class="m-0" xs="true" value="100" id="create-psw-strength-bar" input-id="password-${HtmlSecretsRender.id}"></password-strength-bar>
 </div>
 <!-- SERVICE -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="service-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">settings</span>
         Servizio
@@ -439,7 +439,7 @@ export class HtmlSecretsRender {
     <!-- ... -->
 </div>
 <!-- NOTE -->
-<div class="isle bg-4 mb-2">
+<div class="isle bg-4 br-l mb-2">
     <label for="note-${HtmlSecretsRender.id}">
         <span class="material-symbols-rounded">info</span>
         Note
