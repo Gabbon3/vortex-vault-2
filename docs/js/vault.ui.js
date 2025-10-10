@@ -244,6 +244,8 @@ export class VaultUI {
             await this.init_db_dom();
             await PasskeyUI.init();
             // ---
+            VaultService.load_used_usernames()
+            // ---
             if (timeout > 0) Log.summon(0, `Bentornato ${SessionStorage.get('email').split('@')[0]}`);
             Windows.loader(false);
         }, timeout);

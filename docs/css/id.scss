@@ -64,7 +64,7 @@ vortex-navbar {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    z-index: 2050;
+    z-index: 8;
     background-color: var(--bg-2);
     border: 2px solid var(--bg-5);
     box-shadow: 0 0 2px 0px var(--bg-4);
@@ -116,7 +116,7 @@ vortex-navbar {
     left: 5px;
     display: flex;
     gap: 5px;
-    z-index: 2050;
+    z-index: 8;
     max-width: 350px;
     flex-wrap: wrap;
 
@@ -460,7 +460,7 @@ vortex-navbar {
     custom-vault-section {
         background-color: var(--bg-4);
         padding: 0 7px 7px 7px;
-        border-radius: $br-m;
+        border-radius: $br-l;
 
         .remove-custom-section {
             padding: 3px;
