@@ -17,10 +17,10 @@ export class API {
                 setTimeout(() => {
                     window.location.href = '/signin';
                 }, 3000);
+                return null;
             }
-            return null;
         }
-        return API.call(endpoint, options, type);
+        return await API.call(endpoint, options, type);
     }
     /**
      * Eseguo una richiesta fetch centralizzata con endpoint, opzioni e tipo di dato.

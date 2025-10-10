@@ -142,6 +142,7 @@ export class AuthService {
         });
         // ---
         if (!res) return false;
+        SessionStorage.set('access-token-expiry', new Date(Date.now() + (7 * 60 * 1000)));
         return true;
     }
     /**

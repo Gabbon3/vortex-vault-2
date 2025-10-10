@@ -55,7 +55,9 @@ export class PoP {
             body: { signedNonce: signedNonceHex, nonce: nonceRes.nonce }
         });
         if (!refreshRes) return false;
-        else return true;
+        // ---
+        SessionStorage.set('access-token-expiry', new Date(Date.now() + (15 * 60 * 1000)));
+        return true;
     }
 }
 
