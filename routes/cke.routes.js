@@ -17,8 +17,8 @@ const limiter = rateLimit({
 router.use(limiter);
 // -- auth/cke
 router.post('/set', verifyAuth(), verifyPasskey(), controller.set);
-router.get('/get/basic', verifyAuth({ checkIntegrity: false }), controller.getBasic);
-router.get('/get/advanced', verifyAuth({ checkIntegrity: true }), controller.getAdvanced);
+router.get('/get/basic', verifyAuth(), controller.getBasic);
+router.get('/get/advanced', verifyAuth(), controller.getAdvanced);
 // TODO: aggiungere un PIN al posto della passkey poiché è sgravato
 // router.post('/get/advanced', verifyPasskey(), controller.getAdvanced);
 

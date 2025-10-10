@@ -1,19 +1,13 @@
 import bcrypt from "bcryptjs";
 import { CError } from "../helpers/cError.js";
-import { Cripto } from "../utils/cryptoUtils.js";
 import { User } from "../models/user.js";
-import { Mailer } from "../config/mail.js";
-import emailContents from "../docs/utils/automated.mails.js";
-import { RedisDB } from "../config/redisdb.js";
 import { Op } from "sequelize";
-import { SHIV } from "../protocols/SHIV.node.js";
+import { PoP } from "../protocols/PoP.node.js";
 import { AuthKeys } from "../models/authKeys.model.js";
-import { Vault } from "../models/vault.js";
-import { sequelize } from "../config/db.js";
 
 export class UserService {
     constructor() {
-        this.shiv = new SHIV();
+        this.pop = new PoP();
     }
     /**
      * Registra un utente sul db
@@ -74,54 +68,27 @@ export class UserService {
      *
      * @param {Request} request
      * @param {string} email
-     * @param {string} publicKeyHex - chiave pubblica ECDH del client in esadecimale
+     * @param {string} publicKeyHex - chiave pubblica ECDSA del client in esadecimale
      * @returns {}
      */
-    async signin({ request, email, publicKeyHex }) {
+    async signin({ email, publicKeyHex }) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { email },
         });
         if (!user)
-            throw new CError("AuthenticationError", "Invalid email", 401);
+            throw new CError("AuthenticationError", "Email inesistente", 401);
         if (user.verified !== true)
             throw new CError(
                 "AuthenticationError",
-                "Email is not verified",
+                "Email non verificata",
                 401
             );
         /**
-         * Stabilisco la sessione con SHIV
+         * Genero l'access token
          */
-        const { jwt, publicKey, userAgentSummary } =
-            await this.shiv.generateSession({
-                request: request,
-                publicKeyHex,
-                userId: user.id,
-                payload: { uid: user.id },
-            });
-        /**
-         * Avviso l'utente via mail del nuovo login
-         */
-        const { text, html } = await emailContents.newSignIn({
-            email,
-            user_agent: userAgentSummary,
-            ip_address:
-                request.headers["x-forwarded-for"] ||
-                request.socket.remoteAddress,
-        });
-        // -- invio la mail
-        Mailer.send(email, "New device Sign-In", text, html);
-        /**
-         * Genero un bypass token
-         */
-        const cripto = new Cripto();
-        const bypassToken = cripto.bypassToken();
-        await RedisDB.set(`byp-${bypassToken}`, { uid: user.id }, 60);
-        /**
-         * restituisco quindi l'access token se generato, il refresh token non hashato, il modello User e il bypass token se generato
-         */
-        return { uid: user.id, salt: user.salt, dek: user.dek, jwt, publicKey, bypassToken };
+        const jwt = await this.pop.generateAccessToken(user.id, publicKeyHex);
+        return { uid: user.id, salt: user.salt, dek: user.dek, jwt };
     }
 
     /**

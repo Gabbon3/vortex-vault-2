@@ -4,49 +4,31 @@ import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import { API } from "../utils/api.js";
 import { AES256GCM } from "../secure/aesgcm.js";
-import { ECDH } from "../secure/ecdh.js";
-import { BackupService } from "./backup.service.js";
 import { VaultService } from "./vault.service.js";
 import { SecureLink } from "../utils/secure-link.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Log } from "../utils/log.js";
-import msgpack from "../utils/msgpack.min.js";
-import { CKE } from "../utils/cke.public.util.js";
-import { SHIV } from "../secure/SHIV.browser.js";
 import { Windows } from "../utils/windows.js";
+import { PoP } from "../secure/PoP.js";
 
 export class AuthService {
     /**
      * Inizializza la sessione calcolando la shared key
      */
     static async init() {
-        /**
-         * CKE
-         */
-        Windows.loader(true, "SHIV is starting");
-        const sessionSharedSecret = SessionStorage.get('shared-secret');
-        const userIsLogged = LocalStorage.exist('shared-secret');
-        if (sessionSharedSecret || !userIsLogged) return true;
-        // ---
-        const keyBasic = await CKE.getBasic();
-        if (!keyBasic) return false;
-        // ---
-        const sharedSecret = await LocalStorage.get('shared-secret', keyBasic);
-        if (!sharedSecret) return false;
-        // ---
-        SessionStorage.set('shared-secret', sharedSecret);
-        return true;
+        Windows.loader(true, "Verifico la sessione");
+        const popInitialized = await PoP.init();
+        return popInitialized;
     }
     /**
      * Esegue l'accesso
      * @param {string} email 
      * @param {string} password 
-     * @param {boolean} [activate_lse=false] true per abilitare il protocollo lse
      * @returns {boolean}
      */
     static async signin(email, password) {
         // -- genero la coppia di chiavi
-        const publicKeyHex = await SHIV.generateKeyPair();
+        const publicKeyHex = await PoP.generateKeyPair();
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
         const res = await API.fetch('/auth/signin', {
@@ -56,33 +38,19 @@ export class AuthService {
                 password: obfuscatedPassword,
                 publicKey: publicKeyHex,
             },
+            skipRefresh: true,
         });
         if (!res) return false;
         // ---
-        const { dek: encodedDek, publicKey: serverPublicKey, bypassToken } = res;
-        // -- ottengo il segreto condiviso e lo cifro in localstorage con CKE
-        const sharedSecret = await SHIV.completeHandshake(serverPublicKey);
-        if (!sharedSecret) return false;
-        /**
-         * Inizializzo CKE localmente
-         */
-        const { keyBasic, keyAdvanced } = await CKE.set(bypassToken);
-        if (!keyBasic || !keyAdvanced) return false;
-        // -- cifro localmente lo shared secret con la chiave basic
-        LocalStorage.set('shared-secret', sharedSecret, keyBasic);
+        const { dek: encodedDek } = res;
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
         const KEK = await Cripto.deriveKey(password, salt);
         // ---
         const encryptedDEK = Bytes.base64.decode(encodedDek);
         const DEK = await AES256GCM.decrypt(encryptedDEK, KEK);
-        // -- cifro le credenziali sul localstorage
-        await LocalStorage.set('email-utente', email);
-        await LocalStorage.set('password-utente', password, KEK);
-        await LocalStorage.set('master-key', KEK, keyAdvanced);
-        await LocalStorage.set('DEK', DEK, keyAdvanced);
-        await LocalStorage.set('salt', salt, keyAdvanced);
-        // -- imposto quelle in chiaro sul session storage
+        // -- imposto in chiaro sul session storage
+        SessionStorage.set('access-token-expiry', new Date(Date.now() + (15 * 60 * 1000))); // 15 minuti
         SessionStorage.set('master-key', KEK);
         SessionStorage.set('DEK', DEK);
         SessionStorage.set('salt', salt);
@@ -166,8 +134,8 @@ export class AuthService {
      * @param {string} code 
      * @returns {boolean}
      */
-    static async getShivPrivilegedToken(email, request_id, code) {
-        const res = await API.fetch('/shiv/spt', {
+    static async enableAdvancedSession(email, request_id, code) {
+        const res = await API.fetch('/auth/advanced', {
             method: 'POST',
             body: { email, request_id, code },
             auth: 'otp'
@@ -210,25 +178,6 @@ export class AuthService {
         /**
          * ----
          */
-        // ---
-        return true;
-    }
-    /**
-     * Imposta la chiave master dell'utente nel session storage
-     * @param {Uint8Array} ckeKeyAdvanced 
-     */
-    static async configSessionVariables(ckeKeyAdvanced) {
-        const KEK = await LocalStorage.get('master-key', ckeKeyAdvanced);
-        const DEK = await LocalStorage.get('DEK', ckeKeyAdvanced);
-        const salt = await LocalStorage.get('salt', ckeKeyAdvanced);
-        const email = await LocalStorage.get('email-utente');
-        if (!KEK || !DEK) return false;
-        // ---
-        SessionStorage.set('cke', ckeKeyAdvanced);
-        SessionStorage.set('master-key', KEK);
-        SessionStorage.set('DEK', DEK);
-        SessionStorage.set('salt', salt);
-        SessionStorage.set('email', email);
         // ---
         return true;
     }
@@ -378,77 +327,7 @@ export class AuthService {
     static async start_session() {
         const session_storage_init = SessionStorage.get('master-key') !== null;
         // -- con questa condizione capisco se ce bisogno di accedere o meno
-        const signin_need = !session_storage_init;
-        // -- nessuna necessita di accedere
-        if (!signin_need) return 0;
-        // ---
-        const ckeKeyAdvanced = await CKE.getAdvanced();
-        // -- verifico
-        if (!ckeKeyAdvanced) {
-            console.warn("CKE non ottenuta.");
-            return false;
-        }
-        // -- imposto le variabili di sessione
-        const initialized = await this.configSessionVariables(ckeKeyAdvanced);
-        // ---
-        return initialized;
-    }
-    /**
-     * Restituisce la password dell'utente se il codice è corretto
-     * @param {string} email
-     * @param {Uint8Array} private_key 
-     * @returns {string} Returns
-     */
-    static async master_password_recovery(email, private_key, request_id, code) {
-        const res = await API.fetch(`/auth/recovery`, {
-            method: 'POST',
-            body: { request_id, code }
-        });
-        if (!res) return false;
-        // ---
-        const recovery = new Uint8Array(res.recovery.data);
-        const [encrypted_password, public_key] = msgpack.decode(recovery);
-        // ---
-        const imported_private_key = await ECDH.import_private_key(private_key, LSE.curve);
-        const imported_public_key = await ECDH.import_public_key(public_key, LSE.curve);
-        // ---
-        const simmetric = await ECDH.derive_shared_secret(imported_private_key, imported_public_key);
-        try {
-            const master_password_bytes = await AES256GCM.decrypt(encrypted_password, simmetric);
-            const master_password = new TextDecoder().decode(master_password_bytes);
-            // ---
-            return master_password;
-        } catch (error) {
-            console.warn(error);
-            return null;
-        }
-    }
-    /**
-     * Recovery a device by using mfa
-     * @param {string} email 
-     * @param {string} code 
-     */
-    static async device_recovery_mfa(email, code) {
-        const res = await API.fetch('/auth/token/unlock', {
-            method: 'POST',
-            body: { email, code }
-        });
-        if (!res) return false;
-        return res.message;
-    }
-    /**
-     * Recovery a device by using email
-     * @param {string} email 
-     * @param {string} request_id 
-     * @param {string} code 
-     */
-    static async device_recovery_email(email, request_id, code) {
-        const res = await API.fetch('/auth/token/unlockwithemail', {
-            method: 'POST',
-            body: { email, request_id, code }
-        });
-        if (!res) return false;
-        return res.message;
+        return session_storage_init;
     }
 }
 

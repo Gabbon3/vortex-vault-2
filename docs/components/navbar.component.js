@@ -18,15 +18,15 @@ export class VortexNavbar extends HTMLElement {
             <span class="material-symbols-rounded">mobile_friendly</span>
             <i>Device Recovery</i>
         </a>` : ''}
+        ${this.checkPath('/signin', true) ? `<a title="Sign-in with Passkey" id="signin-passkey" class="red">
+            <span class="material-symbols-rounded">passkey</span>
+            <i>Accedi con Passkey</i>
+        </a>` : ''}
          */
         this.innerHTML = `
         ${true ? `<a class="open blue" data-target-open="win-settings" title="Tools">
             <span class="material-symbols-rounded">handyman</span>
             <i>Tools</i>
-        </a>` : ''}
-        ${this.checkPath('/vault', true) ? `<a class="open purple" data-target-open="win-devices" title="Devices">
-            <span class="material-symbols-rounded">devices</span>
-            <i>Dispositivi</i>
         </a>` : ''}
         ${this.checkPath('/vault', true) ? `<a class="open red" data-target-open="win-passkey" title="Passkey">
             <span class="material-symbols-rounded">passkey</span>
@@ -50,11 +50,6 @@ export class VortexNavbar extends HTMLElement {
         ${this.checkPath('/signin', false) ? `<a href="${this.getPath('signin')}" title="Sign In" class="mint last">
             <span class="material-symbols-rounded">login</span>
             <i>Accedi</i>
-        </a>` : ''}
-
-        ${this.checkPath('/signin', true) ? `<a title="Sign-in with Passkey" id="signin-passkey" class="red">
-            <span class="material-symbols-rounded">passkey</span>
-            <i>Accedi con Passkey</i>
         </a>` : ''}
         ${this.checkPath('/signin', true) ? `<a href="${this.getPath('signup')}" title="Sign Up" class="mint last">
             <span class="material-symbols-rounded">person_add</span>

@@ -1,6 +1,8 @@
 import 'dotenv/config';
+import crypto from "crypto";
 
 export class Config {
+    static initialized = false;
     // 
     static PORT = process.env.PORT || 8080;
     // Database
@@ -16,6 +18,10 @@ export class Config {
     // PASSKEYS
     static ORIGIN = process.env.ORIGIN;
     static RPID = process.env.RPID;
+    // AUTH
+    static JWT_SIGN_KEY = null;
+    static AUTH_TOKEN_EXPIRY = 15 * 60; // 15 minuti
+    static AUTH_ADVANCED_TOKEN_EXPIRY = 7 * 60; // 7 minuti
     // Percorso Rocks DB
     static ROCKSDB_MSG_PATH = process.env.ROCKSDB_MSG_PATH;
     // Percorso cartella dei log
@@ -27,10 +33,28 @@ export class Config {
     static REDIS_HOST = process.env.REDIS_HOST;
     static REDIS_PORT = process.env.REDIS_PORT;
     static REDIS_URL = process.env.REDIS_URL;
-    // SHIV
-    static SHIVPEPPER = Buffer.from(process.env.SHIVPEPPER, "hex");
     // Dev
     static DEV = process.env.DEV === 'true';
     // Numero di tentativi massimi per rate limiter -> email
     static TRLEMAIL = 5; // TRL = Tentativi Rate Limiter per Email
+
+    /**
+     * Inizializza le variabili
+     */
+    static async initialize() {
+        if (this.initialized) return;
+        // ---
+        this.JWT_SIGN_KEY = await crypto.subtle.importKey(
+            "raw",
+            Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'hex'),
+            {
+                name: "HMAC",
+                hash: "SHA-256",
+            },
+            false,
+            ["sign", "verify"]
+        );
+        // ---
+        this.initialized = true;
+    }
 }

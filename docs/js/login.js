@@ -7,7 +7,7 @@ import { Log } from "../utils/log.js";
 import { Windows } from "../utils/windows.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (await AuthService.init()) console.log('SHIV ready');
+    if (await AuthService.init()) console.log('Sessione gia attiva');
     Windows.loader(false);
     /**
      * Micro utility per l'accesso
@@ -77,29 +77,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * LOGGA CON LA PASSKEY
      */
-    document.getElementById('signin-passkey').addEventListener('click', async (e) => {
-        const email = await LocalStorage.get('email-utente');
-        const master_key_exist = LocalStorage.has('master-key');
-        // ---
-        const was_logged = email !== null && master_key_exist;
-        const name = email.split('@')[0];
-        // -- se non ci sono informazioni locali salvate non è possibile accedere con la passkey
-        if (!was_logged) return Log.summon(3, 'There are no data required to sign you in with the passkey, please sign-in with password.');
-        // -- accedo
-        Windows.loader(true);
-        const session_started = await AuthService.start_session();
-        if (session_started !== true) {
-            if (session_started === 0) Log.summon(3, `Hai gia effettiato l'accesso come ${name}`);
-            Windows.loader(false);
-            return;
-        }
-        // ---
-        Log.summon(0, `Bentornato ${name.split('@')[0]}`);
-        Windows.loader(false);
-        setTimeout(() => {
-            window.location.href = '/vault';
-        }, 3000);
-    });
+    // document.getElementById('signin-passkey').addEventListener('click', async (e) => {
+    //     const email = await LocalStorage.get('email-utente');
+    //     const master_key_exist = LocalStorage.has('master-key');
+    //     // ---
+    //     const was_logged = email !== null && master_key_exist;
+    //     const name = email.split('@')[0];
+    //     // -- se non ci sono informazioni locali salvate non è possibile accedere con la passkey
+    //     if (!was_logged) return Log.summon(3, 'There are no data required to sign you in with the passkey, please sign-in with password.');
+    //     // -- accedo
+    //     Windows.loader(true);
+    //     const session_started = await AuthService.start_session();
+    //     if (session_started !== true) {
+    //         if (session_started === 0) Log.summon(3, `Hai gia effettiato l'accesso come ${name}`);
+    //         Windows.loader(false);
+    //         return;
+    //     }
+    //     // ---
+    //     Log.summon(0, `Bentornato ${name.split('@')[0]}`);
+    //     Windows.loader(false);
+    //     setTimeout(() => {
+    //         window.location.href = '/vault';
+    //     }, 3000);
+    // });
     /**
      * PASSWORD DIMENTICATA
      */

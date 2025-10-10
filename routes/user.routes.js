@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { UserController } from "../controllers/user.controller.js";
-import { verifyEmailCode, verifyPassword, verifyAuth, verifyShivPrivilegedToken } from "../middlewares/authMiddleware.js";
+import { verifyEmailCode, verifyPassword, verifyAuth, verifySignatureOnly } from "../middlewares/authMiddleware.js";
 import { verifyPasskey } from "../middlewares/passkey.middleware.js";
 import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
 // -- router
@@ -18,11 +18,14 @@ router.use(limiter);
 // -- AUTH ROUTES (USER)
 router.post('/signup', controller.signup);
 router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
-router.post('/password', verifyAuth({ replayProtection: true }), verifyShivPrivilegedToken, controller.changePassword);
+router.post('/password', verifyAuth({ advanced: true }), controller.changePassword);
+router.get('/nonce', controller.getNonce);
+router.post('/refresh', verifySignatureOnly, controller.refreshAccessToken);
+router.post('/advanced', verifyAuth(), verifyEmailCode, controller.enableAdvancedSession);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);
 // -- QUICK SIGN IN
-router.post('/quick-sign-in', verifyAuth(), verifyShivPrivilegedToken, controller.quick_signin);
+router.post('/quick-sign-in', verifyAuth(), controller.quick_signin);
 router.get('/quick-sign-in/:id', controller.get_quick_signin);
 // -- EMAIL CODES
 router.post('/email-verification', controller.sendEmailCode);
@@ -30,7 +33,7 @@ router.post('/email-verification-test', verifyEmailCode, controller.test_email_a
 // -- ACCOUNT VERIFY
 router.post('/verify-account', verifyEmailCode, controller.verify_account);
 // -- SIGN-OUT
-router.post('/signout', verifyAuth({ checkIntegrity: false }), controller.signout);
+router.post('/signout', verifyAuth(), controller.signout);
 router.post('/clear-cookies', controller.clearCookies);
 // -- DELETE
 router.post('/delete', verifyPasskey(true), controller.delete);

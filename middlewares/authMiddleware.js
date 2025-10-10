@@ -1,78 +1,52 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { UserService } from "../services/user.service.js";
-import { JWT } from "../utils/jwt.utils.js";
 // import { Roles } from "../utils/roles.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
 import emailContents from "../docs/utils/automated.mails.js";
-import { SHIV } from "../protocols/SHIV.node.js";
 import { verifyPasskey } from "./passkey.middleware.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
+import { JWT } from "../utils/jwt.utils.js";
+import { Config } from "../server_config.js";
 
 /**
- * Middleware di autenticazione e autorizzazione basato sui componenti SHIV: JWT e Integrity.
- * => req.payload = payload { uid, kid }
- * @function verifyAccessToken
- * @param {Object} [options={}] - Opzioni per configurare il middleware.
- * @param {boolean} [options.checkIntegrity=true] - Se true, abilita la verifica dell'integrità tramite header 'X-Integrity'.
- * @param {boolean} [options.replayProtection=false] - Se true, effettua un controllo sul salt verificando che non sia già stato usato.
- * @returns {Function}
+ * Verifica un access token
  */
 export const verifyAuth = (options = {}) => {
-    const { checkIntegrity = true, replayProtection = false } = options;
-    if (replayProtection && !checkIntegrity) {
-        throw new Error("ReplayProtection requires checkIntegrity = true");
-    }
+    const { verifySignatureOnly = false, advanced = false } = options;
     return async (req, res, next) => {
-        const jwt = cookieUtils.getCookie(req, 'jwt') || req.headers.authorization?.split(" ")[1];
-        // -- verifico che esista
-        if (!jwt) return res.status(401).json({ error: "Access denied" });
-        // ---
-        const shiv = new SHIV();
-        const kid = shiv.getKidFromJWT(jwt);
-        // ---
-        const jwtSignKey = await shiv.getSignKey(kid, 'jwt-signing');
-        if (!jwtSignKey)
-            return res.status(401).json({ error: "Access denied" });
-        // -- verifico che l'access token sia valido
-        const jsonwebtoken = new JWT();
-        const payload = jsonwebtoken.verify(jwt, jwtSignKey);
-        if (!payload) return res.status(401).json({ error: "Access denied" });
-        // -- se è tutto ok aggiungo il payload dell'utente alla request
+        const jwt = cookieUtils.getCookie(req, "jwt");
+        if (!jwt) return res.status(401).json({ error: "Accesso negato" });
+        // -- VERIFICA
+        let payload = {};
+        if (verifySignatureOnly) {
+            payload = await JWT.verifySignatureOnly(jwt, Config.JWT_SIGN_KEY)
+        } else {
+            payload = await JWT.verify(jwt, Config.JWT_SIGN_KEY);
+        }
+        if (!payload) return res.status(401).json({ error: "Accesso negato" });
+        // -- VERIFICO ADVANCED
+        if (advanced && (!payload.advanced || payload.advanced !== true)) {
+            return res.status(403).json({ error: "Sessione avanzata non attivata" });
+        }
+        // memorizzo il payload nella request
         req.payload = payload;
-        // -- verifica se il payload è conforme
-        if (!req.payload.uid)
-            return res.status(400).json({ error: "Sign-in again" });
-        /**
-         * Verifico il replay se richiesto
-         */
-        const integrity = req.get("X-Integrity");
-        if (replayProtection) {
-            const isReplay = await shiv.isReplay(kid, integrity);
-            if (isReplay)
-                return res.status(409).json({ error: "Replay attemp detected" });
-        }
-        /**
-         * Verifico l'integrità della richiesta
-         */
-        if (checkIntegrity) {
-            if (!integrity)
-                return res.status(403).json({ error: "Integrity not found" });
-            // -- verifico l'integrity
-            const { kid } = payload;
-            const verified = await shiv.verifyIntegrity(kid, req.method, `${req.baseUrl}${req.path}`, integrity);
-            // ---
-            if (verified === -1)
-                return res.status(404).json({ error: "Secret not found" });
-            if (!verified)
-                return res.status(403).json({ error: "Integrity failed" });
-        }
-        // -- passo al prossimo middleware o controller
         next();
     };
 };
+
+export const verifySignatureOnly = asyncHandler(async (req, res, next) => {
+    const jwt = cookieUtils.getCookie(req, "jwt");
+    if (!jwt) return res.status(401).json({ error: "Accesso negato" });
+    // ---
+    const payload = await JWT.verifySignatureOnly(jwt, Config.JWT_SIGN_KEY);
+    if (!payload) return res.status(401).json({ error: "Accesso negato" });
+    // memorizzo il payload nella request
+    req.payload = payload;
+    next();
+});
 
 /**
  * Verifica un shiv privileged token
@@ -80,17 +54,19 @@ export const verifyAuth = (options = {}) => {
  */
 export const verifyShivPrivilegedToken = asyncHandler(
     async (req, res, next) => {
-        if (!req.payload) throw new Error("Payload mancante, è necessario richiamare prima verifyAuth");
+        if (!req.payload)
+            throw new Error(
+                "Payload mancante, è necessario richiamare prima verifyAuth"
+            );
         // ---
-        const ppt = cookieUtils.getCookie(req, 'ppt');
-        if (!ppt)
-            return res.status(401).json({ error: "Access denied" });
+        const ppt = cookieUtils.getCookie(req, "ppt");
+        if (!ppt) return res.status(401).json({ error: "Access denied" });
         // ---
         const shiv = new SHIV();
         // -- ottengo il kid
         let kid = req.payload.kid;
         // ---
-        const pptSignKey = await shiv.getSignKey(kid, 'ppt-signing');
+        const pptSignKey = await shiv.getSignKey(kid, "ppt-signing");
         if (!pptSignKey)
             return res.status(401).json({ error: "Access denied" });
         // -- verifico che il ppt sia valido
@@ -110,17 +86,24 @@ export const verifyShivPrivilegedToken = asyncHandler(
 export const verifyPassword = asyncHandler(async (req, res, next) => {
     const from_token = req.payload ? true : false;
     // -- ottengo un identificatore per l'utente
-    if (!from_token && !req.body.email) throw new CError('ValidationError', 'Any information to identify user', 422);
+    if (!from_token && !req.body.email)
+        throw new CError(
+            "ValidationError",
+            "Any information to identify user",
+            422
+        );
     // -- ottengo le variabili
     const password = req.body.password;
     const uid = from_token ? req.payload.uid : req.body.email;
     // -- istanzio il servizio utente e recupero il segreto
     const service = new UserService();
-    const user = from_token ? await service.find_by_id(uid) : await service.find_by_email(uid);
+    const user = from_token
+        ? await service.find_by_id(uid)
+        : await service.find_by_email(uid);
     // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
     if (!user) throw new CError("ValidationError", "User not found", 404);
     const valid = await service.verifyPassword(password, user.password);
-    if (!valid) throw new CError("AuthError", "Invalid password", 403);
+    if (!valid) throw new CError("AuthError", "Password non valida", 403);
     next();
 });
 /**
@@ -137,7 +120,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const { hash: salted_hash, tryes, email } = record;
     // -- verifico il numero di tentativi
     if (tryes >= 3) {
-        const ip_address = req.headers['x-forwarded-for'] || req.ip;
+        const ip_address = req.headers["x-forwarded-for"] || req.ip;
         // -- invio una mail per avvisare l'utente del tentativo fallito e del possibile attacco
         const { text, html } = await emailContents.otpFailedAttempt({
             email,
@@ -156,8 +139,8 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const valid = await cripto.verifyHashWithSalt(code, salted_hash);
     if (!valid) {
         // -- aumento il numero di tentativi
-        await RedisDB.update(request_id, { 
-            hash: salted_hash, 
+        await RedisDB.update(request_id, {
+            hash: salted_hash,
             tryes: tryes + 1,
             email: email,
         });
@@ -165,7 +148,7 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
         throw new CError("AuthError", "Invalid code", 403);
     }
     // memorizzo l'utente che ha fatto la richiesta
-    req.payload = { email };
+    req.payload = { ...req.payload, email };
     // -- elimino la richiesta dal db
     // await RedisDB.delete(request_id); // commentato per abilitare utilizzo multiplo del codice nella sua finestra temporale
     // -- se il codice è valido, passo al prossimo middleware
@@ -173,10 +156,10 @@ export const verifyEmailCode = asyncHandler(async (req, res, next) => {
 });
 
 const authStrategies = {
-    'psk': verifyPasskey(),
-    'otp': verifyEmailCode,
-    'psw': verifyPassword,
-}
+    psk: verifyPasskey(),
+    otp: verifyEmailCode,
+    psw: verifyPassword,
+};
 
 /**
  * Middleware per selezionare in automatico l'autenticatore da usare
@@ -185,15 +168,15 @@ const authStrategies = {
  */
 export const authSelector = (allowedMethods = []) => {
     return (req, res, next) => {
-        const method = req.headers['x-authentication-method'];
+        const method = req.headers["x-authentication-method"];
 
         if (!method || !allowedMethods.includes(method)) {
-            return res.status(400).json({ error: 'Auth method not allowed' });
+            return res.status(400).json({ error: "Auth method not allowed" });
         }
 
         const middleware = authStrategies[method];
         if (!middleware) {
-            return res.status(400).json({ error: 'Not valid auth method' });
+            return res.status(400).json({ error: "Not valid auth method" });
         }
 
         return middleware(req, res, next);

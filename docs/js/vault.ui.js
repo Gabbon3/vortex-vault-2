@@ -7,7 +7,6 @@ import { Windows } from "../utils/windows.js";
 import { Search } from "../utils/search.js";
 import { ptg } from "../utils/ptg.js";
 import { SessionStorage } from "../utils/session.js";
-import { DeviceUI } from "./device.ui.js";
 import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";
@@ -19,7 +18,7 @@ const newVaultsInsertedData = {};
 document.addEventListener('DOMContentLoaded', async () => {
     if (window.location.pathname !== '/vault') return;
     // ---
-    if (await AuthService.init()) console.log('SHIV ready');
+    if (await AuthService.init()) console.log('Sessione gia attiva');
     await VaultUI.init();
     const addButtonListeners = () => {
         const config = [
@@ -243,7 +242,6 @@ export class VaultUI {
         setTimeout(async () => {
             // ---
             await this.init_db_dom();
-            await DeviceUI.init();
             await PasskeyUI.init();
             // ---
             if (timeout > 0) Log.summon(0, `Bentornato ${SessionStorage.get('email').split('@')[0]}`);

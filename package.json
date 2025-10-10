@@ -19,7 +19,7 @@
         "express-rate-limit": "^7.4.1",
         "fido2-lib": "^3.5.3",
         "ioredis": "^5.6.1",
-        "jsonwebtoken": "^9.0.2",
+        "jose": "^6.1.0",
         "level-rocksdb": "^5.0.0",
         "msgpack-lite": "^0.1.26",
         "mysql2": "^3.11.3",

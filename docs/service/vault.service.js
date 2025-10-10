@@ -23,12 +23,12 @@ export class VaultService {
      */
     static async configSecrets() {
         // -- ottengo la scadenza dell'access token
-        const ckeKeyAdvanced = SessionStorage.get("cke-key-advanced");
+        const accessTokenExpiry = SessionStorage.get("access-token-expiry");
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
-        if (ckeKeyAdvanced === null) return false;
-        this.KEK = await LocalStorage.get("master-key", ckeKeyAdvanced);
-        this.DEK = await LocalStorage.get("DEK", ckeKeyAdvanced);
-        this.salt = await LocalStorage.get("salt", ckeKeyAdvanced);
+        if (accessTokenExpiry === null) return false;
+        this.KEK = await SessionStorage.get("master-key");
+        this.DEK = await SessionStorage.get("DEK");
+        this.salt = await SessionStorage.get("salt");
         return this.KEK && this.DEK && this.salt ? true : false;
     }
     /**

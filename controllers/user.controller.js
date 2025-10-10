@@ -6,19 +6,17 @@ import { Cripto } from "../utils/cryptoUtils.js";
 import { MFAService } from "../services/mfa.service.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Mailer } from "../config/mail.js";
-import { Validator } from "../docs/utils/validator.js";
+import { Validator } from "../utils/validator.js";
 import { v7 as uuidv7 } from "uuid";
 import emailContents from "../docs/utils/automated.mails.js";
 import { Config } from "../server_config.js";
-import { ShivService } from "../services/shiv.service.js";
-import { SHIV } from "../protocols/SHIV.node.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
-import msgpack from "../docs/utils/msgpack.min.js";
+import { PoP } from "../protocols/PoP.node.js";
 
 export class UserController {
     constructor() {
         this.service = new UserService();
-        this.shivService = new ShivService();
+        this.pop = new PoP();
     }
     /**
      * Registra utente
@@ -47,19 +45,11 @@ export class UserController {
      */
     signin = asyncHandler(async (req, res) => {
         const { email, publicKey: publicKeyHex } = req.body;
-        // -- verifico se l'utente è già autenticato
-        const jwtCookie = cookieUtils.getCookie(req, 'jwt');
-        if (jwtCookie) {
-            // -- se si elimino dal db
-            const kid = this.shivService.shiv.getKidFromJWT(jwtCookie);
-            if (kid) await this.shivService.delete({ kid }, true);
-        }
         /**
          * Servizio
          */
-        const { uid, salt, dek, jwt, publicKey: serverPublicKey, bypassToken } =
+        const { uid, salt, dek, jwt } =
             await this.service.signin({
-                request: req,
                 email,
                 publicKeyHex
             });
@@ -67,28 +57,72 @@ export class UserController {
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
-            maxAge: SHIV.jwtLifetime * 1000,
+            maxAge: 24 * 60 * 60 * 1000,
             sameSite: "Lax",
             path: "/",
         });
-        cookieUtils.setCookie(req, res, 'uid', uid, {
-            httpOnly: true,
-            secure: true,
-            maxAge: SHIV.jwtLifetime * 1000,
-            sameSite: "Lax",
-            path: "/",
-        })
         // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
         await RedisDB.delete(`login-attempts-${email}`);
         // ---
         res.status(201).json({
-            jwt,
-            publicKey: serverPublicKey,
             uid,
             salt,
-            dek: dek.toString('base64'),
-            bypassToken,
+            dek: dek.toString('base64')
         });
+    });
+    /**
+     * Restituisce un nonce per l'autenticazione
+     */
+    getNonce = asyncHandler(async (req, res) => {
+        const cripto = new Cripto();
+        const nonce = cripto.randomBytes(20, 'hex');
+        // -- salvo nel ramdb
+        const isSet = await RedisDB.set(`nonce-${nonce}`, true, 60); // valido 1 minuto
+        if (!isSet) throw new Error("Not able to generate nonce");
+        // ---
+        res.status(200).json({ nonce });
+    });
+    /**
+     * Aggiorna l'access token verificando la firma del nonce
+     */
+    refreshAccessToken = asyncHandler(async (req, res) => {
+        // -- verifico che la firma del jwt sia corretta
+        const { signedNonce, nonce } = req.body;
+        
+        Validator.of(signedNonce).string();
+        Validator.of(nonce).string().min(40).max(40);
+
+        // -- verifico che il nonce esista
+        const exists = await RedisDB.get(`nonce-${nonce}`);
+        if (!exists) throw new CError("ValidationError", "Nonce non valido o scaduto", 422);
+        // -- verifico la firma
+        const isValid = await this.pop.verifyNonceSignature(nonce, signedNonce, req.payload.pub);
+        if (!isValid) throw new CError("AuthenticationError", "Firma non valida", 401);
+        // -- se è tutto ok rigenero un access token
+        const jwt = await this.pop.generateAccessToken(req.payload.uid, req.payload.pub);
+        cookieUtils.setCookie(req, res, 'jwt', jwt, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Lax",
+            path: "/",
+        });
+        res.status(200).json({ message: "Access token refreshed" });
+    });
+
+    /**
+     * Ricalcolo il jwt aggiungendo la sessione avanzata
+     */
+    enableAdvancedSession = asyncHandler(async (req, res) => {
+        const { uid, pub: publicKeyHex } = req.payload;
+        // ---
+        const advancedJwt = await this.pop.generateAccessToken(uid, publicKeyHex, { advanced: true }, Config.AUTH_ADVANCED_TOKEN_EXPIRY);
+        cookieUtils.setCookie(req, res, 'jwt', advancedJwt, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+            path: "/",
+        });
+        res.status(200).json({ message: "Advanced session enabled" });
     });
     /**
      * Effettua la disconnessione eliminando i cookie e il refresh token
@@ -180,8 +214,9 @@ export class UserController {
      */
     sendEmailCode = asyncHandler(async (req, res) => {
         const email = req.body.email;
-        if (!email || !Validator.email(email))
-            throw new CError("ValidationError", "No email provided", 422);
+        
+        Validator.of(email).email();
+
         const cripto = new Cripto();
         const code = cripto.randomMfaCode();
         const request_id = `ear-${email}`; // ear = email auth request

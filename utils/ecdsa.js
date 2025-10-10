@@ -120,9 +120,10 @@ export class ECDSA {
     /**
      * Importa una chiave pubblica da formato raw
      * @param {ArrayBuffer} rawPublicKey - Chiave pubblica in formato raw
+     * @param {boolean} [exportable=true] - Se true, la chiave sarà esportabile
      * @returns {Promise<CryptoKey>} Chiave pubblica come CryptoKey
      */
-    static async importPublicKeyRaw(rawPublicKey) {
+    static async importPublicKeyRaw(rawPublicKey, exportable = true) {
         try {
             const publicKey = await crypto.subtle.importKey(
                 'raw',
@@ -131,7 +132,7 @@ export class ECDSA {
                     name: 'ECDSA',
                     namedCurve: 'P-256'
                 },
-                true,
+                exportable,
                 ['verify']
             );
             return publicKey;
@@ -143,9 +144,10 @@ export class ECDSA {
     /**
      * Importa una chiave privata da formato PKCS8
      * @param {ArrayBuffer} rawPrivateKey - Chiave privata in formato PKCS8
+     * @param {boolean} [exportable=true] - Se true, la chiave sarà esportabile
      * @returns {Promise<CryptoKey>} Chiave privata come CryptoKey
      */
-    static async importPrivateKeyRaw(rawPrivateKey) {
+    static async importPrivateKeyRaw(rawPrivateKey, exportable = true) {
         try {
             const privateKey = await crypto.subtle.importKey(
                 'pkcs8',
@@ -154,7 +156,7 @@ export class ECDSA {
                     name: 'ECDSA',
                     namedCurve: 'P-256'
                 },
-                true,
+                exportable,
                 ['sign']
             );
             return privateKey;

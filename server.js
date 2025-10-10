@@ -8,7 +8,6 @@ import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
 import cke_routes from './routes/cke.routes.js';
-import shiv_routes from './routes/shiv.routes.js';
 import './models/associations.js';
 import { cors_middleware, csp_middleware, security_headers } from './config/csp.js';
 import { error_handler_middleware } from './middlewares/errorMiddleware.js';
@@ -18,8 +17,16 @@ import https from 'https';
 import fs from 'fs';
 import { date } from './utils/dateUtils.js';
 import { Config } from './server_config.js';
+Config.initialize();
 // -- Chron e Jobs
 import './jobs/jobs.js';
+
+/**
+ * Globals
+ */
+// import { webcrypto } from 'node:crypto';
+// globalThis.crypto = webcrypto;
+
 /**
  * MIDDLEWARES
  * qui ci sono i middleware che verranno utilizzati in tutte le routes
@@ -48,7 +55,6 @@ app.use((req, res, next) => {
  */
 app.use('/auth', user_routes);
 app.use('/cke', cke_routes);
-app.use('/shiv', shiv_routes);
 app.use('/auth/passkey', passkey_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);

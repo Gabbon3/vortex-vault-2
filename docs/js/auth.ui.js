@@ -1,9 +1,7 @@
 import { Form } from "../utils/form.js";
 import { AuthService } from "../service/auth.service.js";
 import { Log } from "../utils/log.js";
-import { Bytes } from "../utils/bytes.js";
 import { LocalStorage } from "../utils/local.js";
-import { FileUtils } from "../utils/file.utils.js";
 import { QrCodeDisplay } from "../utils/qrcode-display.js";
 import { Windows } from "../utils/windows.js";
 
@@ -33,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Windows.loader(true);
         const email = await LocalStorage.get('email-utente');
-        const activated = await AuthService.getShivPrivilegedToken(email, request_id, code);
+        const activated = await AuthService.enableAdvancedSession(email, request_id, code);
         if (activated) {
             Log.summon(0, 'Sessione avanzata iniziata');
             form.reset();
