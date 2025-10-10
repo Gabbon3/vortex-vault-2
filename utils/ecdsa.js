@@ -1,79 +1,167 @@
 import crypto from "crypto";
 
 export class ECDSA {
-    /**
-     * Firma digitalmente un dato utilizzando ECDSA con una chiave privata.
-     *
-     * @param {Uint8Array} data - I dati da firmare.
-     * @param {Uint8Array} private_key - La chiave privata in formato binario (P-256).
-     * @returns {Uint8Array} - La firma digitale come Uint8Array.
-     */
-    static sign(data, private_key) {
-        const buffer_data = Buffer.from(data);
-        const buffer_private_key = Buffer.from(private_key);
-        // -- creo la firma usando ECDSA con la curva P-256
-        const sign = crypto.createSign("SHA256");
-        sign.update(buffer_data);
-        const signature = sign.sign({
-            key: buffer_private_key,
-            dsaEncoding: "ieee-p1363", // Standard per ECDSA
-        });
-        // ---
-        return new Uint8Array(signature);
+    constructor() {
+        this.algorithm = {
+            name: 'ECDSA',
+            namedCurve: 'P-256'
+        };
+        this.signAlgorithm = {
+            name: 'ECDSA',
+            hash: { name: 'SHA-256' }
+        };
     }
+
     /**
-     * Verifica una firma digitale utilizzando ECDSA con una chiave pubblica.
-     *
-     * @param {Uint8Array} data - I dati originali da verificare.
-     * @param {Uint8Array} signature - La firma digitale da verificare.
-     * @param {Uint8Array} public_key - La chiave pubblica in formato binario (P-256).
-     * @returns {boolean} - Restituisce true se la firma è valida, altrimenti false.
+     * Genera una coppia di chiavi ECDSA
+     * @param {boolean} [exportable=true] - Se true, le chiavi saranno esportabili
+     * @returns {Promise<{publicKey: CryptoKey, privateKey: CryptoKey}>}
      */
-    static verify(data, signature, public_key) {
-        const buffer_data = Buffer.from(data);
-        const buffer_signature = Buffer.from(signature);
-        const public_key_pem = this.rawToPem(public_key);
-        // -- verifico la firma con la chiave pubblica
-        const verify = crypto.createVerify("SHA256");
-        verify.update(buffer_data);
-        const is_valid = verify.verify(
-            {
-                key: public_key_pem,
-                dsaEncoding: "ieee-p1363", // Standard per ECDSA
-            },
-            buffer_signature
-        );
-        // ---
-        return is_valid;
+    static async generateKeys(exportable = true) {
+        try {
+            const keyPair = await crypto.subtle.generateKey(
+                {
+                    name: 'ECDSA',
+                    namedCurve: 'P-256'
+                },
+                true, // extractable
+                ['sign', 'verify'] // key usages
+            );
+
+            return {
+                publicKey: keyPair.publicKey,
+                privateKey: keyPair.privateKey
+            };
+        } catch (error) {
+            throw new Error(`Errore nella generazione delle chiavi: ${error.message}`);
+        }
     }
+
     /**
-     * Converte una chiave COSE a PEM
-     * @param {Uint8Array} coseKey 
-     * @returns {string}
+     * Firma un messaggio con la chiave privata
+     * @param {CryptoKey} privateKey - Chiave privata per firmare
+     * @param {ArrayBuffer} message - Messaggio da firmare
+     * @returns {Promise<ArrayBuffer>} Firma in formato raw
      */
-    static rawToPem(publicKeyRaw) {
-        // La chiave raw è composta da x (32 byte) + y (32 byte)
-        const x = publicKeyRaw.slice(0, 32);
-        const y = publicKeyRaw.slice(32, 64);
-    
-        // Costruzione del formato DER
-        const publicKeyDer = Buffer.concat([
-            Buffer.from('3059', 'hex'), // SEQUENCE
-            Buffer.from('3013', 'hex'), // SEQUENCE
-            Buffer.from('0607', 'hex'), // OBJECT IDENTIFIER
-            Buffer.from('2A8648CE3D0201', 'hex'), // id-ecPublicKey
-            Buffer.from('0608', 'hex'), // OBJECT IDENTIFIER
-            Buffer.from('2A8648CE3D030107', 'hex'), // secp256r1
-            Buffer.from('0344', 'hex'), // BIT STRING
-            Buffer.concat([
-                Buffer.from('00', 'hex'), // BIT STRING padding
-                Buffer.from('04', 'hex'), // Uncompressed point indicator
-                x,
-                y,
-            ]),
-        ]);
-    
-        // Convertire in formato PEM
-        return `-----BEGIN PUBLIC KEY-----\n${publicKeyDer.toString('base64')}\n-----END PUBLIC KEY-----`;
+    static async sign(privateKey, message) {
+        try {
+            const signature = await crypto.subtle.sign(
+                {
+                    name: 'ECDSA',
+                    hash: { name: 'SHA-256' }
+                },
+                privateKey,
+                message
+            );
+
+            return signature;
+        } catch (error) {
+            throw new Error(`Errore nella firma: ${error.message}`);
+        }
+    }
+
+    /**
+     * Verifica una firma con la chiave pubblica
+     * @param {CryptoKey} publicKey - Chiave pubblica per verificare
+     * @param {ArrayBuffer} signature - Firma da verificare
+     * @param {ArrayBuffer} message - Messaggio originale
+     * @returns {Promise<boolean>} True se la firma è valida
+     */
+    static async verify(publicKey, signature, message) {
+        try {
+            const isValid = await crypto.subtle.verify(
+                {
+                    name: 'ECDSA',
+                    hash: { name: 'SHA-256' }
+                },
+                publicKey,
+                signature,
+                message
+            );
+
+            return isValid;
+        } catch (error) {
+            throw new Error(`Errore nella verifica: ${error.message}`);
+        }
+    }
+
+    /**
+     * Esporta una chiave pubblica in formato raw
+     * @param {CryptoKey} publicKey - Chiave pubblica da esportare
+     * @returns {Promise<ArrayBuffer>} Chiave pubblica in formato raw
+     */
+    static async exportPublicKeyRaw(publicKey) {
+        try {
+            const rawKey = await crypto.subtle.exportKey(
+                'raw',
+                publicKey
+            );
+            return rawKey;
+        } catch (error) {
+            throw new Error(`Errore nell'esportazione della chiave pubblica: ${error.message}`);
+        }
+    }
+
+    /**
+     * Esporta una chiave privata in formato raw
+     * @param {CryptoKey} privateKey - Chiave privata da esportare
+     * @returns {Promise<ArrayBuffer>} Chiave privata in formato raw
+     */
+    static async exportPrivateKeyRaw(privateKey) {
+        try {
+            const rawKey = await crypto.subtle.exportKey(
+                'pkcs8',
+                privateKey
+            );
+            return rawKey;
+        } catch (error) {
+            throw new Error(`Errore nell'esportazione della chiave privata: ${error.message}`);
+        }
+    }
+
+    /**
+     * Importa una chiave pubblica da formato raw
+     * @param {ArrayBuffer} rawPublicKey - Chiave pubblica in formato raw
+     * @returns {Promise<CryptoKey>} Chiave pubblica come CryptoKey
+     */
+    static async importPublicKeyRaw(rawPublicKey) {
+        try {
+            const publicKey = await crypto.subtle.importKey(
+                'raw',
+                rawPublicKey,
+                {
+                    name: 'ECDSA',
+                    namedCurve: 'P-256'
+                },
+                true,
+                ['verify']
+            );
+            return publicKey;
+        } catch (error) {
+            throw new Error(`Errore nell'importazione della chiave pubblica: ${error.message}`);
+        }
+    }
+
+    /**
+     * Importa una chiave privata da formato PKCS8
+     * @param {ArrayBuffer} rawPrivateKey - Chiave privata in formato PKCS8
+     * @returns {Promise<CryptoKey>} Chiave privata come CryptoKey
+     */
+    static async importPrivateKeyRaw(rawPrivateKey) {
+        try {
+            const privateKey = await crypto.subtle.importKey(
+                'pkcs8',
+                rawPrivateKey,
+                {
+                    name: 'ECDSA',
+                    namedCurve: 'P-256'
+                },
+                true,
+                ['sign']
+            );
+            return privateKey;
+        } catch (error) {
+            throw new Error(`Errore nell'importazione della chiave privata: ${error.message}`);
+        }
     }
 }
