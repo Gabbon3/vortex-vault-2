@@ -1,16 +1,14 @@
 import crypto from "crypto";
 
 export class ECDSA {
-    constructor() {
-        this.algorithm = {
-            name: 'ECDSA',
-            namedCurve: 'P-256'
-        };
-        this.signAlgorithm = {
-            name: 'ECDSA',
-            hash: { name: 'SHA-256' }
-        };
-    }
+    static algorithm = {
+        name: 'ECDSA',
+        namedCurve: 'P-256'
+    };
+    static signAlgorithm = {
+        name: 'ECDSA',
+        hash: { name: 'SHA-256' }
+    };
 
     /**
      * Genera una coppia di chiavi ECDSA
@@ -21,10 +19,10 @@ export class ECDSA {
         try {
             const keyPair = await crypto.subtle.generateKey(
                 {
-                    name: 'ECDSA',
-                    namedCurve: 'P-256'
+                    name: ECDSA.algorithm.name,
+                    namedCurve: ECDSA.algorithm.namedCurve
                 },
-                true, // extractable
+                exportable,
                 ['sign', 'verify'] // key usages
             );
 
@@ -47,8 +45,8 @@ export class ECDSA {
         try {
             const signature = await crypto.subtle.sign(
                 {
-                    name: 'ECDSA',
-                    hash: { name: 'SHA-256' }
+                    name: ECDSA.algorithm.name,
+                    hash: { name: ECDSA.signAlgorithm.hash.name }
                 },
                 privateKey,
                 message
@@ -71,8 +69,8 @@ export class ECDSA {
         try {
             const isValid = await crypto.subtle.verify(
                 {
-                    name: 'ECDSA',
-                    hash: { name: 'SHA-256' }
+                    name: ECDSA.algorithm.name,
+                    hash: { name: ECDSA.signAlgorithm.hash.name }
                 },
                 publicKey,
                 signature,
