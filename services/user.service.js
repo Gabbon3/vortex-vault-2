@@ -65,11 +65,11 @@ export class UserService {
     }
 
     /**
-     *
+     * Esegue il login dell'utente
      * @param {Request} request
      * @param {string} email
      * @param {string} publicKeyHex - chiave pubblica ECDSA del client in esadecimale
-     * @returns {}
+     * @returns {{ uid: string, salt: Uint8Array, dek: Uint8Array, jwt: string, chain: string }} uid, salt, dek, jwt e chain
      */
     async signin({ email, publicKeyHex }) {
         // -- cerco se l'utente esiste
@@ -85,10 +85,15 @@ export class UserService {
                 401
             );
         /**
-         * Genero l'access token
+         * Genero l'access token e la chain
          */
-        const jwt = await this.pop.generateAccessToken(user.id, publicKeyHex);
-        return { uid: user.id, salt: user.salt, dek: user.dek, jwt };
+        const { jwt, chain } = await this.pop.generateAccessToken({ 
+            uid: user.id,
+            pub: publicKeyHex,
+            chain: true,
+            counter: 0
+        });
+        return { uid: user.id, salt: user.salt, dek: user.dek, jwt, chain };
     }
 
     /**

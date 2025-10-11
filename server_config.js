@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import crypto from "crypto";
+import { Bytes } from './utils/bytes.js';
 
 export class Config {
     static initialized = false;
@@ -11,8 +12,8 @@ export class Config {
     static DB_USER = process.env.DB_USER;
     static DB_PASSWORD = process.env.DB_PASSWORD;
     // Mail
-    static FISH_KEY = Buffer.from(process.env.FISH_SECRET, "hex");
-    static FISH_SALT = Buffer.from(process.env.FISH_SALT, "hex");
+    static FISH_KEY = null;
+    static FISH_SALT = Bytes.hex.decode(process.env.FISH_SALT);
     static EMAIL_USER = process.env.EMAIL_USER;
     static EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
     // PASSKEYS
@@ -21,6 +22,7 @@ export class Config {
     // AUTH
     static JWT_SIGN_KEY = null;
     static AUTH_TOKEN_EXPIRY = 15 * 60; // 15 minuti
+    static AUTH_TOKEN_COOKIE_EXPIRY = 24 * 60 * 60 * 1000;
     static AUTH_ADVANCED_TOKEN_EXPIRY = 7 * 60; // 7 minuti
     // Percorso Rocks DB
     static ROCKSDB_MSG_PATH = process.env.ROCKSDB_MSG_PATH;
@@ -47,6 +49,17 @@ export class Config {
         this.JWT_SIGN_KEY = await crypto.subtle.importKey(
             "raw",
             Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'hex'),
+            {
+                name: "HMAC",
+                hash: "SHA-256",
+            },
+            false,
+            ["sign", "verify"]
+        );
+        // ---
+        this.FISH_KEY = await crypto.subtle.importKey(
+            "raw",
+            Buffer.from(process.env.FISH_SECRET, 'hex'),
             {
                 name: "HMAC",
                 hash: "SHA-256",

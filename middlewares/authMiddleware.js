@@ -1,7 +1,6 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
 import { UserService } from "../services/user.service.js";
-// import { Roles } from "../utils/roles.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Cripto } from "../utils/cryptoUtils.js";
 import { Mailer } from "../config/mail.js";
@@ -10,75 +9,85 @@ import { verifyPasskey } from "./passkey.middleware.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
 import { JWT } from "../utils/jwt.utils.js";
 import { Config } from "../server_config.js";
+import { PoP } from "../protocols/PoP.node.js";
+import { Validator } from "../utils/validator.js";
 
 /**
- * Verifica un access token
+ * Verifica l'access token
+ * @param {{}} options
+ * @param {boolean} [options.ignoreExpiration=false] - se true ignora la scadenza del token
+ * @param {boolean} [options.ignoreChain=false] - se true ignora la verifica della chain
+ * @param {boolean} [options.advanced=false] - se true richiede che la sessione sia avanzata
+ * @returns {Function} next
  */
 export const verifyAuth = (options = {}) => {
-    const { verifySignatureOnly = false, advanced = false } = options;
-    return async (req, res, next) => {
+    const { ignoreExpiration = false, advanced = false, ignoreChain = false } = options;
+    return asyncHandler(async (req, res, next) => {
         const jwt = cookieUtils.getCookie(req, "jwt");
-        if (!jwt) return res.status(401).json({ error: "Accesso negato" });
-        // -- VERIFICA
-        let payload = {};
-        if (verifySignatureOnly) {
-            payload = await JWT.verifySignatureOnly(jwt, Config.JWT_SIGN_KEY)
-        } else {
-            payload = await JWT.verify(jwt, Config.JWT_SIGN_KEY);
+        if (!jwt) {
+            throw new CError("Forbidden", "Accesso negato", 401);
         }
-        if (!payload) return res.status(401).json({ error: "Accesso negato" });
+        // -- VERIFICA
+        const payload = await JWT.verify(jwt, Config.JWT_SIGN_KEY, {
+            ignoreExpiration,
+        });
+        if (!payload) {
+            throw new CError("Forbidden", "Accesso negato", 401);
+        }
         // -- VERIFICO ADVANCED
         if (advanced && (!payload.advanced || payload.advanced !== true)) {
-            return res.status(403).json({ error: "Sessione avanzata non attivata" });
+            throw new CError(
+                "Forbidden",
+                "Sessione avanzata non attivata",
+                403
+            );
         }
-        // memorizzo il payload nella request
+        // -- VERIFICO LA CHAIN
+        if (!ignoreChain) {
+            await verifyChain(req, res, payload.jti);
+        }
+        // -- memorizzo il payload nella request
         req.payload = payload;
         next();
-    };
+    });
 };
 
-export const verifySignatureOnly = asyncHandler(async (req, res, next) => {
-    const jwt = cookieUtils.getCookie(req, "jwt");
-    if (!jwt) return res.status(401).json({ error: "Accesso negato" });
-    // ---
-    const payload = await JWT.verifySignatureOnly(jwt, Config.JWT_SIGN_KEY);
-    if (!payload) return res.status(401).json({ error: "Accesso negato" });
-    // memorizzo il payload nella request
-    req.payload = payload;
-    next();
-});
-
 /**
- * Verifica un shiv privileged token
- * configura la proprietà req.ppt = payload del ppt
+ * Verifica la Chain e ne genera una nuova
+ * @param {Request} req - richiesta per impostare il nuovo cookie
+ * @param {Response} res - risposta per impostare il nuovo cookie
+ * @param {string} jti - jti dell'access token
+ * @returns {boolean} true se la chain è valida, false altrimenti
  */
-export const verifyShivPrivilegedToken = asyncHandler(
-    async (req, res, next) => {
-        if (!req.payload)
-            throw new Error(
-                "Payload mancante, è necessario richiamare prima verifyAuth"
-            );
-        // ---
-        const ppt = cookieUtils.getCookie(req, "ppt");
-        if (!ppt) return res.status(401).json({ error: "Access denied" });
-        // ---
-        const shiv = new SHIV();
-        // -- ottengo il kid
-        let kid = req.payload.kid;
-        // ---
-        const pptSignKey = await shiv.getSignKey(kid, "ppt-signing");
-        if (!pptSignKey)
-            return res.status(401).json({ error: "Access denied" });
-        // -- verifico che il ppt sia valido
-        const jsonwebtoken = new JWT();
-        const payload = jsonwebtoken.verify(ppt, pptSignKey);
-        if (!payload) return res.status(401).json({ error: "Access denied" });
-        // -- passo le informazioni
-        req.ppt = payload;
-        // -- passo al prossimo middleware o controller
-        next();
-    }
-);
+export const verifyChain = async (req, res, jti) => {
+    const chain = cookieUtils.getCookie(req, "chain");
+    const counter = req.headers["x-counter"];
+    Validator.of(counter).number().min(0).max(9999);
+    if (!counter)
+        throw new CError(
+            "Forbidden",
+            "Accesso negato, counter non allegato",
+            401
+        );
+    // -- se la chain non è presente o non è valida
+    if (!chain)
+        throw new CError(
+            "Forbidden",
+            "Accesso negato, chain non allegata",
+            401
+        );
+    // -- verifico la chain
+    const newChain = await new PoP().verifyChain(chain, jti, Number(counter));
+    if (!newChain)
+        throw new CError("Forbidden", "Accesso negato, chain non valida", 401);
+    // -- imposto il nuovo cookie
+    cookieUtils.setCookie(req, res, "chain", newChain, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Lax",
+        path: "/",
+    });
+};
 
 /**
  * Verifica la password di un utente

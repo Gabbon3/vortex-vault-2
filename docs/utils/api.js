@@ -4,8 +4,30 @@ import { Config } from "../config.js";
 import { PoP } from "../secure/PoP.js";
 import { SessionStorage } from "./session.js";
 
+document.addEventListener("DOMContentLoaded", () => {
+    API.init();
+});
+
 export class API {
     static recent = {};
+    // counter usato per la Chain
+    static counter = 1;
+    static initialized = false;
+    /**
+     * Inizializzo l'API, recuperando il counter dalla sessione
+     */
+    static init() {
+        if (API.initialized) return;
+        API.initialized = true;
+        API.counter = SessionStorage.get('api-counter') || 1;
+    }
+    /**
+     * Wrapper per fetch che controlla e rinnova l'access token se scaduto
+     * @param {string} endpoint 
+     * @param {{}} options 
+     * @param {string} type 
+     * @returns 
+     */
     static async fetch(endpoint, options = {}, type = {}) {
         // controllo che l'access token non sia scaduto
         const accessTokenExpiry = SessionStorage.get('access-token-expiry');
@@ -42,12 +64,14 @@ export class API {
             options.credentials = "include";
             const loader = options.loader === true;
             if (loader) Windows.loader(true);
+            // -- aggiungo l'header del counter per la chain
+            options.headers['x-counter'] = API.counter++;
+            SessionStorage.set('api-counter', API.counter);
             // -- imposto il metodo di autenticazione se presente
             if (options.auth) {
                 options.headers['x-authentication-method'] = options.auth;
                 delete options.auth;
             }
-            // IMPORTANTE: aggiungere queryParams DOPO la firma, per evitare mismatch di endpoint
             // -- gestisco i query Params
             if (options.queryParams) {
                 endpoint += `?${options.queryParams}`;

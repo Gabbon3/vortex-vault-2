@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { UserController } from "../controllers/user.controller.js";
-import { verifyEmailCode, verifyPassword, verifyAuth, verifySignatureOnly } from "../middlewares/authMiddleware.js";
+import { verifyEmailCode, verifyPassword, verifyAuth } from "../middlewares/authMiddleware.js";
 import { verifyPasskey } from "../middlewares/passkey.middleware.js";
 import { emailRateLimiter } from "../middlewares/rateLimiter.middlewares.js";
 // -- router
@@ -20,7 +20,7 @@ router.post('/signup', controller.signup);
 router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
 router.post('/password', verifyAuth({ advanced: true }), controller.changePassword);
 router.get('/nonce', controller.getNonce);
-router.post('/refresh', verifySignatureOnly, controller.refreshAccessToken);
+router.post('/refresh', verifyAuth({ ignoreExpiration: true }), controller.refreshAccessToken);
 router.post('/advanced', verifyAuth(), verifyEmailCode, controller.enableAdvancedSession);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);

@@ -38,36 +38,16 @@ export class Cripto {
         }
         return code;
     }
+    
     /**
      * Genera un hash HMAC di un messaggio con una chiave specifica.
-     * @param {string|crypto.BinaryLike} message - Messaggio da crittografare.
-     * @param {Buffer|string} key - Chiave segreta per l'HMAC; può essere una stringa o un buffer.
-     * @param {Object} [options={}] - Opzioni per configurare l'HMAC.
-     * @param {string} [options.key_encoding] - Encoding della chiave, se fornita come stringa (es: 'hex' o 'base64'). Se non specificato, si assume che `key` sia già un `Buffer`.
-     * @param {string} [options.algo='sha256'] - Algoritmo di hash da usare per l'HMAC (es: 'sha256').
-     * @param {string} [options.output_encoding='hex'] - Encoding per l'output HMAC, default 'hex'.
-     * @returns {*} HMAC del messaggio in formato specificato.
+     * @param {Uint8Array} message - Messaggio da crittografare.
+     * @param {CryptoKey} key - Chiave segreta per l'HMAC
+     * @returns {Uint8Array} HMAC del messaggio in formato specificato.
      */
-    async hmac(message, key, options = {}) {
-        const key_buffer = options.key_encoding
-            ? Buffer.from(key, options.key_encoding)
-            : Buffer.from(key);
-        // ---
-        const hmac_buffer = await new Promise((resolve, reject) => {
-            try {
-                const result = crypto
-                    .createHmac(options.algo ?? "sha256", key_buffer)
-                    .update(message)
-                    .digest();
-                resolve(result);
-            } catch (err) {
-                reject(err);
-            }
-        });
-        // ---
-        return options.output_encoding
-            ? hmac_buffer.toString(options.output_encoding)
-            : new Uint8Array(hmac_buffer);
+    async hmac(message, key) {
+        const hmacBuffer = await crypto.subtle.sign("HMAC", key, message);
+        return new Uint8Array(hmacBuffer);
     }
 
     /**
@@ -154,7 +134,7 @@ export class Cripto {
                 throw new Error(`Unknown truncation mode: ${mode}`);
         }
     }
-    
+
     /**
      * Calcola l'hash di un messaggio.
      * @param {string} message - Messaggio da hashare.

@@ -48,7 +48,7 @@ export class Mailer {
         // ---
         const payload = `${email}.${timestamp}`;
         const cripto = new Cripto();
-        const signature = await cripto.hmac(payload, Config.FISH_KEY);
+        const signature = await cripto.hmac(new TextEncoder().encode(payload), Config.FISH_KEY);
         // ---
         const encoded_signature = Bytes.base62.encode(signature.subarray(0, 16), true);
         return `${payload}.${encoded_signature}`;
@@ -73,7 +73,7 @@ export class Mailer {
         const email_id = await this.get_hash_email_identity(email, true, Config.FISH_SALT);
         // -- calcolo nuovamente la signature
         const cripto = new Cripto();
-        const signature = await cripto.hmac(payload, Config.FISH_KEY);
+        const signature = await cripto.hmac(new TextEncoder().encode(payload), Config.FISH_KEY);
         // -- verifico le condizioni
         const valid_signature = Bytes.compare(signature.subarray(0, 16), encoded_signature);
         const valid_date = Date.now() < new Date(timestamp + (24 * 60 * 60 * 1000));

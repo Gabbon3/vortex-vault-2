@@ -48,7 +48,7 @@ export class UserController {
         /**
          * Servizio
          */
-        const { uid, salt, dek, jwt } =
+        const { uid, salt, dek, jwt, chain } =
             await this.service.signin({
                 email,
                 publicKeyHex
@@ -57,11 +57,17 @@ export class UserController {
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
-            maxAge: 24 * 60 * 60 * 1000,
+            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY, // 1 giorno
             sameSite: "Lax",
             path: "/",
         });
-        // Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
+        cookieUtils.setCookie(req, res, 'chain', chain, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Lax",
+            path: "/",
+        });
+        // -- Rate Limiter Email - rimuovo dal ramdb il controllo sui tentativi per accedere all'account
         await RedisDB.delete(`login-attempts-${email}`);
         // ---
         res.status(201).json({
@@ -99,8 +105,20 @@ export class UserController {
         const isValid = await this.pop.verifyNonceSignature(nonce, signedNonce, req.payload.pub);
         if (!isValid) throw new CError("AuthenticationError", "Firma non valida", 401);
         // -- se è tutto ok rigenero un access token
-        const jwt = await this.pop.generateAccessToken(req.payload.uid, req.payload.pub);
+        const { jwt, chain } = await this.pop.generateAccessToken({ 
+            uid: req.payload.uid, 
+            pub: req.payload.pub, 
+            chain: true, 
+            counter: 0
+        });
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
+            httpOnly: true,
+            secure: true,
+            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY, // 1 giorno
+            sameSite: "Lax",
+            path: "/",
+        });
+        cookieUtils.setCookie(req, res, 'chain', chain, {
             httpOnly: true,
             secure: true,
             sameSite: "Lax",
@@ -113,13 +131,27 @@ export class UserController {
      * Ricalcolo il jwt aggiungendo la sessione avanzata
      */
     enableAdvancedSession = asyncHandler(async (req, res) => {
-        const { uid, pub: publicKeyHex } = req.payload;
+        const { uid, pub } = req.payload;
         // ---
-        const advancedJwt = await this.pop.generateAccessToken(uid, publicKeyHex, { advanced: true }, Config.AUTH_ADVANCED_TOKEN_EXPIRY);
-        cookieUtils.setCookie(req, res, 'jwt', advancedJwt, {
+        const { jwt, chain } = await this.pop.generateAccessToken({ 
+            uid, 
+            pub, 
+            otherClaims: { advanced: true },
+            exp: Config.AUTH_ADVANCED_TOKEN_EXPIRY,
+            chain: true, 
+            counter: 0
+        });
+        cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
+            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY, // 1 giorno
             sameSite: "Strict",
+            path: "/",
+        });
+        cookieUtils.setCookie(req, res, 'chain', chain, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Lax",
             path: "/",
         });
         res.status(200).json({ message: "Advanced session enabled" });
