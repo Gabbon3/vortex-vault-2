@@ -84,7 +84,7 @@ export const verifyPasskey = (required = false) => {
         await RedisDB.delete(`chl-${request_id}`);
 
         // -- imposto l'utente nel request
-        req.payload = { uid: passkey.user_id };
+        req.payload = { ...req.payload, uid: passkey.user_id };
         next();
     });
 };

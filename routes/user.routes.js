@@ -22,6 +22,7 @@ router.post('/password', verifyAuth({ advanced: true }), controller.changePasswo
 router.get('/nonce', controller.getNonce);
 router.post('/refresh', verifyAuth({ ignoreExpiration: true }), controller.refreshAccessToken);
 router.post('/advanced', verifyAuth(), verifyEmailCode, controller.enableAdvancedSession);
+router.post('/advanced-passkey', verifyAuth(), verifyPasskey(), controller.enableAdvancedSession);
 // -- SEARCH
 router.get('/search/:email', verifyAuth(), controller.search);
 // -- QUICK SIGN IN

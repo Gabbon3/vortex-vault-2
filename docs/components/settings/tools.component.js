@@ -124,7 +124,7 @@ class SettingsComponent extends HTMLElement {
                         <span class="material-symbols-rounded">passkey</span>
                         Usa Passkey
                     </h4>
-                    <passkey-btn class="last" icon="security" endpoint="/shiv/spt" callback="sudosession">
+                    <passkey-btn class="last" icon="security" endpoint="/auth/advanced-passkey" callback="sudosession">
                         Attiva
                     </passkey-btn>
                 </div>

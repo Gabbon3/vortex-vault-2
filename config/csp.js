@@ -1,9 +1,11 @@
 import { Config } from "../server_config.js";
+import { Cripto } from "../utils/cryptoUtils.js";
 
 export const csp_middleware = (req, res, next) => {
+    const nonce = new Cripto().randomBytes(16, 'base64');
     res.setHeader(
         'Content-Security-Policy',
-        `default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm https://cdn.jsdelivr.net/npm/dijkstrajs@1.0.3/+esm; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`
+        `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm https://cdn.jsdelivr.net/npm/dijkstrajs@1.0.3/+esm; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`
     );
     next();
 }
