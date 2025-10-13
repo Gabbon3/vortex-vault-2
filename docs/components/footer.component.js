@@ -5,11 +5,11 @@ class Footer extends HTMLElement {
     
     connectedCallback() {
         this.innerHTML = `
-        <!-- container dei log -->
-        <div id="logs_container"></div>
-
         <!-- modal backdrop -->
         <div id="modal-backdrop"></div>
+
+        <!-- container dei log -->
+        <div id="logs_container"></div>
         
         <!-- caricamento -->
         <div id="loader">

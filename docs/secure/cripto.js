@@ -1,4 +1,5 @@
 import { Bytes } from "../utils/bytes.js";
+import { AES256GCM } from "./aesgcm.js";
 
 /**
  * Classe statica per operazioni crittografiche usando le Web Crypto API.

@@ -6,7 +6,7 @@ import msgpack from "./msgpack.min.js";
  *  - lse-private-key-expire-date, data di scadenza della chiave privata del protocollo LSE
  *  - vault-update, data in cui il Vault è stato sincronizzato l'ultima volta
  *  - lse-private-key, la chiave privata del protocollo lse
- *  - email-utente, ~
+ *  - email, ~
  *  - vaults, tutti i vaults, cifrati con master key
  *  - master-key, ~ , cifrata con la LSK
  *  - salt, salt dello user
@@ -20,13 +20,13 @@ export class LocalStorage {
      * Salva qualcosa sul localstorage
      * @param {string} key nome di riferimento della risorsa nel local storage
      * @param {string} value 
-     * @param {Uint8Array} crypto_key se un Uint8Array verrà eseguita la crittografia del value 
+     * @param {CryptoKey} crypto_key se un CryptoKey verrà eseguita la crittografia del value 
      */
     static async set(key, value, crypto_key = null) {
         if (crypto_key === 1) crypto_key = this.key;
         const buffer = msgpack.encode(value);
         // ---
-        const data = crypto_key instanceof Uint8Array ? await AES256GCM.encrypt(buffer, crypto_key) : buffer;
+        const data = crypto_key instanceof CryptoKey ? await AES256GCM.encrypt(buffer, crypto_key) : buffer;
         // ---
         localStorage.setItem(`${LocalStorage.prefix}-${key}`, Bytes.base64.encode(data));
     }
@@ -41,7 +41,7 @@ export class LocalStorage {
     /**
      * Ricava qualcosa dal localstorage
      * @param {string} key nome di riferimento della risorsa nel local storage
-     * @param {Uint8Array} crypto_key se diverso da null verrà eseguita la decifratura del value
+     * @param {CryptoKey} crypto_key se diverso da null verrà eseguita la decifratura del value
      * @returns {Promise<string|Object>}
      */
     static async get(key, crypto_key = null) {
@@ -51,7 +51,7 @@ export class LocalStorage {
             if (!data) return null;
             // ---
             const buffer = Bytes.base64.decode(data);
-            let value = crypto_key instanceof Uint8Array ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
+            let value = crypto_key instanceof CryptoKey ? await AES256GCM.decrypt(buffer, crypto_key) : buffer;
             return msgpack.decode(value);
         } catch (error) {
             console.warn('[!] LocalStorage - get (' + key + ')', error);

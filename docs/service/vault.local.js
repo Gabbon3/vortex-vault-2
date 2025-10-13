@@ -2,12 +2,17 @@ import { LocalStorage } from "../utils/local.js";
 
 export class VaultLocal {
     // Implement the necessary methods for interacting with the local vault
+    /**
+     * Salva i vault nel localstorage
+     * @param {Array<Object>} vaults 
+     * @param {CryptoKey} key 
+     */
     static async save(vaults, key = null) {
         await LocalStorage.set('vaults', vaults, key);
     }
     /**
      * Restituisce un vault dal localstorage
-     * @param {Uint8Array} key 
+     * @param {CryptoKey} key 
      * @returns {Array<Object>}
      */
     static async get(key = null) {

@@ -20,7 +20,7 @@ router.post('/signup', controller.signup);
 router.post('/signin', emailRateLimiter, verifyPassword, controller.signin);
 router.post('/password', verifyAuth({ advanced: true }), controller.changePassword);
 router.get('/nonce', controller.getNonce);
-router.post('/refresh', verifyAuth({ ignoreExpiration: true }), controller.refreshAccessToken);
+router.post('/refresh', verifyAuth({ ignoreExpiration: true, ignoreChain: true }), controller.refreshAccessToken);
 router.post('/advanced', verifyAuth(), verifyEmailCode, controller.enableAdvancedSession);
 router.post('/advanced-passkey', verifyAuth(), verifyPasskey(), controller.enableAdvancedSession);
 // -- SEARCH

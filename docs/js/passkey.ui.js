@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
      * NEW PASSKEY
      */
     document.getElementById('btn-new-passkey').addEventListener("click", async () => {
-        const email = await LocalStorage.get('email-utente');
+        const email = await LocalStorage.get('email');
         if (!email) return Log.summon(1, 'Nessuna email trovata');
         // ---
         const passkey_added = await PasskeyService.activate_new_passkey(email);

@@ -28,7 +28,7 @@ class SettingsComponent extends HTMLElement {
                     const code = elements['tuamadre'];
                     if (!code.includes('.')) return Log.summon(1, "Invalid format");
                     // -- email
-                    const email = await LocalStorage.get('email-utente');
+                    const email = await LocalStorage.get('email');
                     // ---
                     const res = await API.fetch('/auth/vmac', {
                         method: 'POST',

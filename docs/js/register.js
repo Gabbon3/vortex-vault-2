@@ -8,7 +8,7 @@ import { LocalStorage } from "../utils/local.js";
 import { PasskeyService } from "../service/passkey.public.service.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const email = await LocalStorage.get('email-utente');
+    const email = await LocalStorage.get('email');
     if (email) {
         document.getElementById('verify-email-email').value = email;
     }
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---
         Windows.loader(true, "Creating your new account, please wait");
         if (await AuthService.register(email, password)) {
-            LocalStorage.set('email-utente', email);
+            LocalStorage.set('email', email);
             form.reset();
             // Log.summon(1, "Almost done! now, to verify your email and create your first passkey, click on the \"Verify email & Create your first Passkey\" button.");
             document.getElementById('verify-email-email').value = email;

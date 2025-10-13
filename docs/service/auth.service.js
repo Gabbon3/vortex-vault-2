@@ -18,7 +18,8 @@ export class AuthService {
     static async init() {
         Windows.loader(true, "Verifico la sessione");
         const popInitialized = await PoP.init();
-        return popInitialized;
+        const authInitialized = await this.startSessionWithPoP();
+        return popInitialized && authInitialized;
     }
     /**
      * Esegue l'accesso
@@ -45,16 +46,19 @@ export class AuthService {
         const { dek: encodedDek } = res;
         // -- derivo la chiave crittografica
         const salt = Bytes.hex.decode(res.salt);
-        const KEK = await Cripto.deriveKey(password, salt);
+        // ---
+        const rawKEK = await Cripto.deriveKey(password, salt);
+        const KEK = await AES256GCM.importAesGcmKey(rawKEK, false);
         // ---
         const encryptedDEK = Bytes.base64.decode(encodedDek);
-        const DEK = await AES256GCM.decrypt(encryptedDEK, KEK);
+        const rawDEK = await AES256GCM.decrypt(encryptedDEK, KEK);
+        const DEK = await AES256GCM.importAesGcmKey(rawDEK, false);
         // -- imposto in chiaro sul session storage
-        SessionStorage.set('access-token-expiry', new Date(Date.now() + (15 * 60 * 1000))); // 15 minuti
-        SessionStorage.set('master-key', KEK);
-        SessionStorage.set('DEK', DEK);
-        SessionStorage.set('salt', salt);
-        SessionStorage.set('uid', res.uid);
+        SessionStorage.set('access-token-expiry', new Date(Date.now() + (15 * 60 * 1000)));
+        LocalStorage.set('salt', salt);
+        LocalStorage.set('email', email);
+        await VaultService.keyStore.saveKey(KEK, 'KEK');
+        await VaultService.keyStore.saveKey(DEK, 'DEK');
         // ---
         return true;
     }
@@ -154,12 +158,12 @@ export class AuthService {
     static async changePassword(newPassword) {
         const ckeKey = SessionStorage.get("cke-key-advanced"); // local storage key
         if (!ckeKey) return false;
-        const email = await LocalStorage.get('email-utente');
+        const email = await LocalStorage.get('email');
         if (!email) {
             Log.summon(2, 'No email found, sign in again');
             return false;
         }
-        const salt = await SessionStorage.get('salt');
+        const salt = await LocalStorage.get('salt');
         if (!salt) {
             Log.summon(2, 'No salt, sign in again');
             return false;
@@ -190,7 +194,7 @@ export class AuthService {
      */
     static async verify_master_password(password) {
         const master_key = await SessionStorage.get('master-key');
-        const salt = await SessionStorage.get('salt');
+        const salt = await LocalStorage.get('salt');
         // ---
         const key = await Cripto.deriveKey(password, salt);
         return Bytes.compare(key, master_key);
@@ -203,7 +207,7 @@ export class AuthService {
         const password = await LocalStorage.get('password-utente', VaultService.KEK);
         if (!password) return null;
         // ---
-        const email = await LocalStorage.get('email-utente');
+        const email = await LocalStorage.get('email');
         const { id, key } = await SecureLink.generate({
             scope: 'qsi',
             ttl: 60 * 3,
@@ -220,7 +224,7 @@ export class AuthService {
         const password = await LocalStorage.get('password-utente', VaultService.KEK);
         if (!password) return null;
         // ---
-        const email = await LocalStorage.get('email-utente');
+        const email = await LocalStorage.get('email');
         const { id, key } = await SecureLink.generate({
             scope: 'ext-signin',
             ttl: 60 * 3,
@@ -306,7 +310,7 @@ export class AuthService {
         const password = await LocalStorage.get('password-utente', master_key);
         if (!password) return null;
         // ---
-        const email = await LocalStorage.get('email-utente');
+        const email = await LocalStorage.get('email');
         const res = await SecureLink.generate({
             key,
             id,
@@ -322,13 +326,19 @@ export class AuthService {
         return true;
     }
     /**
-     * Tenta di avviare automaticamente una sessione
-     * @returns {number} true è stato loggato e la sessione è stata attivata, 0 già loggato, -1 nuovo access token non ottenuto, -2 nessuna chiave restituita, false sessione non attivata
+     * Refresha l'access token in automatico usando la chiave privata pop
+     * @returns {boolean} true è stato loggato e la sessione è stata attivata, 0 già loggato, -1 nuovo access token non ottenuto, -2 nessuna chiave restituita, false sessione non attivata
      */
-    static async start_session() {
-        const session_storage_init = SessionStorage.get('master-key') !== null;
-        // -- con questa condizione capisco se ce bisogno di accedere o meno
-        return session_storage_init;
+    static async startSessionWithPoP() {
+        const accessTokenExpiry = SessionStorage.get("access-token-expiry");
+        if (accessTokenExpiry) return true;
+        // ---
+        const accessTokenRefreshed = await PoP.refreshAccessToken();
+        if (!accessTokenRefreshed) return false;
+        // -- imposto le variabili di sessione
+        SessionStorage.set('email', await LocalStorage.get('email'));
+        SessionStorage.set('salt', await LocalStorage.get('salt'));
+        return true;
     }
 }
 

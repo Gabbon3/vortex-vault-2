@@ -22,7 +22,7 @@ export class Config {
     // AUTH
     static JWT_SIGN_KEY = null;
     static AUTH_TOKEN_EXPIRY = 15 * 60; // 15 minuti
-    static AUTH_TOKEN_COOKIE_EXPIRY = 24 * 60 * 60 * 1000;
+    static AUTH_TOKEN_COOKIE_EXPIRY = 14 * 24 * 60 * 60 * 1000; // 2 settimane
     static AUTH_ADVANCED_TOKEN_EXPIRY = 7 * 60; // 7 minuti
     // Percorso Rocks DB
     static ROCKSDB_MSG_PATH = process.env.ROCKSDB_MSG_PATH;

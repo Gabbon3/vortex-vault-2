@@ -69,7 +69,7 @@ export class ChatService {
     static async init() {
         if (this.initialize) return;
 
-        this.email = await LocalStorage.get("email-utente");
+        this.email = await LocalStorage.get("email");
         this.uuid = SessionStorage.get("uid");
         this.masterKey = SessionStorage.get("master-key");
         

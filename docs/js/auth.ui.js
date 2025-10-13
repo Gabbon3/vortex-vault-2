@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!code || code.length!== 6) return Log.summon(1, "Codice non valido");
         // ---
         Windows.loader(true);
-        const email = await LocalStorage.get('email-utente');
+        const email = await LocalStorage.get('email');
         const activated = await AuthService.enableAdvancedSession(email, request_id, code);
         if (activated) {
             Log.summon(0, 'Sessione avanzata iniziata');

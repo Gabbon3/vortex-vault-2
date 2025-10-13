@@ -44,19 +44,34 @@ export class AES256GCM {
         );
     }
     /**
+     * Importa e restituisce una CryptoKey partendo da 32 byte
+     * @param {Uint8Array} raw 
+     * @param {boolean} [exportable=false] 
+     * @param {number} [version=1]
+     * @returns {CryptoKey}
+     */
+    static async importAesGcmKey(raw, exportable = false, version = 1) {
+        return await crypto.subtle.importKey(
+            "raw",
+            raw,
+            { name: this.versionMap[version].algorithm },
+            exportable,
+            ["encrypt", "decrypt"]
+        );
+    }
+    /**
      * Cifra i dati utilizzando AES-256-GCM.
-     *
      * @param {Uint8Array} data - I dati da cifrare.
-     * @param {Uint8Array|CryptoKey} keyBuffer - La chiave di cifratura (32 byte per AES-256).
+     * @param {CryptoKey} key - La chiave di cifratura (32 byte per AES-256).
      * @param {*|Uint8Array} [aad=null] - informazioni aggiuntive da includere per l'autenticazione
      * @param {number} [version=1] - indica con quale versione i dati sono cifrati
      * @returns {Promise<Uint8Array>} - I dati cifrati concatenati con il nonce e il tag di autenticazione.
      */
-    static async encrypt(data, keyBuffer, aad = null, version = 1) {
+    static async encrypt(data, key, aad = null, version = 1) {
         // -- genero un nonce casuale
         const nonce = crypto.getRandomValues(new Uint8Array(this.versionMap[version].nonceLength));
         // -- importo la chiave
-        const key = await this.resolveKey(keyBuffer);
+        // const key = await this.resolveKey(keyBuffer);
         // ---
         const options = {
             name: this.versionMap[version].algorithm,
@@ -80,20 +95,18 @@ export class AES256GCM {
 
     /**
      * Decifra i dati con AES-256-GCM.
-     *
      * @param {Uint8Array} encrypted - I dati cifrati concatenati (nonce + dati cifrati + tag).
-     * @param {Uint8Array} keyBuffer - La chiave di decifratura (32 byte per AES-256).
+     * @param {CryptoKey} key - La chiave di decifratura (32 byte per AES-256).
      * @param {*|Uint8Array} [aad=null] - informazioni aggiuntive da includere per l'autenticazione
      * @returns {Promise<Uint8Array>} - I dati decifrati.
      */
-    static async decrypt(encrypted, keyBuffer, aad = null) {
+    static async decrypt(encrypted, key, aad = null) {
         // -- ottengo la versione
         const version = encrypted[0];
         // -- estraggo il nonce, i dati cifrati e il tag di autenticazione
         const nonce = encrypted.slice(1, 1 + this.versionMap[version].nonceLength);
         const encryptedData = encrypted.slice(1 + this.versionMap[version].nonceLength);
         // -- importo la chiave
-        const key = await this.resolveKey(keyBuffer);
         // ---
         const options = {
             name: this.versionMap[version].algorithm,

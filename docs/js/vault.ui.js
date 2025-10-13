@@ -11,6 +11,7 @@ import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";
 import { VaultDelegator } from "../components/delegators/vault.delegator.js";
+import { PoP } from "../secure/PoP.js";
 
 // oggetto usato per memorizzare i dati inseriti nel form di creazione vault
 const newVaultsInsertedData = {};
@@ -176,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('#psw-gen-len').addEventListener('input', (e) => {
         document.getElementById('psw-gen-length-indicator').textContent = e.currentTarget.value;
     });
-    
+
     Form.register('form-psw-gen', (form, elements) => {
         const { length, az, AZ, _09, _$, mode } = elements;
         try {
@@ -216,6 +217,13 @@ export class VaultUI {
      */
     static async init() {
         /**
+         * Verifico se il client possiede la chiave privata
+         */
+        if (!PoP.keys.privateKey) {
+            this.#redirectToLogin();
+            return false;
+        }
+        /**
          * EVENT DELEGATIONS INIT
          */
         Windows.loader(true, "Sto decifrando i dati");
@@ -223,32 +231,27 @@ export class VaultUI {
         // ----
         // - controllo se è possibile usare il vault configurando i segreti
         const configured = await VaultService.configSecrets();
-        let timeout = 0;
-        // -- se non ci sono provo ad avviare la sessione
         if (!configured) {
-            const started = await AuthService.start_session();
-            // --- se non viene avviata fermo e restituisco errore
-            if (started !== true && started !== 0) {
-                Log.summon(2, "Autenticazione fallita, verrai reindirizzato alla pagina di accesso.");
-                setTimeout(() => {
-                    window.location.href = '/signin';
-                }, 4000);
-                return false;
-            }
-            // --- se la sessione viene avviata, eseguo init_db_dom() e avvio il vault
-            timeout = 1000;
+            this.#redirectToLogin();
+            return false;
         }
-        // -- se ci sono avvio il vault
-        setTimeout(async () => {
-            // ---
-            await this.init_db_dom();
-            await PasskeyUI.init();
-            // ---
-            VaultService.load_used_usernames()
-            // ---
-            if (timeout > 0) Log.summon(0, `Bentornato ${SessionStorage.get('email').split('@')[0]}`);
-            Windows.loader(false);
-        }, timeout);
+        // -- avvio il vault
+        await this.init_db_dom();
+        await PasskeyUI.init();
+        // ---
+        VaultService.load_used_usernames();
+        // ---
+        Windows.loader(false);
+        Log.summon(0, `Bentornato ${(await LocalStorage.get('email')).split('@')[0]}`);
+    }
+    /**
+     * Metodo privato di supporto per reindirizzare alla pagina di login
+     */
+    static #redirectToLogin() {
+        Windows.loader(true, "Autenticazione fallita, verrai reindirizzato alla pagina di accesso.");
+        setTimeout(() => {
+            window.location.href = '/signin';
+        }, 4000);
     }
     /**
      * Inizializza il vault e il dom
@@ -284,7 +287,7 @@ export class VaultUI {
                 date.format('%M %y', new Date(vault.updatedAt))
         }
         // -- preparo i vaults da iterare
-        const filter_condition = (vault) => { return secret_type_view === -1 || secret_type_view === (vault.secrets.ST ?? 0)};
+        const filter_condition = (vault) => { return secret_type_view === -1 || secret_type_view === (vault.secrets.ST ?? 0) };
         const vaults_list = vaults.filter((vault) => filter_condition(vault));
         // -- mostro il numero totale di elementi disponibili
         document.getElementById('vault-counter').textContent = vaults_list.length;

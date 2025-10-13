@@ -50,7 +50,7 @@ class EmailVerifyBtn extends HTMLElement {
     async send_email() {
         this.button.disabled = true;
         // ---
-        const email = this.email ? this.email.value : await LocalStorage.get('email-utente');
+        const email = this.email ? this.email.value : await LocalStorage.get('email');
         // ---
         const res = await API.fetch('/auth/email-verification', {
             method: "POST",

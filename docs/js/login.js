@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     const auth_success = async () => {
         Windows.loader(true);
-        const session_started = await AuthService.start_session();
+        const session_started = await AuthService.startSessionWithPoP();
         Windows.loader(false);
         return session_started;
     }
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (quick_signin === true) {
         const session_started = await auth_success();
         if (session_started === true || session_started === 0) {
-            Log.summon(0, `Ciao ${(await LocalStorage.get('email-utente')).split('@')[0]}`, () => { window.location.href = '/vault'; });
+            Log.summon(0, `Ciao ${(await LocalStorage.get('email')).split('@')[0]}`, () => { window.location.href = '/vault'; });
             // setTimeout(() => {
             //     window.location.href = '/vault';
             // }, 3000);
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * Provo ad accedere automaticamente
      */
-    const saved_email = await LocalStorage.get('email-utente');
+    const saved_email = await LocalStorage.get('email');
     // ---
     document.getElementById('email').value = saved_email;
     // -- REQUEST SIGN-IN
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      * LOGGA CON LA PASSKEY
      */
     // document.getElementById('signin-passkey').addEventListener('click', async (e) => {
-    //     const email = await LocalStorage.get('email-utente');
+    //     const email = await LocalStorage.get('email');
     //     const master_key_exist = LocalStorage.has('master-key');
     //     // ---
     //     const was_logged = email !== null && master_key_exist;
@@ -167,10 +167,10 @@ class RequestSignIn {
                     return false;
                 }
                 // ---
-                const session_started = await AuthService.start_session();
+                const session_started = await AuthService.startSessionWithPoP();
                 if (session_started !== true && session_started !== 0) return false;
                 // ---
-                Log.summon(0, `Ciao ${(await LocalStorage.get('email-utente')).split('@')[0]}`);
+                Log.summon(0, `Ciao ${(await LocalStorage.get('email')).split('@')[0]}`);
                 setTimeout(() => {
                     window.location.href = '/vault';
                 }, 3000);

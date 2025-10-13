@@ -8,8 +8,10 @@ import { API } from "../utils/api.js";
 import { LocalStorage } from "../utils/local.js";
 import { VaultLocal } from "./vault.local.js";
 import { UUID } from "../utils/uuid.js";
+import { KeyStore } from "../secure/keystore.js";
 
 export class VaultService {
+    static keyStore = new KeyStore('VaultKeys');
     static KEK = null;
     static DEK = null;
     static salt = null;
@@ -22,13 +24,13 @@ export class VaultService {
      * @returns {boolean} - true se entrambi sono presenti
      */
     static async configSecrets() {
-        // -- ottengo la scadenza dell'access token
+        // -- verifico se la sessione è attiva
         const accessTokenExpiry = SessionStorage.get("access-token-expiry");
         // - se scaduto restituisco false cosi verrà rigenerata la sessione
         if (accessTokenExpiry === null) return false;
-        this.KEK = await SessionStorage.get("master-key");
-        this.DEK = await SessionStorage.get("DEK");
-        this.salt = await SessionStorage.get("salt");
+        this.KEK = await this.keyStore.loadKey("KEK");
+        this.DEK = await this.keyStore.loadKey("DEK");
+        this.salt = await LocalStorage.get("salt");
         return this.KEK && this.DEK && this.salt ? true : false;
     }
     /**
