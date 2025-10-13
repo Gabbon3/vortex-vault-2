@@ -23,8 +23,8 @@ export class AuthService {
     }
     /**
      * Esegue l'accesso
-     * @param {string} email 
-     * @param {string} password 
+     * @param {string} email
+     * @param {string} password
      * @returns {boolean}
      */
     static async signin(email, password) {
@@ -32,8 +32,8 @@ export class AuthService {
         const publicKeyHex = await PoP.generateKeyPair();
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
-        const res = await API.fetch('/auth/signin', {
-            method: 'POST',
+        const res = await API.fetch("/auth/signin", {
+            method: "POST",
             body: {
                 email,
                 password: obfuscatedPassword,
@@ -54,18 +54,21 @@ export class AuthService {
         const rawDEK = await AES256GCM.decrypt(encryptedDEK, KEK);
         const DEK = await AES256GCM.importAesGcmKey(rawDEK, false);
         // -- imposto in chiaro sul session storage
-        SessionStorage.set('access-token-expiry', new Date(Date.now() + (15 * 60 * 1000)));
-        LocalStorage.set('salt', salt);
-        LocalStorage.set('email', email);
-        await VaultService.keyStore.saveKey(KEK, 'KEK');
-        await VaultService.keyStore.saveKey(DEK, 'DEK');
+        SessionStorage.set(
+            "access-token-expiry",
+            new Date(Date.now() + 15 * 60 * 1000)
+        );
+        LocalStorage.set("salt", salt);
+        LocalStorage.set("email", email);
+        await VaultService.keyStore.saveKey(KEK, "KEK");
+        await VaultService.keyStore.saveKey(DEK, "DEK");
         // ---
         return true;
     }
     /**
      * Esegue la registrazione di un nuovo utente
-     * @param {string} email 
-     * @param {string} password 
+     * @param {string} email
+     * @param {string} password
      * @returns {boolean}
      */
     static async register(email, password) {
@@ -77,13 +80,13 @@ export class AuthService {
         // ---
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
-        const res = await API.fetch('/auth/signup', {
-            method: 'POST',
-            body: { 
-                email, 
+        const res = await API.fetch("/auth/signup", {
+            method: "POST",
+            body: {
+                email,
                 password: obfuscatedPassword,
                 dek: Bytes.base64.encode(encryptedDEK),
-                salt: Bytes.hex.encode(salt)
+                salt: Bytes.hex.encode(salt),
             },
         });
         if (!res) return false;
@@ -94,8 +97,8 @@ export class AuthService {
      * Effettua il logout eliminando ogni traccia dell'utente dal client
      */
     static async signout() {
-        const res = await API.fetch('/auth/signout', {
-            method: 'POST',
+        const res = await API.fetch("/auth/signout", {
+            method: "POST",
         });
         if (!res) return false;
         // ---
@@ -108,8 +111,8 @@ export class AuthService {
      * @returns {boolean}
      */
     static async deleteAllLocalData() {
-        const res = await API.fetch('/auth/clear-cookies', {
-            method: 'POST',
+        const res = await API.fetch("/auth/clear-cookies", {
+            method: "POST",
         });
         if (!res) return false;
         // ---
@@ -119,14 +122,14 @@ export class AuthService {
     }
     /**
      * Verifica un email
-     * @param {string} email 
-     * @param {string} code 
+     * @param {string} email
+     * @param {string} code
      * @returns {boolean}
      */
     static async verify_account(email, request_id, code) {
-        const res = await API.fetch('/auth/verify-account', {
-            method: 'POST',
-            body: { email, request_id, code }
+        const res = await API.fetch("/auth/verify-account", {
+            method: "POST",
+            body: { email, request_id, code },
         });
         // ---
         if (!res) return false;
@@ -134,19 +137,22 @@ export class AuthService {
     }
     /**
      * Abilita una sessione avanzata tramite mail
-     * @param {string} email 
-     * @param {string} code 
+     * @param {string} email
+     * @param {string} code
      * @returns {boolean}
      */
     static async enableAdvancedSession(email, request_id, code) {
-        const res = await API.fetch('/auth/advanced', {
-            method: 'POST',
+        const res = await API.fetch("/auth/advanced", {
+            method: "POST",
             body: { email, request_id, code },
-            auth: 'otp'
+            auth: "otp",
         });
         // ---
         if (!res) return false;
-        SessionStorage.set('access-token-expiry', new Date(Date.now() + (7 * 60 * 1000)));
+        SessionStorage.set(
+            "access-token-expiry",
+            new Date(Date.now() + 7 * 60 * 1000)
+        );
         return true;
     }
     /**
@@ -158,27 +164,27 @@ export class AuthService {
     static async changePassword(newPassword) {
         const ckeKey = SessionStorage.get("cke-key-advanced"); // local storage key
         if (!ckeKey) return false;
-        const email = await LocalStorage.get('email');
+        const email = await LocalStorage.get("email");
         if (!email) {
-            Log.summon(2, 'No email found, sign in again');
+            Log.summon(2, "No email found, sign in again");
             return false;
         }
-        const salt = await LocalStorage.get('salt');
+        const salt = await LocalStorage.get("salt");
         if (!salt) {
-            Log.summon(2, 'No salt, sign in again');
+            Log.summon(2, "No salt, sign in again");
             return false;
         }
         // ---
         /**
-         * 
+         *
          */
         const newKEK = await VaultService.rotateKEK(email, newPassword, salt);
         if (!newKEK) return false;
         /**
          * Elimino tutte le sessioni SHIV associate tranne la corrente
          */
-        await API.fetch('/shiv/session', {
-            method: 'DELETE'
+        await API.fetch("/shiv/session", {
+            method: "DELETE",
         });
         /**
          * ----
@@ -189,12 +195,12 @@ export class AuthService {
     /**
      * Verifica localmente se la password passata come parametro corrisponde a quella effettiva dell'utente
      * alleggerendo il server
-     * @param {string} password 
-     * @returns {boolean} 
+     * @param {string} password
+     * @returns {boolean}
      */
     static async verify_master_password(password) {
-        const master_key = await SessionStorage.get('master-key');
-        const salt = await LocalStorage.get('salt');
+        const master_key = await SessionStorage.get("master-key");
+        const salt = await LocalStorage.get("salt");
         // ---
         const key = await Cripto.deriveKey(password, salt);
         return Bytes.compare(key, master_key);
@@ -204,14 +210,17 @@ export class AuthService {
      * @returns {string} url per accedere
      */
     static async request_quick_signin() {
-        const password = await LocalStorage.get('password-utente', VaultService.KEK);
+        const password = await LocalStorage.get(
+            "password-utente",
+            VaultService.KEK
+        );
         if (!password) return null;
         // ---
-        const email = await LocalStorage.get('email');
+        const email = await LocalStorage.get("email");
         const { id, key } = await SecureLink.generate({
-            scope: 'qsi',
+            scope: "qsi",
             ttl: 60 * 3,
-            data: [email, password]
+            data: [email, password],
         });
         // -- compongo l'url
         const url = `${window.location.protocol}//${window.location.host}/signin?action=qsi&id=${id}&key=${key}`;
@@ -221,14 +230,17 @@ export class AuthService {
      * Genera un token per accedere velocemente all'estensione di chrome
      */
     static async requestExtensionTokenSignIn() {
-        const password = await LocalStorage.get('password-utente', VaultService.KEK);
+        const password = await LocalStorage.get(
+            "password-utente",
+            VaultService.KEK
+        );
         if (!password) return null;
         // ---
-        const email = await LocalStorage.get('email');
+        const email = await LocalStorage.get("email");
         const { id, key } = await SecureLink.generate({
-            scope: 'ext-signin',
+            scope: "ext-signin",
             ttl: 60 * 3,
-            data: [email, password]
+            data: [email, password],
         });
         // ---
         return Bytes.base32.encode(new TextEncoder().encode(`${id}.${key}`));
@@ -239,14 +251,24 @@ export class AuthService {
      */
     static async quick_signin() {
         // -- verifico se ce bisogno di eseguire questa operazione
-        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
-        if (!action || action !== 'qsi') return false;
+        const {
+            action,
+            id,
+            key: key_base64,
+        } = Object.fromEntries(
+            new URL(window.location.href).searchParams.entries()
+        );
+        if (!action || action !== "qsi") return false;
         if (!id || !key_base64) return false;
         // -- ottengo dal server le credenziali
-        const [email, password] = await SecureLink.get('qsi', id, key_base64);
+        const [email, password] = await SecureLink.get("qsi", id, key_base64);
         if (!email || !password) return false;
         // -- pulisco l'url
-        window.history.replaceState(null, '', window.location.origin + window.location.pathname);
+        window.history.replaceState(
+            null,
+            "",
+            window.location.origin + window.location.pathname
+        );
         // -- eseguo l'accesso passando la passkey
         return await AuthService.signin(email, password);
     }
@@ -255,7 +277,7 @@ export class AuthService {
      */
     static async request_signin() {
         // -- genero una chiave casuale e un id utilizzabile
-        const key = Cripto.randomBytes(32, 'base64url');
+        const key = Cripto.randomBytes(32, "base64url");
         const id = await SecureLink.request_id();
         if (!id) return false;
         // ---
@@ -264,17 +286,17 @@ export class AuthService {
             data: url,
         });
         navigator.clipboard.writeText(url);
-        Log.summon(3, 'Link copied into your clipboard');
+        Log.summon(3, "Link copied into your clipboard");
         return { key, id };
     }
     /**
      * Verifica e accede se da una richiesta di autenticazione ce stata una risposta
-     * @param {string} id 
-     * @param {Uint8Array} key 
+     * @param {string} id
+     * @param {Uint8Array} key
      * @returns {boolean}
      */
     static async check_signin_response(id, key) {
-        const [email, password] = await SecureLink.get('rsi', id, key);
+        const [email, password] = await SecureLink.get("rsi", id, key);
         if (!email || !password) return false;
         // -- eseguo l'accesso passando la passkey
         return await AuthService.signin(email, password, id);
@@ -284,7 +306,13 @@ export class AuthService {
      * @returns {boolean|object}
      */
     static check_signin_request_url() {
-        const { action, id, key: key_base64 } = Object.fromEntries(new URL(window.location.href).searchParams.entries());
+        const {
+            action,
+            id,
+            key: key_base64,
+        } = Object.fromEntries(
+            new URL(window.location.href).searchParams.entries()
+        );
         if (!action || !key_base64 || !id) return false;
         return { action, id, key_base64 };
     }
@@ -296,32 +324,36 @@ export class AuthService {
         // -- controllo la correttezza dei parametri
         const params = this.check_signin_request_url();
         if (!params) return false;
-        if (params.action !== 'rsi') return false;
+        if (params.action !== "rsi") return false;
         const { id, key_base64 } = params;
         // ---
         const key = Bytes.base64.decode(key_base64, true);
         // -- recupero la password
-        const master_key = SessionStorage.get('master-key');
+        const master_key = SessionStorage.get("master-key");
         if (!master_key) {
             console.warn("Master key not found");
             return null;
         }
         // ---
-        const password = await LocalStorage.get('password-utente', master_key);
+        const password = await LocalStorage.get("password-utente", master_key);
         if (!password) return null;
         // ---
-        const email = await LocalStorage.get('email');
+        const email = await LocalStorage.get("email");
         const res = await SecureLink.generate({
             key,
             id,
-            scope: 'rsi',
+            scope: "rsi",
             ttl: 60 * 3,
             data: [email, password],
             passKey: true,
         });
         if (!res) return false;
         // -- pulisco l'url
-        window.history.replaceState(null, '', window.location.origin + window.location.pathname);
+        window.history.replaceState(
+            null,
+            "",
+            window.location.origin + window.location.pathname
+        );
         // ---
         return true;
     }
@@ -336,8 +368,8 @@ export class AuthService {
         const accessTokenRefreshed = await PoP.refreshAccessToken();
         if (!accessTokenRefreshed) return false;
         // -- imposto le variabili di sessione
-        SessionStorage.set('email', await LocalStorage.get('email'));
-        SessionStorage.set('salt', await LocalStorage.get('salt'));
+        SessionStorage.set("email", await LocalStorage.get("email"));
+        SessionStorage.set("salt", await LocalStorage.get("salt"));
         return true;
     }
 }

@@ -68,9 +68,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => {
                 window.location.href = '/vault';
             }, 3000);
-        } else {
-            document.getElementById('recovery-email').value = email;
-            document.getElementById('recovery-device-email-email').value = email;
         }
         Windows.loader(false);
     });

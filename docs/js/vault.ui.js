@@ -12,6 +12,7 @@ import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";
 import { VaultDelegator } from "../components/delegators/vault.delegator.js";
 import { PoP } from "../secure/PoP.js";
+import { DeviceUI } from "./device.ui.js";
 
 // oggetto usato per memorizzare i dati inseriti nel form di creazione vault
 const newVaultsInsertedData = {};
@@ -238,6 +239,7 @@ export class VaultUI {
         // -- avvio il vault
         await this.init_db_dom();
         await PasskeyUI.init();
+        await DeviceUI.init();
         // ---
         VaultService.load_used_usernames();
         // ---

@@ -3,19 +3,20 @@ import { sequelize } from "../config/db.js";
 
 /**
  * Sul db bisogna creare l'indice hash e l'indice unico:
- * CREATE INDEX idx_auth_keys_kid_hash ON auth_keys USING hash(kid);
- * CREATE UNIQUE INDEX idx_auth_keys_kid_unique ON auth_keys(kid);
+ * CREATE INDEX idx_public_key_id_hash ON public_key USING hash(id);
+ * CREATE UNIQUE INDEX idx_public_key_id_unique ON public_key(id);
  */
-export const AuthKeys = sequelize.define(
-    "AuthKeys",
+export const PublicKey = sequelize.define(
+    "PublicKey",
     {
-        kid: {
-            type: DataTypes.STRING(64),
+        id: {
+            type: DataTypes.UUID,
             primaryKey: true,
         },
-        secret: {
-            type: DataTypes.STRING(64), // oppure BLOB(32) se binario
+        fingerprint: {
+            type: DataTypes.STRING(64),
             allowNull: false,
+            comment: "SHA-256 fingerprint"
         },
         user_id: {
             type: DataTypes.UUID,
@@ -31,7 +32,8 @@ export const AuthKeys = sequelize.define(
         },
         last_seen_at: {
             type: DataTypes.DATE,
-            allowNull: true
+            allowNull: true,
+            defaultValue: null,
         },
         created_at: {
             type: DataTypes.DATE,
@@ -39,7 +41,7 @@ export const AuthKeys = sequelize.define(
         },
     },
     {
-        tableName: "auth_keys",
+        tableName: "public_key",
         timestamps: false,
         underscored: true,
         charset: "utf8mb4",

@@ -13,6 +13,7 @@ import './btn-copy.component.js';
 import './btn-paste.component.js';
 import './mfa-input.component.js';
 import './passkey-btn.component.js';
+import './device-list-item.component.js';
 import './passkey-list-item.component.js';
 import './otp-copy-button.component.js';
 import './btn-hide-show-protect-input.component.js';

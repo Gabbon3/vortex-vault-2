@@ -34,7 +34,7 @@ export class PasskeyService {
         const user = await User.findOne({
             where: { email },
         });
-        if (!user) throw new CError("UserNotFound", "User not found", 422);
+        if (!user) throw new CError("UserNotFound", "Utente non trovato", 422);
         // -- l'account dell'utente deve essere verificato affinche possa essere attivata una nuova passkey
         if (!user.verified) throw new CError("", "You're not able to register any passkey to this account.", 403);
         // -- genero la challenge e le options

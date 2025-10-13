@@ -110,7 +110,7 @@ export const verifyPassword = asyncHandler(async (req, res, next) => {
         ? await service.find_by_id(uid)
         : await service.find_by_email(uid);
     // -- verifico se l'utente ha attivato l'autenticazione a 2 fattori
-    if (!user) throw new CError("ValidationError", "User not found", 404);
+    if (!user) throw new CError("ValidationError", "Utente non trovato", 404);
     const valid = await service.verifyPassword(password, user.password);
     if (!valid) throw new CError("AuthError", "Password non valida", 403);
     next();

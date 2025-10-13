@@ -12,6 +12,7 @@ import emailContents from "../docs/utils/automated.mails.js";
 import { Config } from "../server_config.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
 import { PoP } from "../protocols/PoP.node.js";
+import { getUserAgentSummary } from "../utils/useragent.util.js";
 
 export class UserController {
     constructor() {
@@ -45,13 +46,16 @@ export class UserController {
      */
     signin = asyncHandler(async (req, res) => {
         const { email, publicKey: publicKeyHex } = req.body;
+        // --- calcolo useragent
+        const ua = getUserAgentSummary(req);
         /**
          * Servizio
          */
         const { uid, salt, dek, jwt, chain } =
             await this.service.signin({
                 email,
-                publicKeyHex
+                publicKeyHex,
+                ua
             });
         // ---
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
@@ -111,10 +115,13 @@ export class UserController {
             chain: true, 
             counter: 0
         });
+        // -- aggiorno public key last_used_at
+        await this.service.publicKeyService.update({ id: req.payload.jti }, { last_used_at: new Date() });
+        // ---
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
-            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY, // 1 giorno
+            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY,
             sameSite: "Lax",
             path: "/",
         });
@@ -144,7 +151,7 @@ export class UserController {
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
             secure: true,
-            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY, // 1 giorno
+            maxAge: Config.AUTH_TOKEN_COOKIE_EXPIRY,
             sameSite: "Strict",
             path: "/",
         });
@@ -161,11 +168,11 @@ export class UserController {
      */
     signout = asyncHandler(async (req, res) => {
         // -- elimino dal db
-        this.service.signout(req.payload.kid);
+        this.service.signout(req.payload.jti);
         // ---
         cookieUtils.deleteCookie(req, res, 'jwt');
+        cookieUtils.deleteCookie(req, res, 'chain');
         cookieUtils.deleteCookie(req, res, 'uid');
-        cookieUtils.deleteCookie(req, res, 'cke');
         // ---
         res.status(201).json({ message: 'Bye' });
     });
@@ -215,29 +222,6 @@ export class UserController {
         const users = await this.service.search(email);
         // -- restituisco la lista
         res.status(200).json(users);
-    });
-    /**
-     * Abilita l'autenticazione a 2 fattori
-     * @param {Request} req
-     * @param {Response} res
-     */
-    enable_mfa = asyncHandler(async (req, res) => {
-        const { email } = req.body;
-        // -- ottengo lo uid
-        const { id } = await this.service.find_by_email(email);
-        if (!id) throw new CError("UserNotFound", "User not found", 422);
-        // --
-        const { final, secret } = MFAService.generate(id);
-        // -- salvo nel db
-        const [affected] = await this.service.update_user_info(
-            { email },
-            { mfa_secret: Buffer.from(final) }
-        );
-        // ---
-        if (affected !== 1)
-            throw new CError("Internal error", "Not able to enable MFA", 500);
-        // ---
-        res.status(201).json({ secret: Bytes.hex.encode(secret) });
     });
     /**
      * Invia una mail con il codice di verifica

@@ -3,11 +3,12 @@ import { CError } from "../helpers/cError.js";
 import { User } from "../models/user.js";
 import { Op } from "sequelize";
 import { PoP } from "../protocols/PoP.node.js";
-import { AuthKeys } from "../models/authKeys.model.js";
+import { PublicKeyService } from "./publicKey.service.js";
 
 export class UserService {
     constructor() {
         this.pop = new PoP();
+        this.publicKeyService = new PublicKeyService();
     }
     /**
      * Registra un utente sul db
@@ -69,9 +70,10 @@ export class UserService {
      * @param {Request} request
      * @param {string} email
      * @param {string} publicKeyHex - chiave pubblica ECDSA del client in esadecimale
+     * @param {string} ua - user agent del dispositivo
      * @returns {{ uid: string, salt: Uint8Array, dek: Uint8Array, jwt: string, chain: string }} uid, salt, dek, jwt e chain
      */
-    async signin({ email, publicKeyHex }) {
+    async signin({ email, publicKeyHex, ua }) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { email },
@@ -87,27 +89,26 @@ export class UserService {
         /**
          * Genero l'access token e la chain
          */
-        const { jwt, chain } = await this.pop.generateAccessToken({ 
+        const { jwt, chain, jti } = await this.pop.generateAccessToken({ 
             uid: user.id,
             pub: publicKeyHex,
             chain: true,
             counter: 0
         });
+        /**
+         * Genero un record su PublicKey
+         */
+        await this.publicKeyService.create(jti, user.id, publicKeyHex, ua);
+        // ---
         return { uid: user.id, salt: user.salt, dek: user.dek, jwt, chain };
     }
 
     /**
-     * Elimina dal db la auth key
-     * @param {string} guid
+     * Elimina dal db la chiave pubblica
+     * @param {string} publicKeyId - uuid v4
      */
-    async signout(guid) {
-        const kid = await this.shiv.calculateKid(guid);
-        // ---
-        return await AuthKeys.destroy({
-            where: {
-                kid: kid,
-            },
-        });
+    async signout(publicKeyId) {
+        return await this.publicKeyService.delete({ id: publicKeyId });
     }
 
     /**

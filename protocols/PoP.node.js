@@ -24,10 +24,10 @@ export class PoP {
         // --- se richiesto genero la chain
         if (options.chain) {
             const chain = await this.calculateChain(jti, counter);
-            return { jwt, chain };
+            return { jwt, jti, chain };
         }
         // ---
-        return { jwt };
+        return { jwt, jti };
     }
 
     /**

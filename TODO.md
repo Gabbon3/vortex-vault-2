@@ -1,0 +1,2 @@
+- Eliminare dal db una chiave pubblica se gia esistente durante un nuovo login
+- Verificare se la public key esiste a db mentre si sta facendo il refresh

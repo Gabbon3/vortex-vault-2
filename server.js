@@ -7,6 +7,7 @@ import backup_routes from './routes/backup.routes.js';
 import static_routes from './routes/static.routes.js';
 import secure_link_routes from './routes/secure-link.routes.js';
 import passkey_routes from './routes/passkey.routes.js';
+import public_key_routes from './routes/publicKey.routes.js';
 import cke_routes from './routes/cke.routes.js';
 import './models/associations.js';
 import { cors_middleware, csp_middleware, security_headers } from './config/csp.js';
@@ -56,6 +57,7 @@ app.use((req, res, next) => {
 app.use('/auth', user_routes);
 app.use('/cke', cke_routes);
 app.use('/auth/passkey', passkey_routes);
+app.use('/public-key', public_key_routes);
 app.use('/vaults', vault_routes);
 app.use('/backup', backup_routes);
 app.use('/secure-link', secure_link_routes);

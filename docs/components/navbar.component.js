@@ -28,7 +28,7 @@ export class VortexNavbar extends HTMLElement {
             <span class="material-symbols-rounded">handyman</span>
             <i>Tools</i>
         </a>` : ''}
-        ${this.checkPath('/vault', true) ? `<a class="open purple" data-target-open="win-psw-devices" title="Dispositivi Connessi">
+        ${this.checkPath('/vault', true) ? `<a class="open purple" data-target-open="win-devices" title="Dispositivi Connessi">
             <span class="material-symbols-rounded">devices</span>
             <i>Dispositivi</i>
         </a>` : ''}
