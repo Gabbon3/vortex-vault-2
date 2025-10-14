@@ -20,24 +20,24 @@ export class DeviceService {
     }
     /**
      * Rinomina un token
-     * @param {string} id 
+     * @param {string} sid 
      * @param {string} newName 
      */
-    static async update_device_name(id, newName) {
-        const res = await API.fetch(`/public-key/${id}/name`, {
+    static async update_device_name(sid, newName) {
+        const res = await API.fetch(`/public-key/${sid}/name`, {
             method: 'PATCH',
-            body: { id: id, name: newName }
+            body: { sid: sid, name: newName }
         });
         if (!res) return null;
         return res;
     }
     /**
      * Elimina un token
-     * @param {string} id 
+     * @param {string} sid 
      * @returns {boolean}
      */
-    static async delete(id) {
-        const res = await API.fetch(`/public-key/${id}`, {
+    static async delete(sid) {
+        const res = await API.fetch(`/public-key/${sid}`, {
             method: 'DELETE',
         });
         // ---
@@ -46,20 +46,20 @@ export class DeviceService {
     }
     /**
      * Restituisce un device tramite id
-     * @param {string} id 
+     * @param {string} sid 
      * @returns {Object}
      */
-    static get_device(id) {
-        return this.devices[this.get_index(id)];
+    static get_device(sid) {
+        return this.devices[this.get_index(sid)];
     }
     /**
      * Restituisce l'index di un device
      * @param {Array<Object>} devices 
-     * @param {string} id 
+     * @param {string} sid 
      * @returns {string}
      */
-    static get_index(id, devices = this.devices) {
-        return devices.findIndex(device => device.id === id);
+    static get_index(sid, devices = this.devices) {
+        return devices.findIndex(device => device.sid === sid);
     }
 }
 

@@ -1,9 +1,7 @@
 import { asyncHandler } from "../helpers/asyncHandler.js";
 import { CError } from "../helpers/cError.js";
-import { Bytes } from "../utils/bytes.js";
 import { UserService } from "../services/user.service.js";
 import { Cripto } from "../utils/cryptoUtils.js";
-import { MFAService } from "../services/mfa.service.js";
 import { RedisDB } from "../config/redisdb.js";
 import { Mailer } from "../config/mail.js";
 import { Validator } from "../utils/validator.js";
@@ -13,6 +11,7 @@ import { Config } from "../server_config.js";
 import { cookieUtils } from "../utils/cookie.utils.js";
 import { PoP } from "../protocols/PoP.node.js";
 import { getUserAgentSummary } from "../utils/useragent.util.js";
+import { JWT } from "../utils/jwt.utils.js";
 
 export class UserController {
     constructor() {
@@ -45,17 +44,26 @@ export class UserController {
      * @param {Response} res
      */
     signin = asyncHandler(async (req, res) => {
-        const { email, publicKey: publicKeyHex } = req.body;
+        const { email, publicKey: publicKeyB64 } = req.body;
         // --- calcolo useragent
         const ua = getUserAgentSummary(req);
+        /**
+         * Recupero l'ID della sessione dal JWT
+         */
+        let sessionId = null;
+        if (req.cookies && req.cookies.jwt) {
+            const payload = JWT.getPayload(req.cookies.jwt);
+            if (payload && payload.sid) sessionId = payload.sid;
+        }
         /**
          * Servizio
          */
         const { uid, salt, dek, jwt, chain } =
             await this.service.signin({
                 email,
-                publicKeyHex,
-                ua
+                publicKeyB64,
+                ua,
+                sessionId
             });
         // ---
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
@@ -102,21 +110,7 @@ export class UserController {
         Validator.of(signedNonce).string();
         Validator.of(nonce).string().min(40).max(40);
 
-        // -- verifico che il nonce esista
-        const exists = await RedisDB.get(`nonce-${nonce}`);
-        if (!exists) throw new CError("ValidationError", "Nonce non valido o scaduto", 422);
-        // -- verifico la firma
-        const isValid = await this.pop.verifyNonceSignature(nonce, signedNonce, req.payload.pub);
-        if (!isValid) throw new CError("AuthenticationError", "Firma non valida", 401);
-        // -- se è tutto ok rigenero un access token
-        const { jwt, chain } = await this.pop.generateAccessToken({ 
-            uid: req.payload.uid, 
-            pub: req.payload.pub, 
-            chain: true, 
-            counter: 0
-        });
-        // -- aggiorno public key last_used_at
-        await this.service.publicKeyService.update({ id: req.payload.jti }, { last_used_at: new Date() });
+        const { jwt, chain } = await this.service.refreshAccessToken(signedNonce, nonce, req.payload);
         // ---
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
             httpOnly: true,
@@ -168,11 +162,10 @@ export class UserController {
      */
     signout = asyncHandler(async (req, res) => {
         // -- elimino dal db
-        this.service.signout(req.payload.jti);
+        this.service.signout(req.payload.sid);
         // ---
         cookieUtils.deleteCookie(req, res, 'jwt');
         cookieUtils.deleteCookie(req, res, 'chain');
-        cookieUtils.deleteCookie(req, res, 'uid');
         // ---
         res.status(201).json({ message: 'Bye' });
     });

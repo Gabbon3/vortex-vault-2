@@ -17,8 +17,8 @@ router.use(limiter);
  * /public-key/*
  */
 router.get('/', verifyAuth(), controller.getAllSession);
-router.patch('/:id/name', verifyAuth(), controller.editDeviceName);
-router.delete('/:id', verifyAuth({ advanced: true }), controller.deleteSession);
+router.patch('/:sid/name', verifyAuth(), controller.editDeviceName);
+router.delete('/:sid', verifyAuth({ advanced: true }), controller.deleteSession);
 router.delete('/', verifyAuth({ advanced: true }), controller.deleteAllSession);
 
 export default router;

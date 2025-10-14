@@ -69,4 +69,21 @@ export class JWT {
             return false;
         }
     }
+
+    /**
+     * Restituisce il payload di un JWT senza verificarlo
+     * @param {string} jwt 
+     * @returns {Object|null}
+     */
+    static getPayload(jwt) {
+        try {
+            const [payloadB64] = jwt.split(".");
+            if (!payloadB64) return null;
+            const payloadBuffer = Bytes.base64.decode(payloadB64, true);
+            const payload = msgpack.decode(payloadBuffer);
+            return payload;
+        } catch (error) {
+            return false;
+        }
+    }
 }

@@ -29,7 +29,7 @@ export class AuthService {
      */
     static async signin(email, password) {
         // -- genero la coppia di chiavi
-        const publicKeyHex = await PoP.generateKeyPair();
+        const publicKeyB64 = await PoP.generateKeyPair();
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
         const res = await API.fetch("/auth/signin", {
@@ -37,7 +37,7 @@ export class AuthService {
             body: {
                 email,
                 password: obfuscatedPassword,
-                publicKey: publicKeyHex,
+                publicKey: publicKeyB64,
             },
             skipRefresh: true,
         });

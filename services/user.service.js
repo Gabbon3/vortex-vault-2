@@ -4,6 +4,8 @@ import { User } from "../models/user.js";
 import { Op } from "sequelize";
 import { PoP } from "../protocols/PoP.node.js";
 import { PublicKeyService } from "./publicKey.service.js";
+import { Config } from "../server_config.js";
+import { RedisDB } from "../config/redisdb.js";
 
 export class UserService {
     constructor() {
@@ -35,11 +37,11 @@ export class UserService {
             throw new CError("UserExist", "This email is already in use", 409);
         // -- creo un nuovo utente
         const passwordHash = await this.hashPassword(password);
-        const user = new User({ 
-            email, 
-            password: passwordHash, 
+        const user = new User({
+            email,
+            password: passwordHash,
             salt: salt,
-            dek: DEK
+            dek: DEK,
         });
         // ---
         return await user.save();
@@ -69,11 +71,12 @@ export class UserService {
      * Esegue il login dell'utente
      * @param {Request} request
      * @param {string} email
-     * @param {string} publicKeyHex - chiave pubblica ECDSA del client in esadecimale
+     * @param {string} publicKeyB64 - chiave pubblica ECDSA del client in base64 urlsafe
      * @param {string} ua - user agent del dispositivo
+     * @param {string|null} sessionId - opzionale, se presente indica l'ID della sessione (id della tabella public keys)
      * @returns {{ uid: string, salt: Uint8Array, dek: Uint8Array, jwt: string, chain: string }} uid, salt, dek, jwt e chain
      */
-    async signin({ email, publicKeyHex, ua }) {
+    async signin({ email, publicKeyB64, ua, sessionId = null }) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { email },
@@ -87,28 +90,100 @@ export class UserService {
                 401
             );
         /**
+         * Se viene passato l'id della vecchia sessione (sessionId) la elimino
+         * in modo da evitare che rimangano sessioni orfane
+         */
+        if (sessionId) {
+            await this.publicKeyService.delete({
+                sid: sessionId,
+                user_id: user.id,
+            });
+        }
+        /**
+         * Elimino le sessioni più vecchie di 14 giorni (periodo di vita del jwt nei cookie)
+         */
+        const jwtLifetimeBound = Date.now() - Config.AUTH_TOKEN_COOKIE_EXPIRY;
+        await this.publicKeyService.deleteAll({
+            user_id: user.id,
+            id: null,
+            last_seen_at: { [Op.lt]: new Date(jwtLifetimeBound) },
+        });
+        /**
          * Genero l'access token e la chain
          */
-        const { jwt, chain, jti } = await this.pop.generateAccessToken({ 
+        const { jwt, chain, sid } = await this.pop.generateAccessToken({
             uid: user.id,
-            pub: publicKeyHex,
+            pub: publicKeyB64,
             chain: true,
-            counter: 0
+            counter: 0,
         });
         /**
          * Genero un record su PublicKey
          */
-        await this.publicKeyService.create(jti, user.id, publicKeyHex, ua);
+        await this.publicKeyService.create(sid, user.id, publicKeyB64, ua);
         // ---
         return { uid: user.id, salt: user.salt, dek: user.dek, jwt, chain };
     }
 
     /**
-     * Elimina dal db la chiave pubblica
-     * @param {string} publicKeyId - uuid v4
+     * Rigenera un access token a partire da un nonce firmato
+     * @param {string} signedNonce base64 firmato con chiave privata del client
+     * @param {string} nonce stringa esadecimale da 40 caratteri (20 byte)
+     * @param {Object} payload payload del jwt, cosi posso riprendere i dati e rigenerare il token
+     * @returns {{ jwt: string, chain: string }}
      */
-    async signout(publicKeyId) {
-        return await this.publicKeyService.delete({ id: publicKeyId });
+    async refreshAccessToken(signedNonce, nonce, payload) {
+        // -- verifico che il nonce esista
+        const exists = await RedisDB.getdel(`nonce-${nonce}`);
+        if (!exists)
+            throw new CError(
+                "ValidationError",
+                "Nonce non valido o scaduto",
+                422
+            );
+        // -- verifico la firma
+        const isValid = await this.pop.verifyNonceSignature(
+            nonce,
+            signedNonce,
+            payload.pub
+        );
+        if (!isValid) {
+            throw new CError("AuthenticationError", "Firma non valida", 401);
+        }
+        /**
+         * Verifico se la sessione esiste ancora sul db
+         */
+        let session = await this.publicKeyService.get({ sid: payload.sid });
+        if (!session) {
+            throw new CError(
+                "AuthenticationError",
+                "Sessione non valida",
+                401
+            );
+        }
+        session = null;
+        // -- se è tutto ok rigenero un access token
+        const { jwt, chain } = await this.pop.generateAccessToken({
+            uid: payload.uid,
+            pub: payload.pub,
+            sid: payload.sid,
+            chain: true,
+            counter: 0,
+        });
+        // -- aggiorno public key last_used_at
+        const [count] = await this.publicKeyService.update(
+            { sid: payload.sid },
+            { last_seen_at: new Date() }
+        );
+        // ---
+        return { jwt, chain };
+    }
+    /**
+     * Elimina dal db la chiave pubblica
+     * @param {string} sessionId - uuid v7
+     */
+    async signout(sessionId) {
+        return await this.publicKeyService.delete({ sid: sessionId });
     }
 
     /**
@@ -120,12 +195,15 @@ export class UserService {
     async changePassword(uid, newPassword, dek) {
         const newPasswordHash = await this.hashPassword(newPassword);
         // -- aggiorno la password
-        return await User.update({
-            password: newPasswordHash,
-            dek: dek,
-        }, {
-            where: { id: uid },
-        });
+        return await User.update(
+            {
+                password: newPasswordHash,
+                dek: dek,
+            },
+            {
+                where: { id: uid },
+            }
+        );
     }
     /**
      * Restituisce un utente tramite il suo id

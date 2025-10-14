@@ -8,7 +8,7 @@ export class PublicKeyService {
     /**
      * Restituisce la lista di tutte le sessioni, segnalando quella corrente
      * @param {string} currentId - id della sessione corrente
-     * @param {string} userId 
+     * @param {string} userId
      * @returns {Array<Object>}
      */
     async getAllSession(currentId, userId) {
@@ -16,13 +16,13 @@ export class PublicKeyService {
         const sessions = await PublicKey.findAll({
             where: { user_id: userId },
             attributes: {
-                exclude: ['user_id', 'secret']
-            }
+                exclude: ["user_id", "secret"],
+            },
         });
         // -- converto in json e verifico per ogni token se l'id corrisponde a quello corrente
-        const sessionsJson = sessions.map(session => {
+        const sessionsJson = sessions.map((session) => {
             const sessionJson = session.get();
-            sessionJson.current = sessionJson.id === currentId;
+            sessionJson.current = sessionJson.sid === currentId;
             return sessionJson;
         });
         // ---
@@ -30,18 +30,32 @@ export class PublicKeyService {
     }
 
     /**
+     * Restituisce una Public Key tramite le condizioni passate
+     * @param {Object} conditions 
+     * @returns {PublicKey}
+     */
+    async get(conditions) {
+        return await PublicKey.findOne({
+            where: conditions,
+        });
+    }
+
+    /**
      * Crea un nuovo record di Public Key
-     * @param {string} id - il jti del token
+     * @param {string} sid - id della sessione
      * @param {string} userId uuid dell utente
-     * @param {string} publicKeyHex chiave pubblica in esadecimale
+     * @param {string} publicKeyB64 chiave pubblica in base64 urlsafe
      * @param {string} ua user agent del dispositivo
      * @param {string} deviceName non obbligatorio: nome del dispositivo
      */
-    async create(id, userId, publicKeyHex, ua, deviceName = null) {
-        const fingerprint = await new Cripto().hash(publicKeyHex, { encoding: 'hex', algorithm: 'sha256' });
+    async create(sid, userId, publicKeyB64, ua, deviceName = null) {
+        const fingerprint = await new Cripto().hash(publicKeyB64, {
+            encoding: "hex",
+            algorithm: "sha256",
+        });
         // ---
         return await PublicKey.create({
-            id,
+            sid: sid,
             fingerprint,
             user_id: userId,
             device_name: deviceName,
@@ -56,10 +70,7 @@ export class PublicKeyService {
      * @returns {Array} [affectedRows]
      */
     async update(conditions, newInfo) {
-        return await PublicKey.update(
-            newInfo,
-            { where: conditions }
-        );
+        return await PublicKey.update(newInfo, { where: conditions });
     }
 
     /**
@@ -69,30 +80,28 @@ export class PublicKeyService {
      * @returns {number} numero di record eliminati
      */
     async delete(conditions) {
-        return await PublicKey.destroy(
-            { where: conditions }
-        );
+        return await PublicKey.destroy({ where: conditions });
     }
 
     /**
      * Elimina tutte le sessioni tranne la corrente
-     * @param {Object} conditions 
+     * @param {Object} conditions
      * @param {string} [conditions.id] opzionale, se specificato verranno eliminate tutte le sessioni tranne quella corrente
      * @param {string} [conditions.user_id] obbligatorio, indica lo user id associato alla sessione
      * @returns {number} numero di record eliminati
      */
     async deleteAll(conditions) {
-        if (!conditions.user_id) throw new Error('User ID è obbligatorio');
+        if (!conditions.user_id) throw new Error("User ID è obbligatorio");
         // -- se presente il guid della sessione viene calcolato il kid
-        let idCondition = conditions.id ? { [Op.ne]: conditions.id } : null;
+        let idCondition = conditions.sid ? { [Op.ne]: conditions.sid } : null;
         /**
          * Elimino sul DB
          */
         return await PublicKey.destroy({
             where: {
                 user_id: conditions.user_id,
-                id: idCondition
-            }
+                sid: idCondition,
+            },
         });
     }
 }

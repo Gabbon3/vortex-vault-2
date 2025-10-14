@@ -5,11 +5,21 @@ import { sequelize } from "../config/db.js";
  * Sul db bisogna creare l'indice hash e l'indice unico:
  * CREATE INDEX idx_public_key_id_hash ON public_key USING hash(id);
  * CREATE UNIQUE INDEX idx_public_key_id_unique ON public_key(id);
+ * 
+create table public_key (
+	sid uuid not null primary key,
+	fingerprint varchar(64) not null,
+	user_id uuid not null,
+	device_name varchar(20),
+	device_info varchar(100) not null,
+	last_seen_at timestamp default null,
+	created_at timestamp
+);
  */
 export const PublicKey = sequelize.define(
     "PublicKey",
     {
-        id: {
+        sid: {
             type: DataTypes.UUID,
             primaryKey: true,
         },

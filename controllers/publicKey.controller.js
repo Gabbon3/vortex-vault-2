@@ -12,12 +12,12 @@ export class PublicKeyController {
      * Restituisce la lista di tutte le sessioni legate ad un utente
      */
     getAllSession = asyncHandler(async (req, res) => {
-        const { jti: id, uid: userId } = req.payload;
+        const { sid, uid: userId } = req.payload;
         // ---
-        Validator.of(id, "Id sessione").uuid();
+        Validator.of(sid, "Id sessione").uuid();
         Validator.of(userId, "Id utente").uuid();
         // ---
-        const sessions = await this.service.getAllSession(id, userId);
+        const sessions = await this.service.getAllSession(sid, userId);
         res.status(200).json(sessions);
     });
 
@@ -25,13 +25,13 @@ export class PublicKeyController {
      * Modifica il nome di un dispositivo associato ad una sessione
      */
     editDeviceName = asyncHandler(async (req, res) => {
-        const { id } = req.params;
+        const { sid } = req.params;
         const { name } = req.body;
         // ---
-        Validator.of(id, "Id sessione").uuid();
+        Validator.of(sid, "Id sessione").uuid();
         Validator.of(name, "Nome dispositivo").string().min(3).max(20);
         // ---
-        const [affectedCount] = await this.service.update({ id: id, user_id: req.payload.uid }, { device_name: name });
+        const [affectedCount] = await this.service.update({ sid: sid, user_id: req.payload.uid }, { device_name: name });
         res.status(200).json({ count: affectedCount });
     });
 
@@ -39,13 +39,13 @@ export class PublicKeyController {
      * Elimina una sessione specifica
      */
     deleteSession = asyncHandler(async (req, res) => {
-        const { id } = req.params;
+        const { sid } = req.params;
         // ---
-        Validator.of(id, "Id sessione").uuid();
+        Validator.of(sid, "Id sessione").uuid();
         // -- verifico che non sia la sessione corrente
-        if (id === req.payload.jti) throw new CError("", "Non è possibile eliminare la sessione corrente, per farlo devi effettuare il logout.", 400);
+        if (sid === req.payload.sid) throw new CError("", "Non è possibile eliminare la sessione corrente, per farlo devi effettuare il logout.", 400);
         // ---
-        const deleted = await this.service.delete({ id: id, user_id: req.payload.uid });
+        const deleted = await this.service.delete({ sid: sid, user_id: req.payload.uid });
         res.status(200).json({ count: deleted });
     });
 
@@ -53,7 +53,7 @@ export class PublicKeyController {
      * Elimina tutte le sessioni tranne la corrente
      */
     deleteAllSession = asyncHandler(async (req, res) => {
-        const deleted = await this.service.deleteAll({ kid: req.payload.jti, user_id: req.payload.uid });
+        const deleted = await this.service.deleteAll({ sid: req.payload.sid, user_id: req.payload.uid });
         res.status(200).json({ count: deleted });
     });
 }

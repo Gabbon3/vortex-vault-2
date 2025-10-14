@@ -2,7 +2,7 @@ import { ECDSA } from "../utils/ecdsa.js";
 import { JWT } from "../utils/jwt.utils.js";
 import { Config } from "../server_config.js";
 import { Bytes } from "../utils/bytes.js";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v7 as uuidv7 } from 'uuid';
 
 export class PoP {
     /**
@@ -18,16 +18,17 @@ export class PoP {
     async generateAccessToken(options) {
         if (!options || !options.uid || !options.pub) throw new Error("userId e publicKeyHex sono obbligatori");
         const { otherClaims = {}, exp = Config.AUTH_TOKEN_EXPIRY, counter = 0 } = options;
+        const sid = options.sid ? options.sid : uuidv7();
         const jti = uuidv4();
-        const payload = { jti, uid: options.uid, pub: options.pub, ...otherClaims };
+        const payload = { sid, jti, uid: options.uid, pub: options.pub, ...otherClaims };
         const jwt = await JWT.sign({ payload, exp }, Config.JWT_SIGN_KEY);
         // --- se richiesto genero la chain
         if (options.chain) {
             const chain = await this.calculateChain(jti, counter);
-            return { jwt, jti, chain };
+            return { jwt, sid, chain };
         }
         // ---
-        return { jwt, jti };
+        return { jwt, sid };
     }
 
     /**
@@ -64,11 +65,11 @@ export class PoP {
      * Verifica se un nonce è stato firmato correttamente con la chiave pubblica
      * @param {string} nonce 
      * @param {string} signedNonceHex 
-     * @param {string} publicKeyHex 
+     * @param {string} publicKeyB64 
      * @returns {Promise<boolean>}
      */
-    async verifyNonceSignature(nonce, signedNonceHex, publicKeyHex) {
-        const publicKeyBuffer = Bytes.hex.decode(publicKeyHex).buffer;
+    async verifyNonceSignature(nonce, signedNonceHex, publicKeyB64) {
+        const publicKeyBuffer = Bytes.base64.decode(publicKeyB64, true).buffer;
         const publicKey = await ECDSA.importPublicKeyRaw(publicKeyBuffer);  
         const signedNonceBuffer = Bytes.hex.decode(signedNonceHex).buffer;
         return await ECDSA.verify(publicKey, signedNonceBuffer, Bytes.hex.decode(nonce).buffer);

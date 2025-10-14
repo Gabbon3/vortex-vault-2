@@ -2,20 +2,23 @@ import { DeviceService } from "../service/device.service.js";
 import { date } from "../utils/dateUtils.js";
 import { Windows } from "../utils/windows.js";
 
+document.addEventListener("DOMContentLoaded", async () => {
+    const syncButton = document.querySelector("#btn-sync-devices");
+    if (syncButton) {
+        syncButton.addEventListener("click", async () => {
+            Windows.loader(true);
+            await DeviceUI.init();
+            Windows.loader(false);
+        });
+    }
+});
+
 export class DeviceUI {
     static async init() {
         const inizialized = await DeviceService.init();
         if (inizialized !== true) return;
         // ---
         this.html_devices(DeviceService.devices);
-        // ---
-        document
-            .querySelector("#btn-sync-devices")
-            .addEventListener("click", async () => {
-                Windows.loader(true);
-                await DeviceUI.init();
-                Windows.loader(false);
-            });
     }
     /**
      *
@@ -25,7 +28,7 @@ export class DeviceUI {
         let html = "";
         for (const device of devices) {
             html += `<device-list-item 
-                id="${device.id}"
+                id="${device.sid}"
                 device-name="${
                     device.device_name ??
                     "Clicca qui per rinominare il dispositivo"
