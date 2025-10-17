@@ -6,6 +6,8 @@ import { PoP } from "../protocols/PoP.node.js";
 import { PublicKeyService } from "./publicKey.service.js";
 import { Config } from "../server_config.js";
 import { RedisDB } from "../config/redisdb.js";
+import { Mailer } from "../config/mail.js";
+import emailContents from "../docs/utils/automated.mails.js";
 
 export class UserService {
     constructor() {
@@ -73,10 +75,11 @@ export class UserService {
      * @param {string} email
      * @param {string} publicKeyB64 - chiave pubblica ECDSA del client in base64 urlsafe
      * @param {string} ua - user agent del dispositivo
+     * @param {string} ip - indirizzo ip del dispositivo
      * @param {string|null} sessionId - opzionale, se presente indica l'ID della sessione (id della tabella public keys)
      * @returns {{ uid: string, salt: Uint8Array, dek: Uint8Array, jwt: string, chain: string }} uid, salt, dek, jwt e chain
      */
-    async signin({ email, publicKeyB64, ua, sessionId = null }) {
+    async signin({ email, publicKeyB64, ua, ip, sessionId = null }) {
         // -- cerco se l'utente esiste
         const user = await User.findOne({
             where: { email },
@@ -121,6 +124,11 @@ export class UserService {
          * Genero un record su PublicKey
          */
         await this.publicKeyService.create(sid, user.id, publicKeyB64, ua);
+        /**
+         * Invio una mail per avvisare l'utente del nuovo login
+         */
+        const { text, html } = emailContents.newSignIn({ email, user_agent: ua, ip_address: ip });
+        Mailer.send(email, "Vortex Vault - Nuovo login", text, html);
         // ---
         return { uid: user.id, salt: user.salt, dek: user.dek, jwt, chain };
     }

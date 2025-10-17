@@ -58,12 +58,14 @@ export class UserController {
         /**
          * Servizio
          */
+        const ip = req.ip || req.connection.remoteAddress;
         const { uid, salt, dek, jwt, chain } =
             await this.service.signin({
                 email,
                 publicKeyB64,
                 ua,
-                sessionId
+                sessionId,
+                ip
             });
         // ---
         cookieUtils.setCookie(req, res, 'jwt', jwt, {
