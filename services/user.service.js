@@ -127,7 +127,7 @@ export class UserService {
         /**
          * Invio una mail per avvisare l'utente del nuovo login
          */
-        const { text, html } = emailContents.newSignIn({ email, user_agent: ua, ip_address: ip });
+        const { text, html } = await emailContents.newSignIn({ email, user_agent: ua, ip_address: ip });
         Mailer.send(email, "Vortex Vault - Nuovo login", text, html);
         // ---
         return { uid: user.id, salt: user.salt, dek: user.dek, jwt, chain };

@@ -3,8 +3,8 @@ import { sequelize } from "../config/db.js";
 
 /**
  * Sul db bisogna creare l'indice hash e l'indice unico:
- * CREATE INDEX idx_public_key_id_hash ON public_key USING hash(id);
- * CREATE UNIQUE INDEX idx_public_key_id_unique ON public_key(id);
+ * CREATE INDEX idx_public_key_id_hash ON public_key USING hash(sid);
+ * CREATE UNIQUE INDEX idx_public_key_id_unique ON public_key(sid);
  * 
 create table public_key (
 	sid uuid not null primary key,
