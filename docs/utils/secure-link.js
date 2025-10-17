@@ -14,7 +14,8 @@ export class SecureLink {
      * @param {number} [options.ttl] * time to live
      */
     static async generate(options) {
-        const key = options.key || Cripto.randomBytes(32);
+        const rawKey = options.key instanceof Uint8Array ? options.key : Cripto.randomBytes(32);
+        const key = await AES256GCM.importAesGcmKey(rawKey);
         const data = msgpack.encode(options.data);
         const encrypted_data = await AES256GCM.encrypt(data, key);
         // ---
@@ -30,7 +31,7 @@ export class SecureLink {
         if (!res) return false;
         return {
             id: res.id,
-            key: Bytes.base64.encode(key, true)
+            key: Bytes.base64.encode(rawKey, true)
         };
     }
     /**
@@ -56,7 +57,8 @@ export class SecureLink {
         });
         if (!res) return false;
         // ---
-        const key = key_ instanceof Uint8Array ? key_ : Bytes.base64.decode(key_, true);
+        const rawKey = key_ instanceof Uint8Array ? key_ : Bytes.base64.decode(key_, true);
+        const key = await AES256GCM.importAesGcmKey(rawKey);
         // -- decodifico da msgpack e da base64 e decifro
         const decoded_data = Bytes.base64.decode(res.data);
         const data = await AES256GCM.decrypt(decoded_data, key);

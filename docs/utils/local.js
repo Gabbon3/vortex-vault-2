@@ -8,10 +8,10 @@ import msgpack from "./msgpack.min.js";
  *  - lse-private-key, la chiave privata del protocollo lse
  *  - email, ~
  *  - vaults, tutti i vaults, cifrati con master key
- *  - master-key, ~ , cifrata con la LSK
+ *  - master-key, ~ , cifrata con la KEK
  *  - salt, salt dello user
  *  - passkey-token-expire, data di scadenza del jwt generato quando si usa una passkey (pochi minuti)
- *  - password-utente, password dell'utente, cifrata con la LSK
+ *  - password, password dell'utente, cifrata con la KEK
  */
 export class LocalStorage {
     static prefix = 'vortex-vault';

@@ -60,6 +60,7 @@ export class AuthService {
         );
         LocalStorage.set("salt", salt);
         LocalStorage.set("email", email);
+        LocalStorage.set("password", password, KEK);
         await VaultService.keyStore.saveKey(KEK, "KEK");
         await VaultService.keyStore.saveKey(DEK, "DEK");
         // ---
@@ -211,7 +212,7 @@ export class AuthService {
      */
     static async request_quick_signin() {
         const password = await LocalStorage.get(
-            "password-utente",
+            "password",
             VaultService.KEK
         );
         if (!password) return null;
@@ -231,7 +232,7 @@ export class AuthService {
      */
     static async requestExtensionTokenSignIn() {
         const password = await LocalStorage.get(
-            "password-utente",
+            "password",
             VaultService.KEK
         );
         if (!password) return null;
@@ -335,7 +336,7 @@ export class AuthService {
             return null;
         }
         // ---
-        const password = await LocalStorage.get("password-utente", master_key);
+        const password = await LocalStorage.get("password", master_key);
         if (!password) return null;
         // ---
         const email = await LocalStorage.get("email");

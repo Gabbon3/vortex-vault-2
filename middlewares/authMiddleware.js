@@ -44,7 +44,7 @@ export const verifyAuth = (options = {}) => {
         }
         // -- VERIFICO LA CHAIN
         if (!ignoreChain) {
-            await verifyChain(req, res, payload.jti);
+            // await verifyChain(req, res, payload.jti);
         }
         // -- memorizzo il payload nella request
         req.payload = payload;
