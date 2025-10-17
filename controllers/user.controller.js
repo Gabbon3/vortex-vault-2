@@ -51,8 +51,9 @@ export class UserController {
          * Recupero l'ID della sessione dal JWT
          */
         let sessionId = null;
-        if (req.cookies && req.cookies.jwt) {
-            const payload = JWT.getPayload(req.cookies.jwt);
+        const oldJwt = cookieUtils.getCookie(req, "jwt");
+        if (oldJwt) {
+            const payload = JWT.getPayload(oldJwt);
             if (payload && payload.sid) sessionId = payload.sid;
         }
         /**
