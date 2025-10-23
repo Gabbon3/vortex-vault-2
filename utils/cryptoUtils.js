@@ -38,7 +38,7 @@ export class Cripto {
         }
         return code;
     }
-    
+
     /**
      * Genera un hash HMAC di un messaggio con una chiave specifica.
      * @param {Uint8Array} message - Messaggio da crittografare.
@@ -82,7 +82,17 @@ export class Cripto {
      */
     async hashWithSalt(message) {
         const salt = crypto.randomBytes(16);
-        const hash = Buffer.from(await this.hmac(message, salt));
+        const cryptoKeySalt = await crypto.subtle.importKey(
+            "raw",
+            Buffer.from(salt, "hex"),
+            {
+                name: "HMAC",
+                hash: "SHA-256",
+            },
+            false,
+            ["sign", "verify"]
+        );
+        const hash = Buffer.from(await this.hmac(new TextEncoder().encode(message), cryptoKeySalt));
         return new Uint8Array(Buffer.concat([salt, hash]));
     }
     /**
@@ -95,7 +105,18 @@ export class Cripto {
         const salt = salt_hash.subarray(0, 16);
         const hash = salt_hash.subarray(16);
         // ---
-        const new_hash = await this.hmac(message, salt);
+        const cryptoKeySalt = await crypto.subtle.importKey(
+            "raw",
+            Buffer.from(salt, "hex"),
+            {
+                name: "HMAC",
+                hash: "SHA-256",
+            },
+            false,
+            ["sign", "verify"]
+        );
+        // ---
+        const new_hash = Buffer.from(await this.hmac(new TextEncoder().encode(message), cryptoKeySalt));
         return Buffer.compare(hash, new_hash) === 0;
     }
     /**

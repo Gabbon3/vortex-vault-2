@@ -135,9 +135,10 @@ export class UserController {
      * Ricalcolo il jwt aggiungendo la sessione avanzata
      */
     enableAdvancedSession = asyncHandler(async (req, res) => {
-        const { uid, pub } = req.payload;
+        const { uid, pub, sid } = req.payload;
         // ---
         const { jwt, chain } = await this.pop.generateAccessToken({ 
+            sid,
             uid, 
             pub, 
             otherClaims: { advanced: true },
