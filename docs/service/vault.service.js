@@ -17,8 +17,9 @@ export class VaultService {
     static salt = null;
     static vaults = [];
     static used_usernames = new Set();
-    // Tempo da rimuovere da Date.now() per ottenere i vault piu recenti
-    static getDateDiff = 30 * 60 * 1000;
+    // Tempo da rimuovere dall'ultima-sincronizzazione per ottenere i vault piu recenti
+    // Questo per evitare possibili ritardi che potrebbero non far restituire correttamente tutti i dati
+    static getDateDiff = 2 * 60 * 1000;
     /**
      * Configura i segreti necessari ad utilizzare il vault
      * @returns {boolean} - true se entrambi sono presenti
@@ -49,7 +50,7 @@ export class VaultService {
          * in questo modo evito di farmi restituire dati incompleti per
          * disincronizzazione tra client e server
          */
-        if (vault_update) selectFrom = new Date(Date.now() - this.getDateDiff);
+        if (vault_update) selectFrom = new Date(vault_update - this.getDateDiff);
         /**
          * Provo ad ottenere i vault dal localstorage
          */
@@ -66,7 +67,7 @@ export class VaultService {
             const vaults_from_db = await this.get(full ? null : selectFrom);
             if (vaults_from_db.length > 0) {
                 if (full) {
-                    await VaultLocal.save(
+                    VaultLocal.save(
                         vaults_from_db.filter((vault) => {
                             return vault.deleted == false;
                         }),
@@ -79,6 +80,8 @@ export class VaultService {
                         this.DEK
                     );
                 }
+                // -- aggiorno la data di ultima sincronizzazione con il db
+                LocalStorage.set("vault-update", new Date());
             } else {
                 // -- se eseguendo il sync totale non ci sono vault nel db allora azzero per sicurezza anche in locale
                 if (full) await VaultLocal.save([], this.DEK);
@@ -135,8 +138,6 @@ export class VaultService {
                 : null,
         });
         if (!res) return null;
-        // ---
-        if (res.length > 0) LocalStorage.set("vault-update", new Date());
         // ---
         return (await this.decryptAllVaults(res)) ? res : null;
     }
