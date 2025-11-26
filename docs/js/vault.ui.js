@@ -6,7 +6,6 @@ import { date } from "../utils/dateUtils.js";
 import { Windows } from "../utils/windows.js";
 import { Search } from "../utils/search.js";
 import { ptg } from "../utils/ptg.js";
-import { SessionStorage } from "../utils/session.js";
 import { LocalStorage } from "../utils/local.js";
 import { PasskeyUI } from "./passkey.ui.js";
 import { HtmlSecretsRender } from "./html_secrets_render.js";

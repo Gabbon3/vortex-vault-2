@@ -495,6 +495,8 @@ export class HtmlSecretsRender {
         // -- se è presente un username
         // - @ intesto come "Chi? | Quale username?"
         if (vals.secrets.U) context.push(`@${vals.secrets.U}`);
+        // -- se è una connessione ed esiste l'host lo aggiungo
+        if (vals.secrets.H) context.push(`@${vals.secrets.H}${vals.secrets.P ? `:${vals.secrets.P}` : ''}`);
         // -- se è un login e la password non è sicura
         // - # indica una categoria
         // -- in questo caso la categoria di password non sicure
