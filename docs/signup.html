@@ -75,13 +75,13 @@
                 Registrati
             </button>
             <p class="description">
-                Per completare la registrazione, dovrai verificare la tua email e successivamente potrai creare la tua prima passkey.
+                Per completare la registrazione, dovrai verificare la tua email.
             </p>
             <hr>
             <div class="flex gap-50 d-column">
                 <button type="button" class="btn peach w-100 open" data-target-open="win-email-verify">
-                    <span class="material-symbols-rounded">passkey</span>
-                    Verifica Email e crea la Passkey
+                    <span class="material-symbols-rounded">verifier_user</span>
+                    Verifica Email
                 </button>
             </div>
         </form>
@@ -99,8 +99,8 @@
         <div class="window m maincolor peach" id="win-email-verify">
             <div class="flex y-center">
                 <h3 class="icon">
-                    <span class="material-symbols-rounded">passkey</span>
-                    Verifica l'email e crea la tua prima passkey
+                    <span class="material-symbols-rounded">verifier_user</span>
+                    Verifica l'email
                 </h3>
                 <button class="btn t close l last" data-target-close="win-email-verify">
                     <span class="material-symbols-rounded">close</span>
@@ -108,11 +108,9 @@
             </div>
             <hr>
             <p>
-                Verifica la tua email e crea la tua prima passkey,
-                ti sarà utile per utilizzare l'app.
-                Riceverai un codice a 6 cifre tramite email che dovrai inserire nell input qui sotto, controlla gli spam anche.
+                Riceverai un codice monouso a 6 cifre tramite email che dovrai inserire nell input qui sotto, controlla gli spam anche.
             </p>
-            <form autocomplete="off" id="setup-passkey">
+            <form autocomplete="off" id="verify-email">
                 <!-- --- -->
                 <div class="isle bg-4 mb-2">
                     <label for="verify-email-email">

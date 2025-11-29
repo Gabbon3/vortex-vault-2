@@ -36,7 +36,7 @@ export class UserService {
             where: { email },
         });
         if (user_exist)
-            throw new CError("UserExist", "This email is already in use", 409);
+            throw new CError("UserExist", "Questa non può essere utilizzata sui nostri sistemi", 409);
         // -- creo un nuovo utente
         const passwordHash = await this.hashPassword(password);
         const user = new User({

@@ -77,7 +77,8 @@ export class AuthService {
         const DEK = Cripto.randomBytes(32);
         const salt = Cripto.randomBytes(16);
         const KEK = await Cripto.deriveKey(password, salt);
-        const encryptedDEK = await AES256GCM.encrypt(DEK, KEK);
+        const tempKEK = await AES256GCM.importAesGcmKey(KEK, false);
+        const encryptedDEK = await AES256GCM.encrypt(DEK, tempKEK);
         // ---
         const obfuscatedPassword = await Cripto.obfuscatePassword(password);
         // ---
