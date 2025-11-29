@@ -3,6 +3,7 @@ import { CError } from "../helpers/cError.js";
 import msgpack from "../docs/utils/msgpack.min.js";
 import { UserService } from "../services/user.service.js";
 import { VaultService } from "../services/vault.service.js";
+import { Validator } from "../utils/validator.js";
 
 export class VaultController {
     constructor() {
@@ -45,6 +46,9 @@ export class VaultController {
      */
     get = asyncHandler(async (req, res) => {
         let updated_after = req.query.updated_after ?? null;
+        // ---
+        Validator.of(updated_after, 'Delta').date();
+        // ---
         if (updated_after) updated_after = new Date(updated_after);
         // ---
         const vaults = await this.service.get(req.payload.uid, updated_after);
