@@ -219,6 +219,10 @@ h5 {
     }
 }
 
+h4 {
+    font-size: calc($fs-m + 2px);
+}
+
 .color {
     &.warn {
         color: var(--warning) !important;

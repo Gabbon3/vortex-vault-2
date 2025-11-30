@@ -326,15 +326,21 @@ export class VaultService {
      */
     static async rotateKEK(email, newPassword, salt) {
         try {
-            const ckeKey = SessionStorage.get("cke-key-advanced");
-            if (!ckeKey) throw new Error('CKE non presente');
-            // ---
-            const DEK = VaultService.DEK;
-            const newKEK = await Cripto.deriveKey(newPassword, salt);
+            // ottengo la vecchia DEK
+            const encryptedDEK = await LocalStorage.get("encrypted-dek");
+            let DEK = await AES256GCM.decrypt(encryptedDEK, this.KEK);
+            // genero la nuova KEK
+            let rawNewKEK = await Cripto.deriveKey(newPassword, salt);
+            const newKEK = await AES256GCM.importAesGcmKey(rawNewKEK);
+            rawNewKEK = null;
             /**
              * Cifro la DEK con la nuova KEK
              */
-            const encryptedDEK = await AES256GCM.encrypt(DEK, newKEK);
+            const encryptedDEKnewKEK = await AES256GCM.encrypt(DEK, newKEK);
+            DEK = null;
+            const encodedEncryptedDEKnewKEK = Bytes.base64.encode(encryptedDEKnewKEK);
+            // ---
+            const obfuscatedNewPassword = await Cripto.obfuscatePassword(newPassword);
             // ---
             const res = await API.fetch(
                 "/auth/password",
@@ -342,17 +348,18 @@ export class VaultService {
                     method: "POST",
                     body: {
                         email,
-                        newPassword: await Cripto.obfuscatePassword(newPassword),
-                        dek: Bytes.base64.encode(encryptedDEK)
-                    }
+                        newPassword: obfuscatedNewPassword,
+                        dek: encodedEncryptedDEKnewKEK
+                    },
+                    isAdvanced: true // abilito il controllo sulla sessione avanzata
                 }
             );
             if (!res) throw new Error('Rotazione fallita');
             // --
             VaultService.KEK = newKEK;
-            // -- salvo la master key
-            await SessionStorage.set('master-key', newKEK);
-            await LocalStorage.set('master-key', newKEK, ckeKey);
+            // -- salvo su indexed db la nuova KEK
+            const saved = await VaultService.keyStore.saveKey("KEK", newKEK);
+            if (!saved !== true) throw saved;
             // ---
             return newKEK;
         } catch (error) {

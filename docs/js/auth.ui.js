@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // -- check if new passwords corresponds
         if (elements.new_password !== elements.new_password_2) return Log.summon(1, 'Le password non corrispondono');
         // ---
-        if (!confirm('Sei sicuro di voler cambiare la password? Dovrai effettuare l\'accesso da capo su ogni altro dispositivo connesso a questo account?')) return;
+        if (!confirm('Confermi di voler effettuare il cambio della password? Verrà automaticamente eseguito il logout su tutti gli altri dispotivi connessi.')) return;
         // ---
-        Windows.loader(true, "Sto modificando la password creando un backup");
+        Windows.loader(true, "Sto modificando la password...");
         if (await AuthService.changePassword(elements.new_password)) {
             Log.summon(0, "Password cambiata con successo");
             form.reset();
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const token = await AuthService.requestExtensionTokenSignIn();
         if (token) {
             navigator.clipboard.writeText(token);
-            Log.summon(0, "Il token è stato correttamente generato e copiato sulla tua clipboard");
+            Log.summon(0, "Il token è stato correttamente generato e copiato negli appunti");
             form.reset();
         } else if (token === null) {
             Log.summon(2, "Qualcosa è andato storto");

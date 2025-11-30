@@ -62,6 +62,7 @@ export class AuthService {
         LocalStorage.set("salt", salt);
         LocalStorage.set("email", email);
         LocalStorage.set("password", password, KEK);
+        LocalStorage.set("encrypted-dek", encryptedDEK);
         await VaultService.keyStore.saveKey(KEK, "KEK");
         await VaultService.keyStore.saveKey(DEK, "DEK");
         // ---
@@ -153,29 +154,24 @@ export class AuthService {
         });
         // ---
         if (!res) return false;
-        SessionStorage.set(
-            "access-token-expiry",
-            new Date(Date.now() + 7 * 60 * 1000)
-        );
+        const expire = new Date(Date.now() + 7 * 60 * 1000);
+        SessionStorage.set("access-token-expiry", expire);
+        SessionStorage.set("advanced-session-expiry", expire);
         return true;
     }
     /**
      * Cambio password
-     * @param {string} currentPassword Key Encryption Key corrente
      * @param {string} newPassword Nuova Key Encryption Key
      * @returns {boolean} false se: non ce la lsk, non ce l'email, non è andato a buon fine il cambio password
      */
     static async changePassword(newPassword) {
-        const ckeKey = SessionStorage.get("cke-key-advanced"); // local storage key
-        if (!ckeKey) return false;
         const email = await LocalStorage.get("email");
-        if (!email) {
-            Log.summon(2, "No email found, sign in again");
-            return false;
-        }
         const salt = await LocalStorage.get("salt");
-        if (!salt) {
-            Log.summon(2, "No salt, sign in again");
+        if (!email || !salt) {
+            Log.summon(
+                2,
+                "Non sono state trovate tutte le informazioni necessarie, effettua nuovamente l'accesso"
+            );
             return false;
         }
         // ---
@@ -185,9 +181,9 @@ export class AuthService {
         const newKEK = await VaultService.rotateKEK(email, newPassword, salt);
         if (!newKEK) return false;
         /**
-         * Elimino tutte le sessioni SHIV associate tranne la corrente
+         * Elimino tutte le sessioni tranne la corrente
          */
-        await API.fetch("/shiv/session", {
+        await API.fetch("/public-key/", {
             method: "DELETE",
         });
         /**
@@ -214,10 +210,7 @@ export class AuthService {
      * @returns {string} url per accedere
      */
     static async request_quick_signin() {
-        const password = await LocalStorage.get(
-            "password",
-            VaultService.KEK
-        );
+        const password = await LocalStorage.get("password", VaultService.KEK);
         if (!password) return null;
         // ---
         const email = await LocalStorage.get("email");
@@ -234,10 +227,7 @@ export class AuthService {
      * Genera un token per accedere velocemente all'estensione di chrome
      */
     static async requestExtensionTokenSignIn() {
-        const password = await LocalStorage.get(
-            "password",
-            VaultService.KEK
-        );
+        const password = await LocalStorage.get("password", VaultService.KEK);
         if (!password) return null;
         // ---
         const email = await LocalStorage.get("email");

@@ -47,7 +47,7 @@ export class KeyStore {
      * Salva una CryptoKey (sovrascrive se esiste già)
      * @param {CryptoKey} key - Chiave da salvare
      * @param {string} name - Nome identificativo (usato come chiave primaria)
-     * @returns {Promise<string>} Nome della chiave salvata
+     * @returns {Promise<boolean|string>} true se lha salvata, stringa di errore altrimenti
      */
     async saveKey(key, name) {
         if (!(key instanceof CryptoKey)) {
@@ -67,7 +67,7 @@ export class KeyStore {
             // put() sovrascrive se esiste già un record con lo stesso name
             const request = store.put(keyData);
 
-            request.onsuccess = () => resolve(name);
+            request.onsuccess = () => resolve(true);
             request.onerror = () => reject(request.error);
         });
     }

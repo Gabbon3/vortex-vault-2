@@ -173,19 +173,19 @@ ${aphtml}`;
         const { text: aptext, html: aphtml } = await emailContents.antiphishing_code(email);
 
         const text =
-            `Hello ${email.split("@")[0]},
-Your password has been successfully changed.
+            `Ciao ${email.split("@")[0]},
+La tua password è stata correttamente modificata.
 
-To complete the operation and ensure your data is restored correctly, please make sure to restore the backup file that was just downloaded.
+Se non sei stato tu, sei fottuto :)
 
-The Vortex Vault team
+Il team di Vortex Vault
 ${aptext}`;
 
         const htmlContent =
             `<h2 style="color: #333;">Password changed successfully</h2>
-<p>Your password has been updated.</p>
-<p>To complete the operation and ensure your data is restored correctly, please restore the backup file that was just downloaded.</p>
-<p style="color: #999;">The Vortex Vault team</p>
+<p>La tua password è stata correttamente modificata.</p>
+<p>Se non sei stato tu, sei fottuto :)</p>
+<p style="color: #999;">Il team di Vortex Vault</p>
 ${aphtml}`;
 
         const html = emailContents.htmlWrapper(htmlContent);

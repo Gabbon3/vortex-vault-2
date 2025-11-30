@@ -107,12 +107,12 @@ class SettingsComponent extends HTMLElement {
             html += `
         <hr>
         <!-- ADVANCED SESSION == as -->
-        <div class="maincolor lightblue">
+        <div class="maincolor orange">
             <h3 class="icon slider" slider="cont-sudo-session">
                 <span class="material-symbols-rounded warning">vpn_key</span>
                 Sessione Avanzata
             </h3>
-            <div class="isle bg-4 slider-cont slow" data-open="false" id="cont-sudo-session">
+            <div class="isle bg-4 br-l slider-cont slow" data-open="false" id="cont-sudo-session">
                 <p class="mt-0 mb-2">
                     Attiva la <strong>sessione avanzata</strong> per eseguire operazioni critiche.
                     La sessione sarà valida solo per 10 minuti per motivi di sicurezza. <br>
@@ -159,15 +159,7 @@ class SettingsComponent extends HTMLElement {
                 Cambia Password
                 <span class="material-symbols-rounded warning">vpn_key</span>
             </h3>
-            <form autocomplete="off" class="isle bg-4 slider-cont slow" data-open="false" id="form-change-password">
-                <p class="mt-0 mb-2">
-                    <strong>Prima di cambiare la tua password</strong>
-                    devi sapere che dovrai effettuare il restore di un backup manualmente, 
-                    che verrà generato e scaricato al seguito del cambio della password, 
-                    dovrai quindi raggiungere la sezione backup dal menu in 
-                    alto ed effettuare il restore manualmente.
-                </p>
-                <hr>
+            <form autocomplete="off" class="isle bg-4 br-l slider-cont slow" data-open="false" id="form-change-password">
                 <label for="new-password">
                     <span class="material-symbols-rounded">key_vertical</span>
                     Nuova Password
@@ -199,8 +191,12 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded">id_card</span>
                 Accesso Rapido
             </h3>
-            <div class="isle bg-4 slider-cont" data-open="false" id="cont-qsi">
-                <p class="mt-0 mb-2">
+            <div class="isle bg-4 br-l slider-cont" data-open="false" id="cont-qsi">
+                <h4 class="icon" slider="cont-qsi">
+                    <span class="material-symbols-rounded">devices</span>
+                    Per dispositivi
+                </h4>
+                <p class="mt-1 mb-2">
                     Genera un link monouso mostrato tramite Qr code per accedere rapidamente da un'altro dispositivo
                 </p>
                 <form autocomplete="off" id="form-fsi">
@@ -210,13 +206,17 @@ class SettingsComponent extends HTMLElement {
                     </button>
                 </form>
                 <hr>
-                <p class="mt-0 mb-2">
-                    Genera invece un codice monouso per accedere velocemente all'estensione di Chrome
+                <h4 class="icon" slider="cont-qsi">
+                    <span class="material-symbols-rounded">extension</span>
+                    Per l'estensione
+                </h4>
+                <p class="mt-1 mb-2">
+                    Genera un codice monouso per accedere rapidamente tramite l'estensione del browser
                 </p>
                 <form autocomplete="off" id="form-ext-sign-in">
                     <button type="submit" class="btn primary mt-2">
                         <span class="material-symbols-rounded">password</span>
-                        Genera
+                        Genera e copia
                     </button>
                 </form>
             </div>
@@ -233,7 +233,7 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded">mark_email_read</span>
                 Controllo dei MACs
             </h3>
-            <div class="isle bg-4 slider-cont maincolor olivegreen" id="cont-cmac">
+            <div class="isle bg-4 br-l slider-cont maincolor olivegreen" id="cont-cmac">
                 <p class="m-0 mb-3">
                     Qui puoi controllare la validità dei MACs (Message Authentication Codes)
                     presenti nelle email che ricevi da noi, è utile per verificare se la mail 
@@ -274,7 +274,7 @@ class SettingsComponent extends HTMLElement {
                 <span class="material-symbols-rounded">palette</span>
                 Tema App
             </h3>
-            <div class="isle bg-4 slider-cont fast" data-open="false" id="cont-theme">
+            <div class="isle bg-4 br-l slider-cont fast" data-open="false" id="cont-theme">
                 <p class="m-0 mb-2">
                     Seleziona e cambia il tema dell'app.
                 </p>

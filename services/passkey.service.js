@@ -122,6 +122,7 @@ export class PasskeyService {
      * @returns {object} - Le opzioni di autenticazione da inviare al client.
      */
     async generate_auth_options(uid) {
+        throw new CError("", "Servizio non disponibile", 503);
         let credentials_id = null;
         // -- se è stato passato lo user id recupero le passkey associate
         if (uid) {

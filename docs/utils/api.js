@@ -3,6 +3,7 @@ import { CError } from "./error.js";
 import { Config } from "../config.js";
 import { PoP } from "../secure/PoP.js";
 import { SessionStorage } from "./session.js";
+import { Log } from "./log.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     API.init();
@@ -25,10 +26,19 @@ export class API {
      * Wrapper per fetch che controlla e rinnova l'access token se scaduto
      * @param {string} endpoint 
      * @param {{}} options 
+     * @param {boolean} [options.isAdvanced] - se true verifica che la sessione corrente sia avanzata
      * @param {string} type 
      * @returns 
      */
     static async fetch(endpoint, options = {}, type = {}) {
+        // controllo se serve avere la sessione avanzata
+        if (options.isAdvanced === true) {
+            const advancedExpiry = SessionStorage.get('advanced-session-expiry');
+            if (!advancedExpiry || new Date() > new Date(advancedExpiry)) {
+                Log.summon(1, "Questa operazione richiede una sessione avanzata. Attivala in Tools > Sessione Avanzata");
+                return null;
+            }
+        }
         // controllo che l'access token non sia scaduto
         const accessTokenExpiry = SessionStorage.get('access-token-expiry');
         if (accessTokenExpiry && new Date() > new Date(accessTokenExpiry) && !options.skipRefresh) {
@@ -52,6 +62,7 @@ export class API {
      * @param {string} [options.queryParams] - stringa che contiene i query params da aggiungere alla request
      * @param {boolean} [options.hide_log] - se true non mostra il log
      * @param {boolean} [options.loader] - se true attiva il loader e lo termina quando l'api risponde
+     * @param {boolean} [options.isAdvanced] - se true verifica che la sessione corrente sia avanzata
      * @param {Object} type - Contiene i tipi di ritorno e contenuto: { return_type, content_type }. (json, form-data, bin)
      * @returns {Promise<any|null>} - Restituisco il risultato della chiamata o null in caso di errore.
      */

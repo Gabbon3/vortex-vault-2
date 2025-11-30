@@ -342,7 +342,7 @@ export class UserController {
         const { text, html } = await emailContents.changePassword({
             email,
         });
-        Mailer.send(email, "Password Change Confirmation", text, html);
+        Mailer.send(email, "Conferma modifica password", text, html);
         // ---
         res.status(200).json({ message: "Password changed!" });
     });

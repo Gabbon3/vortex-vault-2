@@ -11,38 +11,7 @@ export class AES256GCM {
             tagLength: 128, // bit
             algorithm: 'AES-GCM',
         }
-    }
-    // mappa di supporto per riutilizzare le stesse crypto key
-    static keyMap = new Map();
-    /**
-     * Importa una chiave AES-256-GCM da un buffer, se necessario.
-     * Se riceve già una CryptoKey, la restituisce direttamente.
-     *
-     * @param {Uint8Array|CryptoKey} inputKey
-     * @param {number} [version=1] versione utilizzata per la cifratura
-     * @returns {Promise<CryptoKey>}
-     */
-    static async resolveKey(inputKey, version = 1) {
-        if (inputKey instanceof CryptoKey) return inputKey;
-        if (inputKey instanceof Uint8Array && inputKey.length === 32) {
-            // -- verifico se la chiave non è in cache
-            const cacheKey = [...inputKey].join("");
-            if (this.keyMap.has(cacheKey)) return this.keyMap.get(cacheKey);
-            // -- se non lo è importo la cripto key e metto in cache
-            const key = await crypto.subtle.importKey(
-                "raw",
-                inputKey,
-                { name: this.versionMap[version].algorithm },
-                false,
-                ["encrypt", "decrypt"]
-            );
-            this.keyMap.set(cacheKey, key);
-            return key;
-        }
-        throw new Error(
-            "Formato chiave non valido, erano attesi 32 byte o una CryptoKey."
-        );
-    }
+    };
     /**
      * Importa e restituisce una CryptoKey partendo da 32 byte
      * @param {Uint8Array} raw 
