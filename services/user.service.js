@@ -28,25 +28,27 @@ export class UserService {
         if (!this.verify_email(email))
             throw new CError(
                 "InvalidEmailDomain",
-                "The email domain is not supported. Please use a well-known email provider like Gmail, iCloud, or Outlook.",
-                422
+                "Questa email non può essere utilizzata sui nostri sistemi",
+                409
             );
         // -- verifico che l'email sia disponibile
         const user_exist = await User.findOne({
             where: { email },
         });
         if (user_exist)
-            throw new CError("UserExist", "Questa non può essere utilizzata sui nostri sistemi", 409);
+            throw new CError("UserExist", "Questa email non può essere utilizzata sui nostri sistemi", 409);
         // -- creo un nuovo utente
         const passwordHash = await this.hashPassword(password);
-        const user = new User({
+        // -- salvo su redis finche non verifica la mail se no elimino account subito
+        const user = {
             email,
             password: passwordHash,
             salt: salt,
             dek: DEK,
-        });
+        };
+        RedisDB.set('pending-user-' + email, user, 300); // 5 minuti
         // ---
-        return await user.save();
+        return true;
     }
     /**
      * Utility per verificare l'email dell'utente
@@ -67,6 +69,26 @@ export class UserService {
         ];
         // ---
         return verified_domains.includes(email.split("@")[1]);
+    }
+
+    /**
+     * Conferma un utente e lo memorizza sul database
+     * @param {string} email stringa email dell'utente da confermare
+     */
+    async confirmPendingUser(email) {
+        const pendingUser = await RedisDB.getdel('pending-user-' + email);
+        if (!pendingUser) {
+            throw new CError("ValidationError", "Nessun utente in attesa di conferma per questa email o tempo scaduto", 422);
+        }
+        // -- creo l'utente sul db
+        const user = await User.create({
+            email: pendingUser.email,
+            password: pendingUser.password,
+            salt: pendingUser.salt,
+            dek: pendingUser.dek,
+            verified: true,
+        });
+        return await user.save();
     }
 
     /**

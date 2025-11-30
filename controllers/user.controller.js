@@ -35,8 +35,19 @@ export class UserController {
         // -- decodifico
         const dek = Buffer.from(encodedDek, 'base64');
         // ---
-        const user = await this.service.signup(email, password, dek, salt);
-        res.status(201).json({ message: "User registered", id: user.id });
+        await this.service.signup(email, password, dek, salt);
+        res.status(200).json({ message: "Utente in attesa di conferma" });
+    });
+    /**
+     * Verifica un email
+     */
+    verifyUser = asyncHandler(async (req, res) => {
+        const { email } = req.payload;
+        if (!email) throw new CError("", "Email not found", 404);
+        // ---
+        const user = await this.service.confirmPendingUser(email);
+        // ---
+        res.status(201).json({ message: `Account confermato, id: ${user.id}` });
     });
     /**
      * Accede
@@ -288,21 +299,6 @@ export class UserController {
         await RedisDB.delete("fsi" + id);
         // ---
         res.status(200).json({ credentials });
-    });
-    /**
-     * Verifica un email
-     */
-    verify_account = asyncHandler(async (req, res) => {
-        const { email } = req.payload;
-        if (!email) throw new CError("", "Email not found", 404);
-        // ---
-        const [affected] = await this.service.update_user_info(
-            { email },
-            { verified: true }
-        );
-        if (affected > 1) throw new Error("Updated multiple emails");
-        // ---
-        res.status(200).json({ message: "Account verified" });
     });
     /**
      * Just a test

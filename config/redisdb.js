@@ -4,9 +4,9 @@ import { redis } from "./redis.js";
 export class RedisDB {
     /**
      * Salva un nuovo record
-     * @param {string} key
-     * @param {*} value
-     * @param {number} ttl
+     * @param {string} key chiave del record
+     * @param {*} value valore qualsiasi, viene codificato con msgpack
+     * @param {number} ttl tempo scadenza in secondi default 3600 (1 ora)
      * @returns {boolean}
      */
     static async set(key, value, ttl = 3600) {

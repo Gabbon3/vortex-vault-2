@@ -88,6 +88,13 @@ export class PoP {
             return false;
         }
     }
+
+    /**
+     * Elimina la chiave privata dal keystore
+     */
+    static clearKeystore() {
+        this.keyStore.deleteKey(this.dbPrivateKeyName);
+    }
 }
 
 window.PoP = PoP;

@@ -18,6 +18,7 @@ export class AuthService {
     static async init() {
         Windows.loader(true, "Verifico la sessione");
         const popInitialized = await PoP.init();
+        if (!popInitialized) return false;
         const authInitialized = await this.startSessionWithPoP();
         return popInitialized && authInitialized;
     }
@@ -106,6 +107,7 @@ export class AuthService {
         // ---
         localStorage.clear();
         sessionStorage.clear();
+        PoP.clearKeystore();
         return true;
     }
     /**

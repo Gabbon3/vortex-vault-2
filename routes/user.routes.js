@@ -32,7 +32,7 @@ router.get('/quick-sign-in/:id', controller.get_quick_signin);
 router.post('/email-verification', controller.sendEmailCode);
 router.post('/email-verification-test', verifyEmailCode, controller.test_email_auth);
 // -- ACCOUNT VERIFY
-router.post('/verify-account', verifyEmailCode, controller.verify_account);
+router.post('/verify-account', verifyEmailCode, controller.verifyUser);
 // -- SIGN-OUT
 router.post('/signout', verifyAuth(), controller.signout);
 router.post('/clear-cookies', controller.clearCookies);
