@@ -273,10 +273,11 @@ export class VaultService {
             return null;
         }
         const exportSalt = Cripto.randomBytes(16);
-        const exportKey = await Cripto.deriveKey(
+        const exportKeyRaw = await Cripto.deriveKey(
             customKey ?? this.KEK,
             exportSalt
         );
+        const exportKey = await AES256GCM.importAesGcmKey(exportKeyRaw);
         // -- preparo il backup con il salt come primo elemento
         const backup = [exportSalt];
         const compactedVaults = this.compactVaults();
@@ -302,15 +303,16 @@ export class VaultService {
         const backup = msgpack.decode(packed_backup);
         // -- ottengo il salt del backup cosi genero la chiave del backup
         const backup_salt = backup.shift();
-        const backup_key = await Cripto.deriveKey(
+        const backup_key_raw = await Cripto.deriveKey(
             custom_key ?? this.KEK,
             backup_salt
         );
+        const backupKey = await AES256GCM.importAesGcmKey(backup_key_raw);
         // -- decifro ogni vault
         for (let i = 0; i < backup.length; i++) {
             const vault = await this.decrypt(
                 backup[i],
-                backup_key
+                backupKey
             );
             vaults.push(vault);
         }
