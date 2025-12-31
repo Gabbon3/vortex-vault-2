@@ -1,5 +1,6 @@
 export class Sliders {
     static initialized = false;
+    static groups = {};
     /**
      * Inizializza gli sliders
      */
@@ -24,29 +25,57 @@ export class Sliders {
             if (!sliderBtn) return;
             // ---
             const targetId = sliderBtn.getAttribute('slider');
-            this.manageSlider(targetId);
+            // logica di raggruppamento
+            const group = sliderBtn.getAttribute('slider-group') ?? null;
+            this.manageSlider(targetId, group);
         });
     }
     /**
      * Gestisce lo sliding
      * @param {string | HTMLElement} targetId - id dello slider container
+     * @param {string} group - rappresenta il gruppo di appartenenza di uno slider
+     * @param {boolean} [force=null] - forza true -> apertura; false -> chiusura del target 
      */
-    static manageSlider(targetId, forceOpen = false) {
+    static manageSlider(targetId, group = null, force = null) {
         const target = targetId instanceof HTMLElement ? targetId : document.getElementById(targetId);
         if (!target) return;
+        //
+        const lastTarget = group ? this.groups[group] : null;
+        if (group && force == null && lastTarget) {
+            this.manageSlider(lastTarget, null, false);
+        }
 
         const isOpen = target.style.maxHeight;
+        if (force === true) {
+            open();
+        }
+        else if (force === false) {
+            close();
+        }
+        else if (isOpen) {
+            close();
+        }
+        else {
+            open();
+        }
+
+        if (group) {
+            this.groups[group] = targetId;
+        }
+        
         // mpy-0 indica -> margin e padding top e bottom = a 0
-        if (isOpen && forceOpen === false) {
-            this.disconnectObserver(target);
-            target.style.maxHeight = null;
-            target.classList.add('mpy-0');
-            target.classList.remove('slider-open')
-        } else {
+        const open = () => {
             target.classList.remove('mpy-0');
             target.classList.add('slider-open')
             this.updateSliderHeight(target);
             this.observeSlider(target);
+        }
+
+        const close = () => {
+            this.disconnectObserver(target);
+            target.style.maxHeight = null;
+            target.classList.add('mpy-0');
+            target.classList.remove('slider-open')
         }
     }
     /**

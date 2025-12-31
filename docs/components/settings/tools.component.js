@@ -108,7 +108,7 @@ class SettingsComponent extends HTMLElement {
         <hr>
         <!-- ADVANCED SESSION == as -->
         <div class="maincolor orange">
-            <h3 class="icon slider" slider="cont-sudo-session">
+            <h3 class="icon slider" slider-group="tools" slider="cont-sudo-session">
                 <span class="material-symbols-rounded warning">vpn_key</span>
                 Sessione Avanzata
             </h3>
@@ -154,7 +154,7 @@ class SettingsComponent extends HTMLElement {
         <!-- CHANGE PASSWORD -->
         <hr>
         <div class="maincolor red">
-            <h3 class="icon slider" slider="form-change-password">
+            <h3 class="icon slider" slider-group="tools" slider="form-change-password">
                 <span class="material-symbols-rounded">key</span>
                 Cambia Password
                 <span class="material-symbols-rounded warning">vpn_key</span>
@@ -187,7 +187,7 @@ class SettingsComponent extends HTMLElement {
         <!-- QUICK SIGN-IN -->
         <hr>
         <div class="maincolor yellow">
-            <h3 class="icon slider" slider="cont-qsi">
+            <h3 class="icon slider" slider-group="tools" slider="cont-qsi">
                 <span class="material-symbols-rounded">id_card</span>
                 Accesso Rapido
             </h3>
@@ -229,7 +229,7 @@ class SettingsComponent extends HTMLElement {
             <!-- CHECK MESSAGE AUTHENTICATION CODE -->
         <hr>
         <div class="maincolor olivegreen">
-            <h3 class="icon slider" slider="cont-cmac">
+            <h3 class="icon slider" slider-group="tools" slider="cont-cmac">
                 <span class="material-symbols-rounded">mark_email_read</span>
                 Controllo dei MACs
             </h3>
@@ -270,7 +270,7 @@ class SettingsComponent extends HTMLElement {
             <hr>
         <!-- TEMA APP -->
         <div class="maincolor blue">
-            <h3 class="icon slider" slider="cont-theme">
+            <h3 class="icon slider" slider-group="tools" slider="cont-theme">
                 <span class="material-symbols-rounded">palette</span>
                 Tema App
             </h3>
@@ -301,7 +301,7 @@ class SettingsComponent extends HTMLElement {
             <hr>
         <!-- HELP -->
         <div class="maincolor orange">
-            <h3 class="icon slider" slider="cont-help-tools">
+            <h3 class="icon slider" slider-group="tools" slider="cont-help-tools">
                 <span class="material-symbols-rounded">help</span>
                 Help
             </h3>
