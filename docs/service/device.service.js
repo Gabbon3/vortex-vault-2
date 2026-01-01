@@ -16,6 +16,14 @@ export class DeviceService {
             method: 'GET'
         });
         if (!res) return null;
+        // effettuo un ordinamento dei dispositivi
+        res.sort((a,b) => {
+            // ordino per current
+            if (a.current && !b.current) return -1;
+            else if (b.current && !a.current) return 1;
+            // ordino per sid
+            return a.sid < b.sid ? -1 : 0;
+        });
         return res;
     }
     /**

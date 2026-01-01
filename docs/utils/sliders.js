@@ -41,42 +41,48 @@ export class Sliders {
         if (!target) return;
         //
         const lastTarget = group ? this.groups[group] : null;
-        if (group && force == null && lastTarget) {
-            this.manageSlider(lastTarget, null, false);
+        if (group && force == null && lastTarget && lastTarget != targetId) {
+            this.close(document.querySelector('#' + lastTarget));
         }
 
         const isOpen = target.style.maxHeight;
         if (force === true) {
-            open();
+            this.open(target);
         }
         else if (force === false) {
-            close();
+            this.close(target);
         }
         else if (isOpen) {
-            close();
+            this.close(target);
         }
         else {
-            open();
+            this.open(target);
         }
 
         if (group) {
             this.groups[group] = targetId;
         }
-        
+    }
+    /**
+     * apri un div slider
+     * @param {HTMLElement} target 
+     */
+    static open(target) {
         // mpy-0 indica -> margin e padding top e bottom = a 0
-        const open = () => {
-            target.classList.remove('mpy-0');
-            target.classList.add('slider-open')
-            this.updateSliderHeight(target);
-            this.observeSlider(target);
-        }
-
-        const close = () => {
-            this.disconnectObserver(target);
-            target.style.maxHeight = null;
-            target.classList.add('mpy-0');
-            target.classList.remove('slider-open')
-        }
+        target.classList.remove('mpy-0');
+        target.classList.add('slider-open')
+        this.updateSliderHeight(target);
+        this.observeSlider(target);
+    }
+    /**
+     * chiudi un div slider
+     * @param {HTMLElement} target 
+     */
+    static close(target) {
+        this.disconnectObserver(target);
+        target.style.maxHeight = null;
+        target.classList.add('mpy-0');
+        target.classList.remove('slider-open')
     }
     /**
      * Osserva uno slider in caso di modifiche
@@ -119,4 +125,4 @@ export class Sliders {
     }
 }
 
-// window.Sliders = Sliders;
+window.Sliders = Sliders;
