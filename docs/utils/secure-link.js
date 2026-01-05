@@ -8,10 +8,11 @@ export class SecureLink {
     /**
      * Genera un nuovo link sicuro
      * @param {Object} options
-     * @param {Uint8Array} [options.key] 
-     * @param {string} [options.id] 
-     * @param {string} [options.scope] *
+     * @param {Uint8Array} [options.key] - se non specificata ne verrà generata una casualmente
+     * @param {string} [options.id] - 
+     * @param {string} [options.scope] - scopo del link, fornisce contesto e isola la richiesta
      * @param {number} [options.ttl] * time to live
+     * @returns {{ id: string, key: string }} - { id: id del link, key: chiave crittografica in base64 }
      */
     static async generate(options) {
         const rawKey = options.key instanceof Uint8Array ? options.key : Cripto.randomBytes(32);
@@ -50,6 +51,7 @@ export class SecureLink {
      * @param {string} scope
      * @param {string} id 
      * @param {Uint8Array|string} key_ 
+     * @returns {*} dipende da cosa si è salvato, in ogni caso è decodificato tramite msgpack
      */
     static async get(scope, id, key_) {
         const res = await API.fetch(`/secure-link/${scope}_${id}`, {
