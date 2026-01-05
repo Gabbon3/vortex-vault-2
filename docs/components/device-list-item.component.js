@@ -50,8 +50,6 @@ class DeviceListItem extends HTMLElement {
             </div>
         `;
         // -- EVENTI
-        // -- pulsante revoca
-        // this.querySelector('.revoke-device').addEventListener('click', this.toggle_revoked.bind(this));
         // -- pulsante cancella
         this.querySelector('.device-delete').addEventListener('click', this.delete_device.bind(this));
         // -- rinomina del dispositivo

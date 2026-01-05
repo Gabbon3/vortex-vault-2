@@ -130,7 +130,6 @@ export class UserService {
         const jwtLifetimeBound = Date.now() - Config.AUTH_TOKEN_COOKIE_EXPIRY;
         await this.publicKeyService.deleteAll({
             user_id: user.id,
-            id: null,
             last_seen_at: { [Op.lt]: new Date(jwtLifetimeBound) },
         });
         /**
