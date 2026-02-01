@@ -37,7 +37,7 @@ export class DeviceUI {
                 lua="${
                     device.last_seen_at
                         ? date.format(
-                              "%j %M %Y at %H:%i",
+                              "%j %M %Y - %H:%i",
                               new Date(device.last_seen_at)
                           )
                         : "Mai usato"
