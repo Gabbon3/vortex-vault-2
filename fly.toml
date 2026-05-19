@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for vortex-vault on 2024-12-06T08:07:10Z
+# fly.toml app configuration file generated for vortexvault on 2026-05-19T15:27:13Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -17,6 +17,6 @@ primary_region = "cdg"
   processes = ["app"]
 
 [[vm]]
-  memory = "512mb"
-  cpu_kind = "shared"
+  memory = '512mb'
+  cpu_kind = 'shared'
   cpus = 1
