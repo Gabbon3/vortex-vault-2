@@ -62,3 +62,68 @@ $message-bc: #4d4d3b;
     --border-color: #{$border-color};
     --message-bc: #{$message-bc};
 }
+
+
+// ==========================================
+// 1. BASE UI & SFONDI (Dark Theme)
+// ==========================================
+// Questi colori creano la struttura dell'editor. Sono toni scuri, 
+// leggermente freddi/bluastri per far risaltare i tuoi pastelli caldi.
+$bg-base:       #1B1D2B; // Sfondo principale dell'editor di testo
+$bg-surface:    #242636; // Sfondo di sidebar, terminale, activity bar
+$bg-surface-alt:#2A2D3E; // Sfondo per dropdown, tooltip e menu contestuali
+$bg-highlight:  #2F3247; // Riga attiva (current line) e hover sui menu
+$bg-selection:  #434B68; // Sfondo del testo selezionato dall'utente
+$border-color:  #34384E; // Bordi divisori tra pannelli e tab inattive
+
+// ==========================================
+// 2. TESTO & GRIGI (Tipografia di base)
+// ==========================================
+// Necessari per la leggibilità generale prima che intervenga l'evidenziazione.
+$text-primary:  #D9E0EE; // Testo standard (variabili base, punteggiatura)
+$text-muted:    #9AA0B8; // Testo secondario (percorsi file, UI inattiva)
+$text-comment:  #6A7089; // Commenti (ben visibili ma che non rubano l'attenzione)
+$text-invis:    #434861; // Caratteri invisibili (spazi, tab, indent guides)
+
+// ==========================================
+// 3. LA TUA PALETTE ORIGINALE (Core Accents)
+// ==========================================
+// I tuoi colori originali, perfetti per il Syntax Highlighting
+$c-danger:      #ee7184; // Errori, keyword critiche (es. throw, delete)
+$c-red:         #F7A7A0; // Tag HTML/XML, costanti
+$c-warning:     #eead71; // Warning nel terminale, annotazioni
+$c-orange:      #e59e7a; // Numeri, valori booleani (true/false)
+$c-yellow:      #eec471; // Classi, costruttori, tipi
+$c-peach:       #FFD6A5; // Attributi HTML, parametri
+$c-green:       #86cd86; // Stringhe di testo
+$c-olive-green: #B9D19C; // Stringhe secondarie, template literals
+$c-mint:        #AEE5D8; // Espressioni regolari (Regex), escape characters
+$c-lightblue:   #A8D8FF; // Proprietà di oggetti, campi
+$c-blue:        #7dbaff; // Funzioni, metodi, chiamate
+$c-purple:      #D3B4FF; // Parole chiave di controllo (if, for, return)
+$c-pink:        #FFB7C5; // Operatori (+, -, =, ==), keyword di import/export
+$c-lightgray:   #E0E0E0; // Badge chiari, testo evidenziato nei menu
+
+// ==========================================
+// 4. ESPANSIONE SINTASSI (Nuovi Accenti)
+// ==========================================
+// Colori extra che si sposano con i tuoi per coprire tutti i token di codice.
+$c-cyan:        #89DCEB; // Variabili speciali (this, self, super)
+$c-teal:        #4FD6BE; // Interfacce, tipi di supporto (TypeScript/Rust)
+$c-magenta:     #E8A2EE; // Proprietà CSS, pseudo-classi
+$c-indigo:      #A2A9FF; // Namespace, moduli, macro
+
+// ==========================================
+// 5. COLORI PER GIT, DIFF & STATI
+// ==========================================
+// Usati nell'albero dei file e per visualizzare le modifiche nel codice.
+$git-added:     #86cd86; // File o riga aggiunta (riprende il tuo verde)
+$git-modified:  #7dbaff; // File o riga modificata (riprende il tuo blu)
+$git-deleted:   #ee7184; // File o riga eliminata (riprende il tuo danger)
+$git-conflict:  #eec471; // Conflitto di merge (riprende il tuo yellow)
+$git-ignored:   #6A7089; // File ignorati (.gitignore)
+
+// Backgrounds trasparenti per le differenze (Git Lens / Diff View)
+$diff-add-bg:   rgba(134, 205, 134, 0.15); 
+$diff-mod-bg:   rgba(125, 186, 255, 0.15);
+$diff-del-bg:   rgba(238, 113, 132, 0.15);
