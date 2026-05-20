@@ -1,22 +1,23 @@
-# fly.toml app configuration file generated for vortexvault on 2026-05-19T15:27:13Z
+# fly.toml app configuration file generated for vortexvault on 2026-05-20T21:01:07Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "vortexvault"
-primary_region = "cdg"
+app = 'vortexvault'
+primary_region = 'fra'
 
 [build]
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
 
 [[vm]]
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256
