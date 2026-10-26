@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize';
 import { Config } from '../server_config.js';
 
+const ssl_cert_path = path.resolve('./config/ssl.crt');
+
 export const sequelize = new Sequelize(
     Config.DB_NAME,
     Config.DB_USER,
@@ -12,7 +14,8 @@ export const sequelize = new Sequelize(
         dialectOptions: Config.DEV ? {} : {
             ssl: {
                 require: true,
-                rejectUnauthorized: false
+                rejectUnauthorized: false,
+                ca: fs.readFileSync(ssl_cert_path).toString(),
             }
         },
         noPgPrepare: true, 
