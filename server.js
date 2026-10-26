@@ -91,7 +91,8 @@ app.use(error_handler_middleware);
 /**
  * _____
  */
-
+const host = '0.0.0.0';
+console.log(`IN ASCOLTO: ${host}:${Config.PORT}`);
 /**
  * HTTP
  */
@@ -102,7 +103,7 @@ try {
     // await sequelize.sync({ force: true });
     // console.log('☑️ Struct');
     // ---
-    app.listen(Config.PORT, '0.0.0.0', () => {
+    app.listen(Config.PORT, host, () => {
         console.log(`☑️ Server`);
         console.log(`☑️ ${date.format('%d %M %Y %H:%i:%s')}`);
     });
