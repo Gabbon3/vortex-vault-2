@@ -1,135 +1,131 @@
 import msgpack from "msgpack-lite";
+import { redis } from "./redis.js";
 
 export class RedisDB {
-    static db = {};
-    static max_ttl = 60 * 60 * 24; // 24 ore
-    static cleanup_interval = 60 * 10 * 1000; // 10 minuti
-    static cleanup = false;
     /**
-     * Imposta un valore nel ramdb, serializzato con msgpack
-     * ha una scadenza di default di 1 ora che non puo essere superata
+     * Salva un nuovo record
+     * @param {string} key chiave del record
+     * @param {*} value valore qualsiasi, viene codificato con msgpack
+     * @param {number} ttl tempo scadenza in secondi default 3600 (1 ora)
+     * @returns {boolean}
+     */
+    static async set(key, value, ttl = 3600) {
+        try {
+            const buffer = msgpack.encode(value);
+            await redis.set(key, buffer, "EX", ttl);
+            return true;
+        } catch (err) {
+            console.warn("RedisDB.set error:", err);
+            return false;
+        }
+    }
+
+    /**
+     * Tenta di creare una chiave solo se non esiste già, con TTL
      * @param {string} key
      * @param {*} value
-     * @param {number} ttl - seconds - 0 > ttl => 145440
-     * @returns {boolean}
+     * @param {number} ttl - in secondi
+     * @returns {boolean} true se creata, false se già esiste
      */
-    static set(key, value, ttl = 3600) {
-        // -- verifico se il ttl è stato disposto correttamente
-        if (ttl < 0 || ttl > this.max_ttl) return false;
-        let encoded_value = null;
-        // -- prima provo a convertire
+    static async setIfNotExists(key, value, ttl = 3600) {
         try {
-            encoded_value = msgpack.encode(value);
-        } catch (error) {
-            console.warn("RAMDB: Error while encoding " + key + error);
+            const buffer = msgpack.encode(value);
+            const result = await redis.set(key, buffer, "NX", "EX", ttl);
+            return result === "OK";
+        } catch (err) {
+            console.warn("RedisDB.setIfNotExists error:", err);
             return false;
         }
-        // -- poi elimino il vecchio dato se si sta rimpiazzando
-        if (this.has(key)) this.delete(key);
-        // ---
-        const expire = Date.now() + ttl * 1000;
-        // -- memorizzo il dato
-        this.db[key] = [encoded_value, expire];
-        // ---
-        return true;
     }
+
     /**
-     * Verifica se un dato esiste nel db (verificando anche se non è scaduto)
+     * Verifica se un record esiste
      * @param {string} key
      * @returns {boolean}
      */
-    static has(key) {
-        const exist = this.db.hasOwnProperty(key);
-        if (!exist) return false;
-        // -- se esiste verifico che non sia scaduta
-        // -- se scaduta elimino e restituisco false
-        const record = this.db[key];
-        const expire = record[1];
-        if (Date.now() > expire) {
-            this.delete(key);
+    static async has(key) {
+        try {
+            const exists = await redis.exists(key);
+            return exists === 1;
+        } catch (err) {
+            console.warn("RedisDB.has error:", err);
             return false;
         }
-        return true;
     }
     /**
-     * Restituisce un valore dal ramdb
+     * Restituisce un record e se richiesto anche il ttl in secondi rimanente
      * @param {string} key
-     * @param {boolean} [ttl=false] - true per restituire anche il ttl
+     * @param {boolean} [getTtl=false] - true per restituire anche il ttl
+     * @returns {* | { value: *, ttl: number }}
+     */
+    static async get(key, getTtl = false) {
+        try {
+            const buffer = await redis.getBuffer(key);
+            if (!buffer) return null;
+            const decoded = msgpack.decode(buffer);
+            // -- se richiesto restituisco anche il ttl
+            if (getTtl) {
+                const ttl = await redis.ttl(key);
+                return { value: decoded, ttl };
+            }
+            // ---
+            return decoded;
+        } catch (err) {
+            console.warn("RedisDB.get error:", err);
+            return null;
+        }
+    }
+    /**
+     * Restituisce ed elimina subito il record
+     * @param {string} key
      * @returns {*}
      */
-    static get(key, ttl = false) {
-        const exist = this.has(key);
-        if (!exist) return null;
-        // ---
-        const record = this.db[key];
-        // ---
+    static async getdel(key) {
         try {
-            const decoded_value = msgpack.decode(record[0]);
-            return ttl ? [decoded_value, record[1]] : decoded_value;
-        } catch (error) {
-            console.warn("RAMDB: Error while decoding " + key + error);
-            return false;
+            const buffer = await redis.callBuffer("GETDEL", key);
+            if (!buffer) return null;
+            return msgpack.decode(Buffer.from(buffer));
+        } catch (err) {
+            console.warn("RedisDB.getdel error:", err);
+            return null;
         }
     }
     /**
-     * Aggiorna un elemento sul db
-     * @param {string} key 
-     * @param {object} updated_value 
-     * @returns 
+     * Aggiorna un record
+     * @param {string} key
+     * @param {*} newValue
+     * @param {number|null} [newTtl=null] - se null, verrà tenuto il ttl precedente, se no verrà sovrascritto
+     * @returns {boolean}
      */
-    static update(key, updated_values) {
-        const record = this.get(key, true);
-        if (!record) return false;
-        // ---
-        const expire = record[1];
-        // -- prima provo a serializzare
-        let encoded_value = null;
+    static async update(key, newValue, newTtl = null) {
         try {
-            encoded_value = msgpack.encode(updated_values);
-        } catch (error) {
-            console.warn("RAMDB update: Error while encoding " + key + error);
+            let ttl = newTtl;
+            // -- se non viene passato un TTL nuovo, mantengo quello attuale
+            if (ttl === null) {
+                const t = await redis.ttl(key);
+                if (t > 0) ttl = t;
+                else if (t === -1) ttl = 0; // chiave permanente
+                else if (t === -2) return false; // chiave non esiste
+            }
+            // ---
+            return await RedisDB.set(key, newValue, ttl);
+        } catch (err) {
+            console.warn("RedisDB.update error:", err);
             return false;
         }
-        // -- memorizzo il dato
-        this.db[key] = [encoded_value, expire];
-        // ---
-        return true;
     }
     /**
-     * Elimina un record dal db
+     * Elimina un record
      * @param {string} key
      * @returns {boolean}
      */
-    static delete(key) {
-        delete this.db[key];
-        return true;
-    }
-    /**
-     * Pulisce l'intero db
-     */
-    static clear() {
-        this.db = {};
-    }
-    /**
-     * Periodicamente vengono controllati i record scaduti
-     * e se lo sono vengono eliminati
-     */
-    static start_cleanup() {
-        if (this.cleanup) return;
-        this.cleanup = true;
-        // ---
-        const cleanupFn = () => {
-            const now = Date.now();
-            for (const key in this.db) {
-                if (this.db[key][1] <= now) {
-                    this.delete(key);
-                }
-            }
-            setTimeout(cleanupFn, this.cleanup_interval);
-        };
-        // ---
-        cleanupFn();
+    static async delete(key) {
+        try {
+            await redis.del(key);
+            return true;
+        } catch (err) {
+            console.warn("RedisDB.delete error:", err);
+            return false;
+        }
     }
 }
-
-RedisDB.start_cleanup();
